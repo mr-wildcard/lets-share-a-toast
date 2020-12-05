@@ -5,7 +5,7 @@ import { APIPaths } from 'frontend/core/constants';
 const httpClient = (apiURL: string) => (
   nextContext?: NextPageContext
 ) => async (request: RequestInfo, config: RequestInit = {}) => {
-  config.credentials = 'include';
+  // config.credentials = 'include';
 
   const response = await fetch(apiURL + request, config);
 

@@ -7,11 +7,11 @@ export enum Pathnames {
 }
 
 export enum APIPaths {
-  PROFILE = '/profile',
   TOASTS = '/toasts',
   TOAST = '/toasts/:id',
   TOAST_STATUS = '/toasts/:id/status',
   CURRENT_TOAST = '/toasts/current',
+  PROFILE = '/users/me',
   USERS = '/users',
   SUBJECTS = '/subjects',
   SUBJECT = '/subjects/:id',

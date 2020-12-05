@@ -9,11 +9,15 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app/app.module';
 
+const port = process.env.PORT || 3333;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
+  app.enableCors({
+    origin: 'http://local.letsshareatoast:5000',
+  });
+
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
@@ -27,11 +31,9 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-  const port = process.env.PORT || 3333;
-
-  await app.listen(port, () => {
-    Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
-  });
+  await app.listen(port);
 }
 
-bootstrap();
+bootstrap().then(() => {
+  Logger.log('Listening at http://localhost:' + port);
+});

@@ -27,6 +27,16 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('me')
+  findProfile() {
+    return {
+      firstName: 'Julien',
+      lastName: 'Viala',
+      picture: 'https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp',
+      email: 'julien.viala@gmail.com',
+    };
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);

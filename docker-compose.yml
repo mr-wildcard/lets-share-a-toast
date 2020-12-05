@@ -26,26 +26,26 @@ services:
     image: ${NODE_DOCKER_IMAGE}
     command: /bin/sh -c "npm start -- api"
     volumes:
-      - "./packages:/code:delegated"
+      - "./:/code:delegated"
     ports:
-      - ${NEST_API_PORT}:${NEST_API_PORT}
-    working_dir: /code/api
+      - ${API_PORT}:${API_PORT}
+    working_dir: /code
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
-      PORT: ${NEST_API_PORT}
+      PORT: ${API_PORT}
 
   frontend:
     image: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "npm start -- frontend -- -p ${NEXT_FRONTEND_PORT}"
+    command: /bin/sh -c "npm start -- frontend -- --port ${FRONTEND_PORT}"
     volumes:
-      - "./packages:/code:delegated"
-    working_dir: /code/frontend
+      - "./:/code:delegated"
+    working_dir: /code
     ports:
-      - ${NEXT_FRONTEND_PORT}:${NEXT_FRONTEND_PORT}
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
-      - API_URL
-      - REAL_TIME_APP_BASE_URL
-      - REAL_TIME_SOCKET_ORIGINS
+      - API_URL=http://$APPS_LOCAL_DOMAIN:$NEST_API_PORT
+      - REAL_TIME_APP_BASE_URL:http://$APPS_LOCAL_DOMAIN:?
+      - REAL_TIME_SOCKET_ORIGINS:http://$APPS_LOCAL_DOMAIN:?
       - FIREBASE_API_KEY
       - FIREBASE_AUTH_DOMAIN
       - FIREBASE_DATABASE_URL
