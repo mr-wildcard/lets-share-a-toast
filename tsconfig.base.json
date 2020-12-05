@@ -15,7 +15,21 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@letsshareatoast/shared": ["./libs/shared/src/index.ts"],
+      "api/toasts/*": ["./apps/api/src/app/toasts/*"],
+      "api/subjects/*": ["./apps/api/src/app/subjects/*"],
+      "api/users/*": ["./apps/api/src/app/users/*"],
+      "api/state-machines/*": ["./apps/api/src/app/state-machines/*"],
+      "api/interceptors/*": ["./apps/api/src/app/interceptors/*"],
+      "frontend/core/*": ["./apps/frontend/src/core/*"],
+      "frontend/pages/*": ["./apps/frontend/src/pages/*"],
+      "frontend/homepage/*": ["./apps/frontend/src/homepage/*"],
+      "frontend/subjects/*": ["./apps/frontend/src/subjects/*"],
+      "frontend/header/*": ["./apps/frontend/src/header/*"],
+      "frontend/notifications/*": ["./apps/frontend/src/notifications/*"],
+      "frontend/votes/*": ["./apps/frontend/src/votes/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

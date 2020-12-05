@@ -1,0 +1,19 @@
+@keyframes pulse {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.link {
+  animation-name: pulse;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}

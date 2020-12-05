@@ -1,0 +1,13 @@
+@keyframes button {
+  from {
+    background-color: #fed7d7;
+  }
+
+  to {
+    background-color: white;
+  }
+}
+
+.button {
+  animation: button 1s infinite alternate;
+}

@@ -1,0 +1,7 @@
+.subjectItem:hover .actions {
+  opacity: 1;
+}
+
+.loader {
+  background-color: rgba(196, 241, 249, 0.5);
+}

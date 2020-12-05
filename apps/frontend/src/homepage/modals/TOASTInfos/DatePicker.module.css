@@ -1,0 +1,195 @@
+/* DayPicker styles */
+.container {
+  font-size: 1rem;
+}
+
+.wrapper {
+  position: relative;
+  flex-direction: row;
+  padding-bottom: 1em;
+  user-select: none;
+}
+
+.months {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.month {
+  width: 100%;
+  display: table;
+  border-spacing: 0;
+  border-collapse: collapse;
+  user-select: none;
+}
+
+:local .navButton {
+  position: absolute;
+  top: 1em;
+  right: 1.5em;
+  left: auto;
+
+  display: inline-block;
+  margin-top: 2px;
+  width: 1.25em;
+  height: 1.25em;
+  background-position: center;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  color: #8b9898;
+  cursor: pointer;
+}
+
+.navButton:hover {
+  opacity: 0.8;
+}
+
+.navButtonPrev {
+  composes: navButton;
+  margin-right: 1.5em;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAwCAYAAAB5R9gVAAAABGdBTUEAALGPC/xhBQAAAVVJREFUWAnN2G0KgjAYwPHpGfRkaZeqvgQaK+hY3SUHrk1YzNLay/OiEFp92I+/Mp2F2Mh2lLISWnflFjzH263RQjzMZ19wgs73ez0o1WmtW+dgA01VxrE3p6l2GLsnBy1VYQOtVSEH/atCCgqpQgKKqYIOiq2CBkqtggLKqQIKgqgCBjpJ2Y5CdJ+zrT9A7HHSTA1dxUdHgzCqJIEwq0SDsKsEg6iqBIEoq/wEcVRZBXFV+QJxV5mBtlDFB5VjYTaGZ2sf4R9PM7U9ZU+lLuaetPP/5Die3ToO1+u+MKtHs06qODB2zBnI/jBd4MPQm1VkY79Tb18gB+C62FdBFsZR6yeIo1YQiLJWMIiqVjQIu1YSCLNWFgijVjYIuhYYCKoWKAiiFgoopxYaKLUWOii2FgkophYp6F3r42W5A9s9OcgNvva8xQaysKXlFytoqdYmQH6tF3toSUo0INq9AAAAAElFTkSuQmCC');
+}
+
+.navButtonNext {
+  composes: navButton;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAwCAYAAAB5R9gVAAAABGdBTUEAALGPC/xhBQAAAXRJREFUWAnN119ugjAcwPHWzJ1gnmxzB/BBE0n24m4xfNkTaOL7wOtsl3AXMMb+Vjaa1BG00N8fSEibPpAP3xAKKs2yjzTPH9RAjhEo9WzPr/Vm8zgE0+gXATAxxuxtqeJ9t5tIwv5AtQAApsfT6TPdbp+kUBcgVwvO51KqVhMkXKsVJFXrOkigVhCIs1Y4iKlWZxB1rX4gwlpRIIpa8SDkWmggrFq4IIRaJKCYWnSgnrXIQV1r8YD+1Vrn+bReagysIFfLABRt31v8oBu1xEBttfRbltmfjgEcWh9snUS2kNdBK6WN1vrOWxObWsz+fjxevsxmB1GQDfINWiev83nhaoiB/CoOU438oPrhXS0WpQ9xc1ZQWxWHqUYe0I0qrKCQKjygDlXIQV2r0IF6ViEBxVTBBSFUQQNhVYkHIVeJAtkNsbQ7c1LtzP6FsObhb2rCKv7NBIGoq4SDmKoEgTirXAcJVGkFSVVpgoSrXICGUMUH/QBZNSUy5XWUhwAAAABJRU5ErkJggg==');
+}
+
+.navButtonInteractionDisabled {
+  display: none;
+}
+
+.caption {
+  display: table-caption;
+}
+
+.weekdays {
+  display: table-header-group;
+  margin-top: 1em;
+}
+
+.weekdaysRow {
+  display: table-row;
+}
+
+.weekday {
+  display: table-cell;
+  padding: 0.5em;
+  color: #8b9898;
+  text-align: center;
+  font-size: 0.875em;
+}
+
+.weekday abbr[title] {
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.body {
+  display: table-row-group;
+}
+
+.week {
+  display: table-row;
+}
+
+.day {
+  display: table-cell;
+  padding: 0.5em;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekNumber {
+  display: table-cell;
+  padding: 0.5em;
+  min-width: 1em;
+  border-right: 1px solid #eaecec;
+  color: #8b9898;
+  vertical-align: middle;
+  text-align: right;
+  font-size: 0.75em;
+  cursor: pointer;
+}
+
+.interactionDisabled .day {
+  cursor: default;
+}
+
+.footer {
+  padding-top: 0.5em;
+}
+
+.todayButton {
+  border: none;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+  color: #4a90e2;
+  font-size: 0.875em;
+  cursor: pointer;
+}
+
+/* Default modifiers */
+.today {
+  color: #d0021b;
+  font-weight: 700;
+}
+
+.outside {
+  color: #8b9898;
+  cursor: default;
+}
+
+.disabled {
+  color: #dce0e0;
+  cursor: default;
+  /* background-color: #eff1f1; */
+}
+
+/* Example modifiers */
+.sunday {
+  background-color: #f7f8f8;
+}
+
+.sunday:not(.today) {
+  color: #dce0e0;
+}
+
+.selected:not(.disabled):not(.outside) {
+  position: relative;
+
+  background-color: #4a90e2;
+  color: #f0f8ff;
+}
+
+.selected:not(.disabled):not(.outside):hover {
+  background-color: #51a0fa;
+}
+
+.container:not(.interactionDisabled)
+  .day:not(.disabled):not(.selected):not(.outside):hover {
+  background-color: #f0f8ff;
+}
+
+/* DayPickerInput */
+.dayPickerInput {
+  display: inline-block;
+}
+
+.overlayWrapper {
+  position: absolute;
+  width: 100%;
+}
+
+.overlay {
+  position: relative;
+  margin-top: 10px;
+
+  z-index: 2;
+  background: white;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}

@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  database:
+    image: ${POSTGRES_DOCKER_IMAGE}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+
+  pgadmin:
+    image: ${PGADMIN_DOCKER_IMAGE}
+    restart: always
+    ports:
+      - ${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}
+    environment:
+      - PGADMIN_DEFAULT_EMAIL
+      - PGADMIN_DEFAULT_PASSWORD
+      - PGADMIN_LISTEN_PORT
+      - GUNICORN_ACCESS_LOGFILE
+
+  api:
+    image: ${NODE_DOCKER_IMAGE}
+    command: /bin/sh -c "npm start -- api"
+    volumes:
+      - "./packages:/code:delegated"
+    ports:
+      - ${NEST_API_PORT}:${NEST_API_PORT}
+    working_dir: /code/api
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+      PORT: ${NEST_API_PORT}
+
+  frontend:
+    image: ${NODE_DOCKER_IMAGE}
+    command: /bin/sh -c "npm start -- frontend -- -p ${NEXT_FRONTEND_PORT}"
+    volumes:
+      - "./packages:/code:delegated"
+    working_dir: /code/frontend
+    ports:
+      - ${NEXT_FRONTEND_PORT}:${NEXT_FRONTEND_PORT}
+    environment:
+      - API_URL
+      - REAL_TIME_APP_BASE_URL
+      - REAL_TIME_SOCKET_ORIGINS
+      - FIREBASE_API_KEY
+      - FIREBASE_AUTH_DOMAIN
+      - FIREBASE_DATABASE_URL
+      - FIREBASE_PROJECT_ID
+      - FIREBASE_STORAGE_BUCKET
+      - FIREBASE_MESSAGING_SENDER_ID
+      - FIREBASE_APP_ID
