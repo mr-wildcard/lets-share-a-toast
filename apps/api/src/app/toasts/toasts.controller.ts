@@ -31,10 +31,6 @@ export class ToastsController {
       throw new ForbiddenException(
         'A TOAST is already opened. You need to close or cancel it first before creating a new one.'
       );
-    } else if (createToastDto?.status !== ToastStatus.OPEN_TO_CONTRIBUTION) {
-      throw new BadRequestException(
-        `A TOAST can only be created with ${ToastStatus.OPEN_TO_CONTRIBUTION} status.`
-      );
     } else {
       return this.toastsService.create(createToastDto);
     }
