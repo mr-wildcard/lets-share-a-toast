@@ -41,16 +41,6 @@ export class SubjectsController {
     return this.subjectsService.findAll();
   }
 
-  @Put(':id')
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() input: UpdateSubjectDto
-  ) {
-    const subject = await this.find(id);
-
-    return this.subjectsService.update(subject, input);
-  }
-
   @Put(':id/status')
   async updateStatus(
     @Param('id', ParseUUIDPipe) id: string,
@@ -59,6 +49,16 @@ export class SubjectsController {
     const subject = await this.find(id);
 
     return this.subjectsService.updateStatus(subject, input);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() input: UpdateSubjectDto
+  ) {
+    const subject = await this.find(id);
+
+    return this.subjectsService.update(subject, input);
   }
 
   @Delete(':id')

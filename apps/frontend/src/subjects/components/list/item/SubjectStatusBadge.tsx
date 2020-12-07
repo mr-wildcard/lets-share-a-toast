@@ -15,7 +15,7 @@ const SubjectStatusBadge: FunctionComponent<Props> = ({ status }) => (
       </C.Badge>
     )}
 
-    {status === SubjectStatus.NOT_AVAILABLE && (
+    {status === SubjectStatus.UNAVAILABLE && (
       <C.Badge variant="solid" colorScheme="red">
         Unavailable
       </C.Badge>

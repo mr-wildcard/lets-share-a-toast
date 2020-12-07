@@ -23,7 +23,7 @@ const SubjectStatusEdited: FunctionComponent<NotificationSubjectEditedStatus> = 
               Available for a TOAST
             </C.Badge>
           )}
-          {data.newStatus === SubjectStatus.NOT_AVAILABLE && (
+          {data.newStatus === SubjectStatus.UNAVAILABLE && (
             <C.Badge variant="solid" colorScheme="red">
               Unavailable
             </C.Badge>

@@ -9,7 +9,7 @@ export default async (req, res) => {
     duration: 10 + Math.round(Math.random() * 110),
     language: faker.random.arrayElement(['FR', 'EN']),
     comment: faker.lorem.lines(),
-    status: faker.random.arrayElement(['AVAILABLE', 'NOT_AVAILABLE', 'DONE']),
+    status: faker.random.arrayElement(['AVAILABLE', 'UNAVAILABLE', 'DONE']),
   }));
 
   try {

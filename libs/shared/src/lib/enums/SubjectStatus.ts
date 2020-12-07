@@ -1,5 +1,5 @@
 export enum SubjectStatus {
   AVAILABLE = 'AVAILABLE',
-  NOT_AVAILABLE = 'NOT_AVAILABLE',
+  UNAVAILABLE = 'UNAVAILABLE',
   DONE = 'DONE',
 }

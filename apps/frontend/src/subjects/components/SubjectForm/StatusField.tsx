@@ -30,7 +30,7 @@ const StatusInfos = {
       It will be automatically submitted to votes for the next TOAST.
     </>
   ),
-  [SubjectStatus.NOT_AVAILABLE]: (
+  [SubjectStatus.UNAVAILABLE]: (
     <>
       You marked this subject as&nbsp;
       <C.Text as="span" fontWeight="bold">
@@ -70,7 +70,7 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
   const statusColors = useMemo(
     () => ({
       [SubjectStatus.AVAILABLE]: theme.colors.green['500'],
-      [SubjectStatus.NOT_AVAILABLE]: theme.colors.red['500'],
+      [SubjectStatus.UNAVAILABLE]: theme.colors.red['500'],
       [SubjectStatus.DONE]: theme.colors.gray['500'],
     }),
     [theme.colors.green, theme.colors.red, theme.colors.gray]
@@ -137,9 +137,9 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
           <C.Button
             mr="-px"
             onClick={() => {
-              form.setFieldValue(field.name, SubjectStatus.NOT_AVAILABLE);
+              form.setFieldValue(field.name, SubjectStatus.UNAVAILABLE);
             }}
-            {...computeStatusButtonStyleProps(SubjectStatus.NOT_AVAILABLE)}
+            {...computeStatusButtonStyleProps(SubjectStatus.UNAVAILABLE)}
           >
             Unavailable
           </C.Button>

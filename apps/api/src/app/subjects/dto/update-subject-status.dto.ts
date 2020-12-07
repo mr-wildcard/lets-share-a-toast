@@ -1,8 +1,7 @@
-import { IsEnum } from 'class-validator';
+import { PickType } from '@nestjs/mapped-types';
 
-import { SubjectStatus } from '@letsshareatoast/shared';
+import { CreateSubjectDto } from 'api/subjects/dto/create-subject.dto';
 
-export class UpdateSubjectStatusDto {
-  @IsEnum(SubjectStatus)
-  readonly status: SubjectStatus;
-}
+export class UpdateSubjectStatusDto extends PickType(CreateSubjectDto, [
+  'status',
+] as const) {}

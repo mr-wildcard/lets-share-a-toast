@@ -281,9 +281,9 @@ const SubjectItem: FunctionComponent<Props> = ({
             </C.Box>
           </MenuItem>
         )}
-        {subject.status !== SubjectStatus.NOT_AVAILABLE && (
+        {subject.status !== SubjectStatus.UNAVAILABLE && (
           <MenuItem
-            onClick={() => changeSubjectStatus(SubjectStatus.NOT_AVAILABLE)}
+            onClick={() => changeSubjectStatus(SubjectStatus.UNAVAILABLE)}
           >
             <C.Box
               d="flex"

@@ -9,14 +9,14 @@ import { StatusFilterValue } from 'frontend/subjects/types';
 const sortedStatusValues: string[] = [
   'all',
   SubjectStatus.AVAILABLE,
-  SubjectStatus.NOT_AVAILABLE,
+  SubjectStatus.UNAVAILABLE,
   SubjectStatus.DONE,
 ];
 
 const sortedStatusLabels: { [value in StatusFilterValue]: string } = {
   all: 'all subjects',
   [SubjectStatus.AVAILABLE]: 'all available subjects',
-  [SubjectStatus.NOT_AVAILABLE]: 'all unavailable subjects',
+  [SubjectStatus.UNAVAILABLE]: 'all unavailable subjects',
   [SubjectStatus.DONE]: 'all given talks',
 };
 
