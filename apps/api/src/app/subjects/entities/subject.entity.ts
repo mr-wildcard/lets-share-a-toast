@@ -14,8 +14,8 @@ import { Toast } from 'api/toasts/entities/toast.entity';
 
 @Entity()
 export class Subject {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;

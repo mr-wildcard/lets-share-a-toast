@@ -15,11 +15,11 @@ export class CreateToastDto {
 
   @IsNotEmpty()
   @IsString()
-  organizer: string;
+  organizerId: string;
 
   @IsNotEmpty()
   @IsString()
-  scribe: string;
+  scribeId: string;
 
   @IsOptional()
   @IsEnum(ToastStatus)

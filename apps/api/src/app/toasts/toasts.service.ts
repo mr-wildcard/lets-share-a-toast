@@ -22,8 +22,8 @@ export class ToastsService {
     const toast = new Toast();
     toast.date = input.date;
     toast.status = input.status;
-    toast.organizer = await this.usersRepository.findOne(input.organizer);
-    toast.scribe = await this.usersRepository.findOne(input.scribe);
+    toast.organizer = await this.usersRepository.findOne(input.organizerId);
+    toast.scribe = await this.usersRepository.findOne(input.scribeId);
 
     return this.toastsRepository.save(toast);
   }
@@ -40,12 +40,12 @@ export class ToastsService {
     toast.date = input.date || toast.date;
     toast.status = input.status || toast.status;
 
-    if (+input.organizer !== toast.organizer.id) {
-      toast.organizer = await this.usersRepository.findOne(input.organizer);
+    if (input.organizerId !== toast.organizer.id) {
+      toast.organizer = await this.usersRepository.findOne(input.organizerId);
     }
 
-    if (+input.scribe !== toast.scribe.id) {
-      toast.scribe = await this.usersRepository.findOne(input.scribe);
+    if (input.scribeId !== toast.scribe.id) {
+      toast.scribe = await this.usersRepository.findOne(input.scribeId);
     }
 
     return this.toastsRepository.save(toast);

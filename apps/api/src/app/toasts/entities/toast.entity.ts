@@ -16,8 +16,8 @@ import { Subject } from 'api/subjects/entities/subject.entity';
 
 @Entity()
 export class Toast {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'date' })
   date: Date;
