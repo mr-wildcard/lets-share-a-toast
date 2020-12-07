@@ -21,7 +21,9 @@ const httpClient = (apiURL: string) => (
 
       nextContext.res.end();
     }
-  } else if (response.headers.get('Content-Type') === 'application/json') {
+  } else if (
+    response.headers.get('Content-Type').includes('application/json')
+  ) {
     return response.json();
   } else {
     return response;
