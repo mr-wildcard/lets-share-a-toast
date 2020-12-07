@@ -10,7 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 
-import { ToastStatus } from '@letsshareatoast/shared';
+import { ToastStatus, getTOASTStatusUtils } from '@letsshareatoast/shared';
 
 import { NotFoundInterceptor } from 'api/interceptors/NotFound';
 import { toastStatusMachine } from 'api/state-machines/toast';
@@ -56,16 +56,13 @@ export class ToastsController {
         `There is no ongoing TOAST to update. You need to create a new one.`
       );
     } else {
-      const statusMachine = toastStatusMachine(currentToast.status);
+      const toastStatusUtils = getTOASTStatusUtils(currentToast.status);
 
-      const { value: nextAvailableStatus } = statusMachine.transition(
-        statusMachine.initialState,
-        'nextStatus'
-      );
-
-      if (nextAvailableStatus !== updateToastDto.status) {
+      if (!toastStatusUtils.isAllowed(updateToastDto.status)) {
         throw new BadRequestException(
-          `Incorrect TOAST status. Status should either be ${nextAvailableStatus} or ${ToastStatus.CANCELLED}`
+          `Incorrect TOAST status. Status should either be ${toastStatusUtils.getNextAllowedStatus()} or ${
+            ToastStatus.CANCELLED
+          }`
         );
       } else {
         return this.toastsService.updateCurrentToast(

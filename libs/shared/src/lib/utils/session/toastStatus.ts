@@ -1,6 +1,6 @@
 import { ToastStatus } from '../../enums/ToastStatus';
 
-const SessionStatusesOrder: ToastStatus[] = [
+const ToastStatusesOrder: ToastStatus[] = [
   ToastStatus.OPEN_TO_CONTRIBUTION,
   ToastStatus.OPEN_FOR_VOTE,
   ToastStatus.VOTE_CLOSED,
@@ -8,19 +8,57 @@ const SessionStatusesOrder: ToastStatus[] = [
   ToastStatus.CLOSED,
 ];
 
-export default function getSessionStatusUtils(sessionStatus: ToastStatus) {
+export const isTOASTOngoing = (toastStatus: ToastStatus) =>
+  toastStatus !== ToastStatus.CLOSED && toastStatus !== ToastStatus.CANCELLED;
+
+export const getTOASTStatusUtils = function (toastStatus: ToastStatus) {
+  const toastIsOngoing = isTOASTOngoing(toastStatus);
+
   return {
     isBefore: (status: ToastStatus) => {
       return (
-        SessionStatusesOrder.indexOf(sessionStatus) <
-        SessionStatusesOrder.indexOf(status)
+        ToastStatusesOrder.indexOf(toastStatus) <
+        ToastStatusesOrder.indexOf(status)
       );
     },
     isAfter: (status: ToastStatus) => {
       return (
-        SessionStatusesOrder.indexOf(sessionStatus) >
-        SessionStatusesOrder.indexOf(status)
+        ToastStatusesOrder.indexOf(toastStatus) >
+        ToastStatusesOrder.indexOf(status)
       );
     },
+    isAllowed(status: ToastStatus) {
+      /**
+       * A closed or cancelled toast can't have its status changed.
+       */
+      if (!toastIsOngoing) {
+        return false;
+      }
+
+      /**
+       * An ongoing toast can be cancelled at any time.
+       */
+      if (status === ToastStatus.CANCELLED) {
+        return true;
+      } else {
+        const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
+        const nextToastStatusIndex = ToastStatusesOrder.indexOf(status);
+
+        /**
+         * Status can be set to the toast only if it is the next
+         * allowed status.
+         */
+        return nextToastStatusIndex === currentToastStatusIndex + 1;
+      }
+    },
+    getNextAllowedStatus(): ToastStatus {
+      if (!toastIsOngoing) {
+        return toastStatus;
+      } else {
+        const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
+
+        return ToastStatusesOrder[currentToastStatusIndex + 1];
+      }
+    },
   };
-}
+};
