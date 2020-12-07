@@ -13,12 +13,12 @@ export class UsersService {
     private usersRepository: Repository<User>
   ) {}
 
-  create(createUserDto: CreateUserDto) {
+  create(input: CreateUserDto) {
     const newUser = new User();
-    newUser.firstName = createUserDto.firstName;
-    newUser.lastName = createUserDto.lastName;
-    newUser.email = createUserDto.email;
-    newUser.picture = createUserDto.picture;
+    newUser.firstName = input.firstName;
+    newUser.lastName = input.lastName;
+    newUser.email = input.email;
+    newUser.picture = input.picture;
 
     return this.usersRepository.save(newUser);
   }
@@ -27,15 +27,15 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.usersRepository.findOne(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, input: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }

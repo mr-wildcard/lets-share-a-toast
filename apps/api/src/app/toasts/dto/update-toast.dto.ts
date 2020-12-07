@@ -1,4 +1,24 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateToastDto } from './create-toast.dto';
+import { PartialType, OmitType } from '@nestjs/mapped-types';
+import {
+  IsDateString,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
-export class UpdateToastDto extends PartialType(CreateToastDto) {}
+import { ToastStatus } from '@letsshareatoast/shared';
+
+export class UpdateToastDto {
+  @IsNotEmpty()
+  @IsDateString()
+  date: Date;
+
+  @IsNotEmpty()
+  @IsString()
+  organizerId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  scribeId: string;
+}

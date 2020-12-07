@@ -8,25 +8,32 @@ import {
   Delete,
   UseInterceptors,
   ParseIntPipe,
+  NotFoundException,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { SubjectsService } from './subjects.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
-import { NotFoundInterceptor } from 'api/interceptors/NotFound';
+import { UpdateSubjectStatusDto } from 'api/subjects/dto/update-subject-status.dto';
 
 @Controller('subjects')
-@UseInterceptors(NotFoundInterceptor)
 export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
 
   @Post()
-  create(@Body() createSubjectDto: CreateSubjectDto) {
-    return this.subjectsService.create(createSubjectDto);
+  create(@Body() input: CreateSubjectDto) {
+    return this.subjectsService.create(input);
   }
 
   @Get(':id')
-  find(@Param('id', ParseIntPipe) id: number) {
-    return this.subjectsService.findOneOrFail(id);
+  async find(@Param('id', ParseUUIDPipe) id: string) {
+    const subject = await this.subjectsService.findOne(id);
+
+    if (!subject) {
+      throw new NotFoundException("Subject doesn't exist.");
+    }
+
+    return this.subjectsService.findOne(id);
   }
 
   @Get()
@@ -35,15 +42,27 @@ export class SubjectsController {
   }
 
   @Put(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateSubjectDto: UpdateSubjectDto
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() input: UpdateSubjectDto
   ) {
-    return this.subjectsService.update(id, updateSubjectDto);
+    const subject = await this.find(id);
+
+    return this.subjectsService.update(subject, input);
+  }
+
+  @Put(':id/status')
+  async updateStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() input: UpdateSubjectStatusDto
+  ) {
+    const subject = await this.find(id);
+
+    return this.subjectsService.updateStatus(subject, input);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.subjectsService.remove(id);
   }
 }

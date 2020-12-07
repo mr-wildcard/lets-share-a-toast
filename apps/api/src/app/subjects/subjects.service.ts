@@ -8,6 +8,7 @@ import { User } from 'api/users/entities/user.entity';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { Subject } from './entities/subject.entity';
+import { UpdateSubjectStatusDto } from 'api/subjects/dto/update-subject-status.dto';
 
 @Injectable()
 export class SubjectsService {
@@ -32,8 +33,8 @@ export class SubjectsService {
     return this.subjectsRepository.save(newSubject);
   }
 
-  findOneOrFail(id: number) {
-    return this.subjectsRepository.findOneOrFail(id);
+  findOne(id: string) {
+    return this.subjectsRepository.findOne(id);
   }
 
   findAll() {
@@ -48,9 +49,7 @@ export class SubjectsService {
     });
   }
 
-  async update(id: number, input: UpdateSubjectDto) {
-    const subject = await this.findOneOrFail(id);
-
+  async update(subject: Subject, input: UpdateSubjectDto) {
     subject.title = input.title || subject.title;
     subject.description = input.description || subject.description;
     subject.comment = input.comment || subject.comment;
@@ -66,7 +65,13 @@ export class SubjectsService {
     return this.subjectsRepository.save(subject);
   }
 
-  remove(id: number) {
+  updateStatus(subject: Subject, input: UpdateSubjectStatusDto) {
+    subject.status = input.status || subject.status;
+
+    return this.subjectsRepository.save(subject);
+  }
+
+  remove(id: string) {
     return this.subjectsRepository.delete(id);
   }
 }

@@ -8,6 +8,8 @@ import { User } from 'api/users/entities/user.entity';
 import { CreateToastDto } from './dto/create-toast.dto';
 import { UpdateToastDto } from './dto/update-toast.dto';
 import { Toast } from './entities/toast.entity';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { UpdateToastStatusDto } from 'api/toasts/dto/update-toast-status.dto';
 
 @Injectable()
 export class ToastsService {
@@ -36,18 +38,25 @@ export class ToastsService {
     });
   }
 
-  async updateCurrentToast(toast: Toast, input: UpdateToastDto) {
-    toast.date = input.date || toast.date;
-    toast.status = input.status || toast.status;
+  async updateCurrentToast(currentToast: Toast, input: UpdateToastDto) {
+    currentToast.date = input.date || currentToast.date;
 
-    if (input.organizerId !== toast.organizer.id) {
-      toast.organizer = await this.usersRepository.findOne(input.organizerId);
+    if (input.organizerId !== currentToast.organizer.id) {
+      currentToast.organizer = await this.usersRepository.findOne(
+        input.organizerId
+      );
     }
 
-    if (input.scribeId !== toast.scribe.id) {
-      toast.scribe = await this.usersRepository.findOne(input.scribeId);
+    if (input.scribeId !== currentToast.scribe.id) {
+      currentToast.scribe = await this.usersRepository.findOne(input.scribeId);
     }
 
-    return this.toastsRepository.save(toast);
+    return this.toastsRepository.save(currentToast);
+  }
+
+  updateCurrentToastStatus(currentToast: Toast, input: UpdateToastStatusDto) {
+    currentToast.status = input.status;
+
+    return this.toastsRepository.save(currentToast);
   }
 }

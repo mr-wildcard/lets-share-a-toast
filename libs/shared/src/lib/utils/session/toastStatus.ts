@@ -44,11 +44,17 @@ export const getTOASTStatusUtils = function (toastStatus: ToastStatus) {
         const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
         const nextToastStatusIndex = ToastStatusesOrder.indexOf(status);
 
+        const nextStatusIsSameThanCurrent =
+          nextToastStatusIndex === currentToastStatusIndex;
+
+        const nextStatusIsNextAllowedStatus =
+          nextToastStatusIndex === currentToastStatusIndex + 1;
+
         /**
          * Status can be set to the toast only if it is the next
-         * allowed status.
+         * allowed status or the same status as the current one.
          */
-        return nextToastStatusIndex === currentToastStatusIndex + 1;
+        return nextStatusIsSameThanCurrent || nextStatusIsNextAllowedStatus;
       }
     },
     getNextAllowedStatus(): ToastStatus {

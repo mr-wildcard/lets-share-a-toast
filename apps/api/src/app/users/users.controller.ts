@@ -18,8 +18,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() input: CreateUserDto) {
+    return this.usersService.create(input);
   }
 
   @Get()
@@ -28,7 +28,7 @@ export class UsersController {
   }
 
   @Get('me')
-  findProfile() {
+  getCurrentLoggedInUser() {
     return {
       firstName: 'Julien',
       lastName: 'Viala',
@@ -38,20 +38,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Put(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto
-  ) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Param('id') id: string, @Body() input: UpdateUserDto) {
+    return this.usersService.update(id, input);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
 }

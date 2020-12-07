@@ -12,19 +12,17 @@ import {
 
 import { ToastStatus, getTOASTStatusUtils } from '@letsshareatoast/shared';
 
-import { NotFoundInterceptor } from 'api/interceptors/NotFound';
-import { toastStatusMachine } from 'api/state-machines/toast';
 import { CreateToastDto } from './dto/create-toast.dto';
 import { UpdateToastDto } from './dto/update-toast.dto';
 import { ToastsService } from './toasts.service';
+import { UpdateToastStatusDto } from './dto/update-toast-status.dto';
 
 @Controller('toasts')
-@UseInterceptors(NotFoundInterceptor)
 export class ToastsController {
   constructor(private readonly toastsService: ToastsService) {}
 
   @Post()
-  async create(@Body() createToastDto: CreateToastDto) {
+  async create(@Body() input: CreateToastDto) {
     const currentToast = await this.toastsService.findCurrentToast();
 
     if (currentToast) {
@@ -32,7 +30,7 @@ export class ToastsController {
         'A TOAST is already opened. You need to close or cancel it first before creating a new one.'
       );
     } else {
-      return this.toastsService.create(createToastDto);
+      return this.toastsService.create(input);
     }
   }
 
@@ -41,35 +39,32 @@ export class ToastsController {
     const currentToast = await this.toastsService.findCurrentToast();
 
     if (!currentToast) {
-      throw new NotFoundException('No TOAST is currently opened.');
-    } else {
-      return currentToast;
+      throw new NotFoundException('No current TOAST found.');
     }
+
+    return currentToast;
   }
 
   @Put('current')
-  async update(@Body() updateToastDto: UpdateToastDto) {
-    const currentToast = await this.toastsService.findCurrentToast();
+  async updateCurrentToast(@Body() input: UpdateToastDto) {
+    const currentToast = await this.getCurrentToast();
 
-    if (!currentToast) {
-      throw new ForbiddenException(
-        `There is no ongoing TOAST to update. You need to create a new one.`
+    return this.toastsService.updateCurrentToast(currentToast, input);
+  }
+
+  @Put('current/status')
+  async updateCurrentToastStatus(@Body() input: UpdateToastStatusDto) {
+    const currentToast = await this.getCurrentToast();
+    const toastStatusUtils = getTOASTStatusUtils(currentToast.status);
+
+    if (!toastStatusUtils.isAllowed(input.status)) {
+      throw new BadRequestException(
+        `Incorrect TOAST status. Status should either be ${toastStatusUtils.getNextAllowedStatus()} or ${
+          ToastStatus.CANCELLED
+        }`
       );
     } else {
-      const toastStatusUtils = getTOASTStatusUtils(currentToast.status);
-
-      if (!toastStatusUtils.isAllowed(updateToastDto.status)) {
-        throw new BadRequestException(
-          `Incorrect TOAST status. Status should either be ${toastStatusUtils.getNextAllowedStatus()} or ${
-            ToastStatus.CANCELLED
-          }`
-        );
-      } else {
-        return this.toastsService.updateCurrentToast(
-          currentToast,
-          updateToastDto
-        );
-      }
+      return this.toastsService.updateCurrentToastStatus(currentToast, input);
     }
   }
 }
