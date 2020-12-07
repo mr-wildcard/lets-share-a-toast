@@ -40,18 +40,15 @@ const CloseVotes: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      const updatedToast: Toast = await request(
-        `/toasts/${currentToast.id}/status`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            status: ToastStatus.VOTE_CLOSED,
-          }),
-        }
-      );
+      const updatedToast: Toast = await request(APIPaths.CURRENT_TOAST, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: ToastStatus.VOTE_CLOSED,
+        }),
+      });
 
       mutate(APIPaths.CURRENT_TOAST, updatedToast);
 

@@ -109,7 +109,7 @@ const DeadHeatSubjects: FunctionComponent<Props> = ({
                   console.log('Dead heat subjects', { values });
 
                   const updatedToast: Toast = await request(
-                    `/toasts/${currentToast.id}/status`,
+                    APIPaths.CURRENT_TOAST,
                     {
                       method: 'PUT',
                       headers: {

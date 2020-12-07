@@ -52,7 +52,7 @@ const SubjectItem: FunctionComponent<Props> = ({
         const request = http();
 
         await request(APIPaths.SUBJECT.replace(':id', subject.id), {
-          method: 'PATCH',
+          method: 'PUT',
           body: JSON.stringify({
             status,
           }),

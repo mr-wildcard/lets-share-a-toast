@@ -15,7 +15,6 @@ export enum APIPaths {
   USERS = '/users',
   SUBJECTS = '/subjects',
   SUBJECT = '/subjects/:id',
-  SUBJECT_STATUS = '/subjects/:id/status',
   OAUTH = '/oauth2/authorize/google',
 }
 

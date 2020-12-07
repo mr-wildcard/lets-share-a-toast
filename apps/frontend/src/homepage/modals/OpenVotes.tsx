@@ -89,7 +89,7 @@ const OpenVotes: FunctionComponent<Props> = ({
                 const request = http();
 
                 const updatedToast: Toast = await request(
-                  `/toasts/${currentToast.id}/status`,
+                  APIPaths.CURRENT_TOAST,
                   {
                     method: 'PUT',
                     headers: {

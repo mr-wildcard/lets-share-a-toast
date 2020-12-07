@@ -4,7 +4,7 @@ import * as C from '@chakra-ui/react';
 import { ToastStatus, Toast } from '@letsshareatoast/shared';
 
 import http from 'frontend/core/httpClient';
-import { pageColors } from 'frontend/core/constants';
+import { APIPaths, pageColors } from 'frontend/core/constants';
 import HighlightedText from 'frontend/core/components/HighlightedText';
 import Image from 'frontend/core/components/Image';
 import useStores from 'frontend/core/hooks/useStores';
@@ -40,7 +40,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      await request(`/toasts/${currentToast.id}/status`, {
+      await request(APIPaths.CURRENT_TOAST, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -159,20 +159,17 @@ const Form: FunctionComponent<Props> = ({
             dueDate: values.dueDate.toString(),
           });
         } else {
-          updatedToast = await request(
-            APIPaths.TOAST.replace(':id', currentToast.id),
-            {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                date: values.dueDate,
-                organizerId: values.organizer.id,
-                scribeId: values.scribe.id,
-              }),
-            }
-          );
+          updatedToast = await request(APIPaths.CURRENT_TOAST, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              date: values.dueDate,
+              organizerId: values.organizer.id,
+              scribeId: values.scribe.id,
+            }),
+          });
 
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
         }
