@@ -54,7 +54,6 @@ export class SubjectsService {
     subject.description = input.description || subject.description;
     subject.comment = input.comment || subject.comment;
     subject.cover = input.cover || subject.cover;
-    subject.status = input.status || subject.status;
     subject.duration = input.duration || subject.duration;
     subject.language = input.language || subject.language;
 
