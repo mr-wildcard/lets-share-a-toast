@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 type CustomImageProps = C.ImageProps & {
   width: number;
@@ -32,7 +32,7 @@ const Img: FunctionComponent<CustomImageProps> = ({
 
   return (
     <C.Box
-      as="img"
+      as={C.Img}
       src={imageLoaded ? src : srcPlaceholder}
       style={{
         ...style,
@@ -41,10 +41,8 @@ const Img: FunctionComponent<CustomImageProps> = ({
       }}
       opacity={0}
       transition="opacity 1000ms ease-out"
-      width={`${width}px`}
-      height={`${height}px`}
-      // TS screams that `onLoad` event is not for HTMLDivElement, but I'm using `as="img"` here so everything's fine.
-      // @ts-ignore
+      htmlWidth={`${width}px`}
+      htmlHeight={`${height}px`}
       onLoad={() => {
         if (imageLoaded) {
           setShowImage(true);

@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
-import NotificationSubjectEdited from 'notifications/types/NotificationSubjectEdited';
-import NotificationWrapper from '../NotificationWrapper';
+import NotificationSubjectEdited from 'frontend/notifications/types/NotificationSubjectEdited';
 import Image from 'frontend/core/components/Image';
+import NotificationWrapper from '../NotificationWrapper';
 
 const SubjectEdited: FunctionComponent<NotificationSubjectEdited> = (data) => {
   return (

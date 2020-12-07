@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { AddIcon, TimeIcon, CheckIcon, WarningIcon } from '@chakra-ui/icons';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -23,7 +23,7 @@ import {
 } from '@letsshareatoast/shared';
 
 import http from 'frontend/core/httpClient';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 import useStores from 'frontend/core/hooks/useStores';
 import { APIPaths, pageColors, urlRegex } from 'frontend/core/constants';
 import HighlightedText from 'frontend/core/components/HighlightedText';

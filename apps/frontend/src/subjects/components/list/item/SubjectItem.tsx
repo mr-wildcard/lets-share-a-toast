@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
@@ -14,7 +14,7 @@ import { SubjectStatus, Subject } from '@letsshareatoast/shared';
 import http from 'frontend/core/httpClient';
 import { APIPaths } from 'frontend/core/constants';
 import useStores from 'frontend/core/hooks/useStores';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 import Image from 'frontend/core/components/Image';
 import DeleteSubjectModal from 'frontend/subjects/components/modals/DeleteSubjectModal';
 import ViewSubjectModal from 'frontend/subjects/components/modals/ViewSubjectModal';

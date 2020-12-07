@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import Image from 'frontend/core/components/Image';
 import css from './DeadHeatSubjects.module.css';

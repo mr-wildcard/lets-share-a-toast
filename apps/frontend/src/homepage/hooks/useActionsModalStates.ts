@@ -1,4 +1,4 @@
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 const useActionsModalStates = () => {
   const toast = C.useDisclosure();

@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { animated, config, useTransition } from 'react-spring';
 
 import ImageComponent from 'frontend/core/components/Image';

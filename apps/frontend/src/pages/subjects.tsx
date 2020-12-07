@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
 import Head from 'next/head';
 import useSWR from 'swr';

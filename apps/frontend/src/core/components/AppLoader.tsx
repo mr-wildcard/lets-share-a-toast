@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
 import { animated, useTransition, config } from 'react-spring';
 

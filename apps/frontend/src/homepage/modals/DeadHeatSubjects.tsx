@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useRef } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { Field, Form, Formik } from 'formik';
 import { mutate } from 'swr';
@@ -12,7 +12,7 @@ import {
   pageColors,
   TOTAL_NEEDED_SUBJECTS,
 } from 'frontend/core/constants';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 import HighlightedText from 'frontend/core/components/HighlightedText';
 import Image from 'frontend/core/components/Image';
 import getUserFullname from 'frontend/core/helpers/getUserFullname';

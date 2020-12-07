@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { ToastStatus, Toast } from '@letsshareatoast/shared';
 
@@ -7,7 +7,7 @@ import http from 'frontend/core/httpClient';
 import { pageColors } from 'frontend/core/constants';
 import HighlightedText from 'frontend/core/components/HighlightedText';
 import Image from 'frontend/core/components/Image';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 import useStores from 'frontend/core/hooks/useStores';
 
 interface Props {

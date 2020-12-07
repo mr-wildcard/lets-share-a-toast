@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useRef } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { Field, FieldProps, Form, Formik } from 'formik';
 import { mutate } from 'swr';
 
@@ -12,7 +12,7 @@ import HighlightedText from 'frontend/core/components/HighlightedText';
 import Image from 'frontend/core/components/Image';
 import { getTOASTIsReadySlackMessage } from 'frontend/homepage/helpers';
 import http from 'frontend/core/httpClient';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 import useStores from 'frontend/core/hooks/useStores';
 
 interface FormErrors {

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
-import NotificationSubjectRemoved from 'notifications/types/NotificationSubjectRemoved';
+import NotificationSubjectRemoved from 'frontend/notifications/types/NotificationSubjectRemoved';
 import NotificationWrapper from '../NotificationWrapper';
 
 const SubjectRemoved: FunctionComponent<NotificationSubjectRemoved> = (

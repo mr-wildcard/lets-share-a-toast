@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useEffect } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import {
   CloseIcon,
   SettingsIcon,

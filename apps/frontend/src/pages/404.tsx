@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
 
 import useStores from 'frontend/core/hooks/useStores';

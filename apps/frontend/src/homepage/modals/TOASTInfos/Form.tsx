@@ -1,26 +1,25 @@
 import React, { FunctionComponent, Ref, useCallback, useMemo } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { Field, FieldProps, Formik, Form as FormikForm } from 'formik';
-import { mutate } from 'swr';
-import dayjs from 'dayjs';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
+import dayjs from 'dayjs';
 
 import { User, CurrentToast, Toast } from '@letsshareatoast/shared';
 
 import http from 'frontend/core/httpClient';
 import { APIPaths, Pathnames } from 'frontend/core/constants';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 import getUserFullname from 'frontend/core/helpers/getUserFullname';
 import getAppURL from 'frontend/core/helpers/getAppURL';
 import isToast from 'frontend/core/helpers/isToast';
+import { getFormattedTOASTDateWithRemainingDays } from 'frontend/core/helpers/timing';
 import useStores from 'frontend/core/hooks/useStores';
 import Image from 'frontend/core/components/Image';
 import SelectUserInput from 'frontend/core/components/form/SelectUserInput';
 import DateInput from './DateInput';
 import DatePickerNavBar from './DatePickerNavBar';
 import DatePickerCaption from './DatePickerCaption';
-import { getFormattedTOASTDateWithRemainingDays } from 'frontend/core/helpers/timing';
 
 const datePickerCSS = require('./DatePicker.module.css');
 

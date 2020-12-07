@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { FieldProps } from 'formik';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { SubjectStatus } from '@letsshareatoast/shared';
 

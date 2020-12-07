@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { useSpring, animated, interpolate, config } from 'react-spring';
 import dayjs from 'dayjs';
 

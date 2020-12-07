@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import { ErrorProps } from 'next/error';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import ColoredBackground from 'frontend/core/components/ColoredBackground';
 import useStores from 'frontend/core/hooks/useStores';

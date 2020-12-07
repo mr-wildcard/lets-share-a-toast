@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { SettingsIcon } from '@chakra-ui/icons';
 import useSWR from 'swr';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

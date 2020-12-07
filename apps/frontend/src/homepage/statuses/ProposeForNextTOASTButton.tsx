@@ -1,5 +1,5 @@
 import React from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { animated, useSpring } from 'react-spring';
 import Link from 'next/link';
 

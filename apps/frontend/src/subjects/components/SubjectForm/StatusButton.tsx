@@ -1,5 +1,5 @@
 import React from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 const StatusButton = (props, ref) => {
   const { isChecked, children, ...rest } = props;

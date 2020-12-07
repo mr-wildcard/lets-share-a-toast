@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { CurrentToast } from '@letsshareatoast/shared';
 

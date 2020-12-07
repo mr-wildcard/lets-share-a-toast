@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { UseToastOptions } from '@chakra-ui/core';
+import { UseToastOptions } from '@chakra-ui/react';
 import { trigger } from 'swr';
 
 import { APIPaths } from 'frontend/core/constants';
@@ -10,14 +10,14 @@ import SubjectRemoved from './components/messages/SubjectRemoved';
 import TOASTCreated from './components/messages/TOASTCreated';
 import TOASTInfosChanged from './components/messages/TOASTInfosChanged';
 import TOASTStatusChanged from './components/messages/TOASTStatusChanged';
-import NotificationSubjectAdded from 'notifications/types/NotificationSubjectAdded';
-import NotificationSubjectEdited from 'notifications/types/NotificationSubjectEdited';
-import NotificationSubjectRemoved from 'notifications/types/NotificationSubjectRemoved';
-import NotificationSubjectEditedStatus from 'notifications/types/NotificationSubjectEditedStatus';
-import NotificationTOASTCreated from 'notifications/types/NotificationTOASTCreated';
-import NotificationTOASTStatusChanged from 'notifications/types/NotificationTOASTStatusChanged';
-import Notification from 'notifications/types/Notification';
-import Toaster from 'notifications/types/Toaster';
+import NotificationSubjectAdded from 'frontend/notifications/types/NotificationSubjectAdded';
+import NotificationSubjectEdited from 'frontend/notifications/types/NotificationSubjectEdited';
+import NotificationSubjectRemoved from 'frontend/notifications/types/NotificationSubjectRemoved';
+import NotificationSubjectEditedStatus from 'frontend/notifications/types/NotificationSubjectEditedStatus';
+import NotificationTOASTCreated from 'frontend/notifications/types/NotificationTOASTCreated';
+import NotificationTOASTStatusChanged from 'frontend/notifications/types/NotificationTOASTStatusChanged';
+import Notification from 'frontend/notifications/types/Notification';
+import Toaster from 'frontend/notifications/types/Toaster';
 
 const getToasterConfig = (Component: ReactElement): UseToastOptions => ({
   duration: 5000,

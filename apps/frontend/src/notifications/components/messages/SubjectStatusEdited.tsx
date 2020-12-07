@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { SubjectStatus } from '@letsshareatoast/shared';
 
-import NotificationSubjectEditedStatus from 'notifications/types/NotificationSubjectEditedStatus';
+import NotificationSubjectEditedStatus from 'frontend/notifications/types/NotificationSubjectEditedStatus';
 import NotificationWrapper from '../NotificationWrapper';
 
 const SubjectStatusEdited: FunctionComponent<NotificationSubjectEditedStatus> = (

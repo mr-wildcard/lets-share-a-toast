@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { ToastStatus, Toast } from '@letsshareatoast/shared';
 
@@ -8,7 +8,7 @@ import { pageColors } from 'frontend/core/constants';
 import HighlightedText from 'frontend/core/components/HighlightedText';
 import Image from 'frontend/core/components/Image';
 import useStores from 'frontend/core/hooks/useStores';
-import NotificationType from 'notifications/types/NotificationType';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 
 interface Props {
   isOpen: boolean;

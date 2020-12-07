@@ -1,5 +1,5 @@
 import React from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { CalendarIcon } from '@chakra-ui/icons';
 
 class DateInput extends React.PureComponent {

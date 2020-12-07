@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { AppProps } from 'next/app';
-import { ChakraProvider, CSSReset, useToast } from '@chakra-ui/core';
+import { ChakraProvider, CSSReset, useToast } from '@chakra-ui/react';
 import { SWRConfig } from 'swr';
 
 import 'frontend/core/styles.css';
@@ -25,20 +25,10 @@ const LetsShareATOAST: FunctionComponent<AppProps> = ({
         'padding-left: 70px; background: url(https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif); background-size: contain; background-repeat: no-repeat; font-size: 60px;color: black; font-weight: bold; font-style: italic; font-family: serif; text-shadow: 3px 3px 0 rgb(245,221,8)'
       );
     }
-  }, []);
 
-  // TODO: merge with all other useEffect once is resolved.
-  useEffect(() => {
-    // notifications.initialize(toaster);
-    // Giving `toaster` as dependency will run this useEffect after each component updates.
-    // This a bug I reported to Chakra UI : https://github.com/chakra-ui/chakra-ui/issues/1448
-    // TODO: merge all useEffect into one once issue is resolved.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     ui.setWindowSize();
-  }, [ui]);
+    notifications.initialize(toaster);
+  }, [ui, notifications]);
 
   return (
     <ChakraProvider theme={customTheme}>

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useRef } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 
 import { Subject } from '@letsshareatoast/shared';
 

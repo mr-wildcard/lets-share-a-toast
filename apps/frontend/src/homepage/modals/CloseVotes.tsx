@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import * as C from '@chakra-ui/core';
+import * as C from '@chakra-ui/react';
 import { mutate } from 'swr';
 
 import { ToastStatus, Toast } from '@letsshareatoast/shared';
@@ -10,8 +10,8 @@ import HighlightedText from 'frontend/core/components/HighlightedText';
 import useStores from 'frontend/core/hooks/useStores';
 import Image from 'frontend/core/components/Image';
 import { getTOASTElapsedTimeSinceCreation } from 'frontend/core/helpers/timing';
-import NotificationType from 'notifications/types/NotificationType';
 import toastHasDeadheatSubjects from 'frontend/core/helpers/toastHasDeadheatSubjects';
+import NotificationType from 'frontend/notifications/types/NotificationType';
 
 interface Props {
   isOpen: boolean;
