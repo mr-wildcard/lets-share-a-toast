@@ -88,6 +88,8 @@ export default class Notifications {
   }
 
   public send(user: User, event: NotificationType, data?: any): void {
+    return;
+
     this._socket.emit(event, {
       username: user.firstName,
       userPicture: user.picture,

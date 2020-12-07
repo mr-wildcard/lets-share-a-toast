@@ -27,7 +27,7 @@ const LetsShareATOAST: FunctionComponent<AppProps> = ({
     }
 
     ui.setWindowSize();
-    notifications.initialize(toaster);
+    // notifications.initialize(toaster);
   }, [ui, notifications]);
 
   return (
