@@ -158,7 +158,7 @@ const Form: FunctionComponent<Props> = ({
           });
         } else {
           await request(APIPaths.SUBJECT.replace(':id', subject.id), {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
