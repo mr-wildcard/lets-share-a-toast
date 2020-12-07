@@ -31,6 +31,7 @@ const Img: FunctionComponent<CustomImageProps> = ({
   }, [src, width, height]);
 
   return (
+    // @ts-ignore
     <C.Box
       as={C.Img}
       src={imageLoaded ? src : srcPlaceholder}
