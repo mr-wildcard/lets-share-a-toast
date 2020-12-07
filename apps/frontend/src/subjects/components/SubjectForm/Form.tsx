@@ -98,7 +98,7 @@ const Form: FunctionComponent<Props> = ({
         duration: isCreatingSubject ? 30 : subject.duration,
         speakers: isCreatingSubject ? [toJS(auth.profile)] : subject.speakers,
         cover: isCreatingSubject ? '' : subject.cover || '',
-        comment: isCreatingSubject ? '' : subject.comment,
+        comment: isCreatingSubject ? '' : subject.comment || '',
         status: isCreatingSubject ? SubjectStatus.AVAILABLE : subject.status,
       }}
       validate={(values: FormValues) => {

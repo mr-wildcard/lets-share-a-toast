@@ -46,7 +46,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
   subject,
   closeModal,
 }) => {
-  const hasCover = subject.cover?.length > 0;
+  const hasCover = subject.cover !== null;
 
   const [coverLoaded, setCoverLoaded] = useState(!hasCover);
 

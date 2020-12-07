@@ -5,6 +5,7 @@ import { User } from './User';
 export interface Subject {
   id: string;
   title: string;
+  description: string;
   speakers: User[];
   status: SubjectStatus;
   duration: number;
@@ -13,7 +14,6 @@ export interface Subject {
   createdDate: string;
   lastModifiedBy: string;
   lastModifiedDate: string;
-  cover?: string;
-  description?: string;
-  comment?: string;
+  cover: string | null;
+  comment: string | null;
 }
