@@ -51,7 +51,7 @@ const SubjectItem: FunctionComponent<Props> = ({
       try {
         const request = http();
 
-        await request(APIPaths.SUBJECT.replace(':id', subject.id), {
+        await request(APIPaths.SUBJECT_STATUS.replace(':id', subject.id), {
           method: 'PUT',
           body: JSON.stringify({
             status,
