@@ -24,7 +24,7 @@ services:
 
   api:
     image: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "npm start -- api"
+    command: /bin/sh -c "yarn start api"
     volumes:
       - "./:/code:delegated"
     ports:
@@ -33,10 +33,12 @@ services:
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
       PORT: ${API_PORT}
+      EKIBOT_SLACK_NOTIFICATION_ENDPOINT: ${EKIBOT_SLACK_NOTIFICATION_ENDPOINT}
+      EKIBOT_SLACK_NOTIFICATION_CHANNEL: ${EKIBOT_SLACK_NOTIFICATION_CHANNEL}
 
   frontend:
     image: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "npm start -- frontend -- --port ${FRONTEND_PORT}"
+    command: /bin/sh -c "yarn start frontend --port ${FRONTEND_PORT}"
     volumes:
       - "./:/code:delegated"
     working_dir: /code
