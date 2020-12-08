@@ -52,6 +52,7 @@ export class SubjectsService {
   async update(subject: Subject, input: UpdateSubjectDto) {
     subject.title = input.title || subject.title;
     subject.description = input.description || subject.description;
+    subject.status = input.status || subject.status;
     subject.comment = input.comment || subject.comment;
     subject.cover = input.cover || subject.cover;
     subject.duration = input.duration || subject.duration;
