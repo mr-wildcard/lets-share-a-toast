@@ -1,4 +1,3 @@
-import { User } from 'firebase';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -13,7 +12,7 @@ export const init = () => {
   }
 };
 
-export const signin = (): Promise<User> => {
+export const signin = (): Promise<firebase.User> => {
   return new Promise((resolve, reject) => {
     const firebaseAuth = firebase.auth();
 
@@ -33,7 +32,7 @@ export const signin = (): Promise<User> => {
   });
 };
 
-export const signout = () => {
+export const signout = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const firebaseAuth = firebase.auth();
 
