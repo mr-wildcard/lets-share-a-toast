@@ -53,10 +53,10 @@ export class SubjectsService {
     subject.title = input.title || subject.title;
     subject.description = input.description || subject.description;
     subject.status = input.status || subject.status;
-    subject.comment = input.comment || subject.comment;
-    subject.cover = input.cover || subject.cover;
     subject.duration = input.duration || subject.duration;
     subject.language = input.language || subject.language;
+    subject.comment = input.comment || null;
+    subject.cover = input.cover || null;
 
     if (input.speakers) {
       subject.speakers = await this.usersRepository.findByIds(input.speakers);
