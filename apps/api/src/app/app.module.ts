@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 
@@ -20,6 +20,7 @@ import { Toast } from './toasts/entities/toast.entity';
     UsersModule,
     SubjectsModule,
     ToastsModule,
+    HttpModule,
   ],
 })
 export class AppModule {

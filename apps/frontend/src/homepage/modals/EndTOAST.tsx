@@ -40,7 +40,7 @@ const EndTOAST: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      await request(APIPaths.CURRENT_TOAST, {
+      await request(APIPaths.CURRENT_TOAST_STATUS, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

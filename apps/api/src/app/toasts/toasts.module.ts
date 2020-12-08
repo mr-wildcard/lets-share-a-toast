@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { User } from 'api/users/entities/user.entity';
@@ -9,7 +9,11 @@ import { Toast } from './entities/toast.entity';
 import { SubjectsModule } from 'api/subjects/subjects.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Toast, User]), SubjectsModule],
+  imports: [
+    TypeOrmModule.forFeature([Toast, User]),
+    HttpModule,
+    SubjectsModule,
+  ],
   controllers: [ToastsController],
   providers: [ToastsService],
 })

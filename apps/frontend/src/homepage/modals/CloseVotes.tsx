@@ -40,7 +40,7 @@ const CloseVotes: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      const updatedToast: Toast = await request(APIPaths.CURRENT_TOAST, {
+      const updatedToast: Toast = await request(APIPaths.CURRENT_TOAST_STATUS, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ const CloseVotes: FunctionComponent<Props> = ({
           <C.ModalHeader textAlign="center">
             <C.Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
-                Close voting toast
+                Close voting session
               </HighlightedText>
               <Image
                 position="absolute"

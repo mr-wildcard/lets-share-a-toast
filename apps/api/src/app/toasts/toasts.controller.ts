@@ -7,11 +7,17 @@ import {
   NotFoundException,
   Post,
   Put,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 
-import { ToastStatus, getTOASTStatusUtils } from '@letsshareatoast/shared';
+import {
+  ToastStatus,
+  getTOASTStatusUtils,
+  URLQueryParams,
+} from '@letsshareatoast/shared';
 
+import { SlackNotificationsInterceptor } from 'api/interceptors/slack-notifications.interceptor';
 import { CreateToastDto } from './dto/create-toast.dto';
 import { UpdateToastDto } from './dto/update-toast.dto';
 import { ToastsService } from './toasts.service';
@@ -22,6 +28,7 @@ export class ToastsController {
   constructor(private readonly toastsService: ToastsService) {}
 
   @Post()
+  @UseInterceptors(SlackNotificationsInterceptor)
   async create(@Body() input: CreateToastDto) {
     const currentToast = await this.toastsService.findCurrentToast();
 
@@ -53,6 +60,7 @@ export class ToastsController {
   }
 
   @Put('current/status')
+  @UseInterceptors(SlackNotificationsInterceptor)
   async updateCurrentToastStatus(@Body() input: UpdateToastStatusDto) {
     const currentToast = await this.getCurrentToast();
     const toastStatusUtils = getTOASTStatusUtils(currentToast.status);

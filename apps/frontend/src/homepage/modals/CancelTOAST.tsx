@@ -40,7 +40,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      await request(APIPaths.CURRENT_TOAST, {
+      await request(APIPaths.CURRENT_TOAST_STATUS, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
                   src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                 />
                 <C.Text as="span" pl={35}>
-                  Abord
+                  Do nothing
                 </C.Text>
               </C.Button>
             </C.Stack>

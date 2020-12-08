@@ -3,7 +3,7 @@ import * as C from '@chakra-ui/react';
 import { Field, FieldProps, Form, Formik } from 'formik';
 import { mutate } from 'swr';
 
-import { ToastStatus, Toast } from '@letsshareatoast/shared';
+import { ToastStatus, Toast, URLQueryParams } from '@letsshareatoast/shared';
 
 import http from 'frontend/core/httpClient';
 import { APIPaths, pageColors, Pathnames } from 'frontend/core/constants';
@@ -11,17 +11,17 @@ import HighlightedText from 'frontend/core/components/HighlightedText';
 import Image from 'frontend/core/components/Image';
 import getAppURL from 'frontend/core/helpers/getAppURL';
 import { getTOASTElapsedTimeSinceCreation } from 'frontend/core/helpers/timing';
+import getAPIEndpointWithSlackNotification from 'frontend/core/helpers/getAPIEndpointWithSlackNotification';
 import NotificationType from 'frontend/notifications/types/NotificationType';
 import useStores from 'frontend/core/hooks/useStores';
+import slackNotificationFieldsAreValid from 'frontend/core/helpers/form/validateSlackNotificationFields';
+import SlackNotificationFieldsValues from 'frontend/core/models/form/SlackNotificationFieldsValues';
 
 interface FormErrors {
   notificationMessage?: boolean;
 }
 
-interface FormValues {
-  notifySlack: boolean;
-  notificationMessage: string;
-}
+type FormValues = SlackNotificationFieldsValues;
 
 interface Props {
   isOpen: boolean;
@@ -72,14 +72,10 @@ const OpenVotes: FunctionComponent<Props> = ({
                 notifySlack: false,
                 notificationMessage: `@here 🍞TOAST 🍞 Ladies and gentlemen, it's time to vote for your favorite subjects: ${votingToastURL}`,
               }}
-              validateOnMount={true}
               validate={(values: FormValues) => {
                 const errors: FormErrors = {};
 
-                if (
-                  values.notifySlack &&
-                  values.notificationMessage.length === 0
-                ) {
+                if (!slackNotificationFieldsAreValid(values)) {
                   errors.notificationMessage = true;
                 }
 
@@ -88,20 +84,22 @@ const OpenVotes: FunctionComponent<Props> = ({
               onSubmit={async (values): Promise<void> => {
                 const request = http();
 
-                const updatedToast: Toast = await request(
-                  APIPaths.CURRENT_TOAST,
-                  {
-                    method: 'PUT',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      status: ToastStatus.OPEN_FOR_VOTE,
-                      notifySlack: values.notifySlack,
-                      notificationMessage: values.notificationMessage,
-                    }),
-                  }
-                );
+                const endpoint = values.notifySlack
+                  ? getAPIEndpointWithSlackNotification(
+                      APIPaths.CURRENT_TOAST_STATUS,
+                      values.notificationMessage
+                    )
+                  : APIPaths.CURRENT_TOAST_STATUS;
+
+                const updatedToast: Toast = await request(endpoint, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    status: ToastStatus.OPEN_FOR_VOTE,
+                  }),
+                });
 
                 notifications.send(
                   auth.profile,

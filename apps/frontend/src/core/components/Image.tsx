@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import * as C from '@chakra-ui/react';
 
-type CustomImageProps = C.ImageProps & {
+interface CustomImageProps extends C.ImageProps {
   width: number;
   height: number;
-};
+}
 
 const srcPlaceholder =
   'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';

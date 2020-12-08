@@ -3,9 +3,7 @@ import * as C from '@chakra-ui/react';
 import { Field, FieldProps, Form, Formik } from 'formik';
 import { mutate } from 'swr';
 
-import { Toast } from '@letsshareatoast/shared';
-
-import { ToastStatus } from '@letsshareatoast/shared';
+import { Toast, ToastStatus } from '@letsshareatoast/shared';
 
 import { APIPaths, pageColors } from 'frontend/core/constants';
 import HighlightedText from 'frontend/core/components/HighlightedText';
@@ -14,15 +12,15 @@ import { getTOASTIsReadySlackMessage } from 'frontend/homepage/helpers';
 import http from 'frontend/core/httpClient';
 import NotificationType from 'frontend/notifications/types/NotificationType';
 import useStores from 'frontend/core/hooks/useStores';
+import slackNotificationFieldsAreValid from 'frontend/core/helpers/form/validateSlackNotificationFields';
+import SlackNotificationFieldsValues from 'frontend/core/models/form/SlackNotificationFieldsValues';
+import getAPIEndpointWithSlackNotification from 'frontend/core/helpers/getAPIEndpointWithSlackNotification';
 
 interface FormErrors {
   notificationMessage?: boolean;
 }
 
-interface FormValues {
-  notifySlack: boolean;
-  notificationMessage: string;
-}
+type FormValues = SlackNotificationFieldsValues;
 
 interface Props {
   isOpen: boolean;
@@ -74,33 +72,31 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
             validate={(values: FormValues) => {
               const errors: FormErrors = {};
 
-              if (
-                values.notifySlack &&
-                values.notificationMessage.length === 0
-              ) {
+              if (!slackNotificationFieldsAreValid(values)) {
                 errors.notificationMessage = true;
               }
 
               return errors;
             }}
             onSubmit={async (values) => {
-              console.log('Mark TOAST as ready', { values });
+              const endpoint = values.notifySlack
+                ? getAPIEndpointWithSlackNotification(
+                    APIPaths.CURRENT_TOAST_STATUS,
+                    values.notificationMessage
+                  )
+                : APIPaths.CURRENT_TOAST_STATUS;
 
               const request = http();
 
-              const updatedToast: Toast = await request(
-                APIPaths.CURRENT_TOAST,
-                {
-                  method: 'PUT',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    status: ToastStatus.WAITING_FOR_TOAST,
-                    // TODO: add slack messages
-                  }),
-                }
-              );
+              const updatedToast: Toast = await request(endpoint, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  status: ToastStatus.WAITING_FOR_TOAST,
+                }),
+              });
 
               notifications.send(
                 auth.profile,

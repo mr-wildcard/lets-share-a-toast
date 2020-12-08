@@ -5,7 +5,12 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import useSWR, { mutate } from 'swr';
 import dayjs from 'dayjs';
 
-import { User, CurrentToast, Toast } from '@letsshareatoast/shared';
+import {
+  User,
+  CurrentToast,
+  Toast,
+  URLQueryParams,
+} from '@letsshareatoast/shared';
 
 import http from 'frontend/core/httpClient';
 import { APIPaths, Pathnames } from 'frontend/core/constants';
@@ -20,6 +25,9 @@ import SelectUserInput from 'frontend/core/components/form/SelectUserInput';
 import DateInput from './DateInput';
 import DatePickerNavBar from './DatePickerNavBar';
 import DatePickerCaption from './DatePickerCaption';
+import getAPIEndpointWithSlackNotification from 'frontend/core/helpers/getAPIEndpointWithSlackNotification';
+import SlackNotificationFieldsValues from 'frontend/core/models/form/SlackNotificationFieldsValues';
+import slackNotificationFieldsAreValid from 'frontend/core/helpers/form/validateSlackNotificationFields';
 
 const datePickerCSS = require('./DatePicker.module.css');
 
@@ -36,17 +44,15 @@ interface FormErrors {
   scribe?: boolean;
 }
 
-interface FormValues {
+interface FormValues extends SlackNotificationFieldsValues {
   dueDate: Date;
   organizer: User;
   scribe: User;
-  notifySlack: boolean;
-  notificationMessage: string;
 }
 
 const today = new Date();
 
-const defaultSlackNotificationMessage = `@here {{PROFILE}} scheduled a new 🍞 TOAST 🍞 for {{SCHEDULED_DATE}} !
+const defaultSlackNotificationMessage = `@here {{PROFILE}} scheduled a new 🍞 TOAST 🍞 for {{DATE}} ! 🎉
 ✍️ It’s time to add / remove / update your subject(s) {{URL}}`;
 
 const Form: FunctionComponent<Props> = ({
@@ -62,7 +68,7 @@ const Form: FunctionComponent<Props> = ({
       return notificationText
         .replace('{{PROFILE}}', getUserFullname(auth.profile))
         .replace(
-          '{{SCHEDULED_DATE}}',
+          '{{DATE}}',
           getFormattedTOASTDateWithRemainingDays(toastDueDate)
         )
         .replace('{{URL}}', getAppURL() + Pathnames.SUBJECTS);
@@ -105,15 +111,14 @@ const Form: FunctionComponent<Props> = ({
         }
 
         if (
+          !isToast(currentToast) &&
+          !slackNotificationFieldsAreValid(values)
+        ) {
           /**
            * In case we're editing a TOAST we don't need to
            * validate those fields as they're not displayed.
            * Only while creating a TOAST.
            */
-          isToast(currentToast) &&
-          values.notifySlack &&
-          values.notificationMessage.length === 0
-        ) {
           errors.notificationMessage = true;
         }
 
@@ -134,7 +139,21 @@ const Form: FunctionComponent<Props> = ({
         let updatedToast: Toast;
 
         if (!isToast(currentToast)) {
-          updatedToast = await request(APIPaths.TOASTS, {
+          /**
+           * Create a TOAST.
+           */
+
+          const endpoint = values.notifySlack
+            ? getAPIEndpointWithSlackNotification(
+                APIPaths.TOASTS,
+                getFormattedSlackNotification(
+                  values.notificationMessage,
+                  values.dueDate
+                )
+              )
+            : APIPaths.TOASTS;
+
+          updatedToast = await request(endpoint, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -143,13 +162,6 @@ const Form: FunctionComponent<Props> = ({
               date: values.dueDate,
               organizerId: values.organizer.id,
               scribeId: values.scribe.id,
-              notifySlack: values.notifySlack,
-              notificationMessage: values.notifySlack
-                ? getFormattedSlackNotification(
-                    values.notificationMessage,
-                    values.dueDate
-                  )
-                : '',
             }),
           });
 
@@ -159,6 +171,10 @@ const Form: FunctionComponent<Props> = ({
             dueDate: values.dueDate.toString(),
           });
         } else {
+          /**
+           * Edit current TOAST.
+           */
+
           updatedToast = await request(APIPaths.CURRENT_TOAST, {
             method: 'PUT',
             headers: {

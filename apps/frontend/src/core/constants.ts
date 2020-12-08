@@ -11,6 +11,7 @@ export enum APIPaths {
   TOAST = '/toasts/:id',
   TOAST_STATUS = '/toasts/:id/status',
   CURRENT_TOAST = '/toasts/current',
+  CURRENT_TOAST_STATUS = '/toasts/current/status',
   PROFILE = '/users/me',
   USERS = '/users',
   SUBJECTS = '/subjects',
