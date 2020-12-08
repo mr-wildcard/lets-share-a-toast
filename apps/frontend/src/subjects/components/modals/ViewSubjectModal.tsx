@@ -117,7 +117,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
             }}
             bg="white"
             position="relative"
-            mH="100%"
+            maxHeight="100%"
             overflowY="auto"
           >
             <C.ModalHeader p={0}>
@@ -187,12 +187,14 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
             <C.Divider m={0} />
 
             <C.ModalCloseButton
-              border="1px solid grey"
+              d="flex"
               bg="rgba(255, 255, 255, 0.7)"
               _hover={{
                 bg: 'white',
               }}
-              top={30}
+              p={2}
+              top={hasCover ? '30px' : '20px'}
+              borderRadius={4}
             />
 
             <C.ModalBody p={4}>

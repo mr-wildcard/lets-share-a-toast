@@ -194,29 +194,31 @@ const Form: FunctionComponent<Props> = ({
 
         return (
           <C.DrawerContent overflowY="auto">
-            <C.DrawerCloseButton />
             <FormikForm>
               <C.DrawerHeader>
-                <C.Flex align="center" justify="center">
-                  <C.Text textAlign="center" wordBreak="break-word">
-                    <HighlightedText
-                      d="inline-block"
-                      bgColor={pageColors.subjects}
-                      animDelay={500}
-                    >
-                      {isCreatingSubject
-                        ? values.title.length
-                          ? `Creating new subject: "${values.title}"`
-                          : 'Creating a new subject'
-                        : `Editing subject: "${subject.title}"`}
-                    </HighlightedText>
-                  </C.Text>
-                  <Image
-                    transform="translateY(-3px)"
-                    width={141}
-                    height={65}
-                    src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
-                  />
+                <C.Flex wrap="nowrap" align="start">
+                  <C.Flex align="center" justify="center" mx="auto">
+                    <C.Text textAlign="center" wordBreak="break-word">
+                      <HighlightedText
+                        d="inline-block"
+                        bgColor={pageColors.subjects}
+                        animDelay={500}
+                      >
+                        {isCreatingSubject
+                          ? values.title.length
+                            ? `Creating new subject: "${values.title}"`
+                            : 'Creating a new subject'
+                          : `Editing subject: "${subject.title}"`}
+                      </HighlightedText>
+                    </C.Text>
+                    <Image
+                      transform="translateY(-3px)"
+                      width={141}
+                      height={65}
+                      src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
+                    />
+                  </C.Flex>
+                  <C.DrawerCloseButton padding={2} />
                 </C.Flex>
               </C.DrawerHeader>
 
@@ -431,7 +433,8 @@ const Form: FunctionComponent<Props> = ({
                                   {...field}
                                   id={field.name}
                                   borderRadius="0"
-                                  placeholder="Insert an external URL of an image"
+                                  placeholder="Image URL"
+                                  bg="white"
                                 />
                                 {urlIsValid && (
                                   <C.InputRightAddon>

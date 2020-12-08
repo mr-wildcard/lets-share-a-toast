@@ -39,7 +39,7 @@ const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
             size="lg"
             px={4}
           >
-            <C.Text pl={60}>Join voting toast !</C.Text>
+            <C.Text pl="60px">Join voting session !</C.Text>
           </C.Button>
         </Link>
         <Image

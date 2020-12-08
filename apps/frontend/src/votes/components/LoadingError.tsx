@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import { LoadingErrorCode } from 'votes/types';
+import { LoadingErrorCode } from '../types';
 
 interface Props {
   error: LoadingErrorCode;

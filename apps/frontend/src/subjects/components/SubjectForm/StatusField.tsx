@@ -108,7 +108,7 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
       </C.Box>
       <C.Box
         position="relative"
-        borderRadius={4}
+        borderRadius={8}
         overflow="hidden"
         d="inline-block"
       >
@@ -126,7 +126,7 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
         />
         <C.ButtonGroup isAttached variant="outline">
           <C.Button
-            mr="-px"
+            mr="-1px"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.AVAILABLE);
             }}
@@ -135,7 +135,7 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
             Available
           </C.Button>
           <C.Button
-            mr="-px"
+            mr="-1px"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.UNAVAILABLE);
             }}

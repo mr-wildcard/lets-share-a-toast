@@ -91,7 +91,6 @@ const SubjectItem: FunctionComponent<Props> = ({
 
           await request(APIPaths.SUBJECT.replace(':id', subject.id), {
             headers: {
-              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             method: 'DELETE',
@@ -203,23 +202,22 @@ const SubjectItem: FunctionComponent<Props> = ({
               <SubjectStatusBadge status={subject.status} />
 
               <C.Box ml="auto" className={css.actions} opacity={0}>
-                <C.ButtonGroup isAttached variant="outline">
+                <C.ButtonGroup isAttached variant="outline" size="sm">
                   <C.IconButton
-                    size="sm"
                     icon={<ViewIcon />}
                     onClick={viewModal.onOpen}
+                    mr="-1px"
                     title="View"
                     aria-label="View"
                   />
                   <C.IconButton
-                    size="sm"
                     icon={<EditIcon />}
                     onClick={() => onEditSubject(subject)}
+                    mr="-1px"
                     title="Edit"
                     aria-label="Edit"
                   />
                   <C.IconButton
-                    size="sm"
                     icon={<DeleteIcon />}
                     onClick={deleteModal.onOpen}
                     title="Delete"
