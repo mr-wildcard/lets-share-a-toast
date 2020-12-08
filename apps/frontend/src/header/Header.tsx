@@ -51,7 +51,11 @@ const Header = () => {
   }, [profile, auth, appLoading]);
 
   return (
-    <C.Box px={`${spacing.stylizedGap}px`} height={header.height} as="header">
+    <C.Box
+      px={`${spacing.stylizedGap}px`}
+      height={`${header.height}px`}
+      as="header"
+    >
       <C.Flex justify="space-between" align="center" h="100%">
         <C.Flex flex={1} align="center">
           <C.Box mr={20}>
