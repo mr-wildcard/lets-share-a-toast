@@ -16,17 +16,22 @@ export const signin = (): Promise<firebase.User> => {
   return new Promise((resolve, reject) => {
     const firebaseAuth = firebase.auth();
 
-    const cleanupListener = firebaseAuth.onAuthStateChanged(function (user) {
-      if (user) {
-        cleanupListener();
+    const cleanupListener = firebaseAuth.onAuthStateChanged(
+      function (user) {
+        if (user) {
+          cleanupListener();
 
-        resolve(user);
-      } else {
-        reject(
-          "Couldn't signin to Firebase. User object from Firebase is falsy."
-        );
+          resolve(user);
+        } else {
+          reject(
+            "Couldn't signin to Firebase. User object from Firebase is falsy."
+          );
+        }
+      },
+      (error: firebase.auth.Error) => {
+        console.error(`[Firebase signin error]:`, { error });
       }
-    });
+    );
 
     firebaseAuth.signInAnonymously().catch(reject);
   });
@@ -36,17 +41,22 @@ export const signout = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const firebaseAuth = firebase.auth();
 
-    const cleanupListener = firebaseAuth.onAuthStateChanged(function (user) {
-      if (!user) {
-        cleanupListener();
+    const cleanupListener = firebaseAuth.onAuthStateChanged(
+      function (user) {
+        if (!user) {
+          cleanupListener();
 
-        resolve();
-      } else {
-        reject(
-          "Couldn't signout from Firebase. User object from Firebse should be falsy."
-        );
+          resolve();
+        } else {
+          reject(
+            "Couldn't signout from Firebase. User object from Firebse should be falsy."
+          );
+        }
+      },
+      (error: firebase.auth.Error) => {
+        console.error(`[Firebase signout error]:`, { error });
       }
-    });
+    );
 
     firebaseAuth.signOut().catch(reject);
   });
