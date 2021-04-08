@@ -10,8 +10,12 @@ interface Props {
 const SubjectStatusBadge: FunctionComponent<Props> = ({ status }) => (
   <>
     {status === SubjectStatus.AVAILABLE && (
-      <C.Badge variant="solid" colorScheme="green">
-        Available for a TOAST
+      <C.Badge
+        variant="solid"
+        colorScheme="green"
+        title="Available for a TOAST"
+      >
+        Available
       </C.Badge>
     )}
 

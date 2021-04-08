@@ -1,21 +1,27 @@
 import { createContext, useContext } from 'react';
-import { useStaticRendering } from 'mobx-react-lite';
+import { configure } from 'mobx';
+import { enableStaticRendering } from 'mobx-react-lite';
 
 import UI from 'frontend/core/stores/UI';
 import Auth from 'frontend/core/stores/Auth';
 import Voting from 'frontend/core/stores/Voting';
 import Notifications from 'frontend/core/stores/Notifications';
-import AppLoading from 'frontend/core/stores/AppLoading';
+import AppLoader from 'frontend/core/stores/AppLoader';
+import CurrentToastSession from 'frontend/core/stores/CurrentToastSession';
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useStaticRendering(!process.browser);
+enableStaticRendering(!process.browser);
+
+configure({
+  enforceActions: 'never',
+});
 
 const storesContext = createContext({
   auth: new Auth(),
   ui: new UI(),
   voting: new Voting(),
   notifications: new Notifications(),
-  appLoading: new AppLoading(),
+  appLoader: new AppLoader(),
+  currentToastSession: new CurrentToastSession(),
 });
 
 export default function useStores() {

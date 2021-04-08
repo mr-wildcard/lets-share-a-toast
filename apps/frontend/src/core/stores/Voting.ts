@@ -1,55 +1,78 @@
-import { observable, when } from 'mobx';
-import { firestore, User } from 'firebase';
+import { computed, makeObservable, observable } from 'mobx';
+import firebase from 'firebase';
 
-import { Toast, FirebaseVotingSession } from '@letsshareatoast/shared';
+import {
+  FirebaseCollections,
+  FirebaseVotingSessionDocument,
+  ClientSideVoteEvent,
+  RealTimeVote,
+} from '@letsshareatoast/shared';
 
 export default class Voting {
-  private _currentToast: Toast;
+  private initializing = false;
+  private database: firebase.firestore.Firestore;
+  private firebaseUser: firebase.auth.UserCredential;
+  private socket: SocketIOClient.Socket;
 
-  @observable
-  private _database: firestore.Firestore;
-
-  @observable
   public initialized = false;
-
-  @observable
-  public session: FirebaseVotingSession;
-
-  private firebaseUser: User;
+  public session?: FirebaseVotingSessionDocument;
 
   constructor() {
-    when(
-      () => !!this._database,
-      () => {
-        this._database
-          .collection('voting-session')
-          .doc(this._currentToast.id)
-          .onSnapshot((doc) => {
-            this.session = doc.data();
-          });
-      }
-    );
-
-    when(
-      () => !!this.session,
-      () => {
-        this.initialized = true;
-      }
-    );
+    makeObservable(this, {
+      session: observable,
+    });
   }
 
-  public async initialize(currentToast: Toast): Promise<void> {
-    this._currentToast = currentToast;
+  public async initialize(): Promise<void> {
+    if (this.initializing || this.initialized) {
+      return;
+    }
 
-    const { init, signin, getDatabase } = await import('../firebase');
+    this.initializing = true;
 
-    init();
+    const { init } = await import('frontend/core/firebase');
+
+    const { database, signin } = init();
 
     if (!this.firebaseUser) {
       this.firebaseUser = await signin();
     }
 
-    this._database = getDatabase();
+    if (!this.database) {
+      this.database = database;
+    }
+
+    if (!this.socket) {
+      const { getVotingSessionSocket } = await import('frontend/core/sockets');
+
+      this.socket = getVotingSessionSocket();
+    }
+
+    this.initializing = false;
+    this.initialized = true;
+  }
+
+  public listenToVotes(currentToastId: string) {
+    const removeVotesListener = this.database
+      .collection(FirebaseCollections.VOTING_SESSION)
+      .doc(currentToastId)
+      .onSnapshot(
+        (
+          doc: firebase.firestore.DocumentSnapshot<FirebaseVotingSessionDocument>
+        ) => {
+          this.session = doc.data();
+        }
+      );
+
+    return () => {
+      removeVotesListener();
+
+      this.session = undefined;
+    };
+  }
+
+  public toggleVote(vote: RealTimeVote): void {
+    this.socket.emit(ClientSideVoteEvent.TOGGLED_VOTE, vote);
   }
 
   public async closeVotingSession(): Promise<void> {

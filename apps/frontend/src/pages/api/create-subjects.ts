@@ -1,24 +1,44 @@
 import 'isomorphic-unfetch';
 import faker from 'faker';
 
+import { SubjectLanguage, SubjectStatus } from '@letsshareatoast/shared';
+
 export default async (req, res) => {
+  const usersData = await fetch('http://api:3000/users');
+  const users = await usersData.json();
+
   const subjects = new Array(20).fill(0).map(() => ({
     title: faker.lorem.sentence(),
-    speakers: ['8b8cee60-4ff8-4a23-87a9-4fcd3f077fb1'],
+    /// speakers: ['db855e2b-ddb2-4cb2-8662-c351ba58e37f'],
+    speakers: [
+      ...new Set(
+        new Array(Math.floor(Math.random() * users.length - 1))
+          .fill(0)
+          .map(() => {
+            return users[Math.ceil(Math.random() * users.length - 1)].id;
+          })
+      ),
+    ],
     description: faker.lorem.lines(),
     duration: 10 + Math.round(Math.random() * 110),
-    language: faker.random.arrayElement(['FR', 'EN']),
+    language: faker.random.arrayElement([
+      SubjectLanguage.EN,
+      SubjectLanguage.FR,
+    ]),
     comment: faker.lorem.lines(),
-    status: faker.random.arrayElement(['AVAILABLE', 'UNAVAILABLE', 'DONE']),
+    status: faker.random.arrayElement([
+      SubjectStatus.AVAILABLE,
+      SubjectStatus.UNAVAILABLE,
+      SubjectStatus.DONE,
+    ]),
   }));
 
   try {
     await Promise.all(
       subjects.map((subject) => {
-        fetch('http://localhost:8080/subjects', {
+        fetch('http://api:3000/subjects', {
           headers: {
             'content-type': 'application/json',
-            Cookie: '',
           },
           body: JSON.stringify(subject),
           method: 'POST',

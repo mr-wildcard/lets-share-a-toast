@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import * as C from '@chakra-ui/react';
-import { animated, config, useTransition } from 'react-spring';
+import { animated, config, useTransition } from '@react-spring/web';
 
 import ImageComponent from 'frontend/core/components/Image';
 import getSupportedVisibilityAPI from 'frontend/core/helpers/getSupportedVisibilityAPI';

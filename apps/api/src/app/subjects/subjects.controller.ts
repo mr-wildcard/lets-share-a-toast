@@ -1,28 +1,58 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
-  UseInterceptors,
-  ParseIntPipe,
+  Get,
   NotFoundException,
+  Param,
   ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
 } from '@nestjs/common';
-import { SubjectsService } from './subjects.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+
+import { SubjectStatus, ToastStatus } from '@letsshareatoast/shared';
+
+import { NotificationType } from 'api/enums/NotificationType';
+import { ToastsService } from 'api/toasts/toasts.service';
+import { VotingSessionService } from 'api/firebase/voting-session.service';
+import { Subject } from './entities/subject.entity';
+import { UpdateSubjectStatusDto } from './dto/update-subject-status.dto';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
-import { UpdateSubjectStatusDto } from 'api/subjects/dto/update-subject-status.dto';
+import { SubjectsService } from './subjects.service';
 
 @Controller('subjects')
 export class SubjectsController {
-  constructor(private readonly subjectsService: SubjectsService) {}
+  constructor(
+    private readonly subjectsService: SubjectsService,
+    private readonly toastsService: ToastsService,
+    private readonly firestoreVotingSessionService: VotingSessionService,
+    private readonly eventEmitter: EventEmitter2
+  ) {}
 
   @Post()
-  create(@Body() input: CreateSubjectDto) {
-    return this.subjectsService.create(input);
+  async create(@Body() input: CreateSubjectDto) {
+    const createdSubject = await this.subjectsService.create(input);
+
+    const currentToastOpenToVotes = await this.toastsService.findOneByStatus(
+      ToastStatus.OPEN_FOR_VOTE
+    );
+
+    if (currentToastOpenToVotes) {
+      await this.firestoreVotingSessionService.addSubject(
+        currentToastOpenToVotes.id,
+        createdSubject.id
+      );
+    }
+
+    /**
+     * Emit event about the creation
+     */
+    this.eventEmitter.emit(NotificationType.SUBJECT_CREATED);
+
+    return createdSubject;
   }
 
   @Get(':id')
@@ -37,8 +67,8 @@ export class SubjectsController {
   }
 
   @Get()
-  findAll() {
-    return this.subjectsService.findAll();
+  findAll(@Query('id') ids?: string[]) {
+    return this.subjectsService.findAll(ids);
   }
 
   @Put(':id/status')
@@ -47,6 +77,23 @@ export class SubjectsController {
     @Body() input: UpdateSubjectStatusDto
   ) {
     const subject = await this.find(id);
+
+    const currentToastOpenToVotes = await this.toastsService.findOneByStatus(
+      ToastStatus.OPEN_FOR_VOTE
+    );
+
+    if (currentToastOpenToVotes) {
+      this.toggleSubjectCurrentVotingSession(
+        currentToastOpenToVotes.id,
+        subject,
+        input
+      );
+    }
+
+    /**
+     * Emit event about the status update
+     */
+    this.eventEmitter.emit(NotificationType.SUBJECT_STATUS_CHANGED);
 
     return this.subjectsService.updateStatus(subject, input);
   }
@@ -58,11 +105,86 @@ export class SubjectsController {
   ) {
     const subject = await this.find(id);
 
-    return this.subjectsService.update(subject, input);
+    const currentToastOpenToVotes = await this.toastsService.findOneByStatus(
+      ToastStatus.OPEN_FOR_VOTE
+    );
+
+    if (currentToastOpenToVotes) {
+      this.toggleSubjectCurrentVotingSession(
+        currentToastOpenToVotes.id,
+        subject,
+        input
+      );
+    }
+
+    const updatedSubject = await this.subjectsService.update(subject, input);
+
+    /**
+     * Emit event about the update
+     */
+    this.eventEmitter.emit(NotificationType.SUBJECT_UPDATED);
+
+    return updatedSubject;
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.subjectsService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) subjectId: string) {
+    const result = await this.subjectsService.remove(subjectId);
+
+    /**
+     * Emit event about the deletion
+     */
+    this.eventEmitter.emit(NotificationType.SUBJECT_DELETED);
+
+    const currentToastOpenToVotes = await this.toastsService.findOneByStatus(
+      ToastStatus.OPEN_FOR_VOTE
+    );
+
+    if (currentToastOpenToVotes) {
+      this.firestoreVotingSessionService.deleteSubject(
+        currentToastOpenToVotes.id,
+        subjectId
+      );
+    }
+
+    return result;
+  }
+
+  /**
+   * Add or remove subject from current voting session on Firebase.
+   * @param currentToastId
+   * @param oldSubject
+   * @param updateInput
+   */
+  toggleSubjectCurrentVotingSession(
+    currentToastId: string,
+    oldSubject: Subject,
+    updateInput: UpdateSubjectStatusDto | UpdateSubjectDto
+  ) {
+    /**
+     * If subject status went from available to any other status and a current TOAST voting session is opened,
+     * this subject is probably in the voting session of Firebase and need to be removed from it.
+     */
+    if (
+      oldSubject.status === SubjectStatus.AVAILABLE &&
+      updateInput.status !== SubjectStatus.AVAILABLE
+    ) {
+      return this.firestoreVotingSessionService.deleteSubject(
+        currentToastId,
+        oldSubject.id
+      );
+    } else if (
+      /**
+       * If subject wasn't available and its status changed to a suitable status for the voting session,
+       * we need to add it to the ongoing voting session on Firebase.
+       */
+      oldSubject.status !== SubjectStatus.AVAILABLE &&
+      updateInput.status === SubjectStatus.AVAILABLE
+    ) {
+      return this.firestoreVotingSessionService.addSubject(
+        currentToastId,
+        oldSubject.id
+      );
+    }
   }
 }

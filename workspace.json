@@ -14,7 +14,9 @@
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
             "tsConfig": "apps/api/tsconfig.app.json",
-            "assets": ["apps/api/src/assets"]
+            "assets": [
+              "apps/api/src/assets"
+            ]
           },
           "configurations": {
             "production": {
@@ -39,7 +41,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/api/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/api/**/*.ts"
+            ]
           }
         },
         "test": {
@@ -89,7 +93,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/frontend/**/*.{ts,tsx}"]
+            "lintFilePatterns": [
+              "apps/frontend/**/*.{ts,tsx}"
+            ]
           }
         },
         "test": {
@@ -110,7 +116,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/shared/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/shared/**/*.ts"
+            ]
           }
         },
         "test": {

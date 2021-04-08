@@ -8,10 +8,10 @@ export enum Pathnames {
 
 export enum APIPaths {
   TOASTS = '/toasts',
-  TOAST = '/toasts/:id',
-  TOAST_STATUS = '/toasts/:id/status',
-  CURRENT_TOAST = '/toasts/current',
-  CURRENT_TOAST_STATUS = '/toasts/current/status',
+  TOAST_CURRENT = '/toasts/current',
+  TOAST_CURRENT_STATUS = '/toasts/current/status',
+  TOAST_CURRENT_SYNC = '/toasts/current/synchronize',
+  TOAST_CURRENT_SELECTED_SUBJECT = '/toasts/current/selected-subjects',
   PROFILE = '/users/me',
   USERS = '/users',
   SUBJECTS = '/subjects',
@@ -21,9 +21,6 @@ export enum APIPaths {
 }
 
 const FONT_FAMILY_LOGO = '"Kaushan Script", cursive';
-
-// TODO: make this constant dynamic from API current toast.
-export const TOTAL_NEEDED_SUBJECTS = 2;
 
 export const header = {
   height: 60,

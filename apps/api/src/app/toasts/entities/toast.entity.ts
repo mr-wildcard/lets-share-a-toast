@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { ToastStatus } from '@letsshareatoast/shared';
+import { SubjectsTotalVotes, ToastStatus } from '@letsshareatoast/shared';
 
 import { User } from 'api/users/entities/user.entity';
 import { Subject } from 'api/subjects/entities/subject.entity';
@@ -34,9 +34,15 @@ export class Toast {
   })
   status: ToastStatus;
 
+  @Column({ default: 2 })
+  maxSelectableSubjects: number;
+
   @ManyToMany(() => Subject, { eager: true })
   @JoinTable()
   selectedSubjects: Subject[];
+
+  @Column('simple-json', { default: {} })
+  votes: SubjectsTotalVotes;
 
   @CreateDateColumn()
   createdDate: Date;

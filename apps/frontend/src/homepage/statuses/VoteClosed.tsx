@@ -4,11 +4,10 @@ import * as C from '@chakra-ui/react';
 
 import { Toast } from '@letsshareatoast/shared';
 
-import { TOTAL_NEEDED_SUBJECTS } from 'frontend/core/constants';
 import { getTOASTElapsedTimeSinceCreation } from 'frontend/core/helpers/timing';
 import Image from 'frontend/core/components/Image';
 import toastHasDeadheatSubjects from 'frontend/core/helpers/toastHasDeadheatSubjects';
-import ProposeForNextTOASTButton from 'frontend/homepage/statuses/ProposeForNextTOASTButton';
+import ProposeSubjectForNextTOASTButton from 'frontend/homepage/statuses/ProposeSubjectForNextTOASTButton';
 import WhosInChargeRecap from './WhosInChargeRecap';
 
 interface Props {
@@ -37,8 +36,8 @@ const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
             src="https://media.giphy.com/media/Ve5vfhwsox2G3bJ44O/giphy.gif"
           />
           <C.Text fontSize="lg">
-            Voting toast closed with more than {TOTAL_NEEDED_SUBJECTS}&nbsp;
-            subjects. <br />
+            Voting session ended with more than {toast.maxSelectableSubjects}
+            &nbsp; subjects. <br />
             Go to TOAST management below to settle this.
           </C.Text>
         </C.Box>
@@ -46,7 +45,7 @@ const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
 
       {!toastHasDeadheatSubjects(toast) && (
         <C.Box mt={5}>
-          <ProposeForNextTOASTButton />
+          <ProposeSubjectForNextTOASTButton />
         </C.Box>
       )}
     </C.Box>

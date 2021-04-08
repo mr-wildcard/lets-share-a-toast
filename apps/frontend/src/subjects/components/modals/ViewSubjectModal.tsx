@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import * as C from '@chakra-ui/react';
-import { useSpring, animated, interpolate, config } from 'react-spring';
+import { useSpring, animated, interpolate, config } from '@react-spring/web';
 import dayjs from 'dayjs';
 
 import { Subject } from '@letsshareatoast/shared';
@@ -144,7 +144,6 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                    * */}
                   <C.Box
                     as="img"
-                    // @ts-ignore
                     src={subject.cover}
                     transition="opacity 500ms"
                     style={{
@@ -161,7 +160,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                 </C.Box>
               )}
 
-              <C.Stack p={4} spacing={3}>
+              <C.Stack p={4} pr={0} mr="50px" spacing={3}>
                 {hasCover && (
                   <C.Box>
                     <SubjectInfoBadges subject={subject} />

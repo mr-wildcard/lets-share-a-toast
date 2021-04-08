@@ -5,7 +5,6 @@ services:
     image: ${POSTGRES_DOCKER_IMAGE}
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    restart: always
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
@@ -13,7 +12,6 @@ services:
 
   pgadmin:
     image: ${PGADMIN_DOCKER_IMAGE}
-    restart: always
     ports:
       - ${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}
     environment:
@@ -23,7 +21,11 @@ services:
       - GUNICORN_ACCESS_LOGFILE
 
   api:
-    image: ${NODE_DOCKER_IMAGE}
+    build:
+      context: ./etc/local
+      dockerfile: Dockerfile
+      args:
+        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
     command: /bin/sh -c "yarn start api"
     volumes:
       - "./:/code:delegated"
@@ -31,13 +33,20 @@ services:
       - ${API_PORT}:${API_PORT}
     working_dir: /code
     environment:
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
-      PORT: ${API_PORT}
-      EKIBOT_SLACK_NOTIFICATION_ENDPOINT: ${EKIBOT_SLACK_NOTIFICATION_ENDPOINT}
-      EKIBOT_SLACK_NOTIFICATION_CHANNEL: ${EKIBOT_SLACK_NOTIFICATION_CHANNEL}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - PORT=${API_PORT}
+      - FIRESTORE_EMULATOR_HOST=firebase:${FIREBASE_EMULATOR_FIRESTORE_PORT}
+      - FIREBASE_AUTH_EMULATOR_HOST=firebase:${FIREBASE_EMULATOR_AUTH_PORT}
+      - FIREBASE_ADMIN_CREDENTIALS
+      - EKIBOT_SLACK_NOTIFICATION_ENDPOINT
+      - EKIBOT_SLACK_NOTIFICATION_CHANNEL
 
   frontend:
-    image: ${NODE_DOCKER_IMAGE}
+    build:
+      context: ./etc/local
+      dockerfile: Dockerfile
+      args:
+        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
     command: /bin/sh -c "yarn start frontend --port ${FRONTEND_PORT}"
     volumes:
       - "./:/code:delegated"
@@ -45,13 +54,43 @@ services:
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
-      - API_URL=http://$APPS_LOCAL_DOMAIN:$API_PORT
-      - REAL_TIME_APP_BASE_URL:http://$APPS_LOCAL_DOMAIN:?
-      - REAL_TIME_SOCKET_ORIGINS:http://$APPS_LOCAL_DOMAIN:?
-      - FIREBASE_API_KEY
-      - FIREBASE_AUTH_DOMAIN
-      - FIREBASE_DATABASE_URL
+      - PORT=${FRONTEND_PORT}
+      - NEXT_PUBLIC_API_URL=http://$LOCAL_HOSTNAME:$API_PORT
+      - NEXT_PUBLIC_LOCAL_HOSTNAME=${LOCAL_HOSTNAME}
+      - NEXT_PUBLIC_FIREBASE_EMULATOR_AUTH_HOST=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_AUTH_PORT
+      - NEXT_PUBLIC_FIREBASE_EMULATOR_FIRESTORE_PORT=${FIREBASE_EMULATOR_FIRESTORE_PORT}
+      - NEXT_PUBLIC_FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - NEXT_PUBLIC_FIREBASE_API_KEY=${FIREBASE_API_KEY}
+      - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${FIREBASE_AUTH_DOMAIN}
+
+  firebase:
+    build:
+      context: ./etc/local
+      dockerfile: Dockerfile
+      args:
+        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
+        FIREBASE_TOOLS_VERSION: latest
+    volumes:
+      - "firestore-data:/home/firestore-data"
+      - "./etc/local/firebase/firebase.json.template:/home/firebase.json.template:ro"
+      - "./etc/local/firebase/firestore.rules.template:/home/firestore.rules:ro"
+    working_dir: /home
+    command:
+      - /bin/sh
+      - -c
+      - |
+        envsubst '$$FIRESTORE_PORT,$$AUTH_PORT,$$UI_PORT' < "firebase.json.template" > "firebase.json"
+        firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=./firestore-data --export-on-exit --debug
+    ports:
+      - ${FIREBASE_EMULATOR_UI_PORT}:${FIREBASE_EMULATOR_UI_PORT}
+      - ${FIREBASE_EMULATOR_FIRESTORE_PORT}:${FIREBASE_EMULATOR_FIRESTORE_PORT}
+      - ${FIREBASE_EMULATOR_AUTH_PORT}:${FIREBASE_EMULATOR_AUTH_PORT}
+    environment:
+      - FIRESTORE_PORT=${FIREBASE_EMULATOR_FIRESTORE_PORT}
+      - AUTH_PORT=${FIREBASE_EMULATOR_AUTH_PORT}
+      - UI_PORT=${FIREBASE_EMULATOR_UI_PORT}
       - FIREBASE_PROJECT_ID
-      - FIREBASE_STORAGE_BUCKET
-      - FIREBASE_MESSAGING_SENDER_ID
-      - FIREBASE_APP_ID
+      - FIREBASE_TOKEN
+
+volumes:
+  firestore-data:

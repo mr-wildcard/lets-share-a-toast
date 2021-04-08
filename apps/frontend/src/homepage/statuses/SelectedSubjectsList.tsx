@@ -6,16 +6,13 @@ import { Toast } from '@letsshareatoast/shared';
 import getUserFullname from 'frontend/core/helpers/getUserFullname';
 
 interface Props {
-  toast: Toast;
+  currentToast: Toast;
 }
 
-const SelectedSubjectsList: FunctionComponent<Props> = ({ toast }) => {
+const SelectedSubjectsList: FunctionComponent<Props> = ({ currentToast }) => {
   return (
     <C.List fontSize="lg" fontWeight="normal">
-      {/**
-       * TODO: remove optional chaining.
-       */}
-      {toast.subjects?.map((subject, index) => (
+      {currentToast.selectedSubjects.map((subject, index) => (
         <C.ListItem key={`subject-${subject.id}-${index}`}>
           &quot;
           <C.Text as="span" fontStyle="italic" fontWeight="bold">

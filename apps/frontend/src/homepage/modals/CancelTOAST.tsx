@@ -13,19 +13,12 @@ import NotificationType from 'frontend/notifications/types/NotificationType';
 interface Props {
   isOpen: boolean;
   currentToast: Toast;
-
-  /**
-   * Ending a TOAST makes the following request to current toast
-   * return a 404. So we need to revalidate the toast objects (instead of mutating).
-   */
-  revalidateToast(): Promise<boolean>;
   closeModal(): void;
 }
 
 const CancelTOAST: FunctionComponent<Props> = ({
   currentToast,
   isOpen,
-  revalidateToast,
   closeModal,
 }) => {
   const { auth, notifications } = useStores();
@@ -40,7 +33,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      await request(APIPaths.CURRENT_TOAST_STATUS, {
+      await request(APIPaths.TOAST_CURRENT_STATUS, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -49,8 +42,6 @@ const CancelTOAST: FunctionComponent<Props> = ({
           status: ToastStatus.CANCELLED,
         }),
       });
-
-      await revalidateToast();
 
       notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
         status: ToastStatus.CANCELLED,
@@ -62,13 +53,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
 
       setCancelling(false);
     }
-  }, [
-    auth.profile,
-    closeModal,
-    currentToast.id,
-    notifications,
-    revalidateToast,
-  ]);
+  }, [auth.profile, closeModal, currentToast.id, notifications]);
 
   return (
     <C.AlertDialog

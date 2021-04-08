@@ -30,4 +30,4 @@ const httpClient = (apiURL: string) => (
   }
 };
 
-export default httpClient(process.env.API_URL);
+export default httpClient(process.env.NEXT_PUBLIC_API_URL);

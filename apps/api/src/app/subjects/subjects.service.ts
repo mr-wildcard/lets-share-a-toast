@@ -24,8 +24,8 @@ export class SubjectsService {
     newSubject.title = input.title;
     newSubject.description = input.description;
     newSubject.status = input.status;
-    newSubject.comment = input.comment;
-    newSubject.cover = input.cover;
+    newSubject.comment = input.comment || null;
+    newSubject.cover = input.cover || null;
     newSubject.language = input.language;
     newSubject.duration = input.duration;
     newSubject.speakers = await this.usersRepository.findByIds(input.speakers);
@@ -37,8 +37,10 @@ export class SubjectsService {
     return this.subjectsRepository.findOne(id);
   }
 
-  findAll() {
-    return this.subjectsRepository.find();
+  findAll(ids?: string[]) {
+    return ids
+      ? this.subjectsRepository.findByIds(ids)
+      : this.subjectsRepository.find();
   }
 
   findAllByStatus(status: SubjectStatus) {

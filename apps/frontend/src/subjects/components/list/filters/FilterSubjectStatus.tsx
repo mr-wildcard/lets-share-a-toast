@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated } from '@react-spring/web';
 import * as C from '@chakra-ui/react';
 
 import { SubjectStatus } from '@letsshareatoast/shared';

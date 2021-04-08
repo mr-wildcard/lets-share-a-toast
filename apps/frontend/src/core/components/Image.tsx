@@ -17,37 +17,21 @@ const Img: FunctionComponent<CustomImageProps> = ({
   ...props
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [showImage, setShowImage] = useState(false);
-
-  useEffect(() => {
-    const image = new Image(width, height);
-
-    image.onload = () => setImageLoaded(true);
-    image.src = src;
-
-    return () => {
-      image.onload = null;
-    };
-  }, [src, width, height]);
 
   return (
-    // @ts-ignore
-    <C.Box
-      as={C.Img}
-      src={imageLoaded ? src : srcPlaceholder}
+    <C.Image
+      src={src}
+      fallbackSrc={srcPlaceholder}
       style={{
         ...style,
-        opacity: showImage ? 1 : 0,
-        visibility: showImage ? 'visible' : 'hidden',
+        opacity: imageLoaded ? 1 : 0,
+        visibility: imageLoaded ? 'visible' : 'hidden',
       }}
-      opacity={0}
       transition="opacity 1000ms ease-out"
       htmlWidth={`${width}px`}
       htmlHeight={`${height}px`}
       onLoad={() => {
-        if (imageLoaded) {
-          setShowImage(true);
-        }
+        setImageLoaded(true);
       }}
       {...props}
     />

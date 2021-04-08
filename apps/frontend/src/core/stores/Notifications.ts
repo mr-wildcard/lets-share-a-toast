@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io-client';
-import { observable, reaction } from 'mobx';
+import { computed, makeObservable, observable, reaction } from 'mobx';
 
 import { User } from '@letsshareatoast/shared';
 
@@ -9,22 +9,22 @@ import Toaster from 'frontend/notifications/types/Toaster';
 import notifier from 'frontend/notifications/handler';
 
 export default class Notifications {
-  private _socket: Socket;
-  private _listenedEvents: [NotificationType, () => void][];
-  private _initializing = false;
-  private _toaster: any;
-  private _notifier: any;
+  private socket: SocketIOClient.Socket;
+  private listenedEvents: [NotificationType, () => void][];
+  private initializing = false;
+  private notifier: any;
 
-  @observable
   public showNotifications = true;
-
-  @observable
   public connecting = true;
-
-  @observable
   public pageIsVisible = true;
 
   constructor() {
+    makeObservable(this, {
+      showNotifications: observable,
+      connecting: observable,
+      pageIsVisible: observable,
+    });
+
     if (process.browser) {
       const savedShowNotifications = localStorage.getItem('show_notifications');
 
@@ -44,53 +44,53 @@ export default class Notifications {
   }
 
   public async initialize(toaster: Toaster): Promise<void> {
-    this._initializing = true;
+    this.initializing = true;
 
-    this._notifier = notifier(toaster);
+    this.notifier = notifier(toaster);
 
-    const { default: getSocket } = await import('frontend/core/socket');
+    // const { getNotificationSocket } = await import('frontend/core/sockets');
 
-    this._socket = getSocket();
+    // this.socket = getNotificationSocket;
 
-    this._listenedEvents = [
+    this.listenedEvents = [
       /**
        * Subject notifications
        */
-      [NotificationType.ADD_SUBJECT, this._notifier.addSubject],
-      [NotificationType.EDIT_SUBJECT_CONTENT, this._notifier.editSubject],
-      [NotificationType.EDIT_SUBJECT_STATUS, this._notifier.editSubjectStatus],
-      [NotificationType.REMOVE_SUBJECT, this._notifier.removeSubject],
+      [NotificationType.ADD_SUBJECT, this.notifier.addSubject],
+      [NotificationType.EDIT_SUBJECT_CONTENT, this.notifier.editSubject],
+      [NotificationType.EDIT_SUBJECT_STATUS, this.notifier.editSubjectStatus],
+      [NotificationType.REMOVE_SUBJECT, this.notifier.removeSubject],
 
       /**
        * TOAST notifications
        */
-      [NotificationType.CREATE_TOAST, this._notifier.createTOAST],
-      [NotificationType.EDIT_TOAST_INFOS, this._notifier.editTOASTInfos],
-      [NotificationType.EDIT_TOAST_STATUS, this._notifier.editTOASTStatus],
+      [NotificationType.CREATE_TOAST, this.notifier.createTOAST],
+      [NotificationType.EDIT_TOAST_INFOS, this.notifier.editTOASTInfos],
+      [NotificationType.EDIT_TOAST_STATUS, this.notifier.editTOASTStatus],
     ];
 
-    this._watchSocketState();
-    this._watchDocumentVisibility();
+    this.watchSocketState();
+    this.watchDocumentVisibility();
 
     reaction(
       () => this.showNotifications && this.pageIsVisible,
       (listenToNotifications) => {
-        this._toggleNotifications(listenToNotifications);
+        this.toggleNotifications(listenToNotifications);
       },
       {
         fireImmediately: true,
       }
     );
 
-    this._socket.open();
+    this.socket.open();
 
-    this._initializing = false;
+    this.initializing = false;
   }
 
   public send(user: User, event: NotificationType, data?: any): void {
     return;
 
-    this._socket.emit(event, {
+    this.socket.emit(event, {
       username: user.firstName,
       userPicture: user.picture,
       userId: user.id,
@@ -98,27 +98,27 @@ export default class Notifications {
     });
   }
 
-  private _toggleNotifications(listen: boolean): void {
-    this._listenedEvents.forEach(([eventName, handler]) => {
+  private toggleNotifications(listen: boolean): void {
+    this.listenedEvents.forEach(([eventName, handler]) => {
       if (listen) {
-        this._socket.on(eventName, handler);
+        this.socket.on(eventName, handler);
       } else {
-        this._socket.off(eventName, handler);
+        this.socket.off(eventName, handler);
       }
     });
   }
 
-  private _watchSocketState(): void {
-    this._socket.on('reconnecting', () => {
+  private watchSocketState(): void {
+    this.socket.on('reconnecting', () => {
       this.connecting = true;
     });
 
-    this._socket.on('connect', () => {
+    this.socket.on('connect', () => {
       this.connecting = false;
     });
   }
 
-  private _watchDocumentVisibility(): void {
+  private watchDocumentVisibility(): void {
     const {
       documentHiddenProperty,
       visibilityChangeEventName,

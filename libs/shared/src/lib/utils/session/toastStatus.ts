@@ -8,6 +8,8 @@ const ToastStatusesOrder: ToastStatus[] = [
   ToastStatus.CLOSED,
 ];
 
+type NotCancelledTOASTStatus = Exclude<ToastStatus, ToastStatus.CANCELLED>;
+
 export const isTOASTOngoing = (toastStatus: ToastStatus) =>
   toastStatus !== ToastStatus.CLOSED && toastStatus !== ToastStatus.CANCELLED;
 
@@ -15,49 +17,61 @@ export const getTOASTStatusUtils = function (toastStatus: ToastStatus) {
   const toastIsOngoing = isTOASTOngoing(toastStatus);
 
   return {
-    isBefore: (status: ToastStatus) => {
+    isBefore: (status: NotCancelledTOASTStatus) => {
       return (
         ToastStatusesOrder.indexOf(toastStatus) <
         ToastStatusesOrder.indexOf(status)
       );
     },
-    isAfter: (status: ToastStatus) => {
+    isAfter: (status: NotCancelledTOASTStatus) => {
       return (
         ToastStatusesOrder.indexOf(toastStatus) >
         ToastStatusesOrder.indexOf(status)
       );
     },
-    isAllowed(status: ToastStatus) {
+    isNextAllowedStatus(status: ToastStatus) {
       /**
        * A closed or cancelled toast can't have its status changed.
        */
       if (!toastIsOngoing) {
         return false;
-      }
-
-      /**
-       * An ongoing toast can be cancelled at any time.
-       */
-      if (status === ToastStatus.CANCELLED) {
+      } else if (status === ToastStatus.CANCELLED) {
+        /**
+         * An ongoing toast can be cancelled at any time.
+         */
+        return true;
+      } else if (status === toastStatus) {
+        /**
+         * Setting toast status to the same status it has it allowed.
+         */
         return true;
       } else {
         const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
         const nextToastStatusIndex = ToastStatusesOrder.indexOf(status);
 
-        const nextStatusIsSameThanCurrent =
-          nextToastStatusIndex === currentToastStatusIndex;
-
-        const nextStatusIsNextAllowedStatus =
-          nextToastStatusIndex === currentToastStatusIndex + 1;
-
         /**
-         * Status can be set to the toast only if it is the next
-         * allowed status or the same status as the current one.
+         * Status is allowed only if it is the next status in a life of a TOAST.
          */
-        return nextStatusIsSameThanCurrent || nextStatusIsNextAllowedStatus;
+        return nextToastStatusIndex === currentToastStatusIndex + 1;
       }
     },
-    getNextAllowedStatus(): ToastStatus {
+    isThePreviousStatusOf(status: NotCancelledTOASTStatus) {
+      return status === this.getPreviousStatus();
+    },
+    getPreviousStatus() {
+      if (!toastIsOngoing) {
+        return toastStatus;
+      } else {
+        const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
+
+        if (currentToastStatusIndex === 0) {
+          return toastStatus;
+        } else {
+          return ToastStatusesOrder[currentToastStatusIndex - 1];
+        }
+      }
+    },
+    getNextAllowedStatus() {
       if (!toastIsOngoing) {
         return toastStatus;
       } else {

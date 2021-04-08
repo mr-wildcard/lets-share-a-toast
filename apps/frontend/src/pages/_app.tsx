@@ -41,7 +41,6 @@ const LetsShareATOAST: FunctionComponent<AppProps> = ({
       >
         <AppLoader>
           <Header />
-
           <Component {...pageProps} />
         </AppLoader>
       </SWRConfig>

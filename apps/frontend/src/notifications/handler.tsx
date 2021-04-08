@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import { UseToastOptions } from '@chakra-ui/react';
-import { trigger } from 'swr';
 
 import { APIPaths } from 'frontend/core/constants';
 import SubjectAdded from './components/messages/SubjectAdded';
@@ -47,42 +46,28 @@ export default function toasterHandler(toaster: Toaster) {
 
   return {
     addSubject(data: NotificationSubjectAdded) {
-      trigger(APIPaths.SUBJECTS);
-
       displayNotification(data)(getToasterConfig(<SubjectAdded {...data} />));
     },
     editSubject: (data: NotificationSubjectEdited) => {
-      trigger(APIPaths.SUBJECTS);
-
       displayNotification(data)(getToasterConfig(<SubjectEdited {...data} />));
     },
     editSubjectStatus: (data: NotificationSubjectEditedStatus) => {
-      trigger(APIPaths.SUBJECTS);
-
       displayNotification(data)(
         getToasterConfig(<SubjectStatusEdited {...data} />)
       );
     },
     removeSubject: (data: NotificationSubjectRemoved) => {
-      trigger(APIPaths.SUBJECTS);
-
       displayNotification(data)(getToasterConfig(<SubjectRemoved {...data} />));
     },
     createTOAST: (data: NotificationTOASTCreated) => {
-      trigger(APIPaths.CURRENT_TOAST);
-
       displayNotification(data)(getToasterConfig(<TOASTCreated {...data} />));
     },
     editTOASTInfos: (data: Notification) => {
-      trigger(APIPaths.CURRENT_TOAST);
-
       displayNotification(data)(
         getToasterConfig(<TOASTInfosChanged {...data} />)
       );
     },
     editTOASTStatus: (data: NotificationTOASTStatusChanged) => {
-      trigger(APIPaths.CURRENT_TOAST);
-
       displayNotification(data)(
         getToasterConfig(<TOASTStatusChanged {...data} />)
       );

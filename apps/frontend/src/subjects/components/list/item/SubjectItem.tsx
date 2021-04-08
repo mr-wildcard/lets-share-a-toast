@@ -8,12 +8,14 @@ import * as C from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
+import { observer } from 'mobx-react-lite';
 
-import { SubjectStatus, Subject } from '@letsshareatoast/shared';
+import { SubjectStatus, Subject, ToastStatus } from '@letsshareatoast/shared';
 
 import http from 'frontend/core/httpClient';
 import { APIPaths } from 'frontend/core/constants';
 import useStores from 'frontend/core/hooks/useStores';
+import isToast from 'frontend/core/helpers/isToast';
 import NotificationType from 'frontend/notifications/types/NotificationType';
 import Image from 'frontend/core/components/Image';
 import DeleteSubjectModal from 'frontend/subjects/components/modals/DeleteSubjectModal';
@@ -23,6 +25,8 @@ import SubjectStatusBadge from './SubjectStatusBadge';
 import SubjectSpeakers from './SubjectSpeakers';
 import SubjectNewBadge from './SubjectNewBadge';
 import css from './SubjectItem.module.css';
+import ContextMenuItem from './ContextMenuItem';
+import subjectIsInVotingSession from 'frontend/core/helpers/subjectIsInVotingSession';
 
 interface Props {
   subject: Subject;
@@ -35,6 +39,13 @@ const SubjectItem: FunctionComponent<Props> = ({
   onEditSubject,
   subject,
 }) => {
+  const {
+    currentToastSession: { toast },
+  } = useStores();
+
+  const subjectIsInCurrentTOASTVotingSession =
+    isToast(toast) && subjectIsInVotingSession(toast.status, subject.status);
+
   const theme = C.useTheme();
   const viewModal = C.useDisclosure();
   const deleteModal = C.useDisclosure();
@@ -120,6 +131,62 @@ const SubjectItem: FunctionComponent<Props> = ({
       auth.profile,
     ]
   );
+
+  const contextMenuStatusOptions = useMemo(() => {
+    const switchToAvailableStatus = subject.status !== SubjectStatus.AVAILABLE;
+
+    const switchToUnavailbleStatus =
+      subject.status !== SubjectStatus.UNAVAILABLE;
+
+    const switchToDoneStatus = subject.status !== SubjectStatus.DONE;
+
+    return []
+      .concat(
+        !switchToAvailableStatus ? (
+          []
+        ) : (
+          <ContextMenuItem
+            onClick={() => changeSubjectStatus(SubjectStatus.AVAILABLE)}
+            key="item-status-available"
+          >
+            Mark as&nbsp;
+            <C.Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
+              AVAILABLE
+            </C.Badge>
+          </ContextMenuItem>
+        )
+      )
+      .concat(
+        !switchToUnavailbleStatus ? (
+          []
+        ) : (
+          <ContextMenuItem
+            onClick={() => changeSubjectStatus(SubjectStatus.UNAVAILABLE)}
+            key="item-status-unavailable"
+          >
+            Mark as&nbsp;
+            <C.Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
+              UNAVAILABLE
+            </C.Badge>
+          </ContextMenuItem>
+        )
+      )
+      .concat(
+        !switchToDoneStatus ? (
+          []
+        ) : (
+          <ContextMenuItem
+            onClick={() => changeSubjectStatus(SubjectStatus.DONE)}
+            key="item-status-done"
+          >
+            Mark as&nbsp;
+            <C.Badge variant="solid" m="1px 0 0 5px">
+              ALREADY GIVEN
+            </C.Badge>
+          </ContextMenuItem>
+        )
+      );
+  }, [toast, subject, changeSubjectStatus]);
 
   const { subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
     const createdDate = dayjs(subject.createdDate);
@@ -254,73 +321,16 @@ const SubjectItem: FunctionComponent<Props> = ({
         overflow="hidden"
         id={`subject-${subject.id}`}
         zIndex={9999}
-        // @ts-ignore
         onShow={() => setContextualMenuOpened(true)}
         onHide={() => setContextualMenuOpened(false)}
       >
-        {subject.status !== SubjectStatus.AVAILABLE && (
-          <MenuItem
-            onClick={() => changeSubjectStatus(SubjectStatus.AVAILABLE)}
-          >
-            <C.Box
-              d="flex"
-              alignItems="center"
-              cursor="pointer"
-              _hover={{
-                bg: theme.colors.gray['100'],
-              }}
-              p={2}
-              px={3}
-            >
-              Mark as&nbsp;
-              <C.Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
-                AVAILABLE
-              </C.Badge>
-            </C.Box>
-          </MenuItem>
-        )}
-        {subject.status !== SubjectStatus.UNAVAILABLE && (
-          <MenuItem
-            onClick={() => changeSubjectStatus(SubjectStatus.UNAVAILABLE)}
-          >
-            <C.Box
-              d="flex"
-              alignItems="center"
-              cursor="pointer"
-              _hover={{
-                bg: theme.colors.gray['100'],
-              }}
-              p={2}
-              px={3}
-            >
-              Mark as&nbsp;
-              <C.Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
-                UNAVAILABLE
-              </C.Badge>
-            </C.Box>
-          </MenuItem>
-        )}
-        {subject.status !== SubjectStatus.DONE && (
-          <MenuItem onClick={() => changeSubjectStatus(SubjectStatus.DONE)}>
-            <C.Box
-              d="flex"
-              alignItems="center"
-              cursor="pointer"
-              _hover={{
-                bg: theme.colors.gray['100'],
-              }}
-              p={2}
-              px={3}
-            >
-              Mark as&nbsp;
-              <C.Badge variant="solid" m="1px 0 0 5px">
-                ALREADY GIVEN
-              </C.Badge>
-            </C.Box>
-          </MenuItem>
-        )}
-
-        <C.Divider />
+        {!subjectIsInCurrentTOASTVotingSession &&
+          contextMenuStatusOptions.length > 0 && (
+            <>
+              {contextMenuStatusOptions}
+              <C.Divider />
+            </>
+          )}
 
         <MenuItem onClick={() => onEditSubject(subject)}>
           <C.Box
@@ -356,6 +366,7 @@ const SubjectItem: FunctionComponent<Props> = ({
 
       {deleteModal.isOpen && (
         <DeleteSubjectModal
+          alertAboutVotingSession={subjectIsInCurrentTOASTVotingSession}
           subject={subject}
           closeModal={onCloseDeleteSubjectModal}
         />
@@ -368,4 +379,4 @@ const SubjectItem: FunctionComponent<Props> = ({
   );
 };
 
-export default SubjectItem;
+export default observer(SubjectItem);

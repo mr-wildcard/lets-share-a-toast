@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useMemo } from 'react';
 import * as C from '@chakra-ui/react';
 
-import { Subject } from '@letsshareatoast/shared';
+import { CurrentToast, Subject } from '@letsshareatoast/shared';
 
 import MasonryGrid from 'frontend/subjects/components/list/MasonryGrid';
 import SubjectItem from './item/SubjectItem';

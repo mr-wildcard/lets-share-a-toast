@@ -81,10 +81,10 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
             onSubmit={async (values) => {
               const endpoint = values.notifySlack
                 ? getAPIEndpointWithSlackNotification(
-                    APIPaths.CURRENT_TOAST_STATUS,
+                    APIPaths.TOAST_CURRENT_STATUS,
                     values.notificationMessage
                   )
-                : APIPaths.CURRENT_TOAST_STATUS;
+                : APIPaths.TOAST_CURRENT_STATUS;
 
               const request = http();
 
@@ -105,8 +105,6 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                   status: ToastStatus.WAITING_FOR_TOAST,
                 }
               );
-
-              mutate(APIPaths.CURRENT_TOAST, updatedToast);
 
               closeModal();
             }}
