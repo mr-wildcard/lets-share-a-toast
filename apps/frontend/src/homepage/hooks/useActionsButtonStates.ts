@@ -31,15 +31,15 @@ const useActionsButtonStates = (currentToast: CurrentToast) => {
             ToastStatus.OPEN_FOR_VOTE
           ),
       },
+      deadHeatSubjects: {
+        display:
+          isToast(currentToast) && toastHasDeadheatSubjects(currentToast),
+      },
       markTOASTAsReady: {
         display:
           isToast(currentToast) &&
           currentToast.status === ToastStatus.VOTE_CLOSED &&
           !toastHasDeadheatSubjects(currentToast),
-      },
-      deadHeatSubjects: {
-        display:
-          isToast(currentToast) && toastHasDeadheatSubjects(currentToast),
       },
       endTOAST: {
         display:

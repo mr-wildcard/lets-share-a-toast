@@ -10,7 +10,6 @@ import {
 import { SubjectStatus, SubjectLanguage } from '@letsshareatoast/shared';
 
 import { User } from 'api/users/entities/user.entity';
-import { Toast } from 'api/toasts/entities/toast.entity';
 
 @Entity()
 export class Subject {

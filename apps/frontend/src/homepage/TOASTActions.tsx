@@ -6,7 +6,7 @@ import {
   EditIcon,
   DeleteIcon,
 } from '@chakra-ui/icons';
-import { animated } from 'react-spring';
+import { animated } from '@react-spring/web';
 
 import { CurrentToast } from '@letsshareatoast/shared';
 
@@ -21,7 +21,7 @@ import TOASTInfosModal from './modals/TOASTInfos';
 import CancelTOASTModal from './modals/CancelTOAST';
 import CloseVotesModal from './modals/CloseVotes';
 import MarkTOASTAsReadyModal from './modals/MarkTOASTAsReady';
-import DeadHeatSubjectsModal from './modals/DeadHeatSubjects';
+import { DeadHeatSubjectsModal } from './modals/DeadHeatSubjects';
 import EndTOASTModal from './modals/EndTOAST';
 import InitiateTOAST from './actions/InitiateTOAST';
 import OpenVotes from './actions/OpenVotes';
@@ -29,6 +29,7 @@ import CloseVotes from './actions/CloseVotes';
 import MarkTOASTAsReady from './actions/MarkTOASTAsReady';
 import DeadHeatSubjects from './actions/DeadHeatSubjects';
 import EndTOAST from './actions/EndTOAST';
+import useStores from 'frontend/core/hooks/useStores';
 
 const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : '30px');
 
@@ -38,13 +39,9 @@ const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px ${
 
 interface Props {
   currentToast: CurrentToast;
-  revalidateToast(): Promise<boolean>;
 }
 
-const TOASTActions: FunctionComponent<Props> = ({
-  revalidateToast,
-  currentToast,
-}) => {
+const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
   const modalsStates = useActionsModalStates();
   const buttonsStates = useActionsButtonStates(currentToast);
   const animations = useActionsAnimations();
@@ -66,7 +63,6 @@ const TOASTActions: FunctionComponent<Props> = ({
     if (buttonsStates.deadHeatSubjects.display) {
       animations.background.open(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -197,18 +193,18 @@ const TOASTActions: FunctionComponent<Props> = ({
                   </C.Box>
                 )}
 
-                {buttonsStates.markTOASTAsReady.display && (
-                  <C.Box ml="30px">
-                    <MarkTOASTAsReady
-                      onClick={modalsStates.markTOASTAsReady.onOpen}
-                    />
-                  </C.Box>
-                )}
-
                 {buttonsStates.deadHeatSubjects.display && (
                   <C.Box ml="30px">
                     <DeadHeatSubjects
                       onClick={modalsStates.deadHeatSubjects.onOpen}
+                    />
+                  </C.Box>
+                )}
+
+                {buttonsStates.markTOASTAsReady.display && (
+                  <C.Box ml="30px">
+                    <MarkTOASTAsReady
+                      onClick={modalsStates.markTOASTAsReady.onOpen}
                     />
                   </C.Box>
                 )}
@@ -225,7 +221,6 @@ const TOASTActions: FunctionComponent<Props> = ({
                 <CancelTOASTModal
                   currentToast={currentToast}
                   isOpen={modalsStates.cancelTOAST.isOpen}
-                  revalidateToast={revalidateToast}
                   closeModal={modalsStates.cancelTOAST.onClose}
                 />
 
@@ -239,12 +234,6 @@ const TOASTActions: FunctionComponent<Props> = ({
                   currentToast={currentToast}
                   isOpen={modalsStates.closeVotes.isOpen}
                   closeModal={modalsStates.closeVotes.onClose}
-                  openMarkTOASTAsReadyModal={
-                    modalsStates.markTOASTAsReady.onOpen
-                  }
-                  openDeadHeatSubjectsModal={
-                    modalsStates.deadHeatSubjects.onOpen
-                  }
                 />
 
                 <MarkTOASTAsReadyModal
@@ -262,7 +251,6 @@ const TOASTActions: FunctionComponent<Props> = ({
                 <EndTOASTModal
                   currentToast={currentToast}
                   isOpen={modalsStates.endTOAST.isOpen}
-                  revalidateToast={revalidateToast}
                   closeModal={modalsStates.endTOAST.onClose}
                 />
               </>
@@ -280,11 +268,8 @@ const TOASTActions: FunctionComponent<Props> = ({
               <C.MenuButton
                 textDecoration="underline"
                 position="relative"
-                // As per documentation, this prop exists on MenuButton component.
-                // @ts-ignore
                 size="lg"
                 pt={0}
-                colorScheme="blue"
                 fontWeight="bold"
                 variant="link"
               >

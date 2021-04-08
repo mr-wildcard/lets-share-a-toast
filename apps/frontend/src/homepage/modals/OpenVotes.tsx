@@ -54,7 +54,7 @@ const OpenVotes: FunctionComponent<Props> = ({
           <C.ModalHeader textAlign="center">
             <C.Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
-                Open subjects voting toast !
+                Open voting session !
               </HighlightedText>
               <Image
                 position="absolute"
@@ -86,10 +86,10 @@ const OpenVotes: FunctionComponent<Props> = ({
 
                 const endpoint = values.notifySlack
                   ? getAPIEndpointWithSlackNotification(
-                      APIPaths.CURRENT_TOAST_STATUS,
+                      APIPaths.TOAST_CURRENT_STATUS,
                       values.notificationMessage
                     )
-                  : APIPaths.CURRENT_TOAST_STATUS;
+                  : APIPaths.TOAST_CURRENT_STATUS;
 
                 const updatedToast: Toast = await request(endpoint, {
                   method: 'PUT',
@@ -108,8 +108,6 @@ const OpenVotes: FunctionComponent<Props> = ({
                     status: ToastStatus.OPEN_FOR_VOTE,
                   }
                 );
-
-                mutate(APIPaths.CURRENT_TOAST, updatedToast);
 
                 closeModal();
               }}

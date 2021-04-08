@@ -17,16 +17,12 @@ interface Props {
   isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
-  openDeadHeatSubjectsModal(): void;
-  openMarkTOASTAsReadyModal(): void;
 }
 
 const CloseVotes: FunctionComponent<Props> = ({
   currentToast,
   isOpen,
   closeModal,
-  openDeadHeatSubjectsModal,
-  openMarkTOASTAsReadyModal,
 }) => {
   const { auth, notifications } = useStores();
 
@@ -40,7 +36,7 @@ const CloseVotes: FunctionComponent<Props> = ({
     const request = http();
 
     try {
-      const updatedToast: Toast = await request(APIPaths.CURRENT_TOAST_STATUS, {
+      const updatedToast: Toast = await request(APIPaths.TOAST_CURRENT_STATUS, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -50,32 +46,17 @@ const CloseVotes: FunctionComponent<Props> = ({
         }),
       });
 
-      mutate(APIPaths.CURRENT_TOAST, updatedToast);
-
       notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
         status: ToastStatus.VOTE_CLOSED,
       });
 
       closeModal();
-
-      if (toastHasDeadheatSubjects(updatedToast)) {
-        openDeadHeatSubjectsModal();
-      } else {
-        openMarkTOASTAsReadyModal();
-      }
     } catch (error) {
       console.error('An error occured while closing votes', { error });
 
       setClosingVotes(false);
     }
-  }, [
-    auth.profile,
-    closeModal,
-    currentToast.id,
-    notifications,
-    openDeadHeatSubjectsModal,
-    openMarkTOASTAsReadyModal,
-  ]);
+  }, [auth.profile, closeModal, currentToast.id, notifications]);
 
   return (
     <C.Modal

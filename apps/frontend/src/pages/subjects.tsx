@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import Head from 'next/head';
 import useSWR from 'swr';
 
-import { Subject, User } from '@letsshareatoast/shared';
+import { Subject, User, CurrentToast } from '@letsshareatoast/shared';
 
 import useStores from 'frontend/core/hooks/useStores';
 import { spacing, APIPaths, pageColors } from 'frontend/core/constants';
@@ -17,7 +17,7 @@ import FilterSubjectStatus from 'frontend/subjects/components/list/filters/Filte
 import FilterSearch from 'frontend/subjects/components/list/filters/FilterSearch';
 
 const Subjects = () => {
-  const { ui, appLoading } = useStores();
+  const { ui, appLoader } = useStores();
 
   const { data: subjects, revalidate: revalidateSubjects } = useSWR<Subject[]>(
     APIPaths.SUBJECTS
@@ -68,11 +68,8 @@ const Subjects = () => {
 
   useEffect(() => {
     ui.currentPageBgColor = pageColors.subjects;
-
-    if (!!subjects && !!users) {
-      appLoading.pageLoaded = true;
-    }
-  }, [appLoading, ui, subjects, users]);
+    appLoader.pageIsReady = !!subjects && !!users;
+  }, [subjects, users]);
 
   return (
     <C.Box as="main">

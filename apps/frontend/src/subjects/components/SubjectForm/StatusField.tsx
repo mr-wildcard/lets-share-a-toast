@@ -56,7 +56,15 @@ const StatusInfos = {
   ),
 };
 
-const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
+interface Props extends FieldProps {
+  showHints?: boolean;
+}
+
+const StatusField: FunctionComponent<Props> = ({
+  field,
+  form,
+  showHints = true,
+}) => {
   const theme = C.useTheme();
 
   const [bgStyles, setBgStyles] = useState<StatusBackgroundStyles>({
@@ -108,7 +116,7 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
       </C.Box>
       <C.Box
         position="relative"
-        borderRadius={8}
+        borderRadius={6}
         overflow="hidden"
         d="inline-block"
       >
@@ -153,9 +161,12 @@ const StatusField: FunctionComponent<FieldProps> = ({ field, form }) => {
           </C.Button>
         </C.ButtonGroup>
       </C.Box>
-      <C.Text mt={2} fontSize="sm">
-        {StatusInfos[field.value]}
-      </C.Text>
+
+      {showHints && (
+        <C.Text mt={2} fontSize="sm">
+          {StatusInfos[field.value]}
+        </C.Text>
+      )}
     </C.FormControl>
   );
 };

@@ -175,7 +175,7 @@ const Form: FunctionComponent<Props> = ({
            * Edit current TOAST.
            */
 
-          updatedToast = await request(APIPaths.CURRENT_TOAST, {
+          updatedToast = await request(APIPaths.TOAST_CURRENT, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -189,8 +189,6 @@ const Form: FunctionComponent<Props> = ({
 
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
         }
-
-        mutate(APIPaths.CURRENT_TOAST, updatedToast);
 
         closeModal(toastCreated);
       }}

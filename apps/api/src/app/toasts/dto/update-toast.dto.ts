@@ -1,13 +1,5 @@
 import { PartialType, OmitType } from '@nestjs/mapped-types';
-import {
-  IsDateString,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-
-import { ToastStatus } from '@letsshareatoast/shared';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdateToastDto {
   @IsNotEmpty()

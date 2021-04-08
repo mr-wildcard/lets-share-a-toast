@@ -6,6 +6,8 @@ import { ToastStatus, CurrentToast } from '@letsshareatoast/shared';
 
 import isToast from 'frontend/core/helpers/isToast';
 import { hasTOASTDatePassed, isTOASTToday } from 'frontend/core/helpers/timing';
+import useStores from 'frontend/core/hooks/useStores';
+import { observer } from 'mobx-react-lite';
 
 const lazyLoadConfig = {
   loading: function Loader() {
@@ -126,4 +128,4 @@ const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
   );
 };
 
-export default React.memo(TOASTStatus);
+export default TOASTStatus;

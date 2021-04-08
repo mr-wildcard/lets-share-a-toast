@@ -26,29 +26,30 @@ import LinkItem from './LinkItem';
 const Header = () => {
   const { pathname } = useRouter();
 
-  const { auth, appLoading, notifications } = useStores();
+  const {
+    currentToastSession: { toast },
+    auth,
+    appLoader,
+    notifications,
+  } = useStores();
 
   const { data: profile } = useSWR<User>(APIPaths.PROFILE, {
     // We don't need profile to be fetched more than once.
     revalidateOnFocus: false,
   });
 
-  const { data: currentToast } = useSWR<CurrentToast>(APIPaths.CURRENT_TOAST);
-
   const votesAreOpened = useMemo(() => {
-    return (
-      isToast(currentToast) && currentToast.status === ToastStatus.OPEN_FOR_VOTE
-    );
-  }, [currentToast]);
+    return isToast(toast) && toast.status === ToastStatus.OPEN_FOR_VOTE;
+  }, [toast]);
 
   const votingPageIsOpened = pathname === Pathnames.VOTING_SESSION;
 
   useEffect(() => {
     if (profile) {
       auth.profile = profile;
-      appLoading.profileLoaded = true;
+      appLoader.profileIsLoaded = true;
     }
-  }, [profile, auth, appLoading]);
+  }, [profile, auth, appLoader]);
 
   return (
     <C.Box
@@ -129,8 +130,9 @@ const Header = () => {
                   icon={<SettingsIcon />}
                   size="sm"
                   aria-label="User settings"
+                  title="Your settings"
                   borderRadius="full"
-                  _hover={{ opacity: 0.95 }}
+                  _hover={{ opacity: 1 }}
                 />
                 <C.MenuList>
                   <C.MenuItem

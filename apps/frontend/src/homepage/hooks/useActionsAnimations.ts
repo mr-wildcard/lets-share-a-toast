@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { config, useTransition, useSpring } from 'react-spring';
+import { config, useTransition, useSpring } from '@react-spring/web';
 
 const useActionsAnimations = () => {
   const [backgroundOpened, openBackground] = useState(false);

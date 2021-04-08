@@ -1,88 +1,93 @@
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import * as C from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
-import { animated, useTransition, config } from 'react-spring';
+import { animated, to, useTransition, config } from '@react-spring/web';
 
 import Loader from 'frontend/core/components/Loader';
 import useStores from 'frontend/core/hooks/useStores';
 
-const AppLoader: FunctionComponent = ({ children }) => {
-  const { appLoading } = useStores();
+enum LoaderAnimationState {
+  INITIAL,
+  ENTERED,
+  LEFT,
+}
 
-  const bgAnimations = useTransition(!appLoading.pageLoaded, {
+const AppLoader: FunctionComponent = ({ children }) => {
+  const { appLoader } = useStores();
+  const [anim, setAnim] = useState(false);
+  const [
+    loaderAnimationState,
+    setLoaderAnimationState,
+  ] = useState<LoaderAnimationState>(LoaderAnimationState.INITIAL);
+
+  const bgAnimations = useTransition(appLoader.appLoaded, {
     config: config.gentle,
     from: {
-      clipPath: [100, 100, 100, 100],
+      clipPath: [100, 150, 100, 150],
     },
-    enter: () => async (next) => {
-      next({ clipPath: [0, 100, 100, 100] });
-      await next({ clipPath: [0, 0, 100, 100], delay: 100 });
+    enter: {
+      clipPath: [0, 0, 100, 150],
+      onRest() {
+        setLoaderAnimationState(LoaderAnimationState.ENTERED);
+      },
     },
-    leave: () => async (next) => {
-      next({ clipPath: [0, 0, 0, 100] });
-      await next({ clipPath: [0, 0, 0, 0], delay: 100 });
+    leave: {
+      clipPath: [0, 0, 0, 0],
     },
-    onRest(item, state) {
-      if (item && state.phase === 'enter') {
-        appLoading.loaderEntering = false;
-        appLoading.loaderEntered = true;
-      }
+    onDestroyed() {
+      setLoaderAnimationState(LoaderAnimationState.LEFT);
     },
   });
 
-  const showWhiteBackground = useMemo(() => {
-    return appLoading.loaderEntering && !appLoading.loaderEntered;
-  }, [appLoading.loaderEntering, appLoading.loaderEntered]);
-
   return (
     <>
-      {showWhiteBackground && (
+      {loaderAnimationState !== LoaderAnimationState.LEFT && (
         <C.Box
+          onClick={() => {
+            setAnim(!anim);
+          }}
           position="fixed"
-          backgroundColor="white"
           top={0}
           right={0}
           bottom={0}
           left={0}
           zIndex={9}
-        />
+          style={{
+            backgroundColor:
+              loaderAnimationState === LoaderAnimationState.INITIAL
+                ? 'white'
+                : 'transparent',
+          }}
+        >
+          {bgAnimations(({ clipPath }, appIsLoaded) => {
+            return (
+              !appIsLoaded && (
+                <C.Flex
+                  as={animated.div}
+                  align="center"
+                  justify="center"
+                  w="100%"
+                  h="100%"
+                  backgroundColor="yellow.300"
+                  zIndex={10}
+                  style={{
+                    // @ts-ignore
+                    clipPath: to(
+                      clipPath,
+                      (path1, path2, path3, path4) =>
+                        `polygon(${path1}% 0%, ${path3}% 0%, ${path4}% 100%, ${path2}% 100%)`
+                    ),
+                  }}
+                >
+                  <Loader />
+                </C.Flex>
+              )
+            );
+          })}
+        </C.Box>
       )}
 
-      {bgAnimations(({ clipPath }, item) => {
-        return (
-          item && (
-            <C.Box
-              as={animated.div}
-              style={{
-                // @ts-ignore
-                clipPath: clipPath.to(
-                  (path1, path2, path3, path4) =>
-                    `polygon(${path1}% 0%, ${path3}% 0%, ${path4}% 100%, ${path2}% 100%)`
-                ),
-              }}
-              position="fixed"
-              backgroundColor="yellow.300"
-              top={0}
-              right={0}
-              bottom={0}
-              left={0}
-              zIndex={10}
-            >
-              <C.Flex
-                align="center"
-                justify="center"
-                zIndex={11}
-                w="100%"
-                h="100%"
-              >
-                <Loader />
-              </C.Flex>
-            </C.Box>
-          )
-        );
-      })}
-
-      {appLoading.loaderEntered && children}
+      {loaderAnimationState !== LoaderAnimationState.INITIAL && children}
     </>
   );
 };

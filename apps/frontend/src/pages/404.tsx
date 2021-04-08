@@ -11,12 +11,12 @@ import HighlightedText from 'frontend/core/components/HighlightedText';
 const Custom404Page = () => {
   const theme = C.useTheme();
 
-  const { ui, appLoading } = useStores();
+  const { ui, appLoader } = useStores();
 
   useEffect(() => {
     ui.currentPageBgColor = theme.colors.purple['400'];
-    appLoading.pageLoaded = true;
-  }, [ui, appLoading, theme]);
+    appLoader.pageIsReady = true;
+  }, [ui, appLoader, theme]);
 
   return (
     <C.Box as="main">

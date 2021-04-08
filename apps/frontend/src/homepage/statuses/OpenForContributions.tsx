@@ -53,4 +53,4 @@ const OpenForContributions: FunctionComponent<Props> = ({ toast }) => {
   );
 };
 
-export default observer(OpenForContributions);
+export default OpenForContributions;

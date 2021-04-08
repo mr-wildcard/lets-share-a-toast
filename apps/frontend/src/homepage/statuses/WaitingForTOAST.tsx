@@ -6,7 +6,7 @@ import { Toast } from '@letsshareatoast/shared';
 
 import { getTOASTElapsedTimeSinceCreation } from 'frontend/core/helpers/timing';
 import WhosInChargeRecap from './WhosInChargeRecap';
-import ProposeForNextTOASTButton from './ProposeForNextTOASTButton';
+import ProposeSubjectForNextTOASTButton from './ProposeSubjectForNextTOASTButton';
 import SelectedSubjectsList from './SelectedSubjectsList';
 import FloralSeparator from './FloralSeparator';
 
@@ -24,13 +24,18 @@ const WaitingForTOAST: FunctionComponent<Props> = observer(({ toast }) => {
 
       <C.Box my={5}>
         <WhosInChargeRecap toast={toast} />
-        <C.Text fontSize="lg">
-          We&apos;ll have the pleasure to attend to the following talks:
-        </C.Text>
       </C.Box>
 
+      <C.Flex my={5} justify="center">
+        <FloralSeparator />
+      </C.Flex>
+
+      <C.Text fontSize="lg" mb={3}>
+        We&apos;ll have the pleasure to attend to the following talks:
+      </C.Text>
+
       <C.Flex align="center" direction="column">
-        <SelectedSubjectsList toast={toast} />
+        <SelectedSubjectsList currentToast={toast} />
       </C.Flex>
 
       <C.Flex my={5} justify="center">
@@ -40,7 +45,8 @@ const WaitingForTOAST: FunctionComponent<Props> = observer(({ toast }) => {
       <C.Text mb={3} fontSize="lg">
         In the meantime, you can still...
       </C.Text>
-      <ProposeForNextTOASTButton />
+
+      <ProposeSubjectForNextTOASTButton />
     </C.Box>
   );
 });

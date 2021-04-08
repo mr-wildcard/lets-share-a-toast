@@ -2,14 +2,14 @@ import React, { FunctionComponent } from 'react';
 import * as C from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 
-import { Subject, User } from '@letsshareatoast/shared';
+import { CurrentToast, Subject, User } from '@letsshareatoast/shared';
 
 import { pageColors } from 'frontend/core/constants';
 
 interface Props {
+  subject?: Subject;
   allUsers: User[];
   isOpen: boolean;
-  subject?: Subject;
   revalidateSubjects(): Promise<boolean>;
   closeForm(): void;
 }
@@ -21,7 +21,7 @@ const Form = dynamic(
       const theme = C.useTheme();
 
       return (
-        <C.DrawerContent justifyContent="center" alignItems="center">
+        <C.Flex h="100%" justifyContent="center" alignItems="center">
           <C.Spinner
             thickness="4px"
             speed="0.65s"
@@ -29,7 +29,7 @@ const Form = dynamic(
             color={pageColors.subjects}
             size="xl"
           />
-        </C.DrawerContent>
+        </C.Flex>
       );
     },
   }
@@ -51,12 +51,14 @@ const SubjectForm: FunctionComponent<Props> = ({
       closeOnEsc={true}
     >
       <C.DrawerOverlay>
-        <Form
-          revalidateSubjects={revalidateSubjects}
-          subject={subject}
-          allUsers={allUsers}
-          closeForm={closeForm}
-        />
+        <C.DrawerContent overflowY="auto">
+          <Form
+            revalidateSubjects={revalidateSubjects}
+            subject={subject}
+            allUsers={allUsers}
+            closeForm={closeForm}
+          />
+        </C.DrawerContent>
       </C.DrawerOverlay>
     </C.Drawer>
   );

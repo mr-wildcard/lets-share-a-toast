@@ -25,7 +25,7 @@ const errorIllustrations = [
 const Error: NextPage<ErrorProps> = () => {
   const theme = C.useTheme();
 
-  const { ui, appLoading } = useStores();
+  const { ui, appLoader } = useStores();
 
   const illustration = useMemo(() => {
     return errorIllustrations[
@@ -35,8 +35,8 @@ const Error: NextPage<ErrorProps> = () => {
 
   useEffect(() => {
     ui.currentPageBgColor = theme.colors.purple['400'];
-    appLoading.pageLoaded = true;
-  }, [ui, appLoading, theme]);
+    appLoader.pageIsReady = true;
+  }, []);
 
   return (
     <C.Box as="main">

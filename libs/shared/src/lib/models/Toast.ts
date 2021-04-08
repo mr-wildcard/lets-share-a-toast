@@ -1,7 +1,7 @@
 import { ToastStatus } from '../enums/ToastStatus';
 import { Subject } from './Subject';
 import { User } from './User';
-import { Vote } from './Vote';
+import { SubjectsTotalVotes } from './FirebaseVotingSessionDocument';
 
 export interface Toast {
   id: string;
@@ -12,7 +12,8 @@ export interface Toast {
   status: ToastStatus;
   subjects: Subject[];
   selectedSubjects: Subject[];
-  votes: Vote[];
+  maxSelectableSubjects: number;
+  votes: SubjectsTotalVotes;
   createdBy: string;
   createdDate: string;
   lastModifiedBy: string;
