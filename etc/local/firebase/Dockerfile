@@ -1,0 +1,13 @@
+ARG NODE_DOCKER_IMAGE
+
+FROM ${NODE_DOCKER_IMAGE}
+
+COPY ./firestore-data /home/firestore-data
+
+RUN apk --upgrade --no-cache add openjdk11-jre gettext bash && \
+    npm install -g firebase-tools@latest && \
+    npm cache clean --force && \
+    firebase -V && \
+    java -version
+
+USER node
