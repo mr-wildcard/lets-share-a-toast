@@ -1,96 +1,53 @@
 version: '3.8'
 
 services:
-  database:
-    image: ${POSTGRES_DOCKER_IMAGE}
-    ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-
-  pgadmin:
-    image: ${PGADMIN_DOCKER_IMAGE}
-    ports:
-      - ${PGADMIN_LISTEN_PORT}:${PGADMIN_LISTEN_PORT}
-    environment:
-      - PGADMIN_DEFAULT_EMAIL
-      - PGADMIN_DEFAULT_PASSWORD
-      - PGADMIN_LISTEN_PORT
-      - GUNICORN_ACCESS_LOGFILE
-
-  api:
-    build:
-      context: ./etc/local
-      dockerfile: Dockerfile
-      args:
-        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "yarn start api"
-    volumes:
-      - "./:/code:delegated"
-    ports:
-      - ${API_PORT}:${API_PORT}
-    working_dir: /code
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      - PORT=${API_PORT}
-      - FIRESTORE_EMULATOR_HOST=firebase:${FIREBASE_EMULATOR_FIRESTORE_PORT}
-      - FIREBASE_AUTH_EMULATOR_HOST=firebase:${FIREBASE_EMULATOR_AUTH_PORT}
-      - FIREBASE_ADMIN_CREDENTIALS
-      - EKIBOT_SLACK_NOTIFICATION_ENDPOINT
-      - EKIBOT_SLACK_NOTIFICATION_CHANNEL
-
   frontend:
-    build:
-      context: ./etc/local
-      dockerfile: Dockerfile
-      args:
-        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "yarn start frontend --port ${FRONTEND_PORT}"
+    image: ${NODE_DOCKER_IMAGE}
+    command: /bin/sh -c "yarn && yarn dev --port ${FRONTEND_PORT}"
     volumes:
-      - "./:/code:delegated"
-    working_dir: /code
+      - ./:/code:delegated
+    working_dir: /code/web
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
       - PORT=${FRONTEND_PORT}
-      - NEXT_PUBLIC_API_URL=http://$LOCAL_HOSTNAME:$API_PORT
-      - NEXT_PUBLIC_LOCAL_HOSTNAME=${LOCAL_HOSTNAME}
-      - NEXT_PUBLIC_FIREBASE_EMULATOR_AUTH_HOST=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_AUTH_PORT
-      - NEXT_PUBLIC_FIREBASE_EMULATOR_FIRESTORE_PORT=${FIREBASE_EMULATOR_FIRESTORE_PORT}
-      - NEXT_PUBLIC_FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
-      - NEXT_PUBLIC_FIREBASE_API_KEY=${FIREBASE_API_KEY}
-      - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${FIREBASE_AUTH_DOMAIN}
+      - VITE_API_URL=http://$LOCAL_HOSTNAME:$API_PORT
+      - VITE_LOCAL_HOSTNAME=${LOCAL_HOSTNAME}
+      - VITE_FIREBASE_EMULATOR_AUTH_HOST=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_AUTH_PORT
+      - VITE_FIREBASE_EMULATOR_DATABASE_HOST=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_DATABASE_PORT
+      - VITE_FIREBASE_EMULATOR_FIRESTORE_PORT=${FIREBASE_EMULATOR_FIRESTORE_PORT}
+      - VITE_FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - VITE_FIREBASE_API_KEY=${FIREBASE_API_KEY}
+      - VITE_FIREBASE_AUTH_DOMAIN=${FIREBASE_AUTH_DOMAIN}
+      - VITE_FIREBASE_APP_ID=${FIREBASE_APP_ID}
 
   firebase:
     build:
-      context: ./etc/local
+      context: ./etc/local/firebase
       dockerfile: Dockerfile
       args:
         NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
-        FIREBASE_TOOLS_VERSION: latest
     volumes:
-      - "firestore-data:/home/firestore-data"
-      - "./etc/local/firebase/firebase.json.template:/home/firebase.json.template:ro"
-      - "./etc/local/firebase/firestore.rules.template:/home/firestore.rules:ro"
-    working_dir: /home
-    command:
-      - /bin/sh
-      - -c
-      - |
-        envsubst '$$FIRESTORE_PORT,$$AUTH_PORT,$$UI_PORT' < "firebase.json.template" > "firebase.json"
-        firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=./firestore-data --export-on-exit --debug
+      - ./:/code:delegated
+      - firestore-data:/home/firestore-data:delegated
+    working_dir: /code/firebase
+    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firestore-data --export-on-exit --debug"
     ports:
       - ${FIREBASE_EMULATOR_UI_PORT}:${FIREBASE_EMULATOR_UI_PORT}
       - ${FIREBASE_EMULATOR_FIRESTORE_PORT}:${FIREBASE_EMULATOR_FIRESTORE_PORT}
+      - ${FIREBASE_EMULATOR_DATABASE_PORT}:${FIREBASE_EMULATOR_DATABASE_PORT}
       - ${FIREBASE_EMULATOR_AUTH_PORT}:${FIREBASE_EMULATOR_AUTH_PORT}
+      - ${FIREBASE_EMULATOR_HUB}:${FIREBASE_EMULATOR_HUB}
     environment:
-      - FIRESTORE_PORT=${FIREBASE_EMULATOR_FIRESTORE_PORT}
-      - AUTH_PORT=${FIREBASE_EMULATOR_AUTH_PORT}
-      - UI_PORT=${FIREBASE_EMULATOR_UI_PORT}
       - FIREBASE_PROJECT_ID
       - FIREBASE_TOKEN
+
+  functions:
+    image: ${NODE_DOCKER_IMAGE}
+    volumes:
+      - ./:/code:delegated
+    working_dir: /code/firebase/functions
+    command: /bin/sh -c "yarn serve"
 
 volumes:
   firestore-data:
