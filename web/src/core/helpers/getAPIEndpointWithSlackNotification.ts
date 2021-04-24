@@ -1,4 +1,4 @@
-import { URLQueryParams } from '@shared';
+import { URLQueryParams } from "@shared";
 
 /**
  * Returns an URL similar to : /api/whatever/path?slackNotificationMessage=Hello%40Hello

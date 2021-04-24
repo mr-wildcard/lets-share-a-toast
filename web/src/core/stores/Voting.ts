@@ -1,13 +1,13 @@
 // @ts-nocheck
-import { computed, makeObservable, observable } from 'mobx';
-import firebase from 'firebase';
+import { computed, makeObservable, observable } from "mobx";
+import firebase from "firebase";
 
 import {
   FirebaseCollections,
   FirebaseVotingSessionDocument,
   ClientSideVoteEvent,
   RealTimeVote,
-} from '@shared';
+} from "@shared";
 
 export default class Voting {
   private initializing = false;
@@ -25,13 +25,14 @@ export default class Voting {
   }
 
   public async initialize(): Promise<void> {
+    return;
     if (this.initializing || this.initialized) {
       return;
     }
 
     this.initializing = true;
 
-    const { init } = await import('@web/core/firebase');
+    const { init } = await import("@web/core/firebase");
 
     const { database, signin } = init();
 
@@ -44,7 +45,7 @@ export default class Voting {
     }
 
     if (!this.socket) {
-      const { getVotingSessionSocket } = await import('@web/core/sockets');
+      const { getVotingSessionSocket } = await import("@web/core/sockets");
 
       this.socket = getVotingSessionSocket();
     }

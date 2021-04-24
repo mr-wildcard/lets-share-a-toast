@@ -1,29 +1,39 @@
-import React, { FunctionComponent, Ref, useCallback, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
-import { Field, FieldProps, Formik, Form as FormikForm } from 'formik';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import useSWR, { mutate } from 'swr';
-import dayjs from 'dayjs';
+import React, {
+  FunctionComponent,
+  Ref,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import * as C from "@chakra-ui/react";
+import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import useSWR, { mutate } from "swr";
+import dayjs from "dayjs";
 
-import { User, CurrentToast, Toast, URLQueryParams } from '@shared';
+import { User } from "@shared/firebase/firestore/models/User";
 
-import http from '@web/core/httpClient';
-import { APIPaths, Pathnames } from '@web/core/constants';
-import NotificationType from '@web/notifications/types/NotificationType';
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import getAppURL from '@web/core/helpers/getAppURL';
-import isToast from '@web/core/helpers/isToast';
-import { getFormattedTOASTDateWithRemainingDays } from '@web/core/helpers/timing';
-import useStores from '@web/core/hooks/useStores';
-import Image from '@web/core/components/Image';
-import SelectUserInput from '@web/core/components/form/SelectUserInput';
-import getAPIEndpointWithSlackNotification from '@web/core/helpers/getAPIEndpointWithSlackNotification';
-import SlackNotificationFieldsValues from '@web/core/models/form/SlackNotificationFieldsValues';
-import slackNotificationFieldsAreValid from '@web/core/helpers/form/validateSlackNotificationFields';
-import DateInput from './DateInput';
-import DatePickerNavBar from './DatePickerNavBar';
-import DatePickerCaption from './DatePickerCaption';
-import datePickerCSS from './DatePicker.module.css';
+import { CurrentToast, Toast } from "@shared";
+
+import firebase from "@web/core/firebase";
+import http from "@web/core/httpClient";
+import { APIPaths, Pathnames } from "@web/core/constants";
+import NotificationType from "@web/notifications/types/NotificationType";
+import getUserFullname from "@web/core/helpers/getUserFullname";
+import getAppURL from "@web/core/helpers/getAppURL";
+import isToast from "@web/core/helpers/isToast";
+import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
+import useStores from "@web/core/hooks/useStores";
+import Image from "@web/core/components/Image";
+import SelectUserInput from "@web/core/components/form/SelectUserInput";
+import getAPIEndpointWithSlackNotification from "@web/core/helpers/getAPIEndpointWithSlackNotification";
+import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
+import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
+import DateInput from "./DateInput";
+import DatePickerNavBar from "./DatePickerNavBar";
+import DatePickerCaption from "./DatePickerCaption";
+import datePickerCSS from "./DatePicker.module.css";
 
 interface Props {
   cancelButtonRef: Ref<HTMLButtonElement>;
@@ -55,20 +65,25 @@ const Form: FunctionComponent<Props> = ({
   closeModal,
 }) => {
   const { auth, notifications } = useStores();
-  const { data: users } = useSWR<User[]>(APIPaths.USERS);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const getUsers = firebase.firestore
+      .collection("users")
+      .get()
+      .then((collection) => collection.docs)
+      .then((docs) => setUsers(docs.map((doc) => doc.data() as User)));
+  }, []);
 
   const getFormattedSlackNotification = useCallback(
     (notificationText, toastDueDate) => {
       return notificationText
+        .replace("{{PROFILE}}", auth.profile.displayName)
         .replace(
-          '{{PROFILE}}',
-          !!auth.profile ? getUserFullname(auth.profile) : ''
-        )
-        .replace(
-          '{{DATE}}',
+          "{{DATE}}",
           getFormattedTOASTDateWithRemainingDays(toastDueDate)
         )
-        .replace('{{URL}}', getAppURL() + Pathnames.SUBJECTS);
+        .replace("{{URL}}", getAppURL() + Pathnames.SUBJECTS);
     },
     [auth.profile]
   );
@@ -83,7 +98,7 @@ const Form: FunctionComponent<Props> = ({
        * If we're already on friday.
        */
       if (today.day() === 5) {
-        return today.add(1, 'week').hour(14).toDate();
+        return today.add(1, "week").hour(14).toDate();
       } else {
         return today.day(5).hour(14).toDate();
       }
@@ -120,8 +135,12 @@ const Form: FunctionComponent<Props> = ({
          * validate those fields because they're not displayed.
          * Only while creating a TOAST.
          */
-        errors.notificationMessage =
-          !isToast(currentToast) && !slackNotificationFieldsAreValid(values);
+        if (
+          !isToast(currentToast) &&
+          !slackNotificationFieldsAreValid(values)
+        ) {
+          errors.notificationMessage = true;
+        }
 
         return errors;
       }}
@@ -132,56 +151,16 @@ const Form: FunctionComponent<Props> = ({
         let updatedToast: Toast;
 
         if (!isToast(currentToast)) {
-          /**
-           * Create a TOAST.
-           */
-          const endpoint = values.notifySlack
-            ? getAPIEndpointWithSlackNotification(
-                APIPaths.TOASTS,
-                getFormattedSlackNotification(
-                  values.notificationMessage,
-                  values.dueDate
-                )
-              )
-            : APIPaths.TOASTS;
-
-          updatedToast = await request(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              date: values.dueDate,
-              organizerId: values.organizer!.id,
-              scribeId: values.scribe!.id,
-            }),
+          await firebase.functions.httpsCallable("createToast")({
+            date: values.dueDate,
+            organizerId: values.organizer!.uid,
+            scribeId: values.scribe!.uid,
           });
 
-          toastCreated = true;
-
-          if (auth.profile) {
-            notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
-              dueDate: values.dueDate.toString(),
-            });
-          }
+          notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
+            dueDate: values.dueDate.toString(),
+          });
         } else {
-          /**
-           * Edit current TOAST.
-           */
-
-          updatedToast = await request(APIPaths.TOAST_CURRENT, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              date: values.dueDate,
-              organizerId: values.organizer!.id,
-              scribeId: values.scribe!.id,
-            }),
-          });
-
-          // @ts-ignore
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
         }
 
@@ -205,7 +184,7 @@ const Form: FunctionComponent<Props> = ({
                         @ts-ignore */}
                         <DayPickerInput
                           {...field}
-                          onDayChange={(date) => setFieldValue('dueDate', date)}
+                          onDayChange={(date) => setFieldValue("dueDate", date)}
                           formatDate={getFormattedTOASTDateWithRemainingDays}
                           classNames={datePickerCSS}
                           component={DateInput}
@@ -245,9 +224,9 @@ const Form: FunctionComponent<Props> = ({
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(profile: User | null) => {
-                              if (profile) {
-                                setFieldValue(field.name, profile);
+                            onChange={(user: User | null) => {
+                              if (user) {
+                                setFieldValue(field.name, user);
                               }
                             }}
                           />
@@ -273,9 +252,9 @@ const Form: FunctionComponent<Props> = ({
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(profile: User | null) => {
-                              if (profile) {
-                                setFieldValue(field.name, profile);
+                            onChange={(user: User | null) => {
+                              if (user) {
+                                setFieldValue(field.name, user);
                               }
                             }}
                           />
@@ -321,15 +300,15 @@ const Form: FunctionComponent<Props> = ({
 
               <C.ModalFooter justifyContent="center">
                 <C.Button
-                  isDisabled={!users || !isValid}
+                  isDisabled={!users.length || !isValid}
                   overflow="hidden"
                   type="submit"
                   colorScheme="blue"
                   isLoading={isSubmitting}
                   loadingText={
                     !isToast(currentToast)
-                      ? 'Initializing TOAST...'
-                      : 'Editing infos...'
+                      ? "Initializing TOAST..."
+                      : "Editing infos..."
                   }
                   mx={2}
                 >
@@ -342,7 +321,7 @@ const Form: FunctionComponent<Props> = ({
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
                   <C.Text as="span" pl={35}>
-                    {isToast(currentToast) && 'Edit'}
+                    {isToast(currentToast) && "Edit"}
                     {!isToast(currentToast) && "Let's go !"}
                   </C.Text>
                 </C.Button>

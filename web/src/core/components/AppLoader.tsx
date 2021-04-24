@@ -1,10 +1,16 @@
-import React, { FunctionComponent, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { observer } from 'mobx-react-lite';
-import { animated, to, useTransition, config } from '@react-spring/web';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import * as C from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
+import { animated, to, useTransition, config } from "@react-spring/web";
+import firebase from "firebase/app";
 
-import Loader from '@web/core/components/Loader';
-import useStores from '@web/core/hooks/useStores';
+import Loader from "@web/core/components/Loader";
+import useStores from "@web/core/hooks/useStores";
 
 enum LoaderAnimationState {
   INITIAL,
@@ -13,14 +19,52 @@ enum LoaderAnimationState {
 }
 
 const AppLoader: FunctionComponent = ({ children }) => {
-  const { appLoader } = useStores();
+  const { auth } = useStores();
+
   const [anim, setAnim] = useState(false);
+
   const [
     loaderAnimationState,
     setLoaderAnimationState,
   ] = useState<LoaderAnimationState>(LoaderAnimationState.INITIAL);
 
-  const bgAnimations = useTransition(appLoader.appLoaded, {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [needToLogin, setNeedToLogin] = useState(false);
+
+  useEffect(() => {
+    if (loaderAnimationState === LoaderAnimationState.ENTERED) {
+      import("@web/core/firebase").then(({ default: firebase }) => {
+        const user = firebase.getCurrentUser();
+
+        if (user) {
+          auth.profile = user;
+
+          setLoggedIn(true);
+        } else {
+          setNeedToLogin(true);
+        }
+      });
+    }
+  }, [loaderAnimationState]);
+
+  const loggin = useCallback(() => {
+    import("@web/core/firebase").then(({ default: firebase }) => {
+      const { signin } = firebase;
+
+      signin()
+        .then((user) => {
+          auth.profile = user as firebase.User;
+
+          setNeedToLogin(false);
+          setLoggedIn(true);
+        })
+        .catch(() => {
+          setNeedToLogin(true);
+        });
+    });
+  }, []);
+
+  const bgAnimations = useTransition(loggedIn, {
     config: config.gentle,
     from: {
       clipPath: [100, 150, 100, 150],
@@ -55,8 +99,8 @@ const AppLoader: FunctionComponent = ({ children }) => {
           style={{
             backgroundColor:
               loaderAnimationState === LoaderAnimationState.INITIAL
-                ? 'white'
-                : 'transparent',
+                ? "white"
+                : "transparent",
           }}
         >
           {bgAnimations(({ clipPath }, appIsLoaded) => {
@@ -80,6 +124,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
                   }}
                 >
                   <Loader />
+                  {needToLogin && <C.Button onClick={loggin}>Login</C.Button>}
                 </C.Flex>
               )
             );
@@ -87,7 +132,9 @@ const AppLoader: FunctionComponent = ({ children }) => {
         </C.Box>
       )}
 
-      {loaderAnimationState !== LoaderAnimationState.INITIAL && children}
+      {loggedIn &&
+        loaderAnimationState !== LoaderAnimationState.INITIAL &&
+        children}
     </>
   );
 };

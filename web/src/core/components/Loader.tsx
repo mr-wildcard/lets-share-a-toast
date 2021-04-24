@@ -4,26 +4,25 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
-import { animated, config, useTransition } from '@react-spring/web';
-import { init } from '@web/core/firebase';
+} from "react";
+import * as C from "@chakra-ui/react";
+import { animated, config, useTransition } from "@react-spring/web";
 
-import ImageComponent from '@web/core/components/Image';
+import ImageComponent from "@web/core/components/Image";
 
 const defaultTransitions = {
   from: {
-    transform: 'scale(0.5) skewX(30deg) rotate(-85deg)',
+    transform: "scale(0.5) skewX(30deg) rotate(-85deg)",
     opacity: 0,
     config: config.wobbly,
   },
   enter: {
-    transform: 'scale(1) skewX(0deg) rotate(0deg)',
+    transform: "scale(1) skewX(0deg) rotate(0deg)",
     opacity: 1,
     config: config.wobbly,
   },
   leave: {
-    transform: 'scale(0.5) skewX(0) rotate(180deg)',
+    transform: "scale(0.5) skewX(0) rotate(180deg)",
     opacity: 0,
     config: {
       duration: 100,
@@ -33,11 +32,11 @@ const defaultTransitions = {
 
 const ALL_GIFS = [
   {
-    src: 'https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp',
+    src: "https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp",
   },
-  { src: 'https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp' },
+  { src: "https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp" },
   {
-    src: 'https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.webp',
+    src: "https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.webp",
   },
 ];
 
@@ -168,13 +167,6 @@ const Loader = () => {
           )
         );
       })}
-      <C.Button
-        onClick={() => {
-          init().signin();
-        }}
-      >
-        Login
-      </C.Button>
     </C.Flex>
   );
 };

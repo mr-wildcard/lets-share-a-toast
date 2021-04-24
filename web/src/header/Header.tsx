@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
-import { observer } from 'mobx-react-lite';
-import * as C from '@chakra-ui/react';
-import { SettingsIcon } from '@chakra-ui/icons';
-import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faBellSlash } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router';
+import React, { useEffect, useMemo } from "react";
+import { observer } from "mobx-react-lite";
+import * as C from "@chakra-ui/react";
+import { SettingsIcon } from "@chakra-ui/icons";
+import useSWR from "swr";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell, faBellSlash } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router";
 
-import { CurrentToast, User, ToastStatus } from '@shared';
+import { CurrentToast, User, ToastStatus } from "@shared";
 
 import {
   APIPaths,
@@ -15,13 +15,13 @@ import {
   pageColors,
   Pathnames,
   spacing,
-} from '@web/core/constants';
-import Image from '@web/core/components/Image';
-import useStores from '@web/core/hooks/useStores';
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import isToast from '@web/core/helpers/isToast';
-import Logo from './Logo';
-import LinkItem from './LinkItem';
+} from "@web/core/constants";
+import Image from "@web/core/components/Image";
+import useStores from "@web/core/hooks/useStores";
+import getUserFullname from "@web/core/helpers/getUserFullname";
+import isToast from "@web/core/helpers/isToast";
+import Logo from "./Logo";
+import LinkItem from "./LinkItem";
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -33,23 +33,11 @@ const Header = () => {
     notifications,
   } = useStores();
 
-  const { data: profile } = useSWR<User>(APIPaths.PROFILE, {
-    // We don't need profile to be fetched more than once.
-    revalidateOnFocus: false,
-  });
-
   const votesAreOpened = useMemo(() => {
     return isToast(toast) && toast.status === ToastStatus.OPEN_FOR_VOTE;
   }, [toast]);
 
   const votingPageIsOpened = pathname === Pathnames.VOTING_SESSION;
-
-  useEffect(() => {
-    if (profile) {
-      auth.profile = profile;
-      appLoader.profileIsLoaded = true;
-    }
-  }, [profile, auth, appLoader]);
 
   return (
     <C.Box
@@ -101,59 +89,57 @@ const Header = () => {
           )}
         </C.Flex>
 
-        {profile && (
-          <C.Stack direction="row" spacing={5} align="center">
-            <C.Text>
-              Welcome
-              <C.Text as="span" pl={1} fontWeight="bold" fontStyle="italic">
-                {profile.firstName}!
-              </C.Text>
+        <C.Stack direction="row" spacing={5} align="center">
+          <C.Text>
+            Welcome
+            <C.Text as="span" pl={1} fontWeight="bold" fontStyle="italic">
+              {auth.profile.displayName}!
             </C.Text>
+          </C.Text>
 
-            <C.Box position="relative">
-              <C.Avatar
-                name={getUserFullname(profile)}
-                src={profile.picture}
+          <C.Box position="relative">
+            <C.Avatar
+              name={auth.profile.displayName}
+              src={auth.profile.photoURL}
+              size="sm"
+            >
+              <C.AvatarBadge boxSize="1em" bg="green.500" />
+            </C.Avatar>
+            <C.Menu closeOnSelect={false}>
+              <C.MenuButton
+                as={C.IconButton}
+                position="absolute"
+                top={0}
+                left={0}
+                width="100%"
+                height="100%"
+                opacity={0}
+                icon={<SettingsIcon />}
                 size="sm"
-              >
-                <C.AvatarBadge boxSize="1em" bg="green.500" />
-              </C.Avatar>
-              <C.Menu closeOnSelect={false}>
-                <C.MenuButton
-                  as={C.IconButton}
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  width="100%"
-                  height="100%"
-                  opacity={0}
-                  icon={<SettingsIcon />}
-                  size="sm"
-                  aria-label="User settings"
-                  title="Your settings"
-                  borderRadius="full"
-                  _hover={{ opacity: 1 }}
-                />
-                <C.MenuList>
-                  <C.MenuItem
-                    onClick={() => {
-                      notifications.showNotifications = !notifications.showNotifications;
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={
-                        notifications.showNotifications ? faBell : faBellSlash
-                      }
-                    />
-                    <C.Text as="span" pl={3}>
-                      Notifications
-                    </C.Text>
-                  </C.MenuItem>
-                </C.MenuList>
-              </C.Menu>
-            </C.Box>
-          </C.Stack>
-        )}
+                aria-label="User settings"
+                title="Your settings"
+                borderRadius="full"
+                _hover={{ opacity: 1 }}
+              />
+              <C.MenuList>
+                <C.MenuItem
+                  onClick={() => {
+                    notifications.showNotifications = !notifications.showNotifications;
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={
+                      notifications.showNotifications ? faBell : faBellSlash
+                    }
+                  />
+                  <C.Text as="span" pl={3}>
+                    Notifications
+                  </C.Text>
+                </C.MenuItem>
+              </C.MenuList>
+            </C.Menu>
+          </C.Box>
+        </C.Stack>
       </C.Flex>
     </C.Box>
   );

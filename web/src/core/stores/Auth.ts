@@ -1,14 +1,12 @@
-// @ts-nocheck
-import { makeObservable, observable } from 'mobx';
+import { makeAutoObservable } from "mobx";
+import firebase from "firebase/app";
 
-import { User } from '@shared';
+import { User } from "@shared";
 
 export default class Auth {
-  public profile: User = {};
+  public profile!: firebase.User;
 
   constructor() {
-    makeObservable(this, {
-      profile: observable,
-    });
+    makeAutoObservable(this);
   }
 }

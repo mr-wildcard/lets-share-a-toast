@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { Socket } from 'socket.io-client';
-import { computed, makeObservable, observable, reaction } from 'mobx';
+import { Socket } from "socket.io-client";
+import { computed, makeObservable, observable, reaction } from "mobx";
 
-import { User } from '@shared';
+import { User } from "@shared";
 
-import NotificationType from '@web/notifications/types/NotificationType';
-import Toaster from '@web/notifications/types/Toaster';
-import notifier from '@web/notifications/handler';
+import NotificationType from "@web/notifications/types/NotificationType";
+import Toaster from "@web/notifications/types/Toaster";
+import notifier from "@web/notifications/handler";
 
 export default class Notifications {
   private socket: SocketIOClient.Socket;
@@ -25,18 +25,18 @@ export default class Notifications {
       pageIsVisible: observable,
     });
 
-    const savedShowNotifications = localStorage.getItem('show_notifications');
+    const savedShowNotifications = localStorage.getItem("show_notifications");
 
     if (savedShowNotifications) {
-      this.showNotifications = savedShowNotifications === '1';
+      this.showNotifications = savedShowNotifications === "1";
     } else {
-      localStorage.setItem('show_notifications', '1');
+      localStorage.setItem("show_notifications", "1");
     }
 
     reaction(
       () => this.showNotifications,
       (show) => {
-        localStorage.setItem('show_notifications', show ? '1' : '0');
+        localStorage.setItem("show_notifications", show ? "1" : "0");
       }
     );
   }
@@ -106,11 +106,11 @@ export default class Notifications {
   }
 
   private watchSocketState(): void {
-    this.socket.on('reconnecting', () => {
+    this.socket.on("reconnecting", () => {
       this.connecting = true;
     });
 
-    this.socket.on('connect', () => {
+    this.socket.on("connect", () => {
       this.connecting = false;
     });
   }

@@ -3,59 +3,61 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/database";
+import "firebase/functions";
 
-export const init = () => {
-  if (!firebase.apps.length) {
-    firebase.initializeApp({
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-      appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    });
-  }
-
-  const auth = firebase.auth();
-  const firestore = firebase.firestore();
-  const db = firebase.database();
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  });
 
   if (import.meta.env.DEV) {
-    auth.useEmulator(import.meta.env.VITE_FIREBASE_EMULATOR_AUTH_HOST);
+    firebase
+      .auth()
+      .useEmulator(import.meta.env.VITE_FIREBASE_EMULATOR_AUTH_HOST);
 
-    firestore.useEmulator(
-      import.meta.env.VITE_LOCAL_HOSTNAME,
-      parseInt(import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE_PORT)
-    );
+    firebase
+      .firestore()
+      .useEmulator(
+        import.meta.env.VITE_LOCAL_HOSTNAME,
+        parseInt(import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE_PORT)
+      );
 
-    db.useEmulator(import.meta.env.VITE_FIREBASE_EMULATOR_DATABASE_HOST);
+    firebase
+      .database()
+      .useEmulator(import.meta.env.VITE_FIREBASE_EMULATOR_DATABASE_HOST);
+
+    firebase
+      .functions()
+      .useEmulator(
+        import.meta.env.VITE_LOCAL_HOSTNAME,
+        parseInt(import.meta.env.VITE_FIREBASE_EMULATOR_FUNCTIONS_PORT)
+      );
   }
+}
 
-  return {
-    database: firestore,
+export default {
+  database: firebase.database(),
+  functions: firebase.functions(),
+  firestore: firebase.firestore(),
 
-    signin() {
-      return auth
-        .signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then((result) => {
-          /** @type {firebase.auth.OAuthCredential} */
-          var credential = result.credential;
+  getCurrentUser(auth = firebase.auth()) {
+    return firebase.auth().currentUser;
+  },
 
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          var token = credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-
-          console.log({ user });
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-
-          console.log({ error });
-        });
-    },
-    signout(auth: firebase.auth.Auth): Promise<void> {
-      return auth.signOut();
-    },
-  };
+  signin(auth = firebase.auth()) {
+    return auth
+      .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then((result) => {
+        return result.user!;
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
+  },
+  signout(auth: firebase.auth.Auth): Promise<void> {
+    return auth.signOut();
+  },
 };
