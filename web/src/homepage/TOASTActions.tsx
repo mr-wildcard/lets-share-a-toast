@@ -1,37 +1,37 @@
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useCallback, useEffect } from "react";
+import * as C from "@chakra-ui/react";
 import {
   CloseIcon,
   SettingsIcon,
   EditIcon,
   DeleteIcon,
-} from '@chakra-ui/icons';
-import { animated } from '@react-spring/web';
+} from "@chakra-ui/icons";
+import { animated } from "@react-spring/web";
 
-import { CurrentToast } from '@shared';
+import { CurrentToast } from "@shared/models";
 
-import { spacing } from '@web/core/constants';
-import isToast from '@web/core/helpers/isToast';
-import Image from '@web/core/components/Image';
-import useStores from '@web/core/hooks/useStores';
-import useActionsModalStates from './hooks/useActionsModalStates';
-import useActionsButtonStates from './hooks/useActionsButtonStates';
-import useActionsAnimations from './hooks/useActionsAnimations';
-import OpenVotesModal from './modals/OpenVotes';
-import TOASTInfosModal from './modals/TOASTInfos';
-import CancelTOASTModal from './modals/CancelTOAST';
-import CloseVotesModal from './modals/CloseVotes';
-import MarkTOASTAsReadyModal from './modals/MarkTOASTAsReady';
-import { DeadHeatSubjectsModal } from './modals/DeadHeatSubjects';
-import EndTOASTModal from './modals/EndTOAST';
-import InitiateTOAST from './actions/InitiateTOAST';
-import OpenVotes from './actions/OpenVotes';
-import CloseVotes from './actions/CloseVotes';
-import MarkTOASTAsReady from './actions/MarkTOASTAsReady';
-import DeadHeatSubjects from './actions/DeadHeatSubjects';
-import EndTOAST from './actions/EndTOAST';
+import { spacing } from "@web/core/constants";
+import isToast from "@web/core/helpers/isToast";
+import Image from "@web/core/components/Image";
+import useStores from "@web/core/hooks/useStores";
+import useActionsModalStates from "./hooks/useActionsModalStates";
+import useActionsButtonStates from "./hooks/useActionsButtonStates";
+import useActionsAnimations from "./hooks/useActionsAnimations";
+import OpenVotesModal from "./modals/OpenVotes";
+import TOASTInfosModal from "./modals/TOASTInfos";
+import CancelTOASTModal from "./modals/CancelTOAST";
+import CloseVotesModal from "./modals/CloseVotes";
+import MarkTOASTAsReadyModal from "./modals/MarkTOASTAsReady";
+import { DeadHeatSubjectsModal } from "./modals/DeadHeatSubjects";
+import EndTOASTModal from "./modals/EndTOAST";
+import InitiateTOAST from "./actions/InitiateTOAST";
+import OpenVotes from "./actions/OpenVotes";
+import CloseVotes from "./actions/CloseVotes";
+import MarkTOASTAsReady from "./actions/MarkTOASTAsReady";
+import DeadHeatSubjects from "./actions/DeadHeatSubjects";
+import EndTOAST from "./actions/EndTOAST";
 
-const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : '30px');
+const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
 
 const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px ${
   spacing.stylizedGap
@@ -74,12 +74,12 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
         left={`${spacing.stylizedGap}px`}
         bottom={`${spacing.stylizedGap}px`}
         m={0}
-        textDecoration={animations.background.opened ? 'none' : 'underline'}
+        textDecoration={animations.background.opened ? "none" : "underline"}
         fontSize="lg"
         transition={
           animations.background.opened
-            ? 'all 450ms cubic-bezier(0.34, 1.56, 0.64, 1)'
-            : 'all 250ms ease-out'
+            ? "all 450ms cubic-bezier(0.34, 1.56, 0.64, 1)"
+            : "all 250ms ease-out"
         }
         style={{
           transform: animations.background.opened
@@ -93,7 +93,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
           animations.background.opened ? <CloseIcon /> : <SettingsIcon />
         }
       >
-        {animations.background.opened && 'Close'}
+        {animations.background.opened && "Close"}
         {!animations.background.opened && (
           <C.Box position="relative">
             Manage TOAST
@@ -122,7 +122,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                * to let the menu displays correctly.
                */
               return path1 === bgClipPath1 && path2 === bgClipPath2
-                ? 'none'
+                ? "none"
                 : `polygon(0% ${path1}%, 100% ${path2}%, 100% 100%, 0% 100%)`;
             }
           ),

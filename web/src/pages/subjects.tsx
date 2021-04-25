@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { observer } from 'mobx-react-lite';
-import useSWR from 'swr';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import * as C from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
+import useSWR from "swr";
 
-import { Subject, User, CurrentToast } from '@shared';
+import { Subject, User, CurrentToast } from "@shared/models";
 
-import useStores from '@web/core/hooks/useStores';
-import { spacing, APIPaths, pageColors } from '@web/core/constants';
-import ColoredBackground from '@web/core/components/ColoredBackground';
-import Image from '@web/core/components/Image';
-import { StatusFilterValue } from '@web/subjects/types';
-import SubjectForm from '@web/subjects/components/SubjectForm';
-import SubjectsList from '@web/subjects/components/list/SubjectsList';
-import FilterSubjectStatus from '@web/subjects/components/list/filters/FilterSubjectStatus';
-import FilterSearch from '@web/subjects/components/list/filters/FilterSearch';
+import useStores from "@web/core/hooks/useStores";
+import { spacing, APIPaths, pageColors } from "@web/core/constants";
+import ColoredBackground from "@web/core/components/ColoredBackground";
+import Image from "@web/core/components/Image";
+import { StatusFilterValue } from "@web/subjects/types";
+import SubjectForm from "@web/subjects/components/SubjectForm";
+import SubjectsList from "@web/subjects/components/list/SubjectsList";
+import FilterSubjectStatus from "@web/subjects/components/list/filters/FilterSubjectStatus";
+import FilterSearch from "@web/subjects/components/list/filters/FilterSearch";
 
 const Subjects = () => {
   const { ui, appLoader } = useStores();
@@ -29,13 +29,13 @@ const Subjects = () => {
   const formDrawerState = C.useDisclosure();
 
   const [editedSubject, setEditedSubject] = useState<Subject>();
-  const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('all');
-  const [searchFilter, setSearchFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilterValue>("all");
+  const [searchFilter, setSearchFilter] = useState<string>("");
 
   const filteredSubjects = useMemo<Subject[]>(() => {
     let finalSubjects = subjects || [];
 
-    if (statusFilter !== 'all') {
+    if (statusFilter !== "all") {
       finalSubjects = finalSubjects.filter(
         (subject) => subject.status === statusFilter
       );

@@ -1,11 +1,11 @@
 // @ts-nocheck
-import 'isomorphic-unfetch';
-import faker from 'faker';
+import "isomorphic-unfetch";
+import faker from "faker";
 
-import { SubjectLanguage, SubjectStatus } from '@shared';
+import { SubjectLanguage, SubjectStatus } from "@shared/enums";
 
 export default async (req, res) => {
-  const usersData = await fetch('http://api:3000/users');
+  const usersData = await fetch("http://api:3000/users");
   const users = await usersData.json();
 
   const subjects = new Array(20).fill(0).map(() => ({
@@ -37,12 +37,12 @@ export default async (req, res) => {
   try {
     await Promise.all(
       subjects.map((subject) => {
-        fetch('http://api:3000/subjects', {
+        fetch("http://api:3000/subjects", {
           headers: {
-            'content-type': 'application/json',
+            "content-type": "application/json",
           },
           body: JSON.stringify(subject),
-          method: 'POST',
+          method: "POST",
         });
       })
     );
@@ -51,6 +51,6 @@ export default async (req, res) => {
   }
 
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader("Content-Type", "application/json");
   res.end(JSON.stringify(subjects));
 };

@@ -1,13 +1,13 @@
-import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { observer } from "mobx-react-lite";
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import Image from '@web/core/components/Image';
-import { Pathnames } from '@web/core/constants';
-import WhosInChargeRecap from './WhosInChargeRecap';
+import Image from "@web/core/components/Image";
+import { Pathnames } from "@web/core/constants";
+import WhosInChargeRecap from "./WhosInChargeRecap";
 
 interface Props {
   toast: Toast;

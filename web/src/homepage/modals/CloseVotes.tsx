@@ -1,17 +1,18 @@
-import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { mutate } from 'swr';
+import React, { FunctionComponent, useCallback, useRef, useState } from "react";
+import * as C from "@chakra-ui/react";
+import { mutate } from "swr";
 
-import { ToastStatus, Toast } from '@shared';
+import { Toast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import useStores from '@web/core/hooks/useStores';
-import Image from '@web/core/components/Image';
-import { getTOASTElapsedTimeSinceCreation } from '@web/core/helpers/timing';
-import toastHasDeadheatSubjects from '@web/core/helpers/toastHasDeadheatSubjects';
-import NotificationType from '@web/notifications/types/NotificationType';
+import http from "@web/core/httpClient";
+import { APIPaths, pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import useStores from "@web/core/hooks/useStores";
+import Image from "@web/core/components/Image";
+import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
+import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
+import NotificationType from "@web/notifications/types/NotificationType";
 
 interface Props {
   isOpen: boolean;
@@ -37,9 +38,9 @@ const CloseVotes: FunctionComponent<Props> = ({
 
     try {
       const updatedToast: Toast = await request(APIPaths.TOAST_CURRENT_STATUS, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           status: ToastStatus.VOTE_CLOSED,
@@ -53,7 +54,7 @@ const CloseVotes: FunctionComponent<Props> = ({
 
       closeModal();
     } catch (error) {
-      console.error('An error occured while closing votes', { error });
+      console.error("An error occured while closing votes", { error });
 
       setClosingVotes(false);
     }

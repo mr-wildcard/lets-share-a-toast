@@ -4,19 +4,20 @@ import React, {
   useCallback,
   useRef,
   useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
-import { Form, Formik, Field, FormikProps, FieldProps } from 'formik';
+} from "react";
+import * as C from "@chakra-ui/react";
+import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
-import { ToastStatus, Toast, SubjectStatus } from '@shared';
+import { Toast } from "@shared/models";
+import { ToastStatus, SubjectStatus } from "@shared/enums";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import NotificationType from '@web/notifications/types/NotificationType';
-import useStores from '@web/core/hooks/useStores';
-import getUserFullname from '@web/core/helpers/getUserFullname';
+import http from "@web/core/httpClient";
+import { APIPaths, pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import NotificationType from "@web/notifications/types/NotificationType";
+import useStores from "@web/core/hooks/useStores";
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -77,9 +78,9 @@ const EndTOAST: FunctionComponent<Props> = ({
               const updateTOASTUpdateRequest = getRequest();
 
               await updateTOASTUpdateRequest(APIPaths.TOAST_CURRENT_STATUS, {
-                method: 'PUT',
+                method: "PUT",
                 headers: {
-                  'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                   status: ToastStatus.CLOSED,
@@ -91,11 +92,11 @@ const EndTOAST: FunctionComponent<Props> = ({
                   const changeSubjectRequest = getRequest();
 
                   return changeSubjectRequest(
-                    APIPaths.SUBJECT_STATUS.replace(':id', givenSubjectsId),
+                    APIPaths.SUBJECT_STATUS.replace(":id", givenSubjectsId),
                     {
-                      method: 'PUT',
+                      method: "PUT",
                       headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                       },
                       body: JSON.stringify({
                         status: SubjectStatus.DONE,
@@ -116,7 +117,7 @@ const EndTOAST: FunctionComponent<Props> = ({
 
               closeModal();
             } catch (error) {
-              console.log('An error occured while ending TOAST', { error });
+              console.log("An error occured while ending TOAST", { error });
 
               setEndingTOAST(false);
             }
@@ -170,7 +171,7 @@ const EndTOAST: FunctionComponent<Props> = ({
                                 field,
                                 form,
                               }: FieldProps<
-                                FormValues['givenSubjectsIds'],
+                                FormValues["givenSubjectsIds"],
                                 FormValues
                               >) => (
                                 <C.Checkbox
@@ -212,7 +213,7 @@ const EndTOAST: FunctionComponent<Props> = ({
                                   &nbsp;by&nbsp;
                                   {selectedSubject.speakers
                                     .map(getUserFullname)
-                                    .join(', ')}
+                                    .join(", ")}
                                 </C.Checkbox>
                               )}
                             </Field>

@@ -1,12 +1,11 @@
-import React, { FunctionComponent, useRef } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useRef } from "react";
+import * as C from "@chakra-ui/react";
 
-import { CurrentToast } from '@shared';
-
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import isToast from '@web/core/helpers/isToast';
-import { pageColors } from '@web/core/constants';
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import isToast from "@web/core/helpers/isToast";
+import { pageColors } from "@web/core/constants";
+import firebase from "@web/core/firebase";
 
 interface Props {
   isOpen: boolean;
@@ -15,7 +14,7 @@ interface Props {
 }
 
 const Form = React.lazy(
-  () => import('./Form' /* webpackChunkName: "toast-infos-form" */)
+  () => import("./Form" /* webpackChunkName: "toast-infos-form" */)
   /*
   {
     loading: function Loader() {
@@ -32,7 +31,7 @@ const Form = React.lazy(
 const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   const cancelButtonRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const isCreatingToast = !isToast(props.currentToast);
+  const isCreatingToast = !isToast(firebase.currentToast);
 
   return (
     <C.Modal
@@ -48,7 +47,7 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
           <C.ModalHeader textAlign="center">
             <C.Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
-                {isCreatingToast ? 'Start a new TOAST' : 'Edit current TOAST'}
+                {isCreatingToast ? "Start a new TOAST" : "Edit current TOAST"}
               </HighlightedText>
               <Image
                 position="absolute"
@@ -63,7 +62,6 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
           <C.ModalBody pb={6}>
             <Form
               closeModal={props.closeModal}
-              currentToast={props.currentToast}
               cancelButtonRef={cancelButtonRef}
             />
           </C.ModalBody>

@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { CurrentToast, Subject, User } from '@shared';
+import { CurrentToast, Subject, User } from "@shared/models";
 
-import { pageColors } from '@web/core/constants';
+import { pageColors } from "@web/core/constants";
 
 interface Props {
   subject?: Subject;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const Form = React.lazy(
-  () => import('./Form' /* webpackChunkName: "subject-form" */)
+  () => import("./Form" /* webpackChunkName: "subject-form" */)
   /*{
     loading: function Loader() {
       const theme = C.useTheme();

@@ -6,15 +6,15 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { observer } from "mobx-react-lite";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 
-import { User } from "@shared/firebase/firestore/models/User";
-
-import { CurrentToast, Toast } from "@shared";
+import { FirestoreUser } from "@shared/firebase";
+import { CurrentToast, Toast } from "@shared/models";
 
 import firebase from "@web/core/firebase";
 import http from "@web/core/httpClient";
@@ -37,7 +37,6 @@ import datePickerCSS from "./DatePicker.module.css";
 
 interface Props {
   cancelButtonRef: Ref<HTMLButtonElement>;
-  currentToast?: CurrentToast;
   closeModal(toastCreated: boolean): void;
 }
 
@@ -50,8 +49,8 @@ interface FormErrors {
 
 interface FormValues extends SlackNotificationFieldsValues {
   dueDate: Date;
-  organizer?: User;
-  scribe?: User;
+  organizer?: FirestoreUser;
+  scribe?: FirestoreUser;
 }
 
 const today = new Date();
@@ -59,21 +58,10 @@ const today = new Date();
 const defaultSlackNotificationMessage = `@here {{PROFILE}} scheduled a new 🍞 TOAST 🍞 for {{DATE}} ! 🎉
 ✍️ It’s time to add / remove / update your subject(s) {{URL}}`;
 
-const Form: FunctionComponent<Props> = ({
-  currentToast,
-  cancelButtonRef,
-  closeModal,
-}) => {
+const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
   const { auth, notifications } = useStores();
-  const [users, setUsers] = useState<User[]>([]);
 
-  useEffect(() => {
-    const getUsers = firebase.firestore
-      .collection("users")
-      .get()
-      .then((collection) => collection.docs)
-      .then((docs) => setUsers(docs.map((doc) => doc.data() as User)));
-  }, []);
+  const currentToast = firebase.currentToast;
 
   const getFormattedSlackNotification = useCallback(
     (notificationText, toastDueDate) => {
@@ -157,10 +145,12 @@ const Form: FunctionComponent<Props> = ({
             scribeId: values.scribe!.uid,
           });
 
+          // @ts-ignore
           notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
             dueDate: values.dueDate.toString(),
           });
         } else {
+          // @ts-ignore
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
         }
 
@@ -218,13 +208,13 @@ const Form: FunctionComponent<Props> = ({
                           </C.FormLabel>
                           <SelectUserInput
                             {...field}
-                            isDisabled={!users}
-                            options={users}
+                            isDisabled={!firebase.users.length}
+                            options={firebase.users}
                             isInvalid={isInvalid}
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(user: User | null) => {
+                            onChange={(user: FirestoreUser | null) => {
                               if (user) {
                                 setFieldValue(field.name, user);
                               }
@@ -247,12 +237,12 @@ const Form: FunctionComponent<Props> = ({
                           <SelectUserInput
                             {...field}
                             isInvalid={isInvalid}
-                            isDisabled={!users}
-                            options={users}
+                            isDisabled={!firebase.users.length}
+                            options={firebase.users}
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(user: User | null) => {
+                            onChange={(user: FirestoreUser | null) => {
                               if (user) {
                                 setFieldValue(field.name, user);
                               }
@@ -300,7 +290,7 @@ const Form: FunctionComponent<Props> = ({
 
               <C.ModalFooter justifyContent="center">
                 <C.Button
-                  isDisabled={!users.length || !isValid}
+                  isDisabled={!firebase.users.length || !isValid}
                   overflow="hidden"
                   type="submit"
                   colorScheme="blue"
@@ -356,4 +346,4 @@ const Form: FunctionComponent<Props> = ({
   );
 };
 
-export default Form;
+export default observer(Form);

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import { FirestoreCollection } from "@shared/firebase/firestore/enum/FirestoreCollection";
+import { FirestoreCollection } from "@shared/firebase";
 
 export const storeIntoFirestoreOnCreation = functions.auth
   .user()

@@ -1,11 +1,12 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useMemo } from "react";
+import * as C from "@chakra-ui/react";
 
-import { ToastStatus, CurrentToast } from '@shared';
+import { CurrentToast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import isToast from '@web/core/helpers/isToast';
-import { hasTOASTDatePassed, isTOASTToday } from '@web/core/helpers/timing';
-import useStores from '@web/core/hooks/useStores';
+import isToast from "@web/core/helpers/isToast";
+import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
+import useStores from "@web/core/hooks/useStores";
 
 const lazyLoadConfig = {
   loading: function Loader() {
@@ -15,8 +16,8 @@ const lazyLoadConfig = {
       <C.Spinner
         thickness="4px"
         speed="0.65s"
-        emptyColor={theme.colors.gray['800']}
-        color={theme.colors.orange['300']}
+        emptyColor={theme.colors.gray["800"]}
+        color={theme.colors.orange["300"]}
         size="xl"
       />
     );
@@ -24,46 +25,46 @@ const lazyLoadConfig = {
 };
 
 const NoTOAST = React.lazy(
-  () => import('./statuses/NoTOAST' /* webpackChunkName: "status-no-toast" */)
+  () => import("./statuses/NoTOAST" /* webpackChunkName: "status-no-toast" */)
 );
 
 const TOASTIsToday = React.lazy(
   () =>
     import(
-      './statuses/TOASTIsToday' /* webpackChunkName: "status-toast-today" */
+      "./statuses/TOASTIsToday" /* webpackChunkName: "status-toast-today" */
     )
 );
 
 const TOASTDateHasPassed = React.lazy(
   () =>
     import(
-      './statuses/TOASTDateHasPassed' /* webpackChunkName: "status-toast-date-passed" */
+      "./statuses/TOASTDateHasPassed" /* webpackChunkName: "status-toast-date-passed" */
     )
 );
 
 const OpenForContributions = React.lazy(
   () =>
     import(
-      './statuses/OpenForContributions' /* webpackChunkName: "status-open-for-contribution" */
+      "./statuses/OpenForContributions" /* webpackChunkName: "status-open-for-contribution" */
     )
 );
 
 const OpenForVotes = React.lazy(
   () =>
     import(
-      './statuses/OpenForVotes' /* webpackChunkName: "status-open-for-votes" */
+      "./statuses/OpenForVotes" /* webpackChunkName: "status-open-for-votes" */
     )
 );
 
 const VoteClosed = React.lazy(
   () =>
-    import('./statuses/VoteClosed' /* webpackChunkName: "status-vote-closed" */)
+    import("./statuses/VoteClosed" /* webpackChunkName: "status-vote-closed" */)
 );
 
 const WaitingForTOAST = React.lazy(
   () =>
     import(
-      './statuses/WaitingForTOAST' /* webpackChunkName: "status-waiting-for-toast" */
+      "./statuses/WaitingForTOAST" /* webpackChunkName: "status-waiting-for-toast" */
     )
 );
 

@@ -1,4 +1,4 @@
-import { ToastStatus } from '@shared';
+import { ToastStatus } from "@shared/enums";
 
 const ToastStatusesOrder: ToastStatus[] = [
   ToastStatus.OPEN_TO_CONTRIBUTION,

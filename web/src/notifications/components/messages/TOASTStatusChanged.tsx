@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { ToastStatus } from '@shared';
+import { ToastStatus } from "@shared/enums";
 
-import Image from '@web/core/components/Image';
-import NotificationTOASTStatusChanged from '../../types/NotificationTOASTStatusChanged';
-import NotificationWrapper from '../NotificationWrapper';
+import Image from "@web/core/components/Image";
+import NotificationTOASTStatusChanged from "../../types/NotificationTOASTStatusChanged";
+import NotificationWrapper from "../NotificationWrapper";
 
 const Username: FunctionComponent<{ username: string }> = ({ username }) => (
   <C.Text as="span" fontWeight="bold">

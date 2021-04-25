@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { MenuItem } from 'react-contextmenu';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
+import { MenuItem } from "react-contextmenu";
 
-import { SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
 
 interface Props {
   onClick: () => void;
@@ -18,7 +18,7 @@ const ContextMenuItem: FunctionComponent<Props> = ({ onClick, children }) => {
         alignItems="center"
         cursor="pointer"
         _hover={{
-          bg: theme.colors.gray['100'],
+          bg: theme.colors.gray["100"],
         }}
         p={2}
         px={3}

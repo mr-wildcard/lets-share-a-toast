@@ -7,7 +7,7 @@ import {
   FirebaseVotingSessionDocument,
   ClientSideVoteEvent,
   RealTimeVote,
-} from "@shared";
+} from "@shared/enums";
 
 export default class Voting {
   private initializing = false;

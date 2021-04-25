@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { observer } from 'mobx-react-lite';
-import useSWR from 'swr';
+import React, { useEffect, useState } from "react";
+import * as C from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
+import useSWR from "swr";
 
-import { Toast, ToastStatus } from '@shared';
+import { Toast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import { APIPaths, pageColors } from '@web/core/constants';
-import useStores from '@web/core/hooks/useStores';
-import isToast from '@web/core/helpers/isToast';
-import ColoredBackground from '@web/core/components/ColoredBackground';
-import { LoadingErrorCode } from '@web/votes/types';
-import LoadingError from '@web/votes/LoadingError';
+import { APIPaths, pageColors } from "@web/core/constants";
+import useStores from "@web/core/hooks/useStores";
+import isToast from "@web/core/helpers/isToast";
+import ColoredBackground from "@web/core/components/ColoredBackground";
+import { LoadingErrorCode } from "@web/votes/types";
+import LoadingError from "@web/votes/LoadingError";
 
 const VotingSession = () => {
   const {
@@ -38,7 +39,7 @@ const VotingSession = () => {
         voting.initialize().catch((error) => {
           setLoadingError(LoadingErrorCode.UNKNOWN_ERROR);
 
-          console.error('Error while initiatizing voting toast.', {
+          console.error("Error while initiatizing voting toast.", {
             error,
           });
         });
@@ -58,7 +59,7 @@ const VotingSession = () => {
     }
 
     return () => {
-      if (typeof listenToVotesHandler === 'function') {
+      if (typeof listenToVotesHandler === "function") {
         listenToVotesHandler();
       }
     };
@@ -72,7 +73,7 @@ const VotingSession = () => {
         <C.Flex direction="column">
           {(!voting.initialized || !voting.session) && (
             <>
-              {loadingError === null && 'Chargement en cours...'}
+              {loadingError === null && "Chargement en cours..."}
               {loadingError !== null && <LoadingError error={loadingError} />}
             </>
           )}
@@ -88,7 +89,7 @@ const VotingSession = () => {
                       onClick={() =>
                         voting.toggleVote({
                           currentToastId: toast!.id,
-                          userId: 'john-doe',
+                          userId: "john-doe",
                           // auth.profile.id,
                           subjectId: subjectId,
                         })

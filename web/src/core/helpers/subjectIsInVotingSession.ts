@@ -1,4 +1,4 @@
-import { SubjectStatus, ToastStatus } from '@shared';
+import { SubjectStatus, ToastStatus } from "@shared/enums";
 
 /**
  * We don't query anything from the database to establish if a subject is included in the current toast voting session,

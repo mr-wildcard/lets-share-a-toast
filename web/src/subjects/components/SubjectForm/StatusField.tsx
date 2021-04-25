@@ -4,13 +4,14 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { FieldProps } from 'formik';
-import * as C from '@chakra-ui/react';
+} from "react";
+import { FieldProps } from "formik";
+import * as C from "@chakra-ui/react";
 
-import { Subject, SubjectStatus } from '@shared';
+import { Subject } from "@shared/models";
+import { SubjectStatus } from "@shared/enums";
 
-import { getStatusButtonStyleProps } from '@web/subjects/components/SubjectForm/helpers';
+import { getStatusButtonStyleProps } from "@web/subjects/components/SubjectForm/helpers";
 
 interface StatusBackgroundStyles {
   x: number;
@@ -70,16 +71,16 @@ const StatusField: FunctionComponent<Props> = ({
   const [bgStyles, setBgStyles] = useState<StatusBackgroundStyles>({
     x: 0,
     width: 0,
-    color: 'transparent',
+    color: "transparent",
   });
 
   const rootElement = useRef() as React.MutableRefObject<HTMLDivElement>;
 
   const statusColors = useMemo(
     () => ({
-      [SubjectStatus.AVAILABLE]: theme.colors.green['500'],
-      [SubjectStatus.UNAVAILABLE]: theme.colors.red['500'],
-      [SubjectStatus.DONE]: theme.colors.gray['500'],
+      [SubjectStatus.AVAILABLE]: theme.colors.green["500"],
+      [SubjectStatus.UNAVAILABLE]: theme.colors.red["500"],
+      [SubjectStatus.DONE]: theme.colors.gray["500"],
     }),
     [theme.colors.green, theme.colors.red, theme.colors.gray]
   );

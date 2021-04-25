@@ -1,16 +1,16 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { SubjectLanguage } from '@shared';
+import { SubjectLanguage } from "@shared/enums";
 
 const languageFlags = {
-  [SubjectLanguage.FR]: '🥖',
-  [SubjectLanguage.EN]: '🇬🇧',
+  [SubjectLanguage.FR]: "🥖",
+  [SubjectLanguage.EN]: "🇬🇧",
 };
 
 const languageLabels = {
-  [SubjectLanguage.FR]: 'Français',
-  [SubjectLanguage.EN]: 'English',
+  [SubjectLanguage.FR]: "Français",
+  [SubjectLanguage.EN]: "English",
 };
 
 interface Props {

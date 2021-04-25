@@ -1,12 +1,13 @@
-import React, { FunctionComponent, useRef } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useRef } from "react";
+import * as C from "@chakra-ui/react";
 
-import { CurrentToast, Subject, SubjectStatus, ToastStatus } from '@shared';
+import { CurrentToast, Subject } from "@shared/models";
+import { SubjectStatus, ToastStatus } from "@shared/enums";
 
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import { pageColors } from '@web/core/constants';
-import isToast from '@web/core/helpers/isToast';
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import { pageColors } from "@web/core/constants";
+import isToast from "@web/core/helpers/isToast";
 
 interface Props {
   subject: Subject;

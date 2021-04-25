@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useMemo } from "react";
+import * as C from "@chakra-ui/react";
 
-import { User } from '@shared';
+import { User } from "@shared/models";
 
-import getUserFullname from '@web/core/helpers/getUserFullname';
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props {
   speakers: User[];
@@ -11,15 +11,15 @@ interface Props {
 
 const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
   const namesList = useMemo(() => {
-    return speakers.map(getUserFullname).join(', ');
+    return speakers.map(getUserFullname).join(", ");
   }, [speakers]);
 
   const highNumberOfSpeakers = speakers.length > 2;
 
   return (
     <C.Flex
-      direction={highNumberOfSpeakers ? 'column' : 'row'}
-      align={highNumberOfSpeakers ? 'start' : 'center'}
+      direction={highNumberOfSpeakers ? "column" : "row"}
+      align={highNumberOfSpeakers ? "start" : "center"}
     >
       <C.AvatarGroup size="sm">
         {speakers.map((speaker, index) => {

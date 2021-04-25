@@ -1,13 +1,14 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useMemo } from "react";
+import * as C from "@chakra-ui/react";
 
-import { Subject, SubjectStatus } from '@shared';
+import { Subject } from "@shared/models";
+import { SubjectStatus } from "@shared/enums";
 
-import { isSubjectNew } from '@web/subjects/helpers';
-import SubjectStatusBadge from '@web/subjects/components/list/item/SubjectStatusBadge';
-import SubjectLanguageBadge from '@web/subjects/components/list/item/SubjectLanguageBadge';
-import SubjectDurationBadge from '@web/subjects/components/list/item/SubjectDurationBadge';
-import SubjectNewBadge from '@web/subjects/components/list/item/SubjectNewBadge';
+import { isSubjectNew } from "@web/subjects/helpers";
+import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
+import SubjectLanguageBadge from "@web/subjects/components/list/item/SubjectLanguageBadge";
+import SubjectDurationBadge from "@web/subjects/components/list/item/SubjectDurationBadge";
+import SubjectNewBadge from "@web/subjects/components/list/item/SubjectNewBadge";
 
 interface Props {
   subject: Subject;

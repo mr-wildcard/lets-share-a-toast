@@ -2,11 +2,11 @@ import React, { FunctionComponent } from "react";
 import * as C from "@chakra-ui/react";
 import Select, { Props as SelectProps } from "react-select";
 
-import { User } from "@shared/firebase/firestore/models/User";
+import { FirestoreUser } from "@shared/firebase/firestore/models/FirestoreUser";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
 
-interface Props extends SelectProps<User> {
+interface Props extends SelectProps<FirestoreUser> {
   isInvalid: boolean;
 }
 
@@ -24,9 +24,9 @@ const SelectUserInput: FunctionComponent<Props> = ({
       isMulti={false}
       isSearchable={true}
       noOptionsMessage={() => "No user found."}
-      getOptionValue={(user: User) => user.uid}
-      getOptionLabel={(user: User) => user.displayName}
-      formatOptionLabel={(user: User) => (
+      getOptionValue={(user: FirestoreUser) => user.uid}
+      getOptionLabel={(user: FirestoreUser) => user.displayName}
+      formatOptionLabel={(user: FirestoreUser) => (
         <C.Stack align="center" spacing={2} direction="row">
           <C.Avatar size="xs" name={user.displayName} src={user.avatarURL} />
           <C.Text as="span">{user.displayName}</C.Text>

@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { useState } from "react";
+import * as C from "@chakra-ui/react";
 
-import { ToastStatus, User, SubjectStatus } from '@shared';
+import { User } from "@shared/models";
+import { ToastStatus, SubjectStatus } from "@shared/enums";
 
-import useStores from '@web/core/hooks/useStores';
-import NotificationType from '../../types/NotificationType';
+import useStores from "@web/core/hooks/useStores";
+import NotificationType from "../../types/NotificationType";
 
 const fakeProfile: Partial<User> = {
-  firstName: 'profile.firstName',
-  picture: 'https://emoji.slack-edge.com/T026JHDL4/ju/7949d2a1e521513d.png',
-  id: 'profile.id',
+  firstName: "profile.firstName",
+  picture: "https://emoji.slack-edge.com/T026JHDL4/ju/7949d2a1e521513d.png",
+  id: "profile.id",
 };
 
 const SESSIONS_STATUSES = Object.values(ToastStatus).filter(
-  (value) => typeof value === 'string'
+  (value) => typeof value === "string"
 );
 
 const SUBJECT_STATUSES = Object.values(SubjectStatus).filter(
-  (value) => typeof value === 'string'
+  (value) => typeof value === "string"
 );
 
 const Debug_Notifications = () => {
@@ -111,7 +112,7 @@ const Debug_Notifications = () => {
                       fakeProfile as User,
                       NotificationType.EDIT_SUBJECT_CONTENT,
                       {
-                        subjectTitle: 'A cool toast subject believe me',
+                        subjectTitle: "A cool toast subject believe me",
                       }
                     );
                   }}

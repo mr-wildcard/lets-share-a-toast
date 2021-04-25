@@ -1,9 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { ToastStatus, Toast } from '@shared';
+import { Toast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 interface Props {
   currentToast: Toast;

@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { computed, makeObservable, observable, when } from 'mobx';
+import { computed, makeObservable, observable, when } from "mobx";
 
-import { CurrentToast } from '@shared';
+import { CurrentToast } from "@shared/models";
 
-import isToast from '@web/core/helpers/isToast';
-import { APIPaths } from '../constants';
+import isToast from "@web/core/helpers/isToast";
+import { APIPaths } from "../constants";
 
 export default class CurrentToastSession {
   public toast: CurrentToast = {};
@@ -34,7 +34,7 @@ export default class CurrentToastSession {
   }
 
   public get isLoaded() {
-    return typeof this.toast !== 'undefined';
+    return typeof this.toast !== "undefined";
   }
 
   public get isOngoing() {

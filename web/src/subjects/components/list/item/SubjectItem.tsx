@@ -4,30 +4,31 @@ import React, {
   useCallback,
   useMemo,
   useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
-import dayjs from 'dayjs';
-import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
-import { observer } from 'mobx-react-lite';
+} from "react";
+import * as C from "@chakra-ui/react";
+import dayjs from "dayjs";
+import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { observer } from "mobx-react-lite";
 
-import { SubjectStatus, Subject, ToastStatus } from '@shared';
+import { Subject } from "@shared/models";
+import { SubjectStatus, ToastStatus } from "@shared/enums";
 
-import http from '@web/core/httpClient';
-import { APIPaths } from '@web/core/constants';
-import useStores from '@web/core/hooks/useStores';
-import isToast from '@web/core/helpers/isToast';
-import NotificationType from '@web/notifications/types/NotificationType';
-import Image from '@web/core/components/Image';
-import DeleteSubjectModal from '@web/subjects/components/modals/DeleteSubjectModal';
-import ViewSubjectModal from '@web/subjects/components/modals/ViewSubjectModal';
-import { isSubjectNew } from '@web/subjects/helpers';
-import SubjectStatusBadge from './SubjectStatusBadge';
-import SubjectSpeakers from './SubjectSpeakers';
-import SubjectNewBadge from './SubjectNewBadge';
-import css from './SubjectItem.module.css';
-import ContextMenuItem from './ContextMenuItem';
-import subjectIsInVotingSession from '@web/core/helpers/subjectIsInVotingSession';
+import http from "@web/core/httpClient";
+import { APIPaths } from "@web/core/constants";
+import useStores from "@web/core/hooks/useStores";
+import isToast from "@web/core/helpers/isToast";
+import NotificationType from "@web/notifications/types/NotificationType";
+import Image from "@web/core/components/Image";
+import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectModal";
+import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
+import { isSubjectNew } from "@web/subjects/helpers";
+import SubjectStatusBadge from "./SubjectStatusBadge";
+import SubjectSpeakers from "./SubjectSpeakers";
+import SubjectNewBadge from "./SubjectNewBadge";
+import css from "./SubjectItem.module.css";
+import ContextMenuItem from "./ContextMenuItem";
+import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 
 interface Props {
   subject: Subject;
@@ -63,13 +64,13 @@ const SubjectItem: FunctionComponent<Props> = ({
       try {
         const request = http();
 
-        await request(APIPaths.SUBJECT_STATUS.replace(':id', subject.id), {
-          method: 'PUT',
+        await request(APIPaths.SUBJECT_STATUS.replace(":id", subject.id), {
+          method: "PUT",
           body: JSON.stringify({
             status,
           }),
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
@@ -102,11 +103,11 @@ const SubjectItem: FunctionComponent<Props> = ({
         try {
           const request = http();
 
-          await request(APIPaths.SUBJECT.replace(':id', subject.id), {
+          await request(APIPaths.SUBJECT.replace(":id", subject.id), {
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            method: 'DELETE',
+            method: "DELETE",
           });
 
           await revalidateSubjects();
@@ -194,7 +195,7 @@ const SubjectItem: FunctionComponent<Props> = ({
     const creationDate = dayjs(subject.createdDate);
 
     return {
-      subjectIsOld: creationDate.isBefore(dayjs().subtract(3, 'month')),
+      subjectIsOld: creationDate.isBefore(dayjs().subtract(3, "month")),
       oldSubjectImageAlt: `Subject has been submitted ${creationDate.fromNow()}`,
     };
   }, [subject]);
@@ -215,14 +216,14 @@ const SubjectItem: FunctionComponent<Props> = ({
           style={{
             transform: `scale(${contextualMenuOpened ? 0.98 : 1})`,
             backgroundColor: contextualMenuOpened
-              ? theme.colors.gray['50']
+              ? theme.colors.gray["50"]
               : theme.colors.white,
           }}
         >
           <C.Box
-            p={contextualMenuOpened ? '15px' : '20px'}
-            borderWidth={contextualMenuOpened ? '5px' : 0}
-            borderColor={theme.colors.cyan['400']}
+            p={contextualMenuOpened ? "15px" : "20px"}
+            borderWidth={contextualMenuOpened ? "5px" : 0}
+            borderColor={theme.colors.cyan["400"]}
             borderStyle="solid"
           >
             {subjectIsOld && (
@@ -235,7 +236,7 @@ const SubjectItem: FunctionComponent<Props> = ({
                 top={0}
                 right={0}
                 style={{
-                  filter: 'invert(1)',
+                  filter: "invert(1)",
                 }}
               />
             )}
@@ -253,7 +254,7 @@ const SubjectItem: FunctionComponent<Props> = ({
             <C.Divider
               mt="30px"
               mb={3}
-              borderColor={theme.colors.gray['300']}
+              borderColor={theme.colors.gray["300"]}
             />
 
             <C.Flex align="center">
@@ -338,7 +339,7 @@ const SubjectItem: FunctionComponent<Props> = ({
             alignItems="center"
             cursor="pointer"
             _hover={{
-              bg: theme.colors.gray['100'],
+              bg: theme.colors.gray["100"],
             }}
             p={2}
             px={3}
@@ -353,7 +354,7 @@ const SubjectItem: FunctionComponent<Props> = ({
             alignItems="center"
             cursor="pointer"
             _hover={{
-              bg: theme.colors.gray['100'],
+              bg: theme.colors.gray["100"],
             }}
             p={2}
             px={3}

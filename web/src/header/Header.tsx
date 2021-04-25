@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faBellSlash } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router";
 
-import { CurrentToast, User, ToastStatus } from "@shared";
+import { CurrentToast, User } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
 import {
   APIPaths,

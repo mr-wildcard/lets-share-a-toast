@@ -1,21 +1,22 @@
-import React, { FunctionComponent, useRef } from 'react';
-import * as C from '@chakra-ui/react';
-import { Field, FieldProps, Form, Formik } from 'formik';
-import { mutate } from 'swr';
+import React, { FunctionComponent, useRef } from "react";
+import * as C from "@chakra-ui/react";
+import { Field, FieldProps, Form, Formik } from "formik";
+import { mutate } from "swr";
 
-import { ToastStatus, Toast, URLQueryParams } from '@shared';
+import { Toast } from "@shared/models";
+import { ToastStatus, URLQueryParams } from "@shared/enums";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors, Pathnames } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import getAppURL from '@web/core/helpers/getAppURL';
-import { getTOASTElapsedTimeSinceCreation } from '@web/core/helpers/timing';
-import getAPIEndpointWithSlackNotification from '@web/core/helpers/getAPIEndpointWithSlackNotification';
-import NotificationType from '@web/notifications/types/NotificationType';
-import useStores from '@web/core/hooks/useStores';
-import slackNotificationFieldsAreValid from '@web/core/helpers/form/validateSlackNotificationFields';
-import SlackNotificationFieldsValues from '@web/core/models/form/SlackNotificationFieldsValues';
+import http from "@web/core/httpClient";
+import { APIPaths, pageColors, Pathnames } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import getAppURL from "@web/core/helpers/getAppURL";
+import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
+import getAPIEndpointWithSlackNotification from "@web/core/helpers/getAPIEndpointWithSlackNotification";
+import NotificationType from "@web/notifications/types/NotificationType";
+import useStores from "@web/core/hooks/useStores";
+import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
+import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -92,9 +93,9 @@ const OpenVotes: FunctionComponent<Props> = ({
                   : APIPaths.TOAST_CURRENT_STATUS;
 
                 const updatedToast: Toast = await request(endpoint, {
-                  method: 'PUT',
+                  method: "PUT",
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
                     status: ToastStatus.OPEN_FOR_VOTE,

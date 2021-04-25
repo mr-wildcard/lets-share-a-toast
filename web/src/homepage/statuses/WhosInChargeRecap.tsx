@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import { getFormattedTOASTDateWithRemainingDays } from '@web/core/helpers/timing';
+import getUserFullname from "@web/core/helpers/getUserFullname";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
 
 interface Props {
   toast: Toast;

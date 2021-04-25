@@ -1,11 +1,10 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import { DatabaseRefPaths } from "@shared/firebase/database/enum/DatabaseRefPaths";
+import { DatabaseRefPaths } from "@shared/firebase";
 import { ToastStatus } from "@shared/enums/ToastStatus";
 
 export const createToast = functions.https.onCall((data, context) => {
-  console.log({ data });
   return admin
     .database()
     .ref(DatabaseRefPaths.CURRENT_TOAST)

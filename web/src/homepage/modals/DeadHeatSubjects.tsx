@@ -1,18 +1,19 @@
-import React, { FunctionComponent, useEffect, useMemo, useRef } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useEffect, useMemo, useRef } from "react";
+import * as C from "@chakra-ui/react";
 
-import { Field, FieldProps, Form, Formik, FormikProps } from 'formik';
-import { mutate } from 'swr';
+import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
+import { mutate } from "swr";
 
-import { ToastStatus, Toast, Subject } from '@shared';
+import { Toast, Subject } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import NotificationType from '@web/notifications/types/NotificationType';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import useStores from '@web/core/hooks/useStores';
+import http from "@web/core/httpClient";
+import { APIPaths, pageColors } from "@web/core/constants";
+import NotificationType from "@web/notifications/types/NotificationType";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import getUserFullname from "@web/core/helpers/getUserFullname";
+import useStores from "@web/core/hooks/useStores";
 
 interface FormErrors {
   selectedSubjectsIds?: boolean;
@@ -81,12 +82,12 @@ export function DeadHeatSubjectsModal({
           onSubmit={async (values: FormValues): Promise<void> => {
             const request = http();
 
-            console.log('Dead heat subjects', { values });
+            console.log("Dead heat subjects", { values });
 
             await request(APIPaths.TOAST_CURRENT_SELECTED_SUBJECT, {
-              method: 'PUT',
+              method: "PUT",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
                 selectedSubjectsIds: values.selectedSubjectsIds,
@@ -94,9 +95,9 @@ export function DeadHeatSubjectsModal({
             });
 
             await request(APIPaths.TOAST_CURRENT_STATUS, {
-              method: 'PUT',
+              method: "PUT",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
                 status: ToastStatus.WAITING_FOR_TOAST,
@@ -185,12 +186,12 @@ export function DeadHeatSubjectsModal({
                                   borderStyle="solid"
                                   borderColor="gray.200"
                                   color={
-                                    subjectIsSelected ? 'white' : 'gray.600'
+                                    subjectIsSelected ? "white" : "gray.600"
                                   }
                                   backgroundColor={
-                                    subjectIsSelected ? 'green.500' : 'white'
+                                    subjectIsSelected ? "green.500" : "white"
                                   }
-                                  boxShadow={subjectIsSelected ? 'none' : 'sm'}
+                                  boxShadow={subjectIsSelected ? "none" : "sm"}
                                   cursor="pointer"
                                   onClick={() => {
                                     if (subjectIsSelected) {
@@ -247,7 +248,7 @@ export function DeadHeatSubjectsModal({
                                     By:&nbsp;
                                     {subject.speakers
                                       .map(getUserFullname)
-                                      .join(', ')}
+                                      .join(", ")}
                                   </C.Text>
                                   <C.Text textAlign="right">
                                     Votes: {currentToast.votes[subject.id]}
@@ -270,10 +271,10 @@ export function DeadHeatSubjectsModal({
                     >
                       {!isValid &&
                         `Select ${remainingSubjectsToSelect} more subject${
-                          remainingSubjectsToSelect > 1 ? 's' : ''
+                          remainingSubjectsToSelect > 1 ? "s" : ""
                         }`}
 
-                      {isValid && 'Save selected subjects'}
+                      {isValid && "Save selected subjects"}
                     </C.Button>
                     <C.Button
                       ref={cancelBtn}

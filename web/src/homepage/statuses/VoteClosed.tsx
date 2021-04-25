@@ -1,14 +1,14 @@
-import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import { observer } from "mobx-react-lite";
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import { getTOASTElapsedTimeSinceCreation } from '@web/core/helpers/timing';
-import Image from '@web/core/components/Image';
-import toastHasDeadheatSubjects from '@web/core/helpers/toastHasDeadheatSubjects';
-import ProposeSubjectForNextTOASTButton from '@web/homepage/statuses/ProposeSubjectForNextTOASTButton';
-import WhosInChargeRecap from './WhosInChargeRecap';
+import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
+import Image from "@web/core/components/Image";
+import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
+import ProposeSubjectForNextTOASTButton from "@web/homepage/statuses/ProposeSubjectForNextTOASTButton";
+import WhosInChargeRecap from "./WhosInChargeRecap";
 
 interface Props {
   toast: Toast;

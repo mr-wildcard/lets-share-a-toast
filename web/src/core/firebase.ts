@@ -4,6 +4,13 @@ import "firebase/firestore";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/functions";
+import { makeObservable, observable } from "mobx";
+
+import {
+  FirestoreUser,
+  DatabaseCurrentToast,
+  DatabaseRefPaths,
+} from "@shared/firebase";
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -38,16 +45,20 @@ if (!firebase.apps.length) {
   }
 }
 
-export default {
+const firebaseInstance = {
   database: firebase.database(),
   functions: firebase.functions(),
   firestore: firebase.firestore(),
+  auth: firebase.auth(),
 
-  getCurrentUser(auth = firebase.auth()) {
+  users: [],
+  currentToast: null,
+
+  getCurrentUser(auth = this.auth) {
     return firebase.auth().currentUser;
   },
 
-  signin(auth = firebase.auth()) {
+  signin(auth = this.auth) {
     return auth
       .signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then((result) => {
@@ -57,7 +68,37 @@ export default {
         console.log({ error });
       });
   },
-  signout(auth: firebase.auth.Auth): Promise<void> {
+
+  signout(auth = this.auth): Promise<void> {
     return auth.signOut();
   },
 };
+
+const authHandler = firebase.auth().onAuthStateChanged(onAuthChanged);
+
+function onAuthChanged(user) {
+  if (user) {
+    firebase
+      .firestore()
+      .collection("users")
+      .onSnapshot(
+        (snapshot: firebase.firestore.QuerySnapshot<FirestoreUser>) => {
+          firebaseInstance.users = snapshot.docs.map((doc) => doc.data());
+        }
+      );
+
+    firebase
+      .database()
+      .ref(DatabaseRefPaths.CURRENT_TOAST)
+      .on("value", (snapshot) => {
+        firebaseInstance.currentToast = snapshot.val();
+      });
+
+    authHandler();
+  }
+}
+
+export default makeObservable(firebaseInstance, {
+  users: observable,
+  currentToast: observable,
+});

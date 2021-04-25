@@ -2,7 +2,7 @@
 import { Socket } from "socket.io-client";
 import { computed, makeObservable, observable, reaction } from "mobx";
 
-import { User } from "@shared";
+import { User } from "@shared/models";
 
 import NotificationType from "@web/notifications/types/NotificationType";
 import Toaster from "@web/notifications/types/Toaster";

@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
 
 interface Props {
   status: SubjectStatus;

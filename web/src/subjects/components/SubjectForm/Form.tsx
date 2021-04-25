@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
-import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from '@chakra-ui/icons';
-import { observer } from 'mobx-react-lite';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-regular-svg-icons';
+import React, { FunctionComponent, useMemo } from "react";
+import * as C from "@chakra-ui/react";
+import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
+import { observer } from "mobx-react-lite";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
 import {
   Field,
   FieldArray,
@@ -11,30 +11,24 @@ import {
   Form as FormikForm,
   Formik,
   FormikProps,
-} from 'formik';
-import Select from 'react-select';
+} from "formik";
+import Select from "react-select";
 
-import {
-  Subject,
-  SubjectLanguage,
-  SubjectStatus,
-  Toast,
-  ToastStatus,
-  User,
-} from '@shared';
+import { Subject, Toast, User } from "@shared/models";
+import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
 
-import http from '@web/core/httpClient';
-import NotificationType from '@web/notifications/types/NotificationType';
-import useStores from '@web/core/hooks/useStores';
-import { APIPaths, pageColors, urlRegex } from '@web/core/constants';
-import { getTOASTRemainingDays } from '@web/core/helpers/timing';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import SelectUserInput from '@web/core/components/form/SelectUserInput';
-import isToast from '@web/core/helpers/isToast';
-import subjectIsInVotingSession from '@web/core/helpers/subjectIsInVotingSession';
-import SubjectStatusBadge from '@web/subjects/components/list/item/SubjectStatusBadge';
-import StatusField from './StatusField';
+import http from "@web/core/httpClient";
+import NotificationType from "@web/notifications/types/NotificationType";
+import useStores from "@web/core/hooks/useStores";
+import { APIPaths, pageColors, urlRegex } from "@web/core/constants";
+import { getTOASTRemainingDays } from "@web/core/helpers/timing";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import SelectUserInput from "@web/core/components/form/SelectUserInput";
+import isToast from "@web/core/helpers/isToast";
+import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
+import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
+import StatusField from "./StatusField";
 
 interface LanguageValue {
   label: string;
@@ -68,15 +62,15 @@ interface Props {
 }
 
 const coverPlaceholder =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM8XQ8AAhsBTLgo62UAAAAASUVORK5CYII=';
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM8XQ8AAhsBTLgo62UAAAAASUVORK5CYII=";
 
 const languageOptions: LanguageValue[] = [
   {
-    label: 'Français',
+    label: "Français",
     value: SubjectLanguage.FR,
   },
   {
-    label: 'English',
+    label: "English",
     value: SubjectLanguage.EN,
   },
 ];
@@ -117,8 +111,8 @@ const Form: FunctionComponent<Props> = ({
     <Formik
       validateOnMount={true}
       initialValues={{
-        title: isCreatingSubject ? '' : subject!.title,
-        description: isCreatingSubject ? '' : subject!.description,
+        title: isCreatingSubject ? "" : subject!.title,
+        description: isCreatingSubject ? "" : subject!.description,
         language: isCreatingSubject
           ? languageOptions[0]
           : languageOptions.find(
@@ -126,8 +120,8 @@ const Form: FunctionComponent<Props> = ({
             )!,
         duration: isCreatingSubject ? 30 : subject!.duration,
         speakers: isCreatingSubject ? [] : subject!.speakers,
-        cover: isCreatingSubject ? '' : subject!.cover || '',
-        comment: isCreatingSubject ? '' : subject!.comment || '',
+        cover: isCreatingSubject ? "" : subject!.cover || "",
+        comment: isCreatingSubject ? "" : subject!.comment || "",
         status: isCreatingSubject ? SubjectStatus.AVAILABLE : subject!.status,
       }}
       validate={(values: FormValues) => {
@@ -175,9 +169,9 @@ const Form: FunctionComponent<Props> = ({
 
         if (isCreatingSubject) {
           await request(APIPaths.SUBJECTS, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(input),
           });
@@ -187,10 +181,10 @@ const Form: FunctionComponent<Props> = ({
             subjectTitle: values.title,
           });
         } else {
-          await request(APIPaths.SUBJECT.replace(':id', subject!.id), {
-            method: 'PUT',
+          await request(APIPaths.SUBJECT.replace(":id", subject!.id), {
+            method: "PUT",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(input),
           });
@@ -231,7 +225,7 @@ const Form: FunctionComponent<Props> = ({
                       {isCreatingSubject
                         ? values.title.length
                           ? `Creating new subject: "${values.title}"`
-                          : 'Creating a new subject'
+                          : "Creating a new subject"
                         : `Editing subject: "${subject!.title}"`}
                     </HighlightedText>
                   </C.Text>
@@ -341,7 +335,7 @@ const Form: FunctionComponent<Props> = ({
                             placeholder="Bryan is in the kitchen"
                             options={languageOptions}
                             onChange={(language) =>
-                              setFieldValue('language', language)
+                              setFieldValue("language", language)
                             }
                           />
                         </C.FormControl>
@@ -365,12 +359,12 @@ const Form: FunctionComponent<Props> = ({
                             max={120}
                             step={5}
                             p={0}
-                            height={theme.space['10']}
+                            height={theme.space["10"]}
                             d="block"
                             size="lg"
                             onChange={(value) => {
                               if (value !== field.value) {
-                                setFieldValue('duration', value);
+                                setFieldValue("duration", value);
                               }
                             }}
                           >
@@ -471,7 +465,7 @@ const Form: FunctionComponent<Props> = ({
                 </C.Box>
                 <C.Box>
                   <Field name="cover">
-                    {({ field }: FieldProps<FormValues['cover']>) => {
+                    {({ field }: FieldProps<FormValues["cover"]>) => {
                       const urlIsValid = urlRegex.test(field.value);
 
                       return (
@@ -482,8 +476,8 @@ const Form: FunctionComponent<Props> = ({
                             align="center"
                             justify="center"
                             height="170px"
-                            marginLeft={`-${theme.space['6']}`}
-                            marginRight={`-${theme.space['6']}`}
+                            marginLeft={`-${theme.space["6"]}`}
+                            marginRight={`-${theme.space["6"]}`}
                             backgroundImage={`url(${
                               urlIsValid ? field.value : coverPlaceholder
                             })`}
@@ -550,8 +544,8 @@ const Form: FunctionComponent<Props> = ({
                   isDisabled={!isValid}
                   loadingText={
                     isCreatingSubject
-                      ? 'Creating subject...'
-                      : 'Editing subject...'
+                      ? "Creating subject..."
+                      : "Editing subject..."
                   }
                   mx={2}
                 >
@@ -564,8 +558,8 @@ const Form: FunctionComponent<Props> = ({
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
                   <C.Text as="span" pl={35}>
-                    {isCreatingSubject && 'Add your subject'}
-                    {!isCreatingSubject && 'Edit subject'}
+                    {isCreatingSubject && "Add your subject"}
+                    {!isCreatingSubject && "Edit subject"}
                   </C.Text>
                 </C.Button>
                 <C.Button

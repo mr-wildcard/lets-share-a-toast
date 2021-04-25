@@ -1,11 +1,11 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useMemo } from "react";
+import * as C from "@chakra-ui/react";
 
-import { CurrentToast, Subject } from '@shared';
+import { CurrentToast, Subject } from "@shared/models";
 
-import MasonryGrid from '@web/subjects/components/list/MasonryGrid';
-import SubjectItem from './item/SubjectItem';
-import SubjectAddButton from './SubjectAddButton';
+import MasonryGrid from "@web/subjects/components/list/MasonryGrid";
+import SubjectItem from "./item/SubjectItem";
+import SubjectAddButton from "./SubjectAddButton";
 
 interface Props {
   subjects: Subject[];

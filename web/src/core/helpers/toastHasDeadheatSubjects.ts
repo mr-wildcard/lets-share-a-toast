@@ -1,4 +1,4 @@
-import { Toast, ToastStatus } from '@shared';
+import { Toast, ToastStatus } from "@shared/enums";
 
 export default function toastHasDeadheatSubjects(toast: Toast) {
   return (

@@ -1,4 +1,4 @@
-import { Toast, CurrentToast } from '@shared';
+import { Toast, CurrentToast } from "@shared/models";
 
 /**
  * This is a TypeScript custom type guard. It's value can't be assigned to a variable
@@ -16,7 +16,7 @@ export default function isToast(
 ): currentToast is Toast {
   return (
     !!currentToast &&
-    'date' in (currentToast as Toast) &&
-    'status' in (currentToast as Toast)
+    "date" in (currentToast as Toast) &&
+    "status" in (currentToast as Toast)
   );
 }

@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import { Pathnames } from '@web/core/constants';
-import { getTOASTElapsedTimeSinceCreation } from '@web/core/helpers/timing';
+import { Pathnames } from "@web/core/constants";
+import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 
 interface Props {
   toast: Toast;

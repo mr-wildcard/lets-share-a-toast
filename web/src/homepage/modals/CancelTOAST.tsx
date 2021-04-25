@@ -1,14 +1,15 @@
-import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useCallback, useRef, useState } from "react";
+import * as C from "@chakra-ui/react";
 
-import { ToastStatus, Toast } from '@shared';
+import { ToastStatus } from "@shared/enums";
+import { Toast } from "@shared/models";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import useStores from '@web/core/hooks/useStores';
-import NotificationType from '@web/notifications/types/NotificationType';
+import http from "@web/core/httpClient";
+import { APIPaths, pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import useStores from "@web/core/hooks/useStores";
+import NotificationType from "@web/notifications/types/NotificationType";
 
 interface Props {
   isOpen: boolean;
@@ -34,9 +35,9 @@ const CancelTOAST: FunctionComponent<Props> = ({
 
     try {
       await request(APIPaths.TOAST_CURRENT_STATUS, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           status: ToastStatus.CANCELLED,
@@ -50,7 +51,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
 
       closeModal();
     } catch (error) {
-      console.error('An error occured while canceling TOAST', { error });
+      console.error("An error occured while canceling TOAST", { error });
 
       setCancelling(false);
     }

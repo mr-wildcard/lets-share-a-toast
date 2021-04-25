@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import getUserFullname from '@web/core/helpers/getUserFullname';
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props {
   currentToast: Toast;
@@ -25,7 +25,7 @@ const SelectedSubjectsList: FunctionComponent<Props> = ({ currentToast }) => {
           &nbsp;
           <C.Text as="span">talk by</C.Text>&nbsp;
           <C.Text as="span" fontWeight="bold">
-            {subject.speakers.map(getUserFullname).join(', ')}
+            {subject.speakers.map(getUserFullname).join(", ")}
           </C.Text>
           .
         </C.ListItem>

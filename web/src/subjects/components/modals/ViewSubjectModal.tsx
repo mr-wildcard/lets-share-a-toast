@@ -1,12 +1,12 @@
-import React, { FunctionComponent, useMemo, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { useSpring, animated, interpolate, config } from '@react-spring/web';
-import dayjs from 'dayjs';
+import React, { FunctionComponent, useMemo, useState } from "react";
+import * as C from "@chakra-ui/react";
+import { useSpring, animated, interpolate, config } from "@react-spring/web";
+import dayjs from "dayjs";
 
-import { Subject } from '@shared';
+import { Subject } from "@shared/models";
 
-import SubjectSpeakers from '@web/subjects/components/list/item/SubjectSpeakers';
-import SubjectInfoBadges from '@web/subjects/components/modals/SubjectInfoBadges';
+import SubjectSpeakers from "@web/subjects/components/list/item/SubjectSpeakers";
+import SubjectInfoBadges from "@web/subjects/components/modals/SubjectInfoBadges";
 
 interface Props {
   subject: Subject;
@@ -127,7 +127,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                   position="relative"
                   transition="height 500ms"
                   overflow="hidden"
-                  style={{ height: coverLoaded ? '250px' : '150px' }}
+                  style={{ height: coverLoaded ? "250px" : "150px" }}
                 >
                   {!coverLoaded && (
                     <C.Spinner
@@ -188,10 +188,10 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
               d="flex"
               bg="rgba(255, 255, 255, 0.7)"
               _hover={{
-                bg: 'white',
+                bg: "white",
               }}
               p={2}
-              top={hasCover ? '30px' : '20px'}
+              top={hasCover ? "30px" : "20px"}
               borderRadius={4}
             />
 
