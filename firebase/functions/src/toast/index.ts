@@ -15,5 +15,7 @@ export const createToast = functions.https.onCall((data, context) => {
       scribeId: data.scribeId,
       maxSelectableSubjects: data.maxSelectableSubjects || 2,
       createdByUserId: context.auth?.uid,
+      subjects: [],
+      selectedSubjects: [],
     });
 });
