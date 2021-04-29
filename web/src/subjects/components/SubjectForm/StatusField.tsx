@@ -135,6 +135,7 @@ const StatusField: FunctionComponent<Props> = ({
         />
         <C.ButtonGroup isAttached variant="outline">
           <C.Button
+            type="button"
             mr="-1px"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.AVAILABLE);
@@ -144,6 +145,7 @@ const StatusField: FunctionComponent<Props> = ({
             Available
           </C.Button>
           <C.Button
+            type="button"
             mr="-1px"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.UNAVAILABLE);
@@ -153,6 +155,7 @@ const StatusField: FunctionComponent<Props> = ({
             Unavailable
           </C.Button>
           <C.Button
+            type="button"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.DONE);
             }}

@@ -1,19 +1,7 @@
-import { SubjectStatus } from '../enums/SubjectStatus';
-import { SubjectLanguage } from '../enums/SubjectLanguage';
-import { User } from './User';
+import { SubjectStatus } from "@shared/enums/SubjectStatus";
+import { SubjectLanguage } from "@shared/enums/SubjectLanguage";
+import { FirestoreSubject } from "@shared/firebase";
 
-export interface Subject {
+export interface Subject extends FirestoreSubject {
   id: string;
-  title: string;
-  description: string;
-  speakers: User[];
-  status: SubjectStatus;
-  duration: number;
-  language: SubjectLanguage;
-  createdBy: string;
-  createdDate: string;
-  lastModifiedBy: string;
-  lastModifiedDate: string;
-  cover?: string;
-  comment?: string;
 }

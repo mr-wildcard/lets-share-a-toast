@@ -7,9 +7,7 @@ import { pageColors } from "@web/core/constants";
 
 interface Props {
   subject?: Subject;
-  allUsers: User[];
   isOpen: boolean;
-  revalidateSubjects(): Promise<boolean>;
   closeForm(): void;
 }
 
@@ -36,10 +34,8 @@ const Form = React.lazy(
 );
 
 const SubjectForm: FunctionComponent<Props> = ({
-  allUsers,
   subject,
   closeForm,
-  revalidateSubjects,
   isOpen,
 }) => {
   return (
@@ -52,12 +48,7 @@ const SubjectForm: FunctionComponent<Props> = ({
     >
       <C.DrawerOverlay>
         <C.DrawerContent overflowY="auto">
-          <Form
-            revalidateSubjects={revalidateSubjects}
-            subject={subject}
-            allUsers={allUsers}
-            closeForm={closeForm}
-          />
+          <Form subject={subject} closeForm={closeForm} />
         </C.DrawerContent>
       </C.DrawerOverlay>
     </C.Drawer>

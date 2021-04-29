@@ -1,23 +1,23 @@
-import React, { Suspense, FunctionComponent, useEffect } from 'react';
+import React, { Suspense, FunctionComponent, useEffect } from "react";
 import {
   ChakraProvider,
   CSSReset,
   useToast,
   Flex,
   Spinner,
-} from '@chakra-ui/react';
-import { SWRConfig } from 'swr';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+} from "@chakra-ui/react";
+import { SWRConfig } from "swr";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import './core/styles.css';
-import Header from './header/Header';
-import Home from './pages/home';
-import Subjects from './pages/subjects';
-import Vote from './pages/vote';
-import customTheme from './core/theme';
-import http from './core/httpClient';
-import AppLoader from './core/components/AppLoader';
-import useStores from './core/hooks/useStores';
+import "./core/styles.css";
+import Header from "./header/Header";
+import Home from "./pages/home";
+import Subjects from "./pages/subjects";
+import Vote from "./pages/vote";
+import customTheme from "./core/theme";
+import http from "./core/httpClient";
+import AppLoader from "./core/components/AppLoader";
+import useStores from "./core/hooks/useStores";
 
 export default function LetsShareATOAST() {
   const toaster = useToast();
@@ -27,7 +27,7 @@ export default function LetsShareATOAST() {
   useEffect(() => {
     console.log(
       "%cLet's share a 🍞 !",
-      'padding-left: 70px; background: url(https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif); background-size: contain; background-repeat: no-repeat; font-size: 60px;color: black; font-weight: bold; font-style: italic; font-family: serif; text-shadow: 3px 3px 0 rgb(245,221,8)'
+      "padding-left: 70px; background: url(https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif); background-size: contain; background-repeat: no-repeat; font-size: 60px;color: black; font-weight: bold; font-style: italic; font-family: serif; text-shadow: 3px 3px 0 rgb(245,221,8)"
     );
 
     ui.setWindowSize();
@@ -46,26 +46,14 @@ export default function LetsShareATOAST() {
         <ChakraProvider theme={customTheme}>
           <CSSReset />
 
-          <SWRConfig
-            value={{
-              fetcher: http(),
-            }}
-          >
-            <AppLoader>
-              <Header />
-              <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route path="/subjects">
-                  <Subjects />
-                </Route>
-                <Route path="/vote">
-                  <Vote />
-                </Route>
-              </Switch>
-            </AppLoader>
-          </SWRConfig>
+          <AppLoader>
+            <Header />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/subjects" component={Subjects} />
+              <Route path="/vote" component={Vote} />
+            </Switch>
+          </AppLoader>
         </ChakraProvider>
       </Router>
     </Suspense>

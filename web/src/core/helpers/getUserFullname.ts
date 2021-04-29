@@ -1,5 +1,5 @@
-import { FirestoreUser } from "@shared/firebase";
+import { User } from "@shared/models";
 
-export default function getUserFullname(user: FirestoreUser) {
-  return user.displayName || `USER_WITHOUT_DISPLAY_NAME: ${user.uid}`;
+export default function getUserFullname(user: User) {
+  return user.displayName || `USER_WITHOUT_DISPLAY_NAME: ${user.id}`;
 }

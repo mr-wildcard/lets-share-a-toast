@@ -12,8 +12,8 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 
-import { DatabaseCurrentToast, FirestoreUser } from "@shared/firebase";
-import { CurrentToast, Toast } from "@shared/models";
+import { DatabaseCurrentToast } from "@shared/firebase";
+import { User } from "@shared/models";
 
 import firebase from "@web/core/firebase";
 import http from "@web/core/httpClient";
@@ -49,8 +49,8 @@ interface FormErrors {
 
 interface FormValues extends SlackNotificationFieldsValues {
   dueDate: Date;
-  organizer?: FirestoreUser;
-  scribe?: FirestoreUser;
+  organizer?: User;
+  scribe?: User;
 }
 
 const today = new Date();
@@ -141,17 +141,16 @@ const Form: FunctionComponent<Props> = ({
         return errors;
       }}
       onSubmit={async (values): Promise<void> => {
-        const request = http();
-
-        let toastCreated = false;
-        let updatedToast: Toast;
-
         if (!isToast(currentToast)) {
-          await firebase.functions.httpsCallable("createToast")({
-            date: values.dueDate,
-            organizerId: values.organizer!.uid,
-            scribeId: values.scribe!.uid,
-          });
+          return firebase.functions
+            .httpsCallable("createToast")({
+              date: values.dueDate,
+              organizerId: values.organizer!.uid,
+              scribeId: values.scribe!.uid,
+            })
+            .then(() => {
+              closeModal(true);
+            });
 
           /*
           notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
@@ -163,8 +162,6 @@ const Form: FunctionComponent<Props> = ({
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
           */
         }
-
-        closeModal(toastCreated);
       }}
     >
       {({ values, setFieldValue, isSubmitting, isValid }) => {
@@ -223,7 +220,7 @@ const Form: FunctionComponent<Props> = ({
                             isInvalid={isInvalid}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(user: FirestoreUser | null) => {
+                            onChange={(user: User | null) => {
                               if (user) {
                                 setFieldValue(field.name, user);
                               }
@@ -251,7 +248,7 @@ const Form: FunctionComponent<Props> = ({
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(user: FirestoreUser | null) => {
+                            onChange={(user: User | null) => {
                               if (user) {
                                 setFieldValue(field.name, user);
                               }

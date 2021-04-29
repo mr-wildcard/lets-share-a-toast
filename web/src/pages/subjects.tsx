@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { toJS } from "mobx";
 import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import useSWR from "swr";
 
-import { Subject, User, CurrentToast } from "@shared/models";
+import { Subject } from "@shared/models";
 
+import firebase from "@web/core/firebase";
 import useStores from "@web/core/hooks/useStores";
 import { spacing, APIPaths, pageColors } from "@web/core/constants";
 import ColoredBackground from "@web/core/components/ColoredBackground";
@@ -18,13 +20,10 @@ import FilterSearch from "@web/subjects/components/list/filters/FilterSearch";
 const Subjects = () => {
   const { ui, appLoader } = useStores();
 
-  const { data: subjects, revalidate: revalidateSubjects } = useSWR<Subject[]>(
-    APIPaths.SUBJECTS
-  );
+  const subjects = firebase.subjects;
+  const users = firebase.users;
 
-  const { data: users } = useSWR<User[]>(APIPaths.USERS);
-
-  const loading = !subjects || !users;
+  const loading = !subjects.length && !users.length;
 
   const formDrawerState = C.useDisclosure();
 
@@ -33,7 +32,7 @@ const Subjects = () => {
   const [searchFilter, setSearchFilter] = useState<string>("");
 
   const filteredSubjects = useMemo<Subject[]>(() => {
-    let finalSubjects = subjects || [];
+    let finalSubjects = toJS(subjects);
 
     if (statusFilter !== "all") {
       finalSubjects = finalSubjects.filter(
@@ -67,8 +66,8 @@ const Subjects = () => {
 
   useEffect(() => {
     ui.currentPageBgColor = pageColors.subjects;
-    appLoader.pageIsReady = !!subjects && !!users;
-  }, [subjects, users]);
+    appLoader.pageIsReady = !loading;
+  }, [loading]);
 
   return (
     <C.Box as="main">
@@ -113,7 +112,6 @@ const Subjects = () => {
               <C.Box>
                 <SubjectsList
                   subjects={filteredSubjects}
-                  revalidateSubjects={revalidateSubjects}
                   creatingSubject={
                     formDrawerState.isOpen && editedSubject === null
                   }
@@ -125,9 +123,7 @@ const Subjects = () => {
               {!!users && (
                 <SubjectForm
                   subject={editedSubject}
-                  allUsers={users}
                   isOpen={formDrawerState.isOpen}
-                  revalidateSubjects={revalidateSubjects}
                   closeForm={toggleSubjectEditForm}
                 />
               )}

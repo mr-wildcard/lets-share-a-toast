@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useMemo } from "react";
 import * as C from "@chakra-ui/react";
 
-import { CurrentToast, Subject } from "@shared/models";
+import { Subject } from "@shared/models";
 
 import MasonryGrid from "@web/subjects/components/list/MasonryGrid";
 import SubjectItem from "./item/SubjectItem";
@@ -11,14 +11,12 @@ interface Props {
   subjects: Subject[];
   creatingSubject: boolean;
   onAddSubject(): void;
-  revalidateSubjects(): Promise<boolean>;
   onEditSubject(subject: Subject): void;
 }
 
 const SubjectsList: FunctionComponent<Props> = ({
   subjects,
   creatingSubject,
-  revalidateSubjects,
   onAddSubject,
   onEditSubject,
 }) => {
@@ -39,11 +37,7 @@ const SubjectsList: FunctionComponent<Props> = ({
         <React.Fragment key={`list-item-${index}`}>
           {index === 0 && subjectAddButton}
 
-          <SubjectItem
-            revalidateSubjects={revalidateSubjects}
-            onEditSubject={onEditSubject}
-            subject={subject}
-          />
+          <SubjectItem onEditSubject={onEditSubject} subject={subject} />
         </React.Fragment>
       ))}
     </MasonryGrid>

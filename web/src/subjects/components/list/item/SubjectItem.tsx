@@ -11,9 +11,11 @@ import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { observer } from "mobx-react-lite";
 
-import { Subject } from "@shared/models";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
+import { FirestoreCollection } from "@shared/firebase";
+import { Subject, User } from "@shared/models";
 
+import firebase from "@web/core/firebase";
 import http from "@web/core/httpClient";
 import { APIPaths } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
@@ -23,36 +25,28 @@ import Image from "@web/core/components/Image";
 import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectModal";
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
 import { isSubjectNew } from "@web/subjects/helpers";
+import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 import SubjectStatusBadge from "./SubjectStatusBadge";
 import SubjectSpeakers from "./SubjectSpeakers";
 import SubjectNewBadge from "./SubjectNewBadge";
 import css from "./SubjectItem.module.css";
 import ContextMenuItem from "./ContextMenuItem";
-import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 
 interface Props {
   subject: Subject;
-  revalidateSubjects(): Promise<boolean>;
   onEditSubject(subject: Subject): void;
 }
 
-const SubjectItem: FunctionComponent<Props> = ({
-  revalidateSubjects,
-  onEditSubject,
-  subject,
-}) => {
-  const {
-    currentToastSession: { toast },
-  } = useStores();
+const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
+  const { users, currentToast } = firebase;
 
   const subjectIsInCurrentTOASTVotingSession =
-    isToast(toast) && subjectIsInVotingSession(toast.status, subject.status);
+    currentToast !== null &&
+    subjectIsInVotingSession(currentToast.status, subject.status);
 
   const theme = C.useTheme();
   const viewModal = C.useDisclosure();
   const deleteModal = C.useDisclosure();
-
-  const { auth, notifications } = useStores();
 
   const [contextualMenuOpened, setContextualMenuOpened] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,79 +55,39 @@ const SubjectItem: FunctionComponent<Props> = ({
     async (status: SubjectStatus) => {
       setLoading(true);
 
-      try {
-        const request = http();
+      await firebase.firestore
+        .collection(FirestoreCollection.SUBJECTS)
+        .doc(subject.id)
+        .update({ status });
 
-        await request(APIPaths.SUBJECT_STATUS.replace(":id", subject.id), {
-          method: "PUT",
-          body: JSON.stringify({
-            status,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        await revalidateSubjects();
-
-        // @ts-ignore
-        notifications.send(auth.profile, NotificationType.EDIT_SUBJECT_STATUS, {
-          subjectTitle: subject.title,
-          newStatus: status,
-        });
-      } catch (error) {
-        console.error(
-          `An error occured while changing subject ${subject.id} status`,
-          { error }
-        );
-      }
+      /*
+      notifications.send(auth.profile, NotificationType.EDIT_SUBJECT_STATUS, {
+        subjectTitle: subject.title,
+        newStatus: status,
+      });
+      */
 
       setLoading(false);
     },
-    [subject.id, subject.title, revalidateSubjects, notifications, auth.profile]
+    [subject.id, subject.title]
   );
 
   const onCloseDeleteSubjectModal = useCallback(
     async (userConfirmedDeletion: boolean) => {
       deleteModal.onClose();
 
+      setLoading(true);
+
       if (userConfirmedDeletion) {
-        setLoading(true);
-
-        try {
-          const request = http();
-
-          await request(APIPaths.SUBJECT.replace(":id", subject.id), {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "DELETE",
-          });
-
-          await revalidateSubjects();
-
-          // @ts-ignore
-          notifications.send(auth.profile, NotificationType.REMOVE_SUBJECT, {
-            subjectTitle: subject.title,
-          });
-        } catch (error) {
-          console.error(
-            `An error occured while deleting subject ${subject.id}`,
-            { error }
-          );
-        }
-
-        setLoading(false);
+        await firebase.firestore
+          .collection(FirestoreCollection.SUBJECTS)
+          .doc(subject.id)
+          .delete();
       }
+
+      setLoading(false);
     },
-    [
-      deleteModal,
-      subject.id,
-      subject.title,
-      revalidateSubjects,
-      notifications,
-      auth.profile,
-    ]
+    [subject.id]
   );
 
   const contextMenuStatusOptions = useMemo(() => {
@@ -146,7 +100,7 @@ const SubjectItem: FunctionComponent<Props> = ({
 
     const statusOptions: ReactElement[] = [];
 
-    if (!switchToAvailableStatus) {
+    if (switchToAvailableStatus) {
       statusOptions.push(
         <ContextMenuItem
           onClick={() => changeSubjectStatus(SubjectStatus.AVAILABLE)}
@@ -160,7 +114,7 @@ const SubjectItem: FunctionComponent<Props> = ({
       );
     }
 
-    if (!switchToUnavailbleStatus) {
+    if (switchToUnavailbleStatus) {
       statusOptions.push(
         <ContextMenuItem
           onClick={() => changeSubjectStatus(SubjectStatus.UNAVAILABLE)}
@@ -174,7 +128,7 @@ const SubjectItem: FunctionComponent<Props> = ({
       );
     }
 
-    if (!switchToDoneStatus) {
+    if (switchToDoneStatus) {
       statusOptions.push(
         <ContextMenuItem
           onClick={() => changeSubjectStatus(SubjectStatus.DONE)}
@@ -189,7 +143,7 @@ const SubjectItem: FunctionComponent<Props> = ({
     }
 
     return statusOptions;
-  }, [toast, subject, changeSubjectStatus]);
+  }, [subject.status]);
 
   const { subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
     const creationDate = dayjs(subject.createdDate);
@@ -198,7 +152,13 @@ const SubjectItem: FunctionComponent<Props> = ({
       subjectIsOld: creationDate.isBefore(dayjs().subtract(3, "month")),
       oldSubjectImageAlt: `Subject has been submitted ${creationDate.fromNow()}`,
     };
-  }, [subject]);
+  }, [subject.createdDate]);
+
+  const speakers = useMemo(() => {
+    return subject.speakersIds.map(
+      (spearkerId) => firebase.users.find((user) => user.uid === spearkerId)!
+    );
+  }, [subject.speakersIds]);
 
   const subjectIsNew = useMemo(() => {
     return isSubjectNew(subject.createdDate);
@@ -248,7 +208,7 @@ const SubjectItem: FunctionComponent<Props> = ({
             </C.Box>
 
             <C.Box>
-              <SubjectSpeakers speakers={subject.speakers} />
+              <SubjectSpeakers speakers={speakers} />
             </C.Box>
 
             <C.Divider
@@ -374,7 +334,11 @@ const SubjectItem: FunctionComponent<Props> = ({
       )}
 
       {viewModal.isOpen && (
-        <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
+        <ViewSubjectModal
+          subject={subject}
+          speakers={speakers}
+          closeModal={viewModal.onClose}
+        />
       )}
     </C.Box>
   );

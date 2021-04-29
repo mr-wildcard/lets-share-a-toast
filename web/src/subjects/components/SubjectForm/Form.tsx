@@ -16,8 +16,9 @@ import Select from "react-select";
 
 import { Subject, Toast, User } from "@shared/models";
 import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
+import { FirestoreCollection } from "@shared/firebase";
 
-import http from "@web/core/httpClient";
+import firebase from "@web/core/firebase";
 import NotificationType from "@web/notifications/types/NotificationType";
 import useStores from "@web/core/hooks/useStores";
 import { APIPaths, pageColors, urlRegex } from "@web/core/constants";
@@ -56,8 +57,6 @@ interface FormValues {
 
 interface Props {
   subject?: Subject;
-  allUsers: User[];
-  revalidateSubjects(): Promise<boolean>;
   closeForm(): void;
 }
 
@@ -75,37 +74,26 @@ const languageOptions: LanguageValue[] = [
   },
 ];
 
-const Form: FunctionComponent<Props> = ({
-  subject,
-  allUsers,
-  closeForm,
-  revalidateSubjects,
-}) => {
-  const {
-    auth,
-    notifications,
-    currentToastSession: { toast },
-  } = useStores();
-
+const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
   const theme = C.useTheme();
+  const currentToast = firebase.currentToast;
+  const users = firebase.users;
 
   const isCreatingSubject = !subject;
 
   const warnAboutNewSubjectDuringVotingSession = useMemo(() => {
     return (
-      isCreatingSubject &&
-      isToast(toast) &&
-      toast.status === ToastStatus.OPEN_FOR_VOTE
+      isCreatingSubject && currentToast?.status === ToastStatus.OPEN_FOR_VOTE
     );
-  }, [isCreatingSubject, toast, subject]);
+  }, [isCreatingSubject, currentToast]);
 
   const alertAboutStatusChange = useMemo(() => {
     return (
       !isCreatingSubject &&
-      isToast(toast) &&
-      subjectIsInVotingSession(toast.status, subject!.status)
+      currentToast !== null &&
+      subjectIsInVotingSession(currentToast.status, subject!.status)
     );
-  }, [isCreatingSubject, toast, subject]);
+  }, [isCreatingSubject, currentToast, subject]);
 
   return (
     <Formik
@@ -119,7 +107,11 @@ const Form: FunctionComponent<Props> = ({
               (option) => option.value === subject!.language
             )!,
         duration: isCreatingSubject ? 30 : subject!.duration,
-        speakers: isCreatingSubject ? [] : subject!.speakers,
+        speakers: isCreatingSubject
+          ? []
+          : subject!.speakersIds.map(
+              (spearkerId) => users.find((user) => user.uid === spearkerId)!
+            ),
         cover: isCreatingSubject ? "" : subject!.cover || "",
         comment: isCreatingSubject ? "" : subject!.comment || "",
         status: isCreatingSubject ? SubjectStatus.AVAILABLE : subject!.status,
@@ -156,7 +148,7 @@ const Form: FunctionComponent<Props> = ({
 
         const input = {
           title: values.title,
-          speakers: speakers.map((speaker) => speaker.id),
+          speakersIds: speakers.map((speaker) => speaker.id),
           description: values.description,
           duration: values.duration,
           language: values.language.value,
@@ -165,30 +157,23 @@ const Form: FunctionComponent<Props> = ({
           status: values.status,
         };
 
-        const request = http();
-
         if (isCreatingSubject) {
-          await request(APIPaths.SUBJECTS, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(input),
-          });
+          await firebase.firestore
+            .collection(FirestoreCollection.SUBJECTS)
+            .add(input);
 
-          // @ts-ignore
+          /*
           notifications.send(auth.profile, NotificationType.ADD_SUBJECT, {
             subjectTitle: values.title,
           });
+          */
         } else {
-          await request(APIPaths.SUBJECT.replace(":id", subject!.id), {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(input),
-          });
+          await firebase.firestore
+            .collection(FirestoreCollection.SUBJECTS)
+            .doc(subject?.id)
+            .update(input);
 
+          /*
           notifications.send(
             // @ts-ignore
             auth.profile,
@@ -197,9 +182,8 @@ const Form: FunctionComponent<Props> = ({
               subjectTitle: subject!.title,
             }
           );
+          */
         }
-
-        await revalidateSubjects();
 
         closeForm();
       }}
@@ -252,7 +236,7 @@ const Form: FunctionComponent<Props> = ({
                       </C.AlertTitle>
                       <C.AlertDescription>
                         A voting session for the next TOAST coming&nbsp;
-                        {getTOASTRemainingDays(new Date((toast as Toast).date))}
+                        {getTOASTRemainingDays(new Date(currentToast!.date))}
                         &nbsp;is currently opened. If you submit this subject
                         with the&nbsp;
                         <SubjectStatusBadge status={SubjectStatus.AVAILABLE} />
@@ -405,7 +389,7 @@ const Form: FunctionComponent<Props> = ({
                                         {...field}
                                         placeholder="You?"
                                         isInvalid={false}
-                                        options={allUsers.filter(
+                                        options={users.filter(
                                           (user) =>
                                             !values.speakers.find(
                                               (selectedUser) =>

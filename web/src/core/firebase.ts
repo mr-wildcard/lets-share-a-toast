@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/database";
@@ -7,10 +7,12 @@ import "firebase/functions";
 
 import {
   FirestoreUser,
+  FirestoreSubject,
   DatabaseCurrentToast,
   DatabaseRefPaths,
   FirestoreCollection,
 } from "@shared/firebase";
+import { Subject, User } from "@shared/models";
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -56,7 +58,8 @@ if (!firebase.apps.length) {
 interface FirebaseInstance extends Record<string, any> {
   connectedUser: FirestoreUser | null;
   currentToast: DatabaseCurrentToast | null;
-  users: FirestoreUser[];
+  users: User[];
+  subjects: Subject[];
 }
 
 const firebaseInstance: FirebaseInstance = {
@@ -68,6 +71,7 @@ const firebaseInstance: FirebaseInstance = {
   connectedUser: null,
   currentToast: null,
   users: [],
+  subjects: [],
 
   getCurrentUser(auth = firebase.auth()) {
     return auth.currentUser;
@@ -96,18 +100,45 @@ function onAuthChanged(user: firebase.User | null) {
       .firestore()
       .collection(FirestoreCollection.USERS)
       .onSnapshot((snapshot) => {
-        firebaseInstance.users = snapshot.docs.map(
-          (doc) => doc.data() as FirestoreUser
-        );
+        const users = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as FirestoreUser),
+        }));
+
+        firebaseInstance.users = users;
+
+        if (import.meta.env.DEV) {
+          console.log({ users });
+        }
+      });
+
+    firebase
+      .firestore()
+      .collection(FirestoreCollection.SUBJECTS)
+      .onSnapshot((snapshot) => {
+        const subjects = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as FirestoreSubject),
+        }));
+
+        firebaseInstance.subjects = subjects;
+
+        if (import.meta.env.DEV) {
+          console.log({ subjects });
+        }
       });
 
     firebase
       .database()
       .ref(DatabaseRefPaths.CURRENT_TOAST)
       .on("value", (snapshot) => {
-        console.log(snapshot.val());
+        const currentToast = snapshot.val();
 
-        firebaseInstance.currentToast = snapshot.val();
+        firebaseInstance.currentToast = currentToast;
+
+        if (import.meta.env.DEV) {
+          console.log({ currentToast });
+        }
       });
 
     removeAuthListener();
@@ -116,6 +147,7 @@ function onAuthChanged(user: firebase.User | null) {
 
 export default makeObservable(firebaseInstance, {
   connectedUser: observable,
-  users: observable,
   currentToast: observable,
+  users: observable,
+  subjects: observable,
 });

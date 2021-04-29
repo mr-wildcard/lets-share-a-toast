@@ -1,16 +1,15 @@
 import React, { FunctionComponent, useRef } from "react";
 import * as C from "@chakra-ui/react";
 
-import { CurrentToast, Subject } from "@shared/models";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
+import { FirestoreSubject } from "@shared/firebase";
 
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { pageColors } from "@web/core/constants";
-import isToast from "@web/core/helpers/isToast";
 
 interface Props {
-  subject: Subject;
+  subject: FirestoreSubject;
   alertAboutVotingSession: boolean;
   closeModal(deleteConfirmation: boolean): void;
 }

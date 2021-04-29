@@ -3,13 +3,14 @@ import * as C from "@chakra-ui/react";
 import { useSpring, animated, interpolate, config } from "@react-spring/web";
 import dayjs from "dayjs";
 
-import { Subject } from "@shared/models";
+import { Subject, User } from "@shared/models";
 
 import SubjectSpeakers from "@web/subjects/components/list/item/SubjectSpeakers";
 import SubjectInfoBadges from "@web/subjects/components/modals/SubjectInfoBadges";
 
 interface Props {
   subject: Subject;
+  speakers: User[];
   closeModal(): void;
 }
 
@@ -44,11 +45,10 @@ const getRandomEdgePositions = (min: number, max: number): number[] => {
 
 const ViewSubjectModal: FunctionComponent<Props> = ({
   subject,
+  speakers,
   closeModal,
 }) => {
-  const hasCover = subject.cover !== null;
-
-  const [coverLoaded, setCoverLoaded] = useState(!hasCover);
+  const [coverLoaded, setCoverLoaded] = useState(!subject.cover);
 
   const [
     [fromPath1, fromPath2],
@@ -121,7 +121,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
             overflowY="auto"
           >
             <C.ModalHeader p={0}>
-              {hasCover && (
+              {subject.cover && (
                 <C.Box
                   backgroundColor="gray.200"
                   position="relative"
@@ -160,7 +160,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
               )}
 
               <C.Stack p={4} pr={0} mr="50px" spacing={3}>
-                {hasCover && (
+                {subject.cover && (
                   <C.Box>
                     <SubjectInfoBadges subject={subject} />
                   </C.Box>
@@ -171,10 +171,10 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                 </C.Heading>
 
                 <C.Box fontSize="md" fontWeight="normal">
-                  <SubjectSpeakers speakers={subject.speakers} />
+                  <SubjectSpeakers speakers={speakers} />
                 </C.Box>
 
-                {!hasCover && (
+                {!subject.cover && (
                   <C.Box>
                     <SubjectInfoBadges subject={subject} />
                   </C.Box>
@@ -191,7 +191,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                 bg: "white",
               }}
               p={2}
-              top={hasCover ? "30px" : "20px"}
+              top={subject.cover ? "30px" : "20px"}
               borderRadius={4}
             />
 
@@ -217,7 +217,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                 <C.Text as="span" fontWeight="bold">
                   Created by
                 </C.Text>
-                &nbsp;{subject.createdBy} {dayjs(subject.createdDate).fromNow()}
+                {/* &nbsp;{subject.createdBy} {dayjs(subject.createdDate).fromNow()} */}
                 .
               </C.Text>
 
@@ -226,7 +226,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                   <C.Text as="span" fontWeight="bold">
                     Edited by
                   </C.Text>
-                  &nbsp;{subject.lastModifiedBy}&nbsp;
+                  {/* &nbsp;{subject.lastModifiedBy}&nbsp; */}
                   {dayjs(subject.lastModifiedDate).fromNow()}.
                 </C.Text>
               )}
@@ -238,4 +238,4 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
   );
 };
 
-export default React.memo(ViewSubjectModal);
+export default ViewSubjectModal;

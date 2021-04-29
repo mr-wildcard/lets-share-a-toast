@@ -27,8 +27,8 @@ const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
 
           return (
             <C.Avatar
-              key={`speaker-${index}-${speaker.id}`}
-              src={speaker.picture}
+              key={`speaker-${index}-${speaker.uid}`}
+              src={speaker.photoURL || undefined}
               name={fullname}
               title={fullname}
             />

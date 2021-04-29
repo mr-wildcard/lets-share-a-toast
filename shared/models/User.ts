@@ -1,7 +1,5 @@
-export interface User {
+import { FirestoreUser } from "@shared/firebase";
+
+export interface User extends FirestoreUser {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  picture: string;
 }
