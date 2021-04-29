@@ -1,5 +1,5 @@
 export interface FirestoreUser {
   uid: string;
-  displayName: string;
-  avatarURL?: string;
+  displayName: string | null;
+  photoURL: string | null;
 }

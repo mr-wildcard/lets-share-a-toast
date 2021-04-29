@@ -25,11 +25,15 @@ const SelectUserInput: FunctionComponent<Props> = ({
       isSearchable={true}
       noOptionsMessage={() => "No user found."}
       getOptionValue={(user: FirestoreUser) => user.uid}
-      getOptionLabel={(user: FirestoreUser) => user.displayName}
+      getOptionLabel={(user: FirestoreUser) => getUserFullname(user)}
       formatOptionLabel={(user: FirestoreUser) => (
         <C.Stack align="center" spacing={2} direction="row">
-          <C.Avatar size="xs" name={user.displayName} src={user.avatarURL} />
-          <C.Text as="span">{user.displayName}</C.Text>
+          <C.Avatar
+            size="xs"
+            name={getUserFullname(user)}
+            src={user.photoURL || undefined}
+          />
+          <C.Text as="span">{getUserFullname(user)}</C.Text>
         </C.Stack>
       )}
       styles={{

@@ -16,7 +16,17 @@ export const storeIntoFirestoreOnCreation = functions.auth
       .doc(user.uid)
       .set({
         displayName: user.displayName,
-        avatarURL: user.photoURL,
+        photoURL: user.photoURL,
         uid: user.uid,
       });
+  });
+
+export const deleteFromFirestoreOnCreation = functions.auth
+  .user()
+  .onDelete((user: functions.auth.UserRecord) => {
+    return admin
+      .firestore()
+      .collection(FirestoreCollection.USERS)
+      .doc(user.uid)
+      .delete();
   });

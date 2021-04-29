@@ -1,10 +1,3 @@
-import { ToastStatus } from "@shared/enums/ToastStatus";
-import { FirestoreUser } from "@shared/firebase";
+import { DatabaseToast } from "./DatabaseTOAST";
 
-export interface DatabaseCurrentToast {
-  date: string;
-  organizerId: FirestoreUser;
-  scribeId: FirestoreUser;
-  status: ToastStatus;
-  maxSelectableSubjects: number;
-}
+export type DatabaseCurrentToast = DatabaseToast | null;

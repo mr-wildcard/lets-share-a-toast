@@ -6,14 +6,13 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { observer } from "mobx-react-lite";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 
-import { FirestoreUser } from "@shared/firebase";
+import { DatabaseCurrentToast, FirestoreUser } from "@shared/firebase";
 import { CurrentToast, Toast } from "@shared/models";
 
 import firebase from "@web/core/firebase";
@@ -36,6 +35,7 @@ import DatePickerCaption from "./DatePickerCaption";
 import datePickerCSS from "./DatePicker.module.css";
 
 interface Props {
+  currentToast: DatabaseCurrentToast;
   cancelButtonRef: Ref<HTMLButtonElement>;
   closeModal(toastCreated: boolean): void;
 }
@@ -58,26 +58,28 @@ const today = new Date();
 const defaultSlackNotificationMessage = `@here {{PROFILE}} scheduled a new 🍞 TOAST 🍞 for {{DATE}} ! 🎉
 ✍️ It’s time to add / remove / update your subject(s) {{URL}}`;
 
-const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
-  const { auth, notifications } = useStores();
-
-  const currentToast = firebase.currentToast;
+const Form: FunctionComponent<Props> = ({
+  currentToast,
+  cancelButtonRef,
+  closeModal,
+}) => {
+  const { notifications } = useStores();
 
   const getFormattedSlackNotification = useCallback(
     (notificationText, toastDueDate) => {
       return notificationText
-        .replace("{{PROFILE}}", auth.profile.displayName)
+        .replace("{{PROFILE}}", firebase.connectedUser?.displayName)
         .replace(
           "{{DATE}}",
           getFormattedTOASTDateWithRemainingDays(toastDueDate)
         )
         .replace("{{URL}}", getAppURL() + Pathnames.SUBJECTS);
     },
-    [auth.profile]
+    [firebase.connectedUser]
   );
 
   const dueDateValue = useMemo(() => {
-    if (isToast(currentToast)) {
+    if (currentToast) {
       return dayjs(currentToast.date).hour(14).toDate();
     } else {
       const today = dayjs();
@@ -98,8 +100,14 @@ const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
       validateOnMount={true}
       initialValues={{
         dueDate: dueDateValue,
-        organizer: currentToast?.organizer,
-        scribe: currentToast?.scribe,
+        organizer: currentToast
+          ? firebase.users.find(
+              (user) => user.uid === currentToast?.organizerId
+            )
+          : undefined,
+        scribe: currentToast
+          ? firebase.users.find((user) => user.uid === currentToast?.scribeId)
+          : undefined,
         notifySlack: false,
         notificationMessage: defaultSlackNotificationMessage,
       }}
@@ -145,13 +153,15 @@ const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
             scribeId: values.scribe!.uid,
           });
 
-          // @ts-ignore
+          /*
           notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
             dueDate: values.dueDate.toString(),
           });
+           */
         } else {
-          // @ts-ignore
+          /*
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
+          */
         }
 
         closeModal(toastCreated);
@@ -211,7 +221,6 @@ const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
                             isDisabled={!firebase.users.length}
                             options={firebase.users}
                             isInvalid={isInvalid}
-                            name={field.name}
                             inputId={field.name}
                             value={field.value}
                             onChange={(user: FirestoreUser | null) => {
@@ -292,7 +301,6 @@ const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
                 <C.Button
                   isDisabled={!firebase.users.length || !isValid}
                   overflow="hidden"
-                  type="submit"
                   colorScheme="blue"
                   isLoading={isSubmitting}
                   loadingText={
@@ -346,4 +354,4 @@ const Form: FunctionComponent<Props> = ({ cancelButtonRef, closeModal }) => {
   );
 };
 
-export default observer(Form);
+export default Form;

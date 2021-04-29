@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useRef } from "react";
 import * as C from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
 
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -9,7 +10,6 @@ import firebase from "@web/core/firebase";
 
 interface Props {
   isOpen: boolean;
-  currentToast?: CurrentToast;
   closeModal(toastCreated: boolean): void;
 }
 
@@ -61,6 +61,7 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
           </C.ModalHeader>
           <C.ModalBody pb={6}>
             <Form
+              currentToast={firebase.currentToast}
               closeModal={props.closeModal}
               cancelButtonRef={cancelButtonRef}
             />
@@ -71,4 +72,4 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   );
 };
 
-export default TOASTInfosForm;
+export default observer(TOASTInfosForm);

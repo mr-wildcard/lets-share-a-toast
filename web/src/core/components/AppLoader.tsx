@@ -19,8 +19,6 @@ enum LoaderAnimationState {
 }
 
 const AppLoader: FunctionComponent = ({ children }) => {
-  const { auth } = useStores();
-
   const [anim, setAnim] = useState(false);
 
   const [
@@ -37,8 +35,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
         const user = firebase.getCurrentUser();
 
         if (user) {
-          auth.profile = user;
-
           setLoggedIn(true);
         } else {
           setNeedToLogin(true);
@@ -52,9 +48,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
       const { signin } = firebase;
 
       signin()
-        .then((user) => {
-          auth.profile = user as firebase.User;
-
+        .then(() => {
           setNeedToLogin(false);
           setLoggedIn(true);
         })
