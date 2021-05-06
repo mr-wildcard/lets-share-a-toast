@@ -65,7 +65,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
     if (firebaseInstance) {
       when(
         () =>
-          toJS(firebaseInstance.currentToast) !== null &&
+          toJS(firebaseInstance.currentToast) !== undefined &&
           firebaseInstance.users.length > 0 &&
           firebaseInstance.subjects.length > 0,
         () => {

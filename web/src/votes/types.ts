@@ -1,5 +1,6 @@
-export enum LoadingErrorCode {
-  NO_SESSION,
-  WRONG_SESSION_STATUS,
-  UNKNOWN_ERROR,
+export enum LoadingState {
+  READY,
+  ERROR_NO_SESSION,
+  ERROR_WRONG_SESSION_STATUS,
+  ERROR_UNKNOWN_ERROR,
 }

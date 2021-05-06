@@ -19,6 +19,7 @@ const Home = () => {
 
   useEffect(() => {
     ui.currentPageBgColor = pageColors.homepage;
+    appLoader.pageIsReady = true;
   }, []);
 
   return (

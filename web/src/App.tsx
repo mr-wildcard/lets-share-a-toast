@@ -13,7 +13,7 @@ import "./core/styles.css";
 import Header from "./header/Header";
 import Home from "./pages/home";
 import Subjects from "./pages/subjects";
-import Voting from "./pages/voting";
+import Votes from "./pages/votes";
 import customTheme from "./core/theme";
 import http from "./core/httpClient";
 import AppLoader from "./core/components/AppLoader";
@@ -31,6 +31,7 @@ export default function LetsShareATOAST() {
     );
 
     ui.setWindowSize();
+    // TODO: handle notifications
     // notifications.initialize(toaster);
   }, [ui, notifications]);
 
@@ -51,7 +52,7 @@ export default function LetsShareATOAST() {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/subjects" component={Subjects} />
-              <Route path="/vote" component={Voting} />
+              <Route path="/vote" component={Votes} />
             </Switch>
           </AppLoader>
         </ChakraProvider>

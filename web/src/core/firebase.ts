@@ -71,7 +71,6 @@ const firebaseInstance: FirebaseInstance = {
   connectedUser: null,
   users: [],
   subjects: [],
-
   currentToast: undefined,
 
   getCurrentUser(auth = firebase.auth()) {

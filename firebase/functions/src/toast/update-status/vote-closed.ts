@@ -26,7 +26,10 @@ export default async function voteClosed() {
   /**
    * Update current TOAST with selected subjects.
    */
-  return admin.database().ref(DatabaseRefPaths.CURRENT_TOAST).update({
-    selectedSubjects: result,
-  });
+  return admin
+    .database()
+    .ref(DatabaseRefPaths.CURRENT_TOAST)
+    .update({
+      selectedSubjects: Object.keys(result.votes),
+    });
 }
