@@ -13,7 +13,7 @@ import "./core/styles.css";
 import Header from "./header/Header";
 import Home from "./pages/home";
 import Subjects from "./pages/subjects";
-import Vote from "./pages/vote";
+import Voting from "./pages/voting";
 import customTheme from "./core/theme";
 import http from "./core/httpClient";
 import AppLoader from "./core/components/AppLoader";
@@ -51,7 +51,7 @@ export default function LetsShareATOAST() {
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/subjects" component={Subjects} />
-              <Route path="/vote" component={Vote} />
+              <Route path="/vote" component={Voting} />
             </Switch>
           </AppLoader>
         </ChakraProvider>

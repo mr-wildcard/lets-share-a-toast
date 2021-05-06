@@ -173,13 +173,21 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
               />
             </C.Box>
 
-            {isToast(currentToast) && (
+            {currentToast !== null && (
               <>
                 <C.Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
                   <OpenVotes
                     isSuccess={buttonsStates.openVotes.isSuccess}
                     onClick={modalsStates.openVotes.onOpen}
                   />
+
+                  {!buttonsStates.openVotes.isSuccess && (
+                    <OpenVotesModal
+                      currentToast={currentToast}
+                      isOpen={modalsStates.openVotes.isOpen}
+                      closeModal={modalsStates.openVotes.onClose}
+                    />
+                  )}
                 </C.Box>
 
                 {buttonsStates.closeVotes.display && (
@@ -190,6 +198,14 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                       isSuccess={buttonsStates.closeVotes.isSuccess}
                       onClick={modalsStates.closeVotes.onOpen}
                     />
+
+                    {!buttonsStates.closeVotes.isSuccess && (
+                      <CloseVotesModal
+                        currentToast={currentToast}
+                        isOpen={modalsStates.closeVotes.isOpen}
+                        closeModal={modalsStates.closeVotes.onClose}
+                      />
+                    )}
                   </C.Box>
                 )}
 
@@ -198,6 +214,12 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                     <DeadHeatSubjects
                       onClick={modalsStates.deadHeatSubjects.onOpen}
                     />
+
+                    <DeadHeatSubjectsModal
+                      currentToast={currentToast}
+                      isOpen={modalsStates.deadHeatSubjects.isOpen}
+                      closeModal={modalsStates.deadHeatSubjects.onClose}
+                    />
                   </C.Box>
                 )}
 
@@ -205,6 +227,12 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                   <C.Box ml="30px">
                     <MarkTOASTAsReady
                       onClick={modalsStates.markTOASTAsReady.onOpen}
+                    />
+
+                    <MarkTOASTAsReadyModal
+                      currentToast={currentToast}
+                      isOpen={modalsStates.markTOASTAsReady.isOpen}
+                      closeModal={modalsStates.markTOASTAsReady.onClose}
                     />
                   </C.Box>
                 )}
@@ -215,6 +243,12 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                       currentToast={currentToast}
                       onClick={modalsStates.endTOAST.onOpen}
                     />
+
+                    <EndTOASTModal
+                      currentToast={currentToast}
+                      isOpen={modalsStates.endTOAST.isOpen}
+                      closeModal={modalsStates.endTOAST.onClose}
+                    />
                   </C.Box>
                 )}
 
@@ -223,47 +257,16 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                   isOpen={modalsStates.cancelTOAST.isOpen}
                   closeModal={modalsStates.cancelTOAST.onClose}
                 />
-
-                <OpenVotesModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.openVotes.isOpen}
-                  closeModal={modalsStates.openVotes.onClose}
-                />
-
-                <CloseVotesModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.closeVotes.isOpen}
-                  closeModal={modalsStates.closeVotes.onClose}
-                />
-
-                <MarkTOASTAsReadyModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.markTOASTAsReady.isOpen}
-                  closeModal={modalsStates.markTOASTAsReady.onClose}
-                />
-
-                <DeadHeatSubjectsModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.deadHeatSubjects.isOpen}
-                  closeModal={modalsStates.deadHeatSubjects.onClose}
-                />
-
-                <EndTOASTModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.endTOAST.isOpen}
-                  closeModal={modalsStates.endTOAST.onClose}
-                />
               </>
             )}
 
             <TOASTInfosModal
-              currentToast={currentToast}
               isOpen={modalsStates.toast.isOpen}
               closeModal={closeTOASTFormModal}
             />
           </C.Flex>
 
-          {isToast(currentToast) && (
+          {currentToast !== null && (
             <C.Menu>
               <C.MenuButton
                 textDecoration="underline"

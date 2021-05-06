@@ -8,6 +8,7 @@ import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import { animated, to, useTransition, config } from "@react-spring/web";
 import firebase from "firebase/app";
+import { toJS, when } from "mobx";
 
 import Loader from "@web/core/components/Loader";
 import useStores from "@web/core/hooks/useStores";
@@ -26,8 +27,11 @@ const AppLoader: FunctionComponent = ({ children }) => {
     setLoaderAnimationState,
   ] = useState<LoaderAnimationState>(LoaderAnimationState.INITIAL);
 
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [appReady, setAppReady] = useState(false);
   const [needToLogin, setNeedToLogin] = useState(false);
+  const [firebaseInstance, setFirebaseInstance] = useState<
+    null | typeof import("@web/core/firebase").default
+  >();
 
   useEffect(() => {
     if (loaderAnimationState === LoaderAnimationState.ENTERED) {
@@ -35,7 +39,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
         const user = firebase.getCurrentUser();
 
         if (user) {
-          setLoggedIn(true);
+          setFirebaseInstance(firebase);
         } else {
           setNeedToLogin(true);
         }
@@ -49,8 +53,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
 
       signin()
         .then(() => {
-          setNeedToLogin(false);
-          setLoggedIn(true);
+          setFirebaseInstance(firebase);
         })
         .catch(() => {
           setNeedToLogin(true);
@@ -58,7 +61,21 @@ const AppLoader: FunctionComponent = ({ children }) => {
     });
   }, []);
 
-  const bgAnimations = useTransition(loggedIn, {
+  useEffect(() => {
+    if (firebaseInstance) {
+      when(
+        () =>
+          toJS(firebaseInstance.currentToast) !== null &&
+          firebaseInstance.users.length > 0 &&
+          firebaseInstance.subjects.length > 0,
+        () => {
+          setAppReady(true);
+        }
+      );
+    }
+  }, [firebaseInstance]);
+
+  const bgAnimations = useTransition(appReady, {
     config: config.gentle,
     from: {
       clipPath: [100, 150, 100, 150],
@@ -126,7 +143,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
         </C.Box>
       )}
 
-      {loggedIn &&
+      {appReady &&
         loaderAnimationState !== LoaderAnimationState.INITIAL &&
         children}
     </>

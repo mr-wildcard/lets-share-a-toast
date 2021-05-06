@@ -6,7 +6,7 @@ import { mutate } from "swr";
 import { Toast } from "@shared/models";
 import { ToastStatus, URLQueryParams } from "@shared/enums";
 
-import http from "@web/core/httpClient";
+import firebase from "@web/core/firebase";
 import { APIPaths, pageColors, Pathnames } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -17,6 +17,7 @@ import NotificationType from "@web/notifications/types/NotificationType";
 import useStores from "@web/core/hooks/useStores";
 import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
+import { DatabaseRefPaths } from "@shared/firebase";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -35,8 +36,6 @@ const OpenVotes: FunctionComponent<Props> = ({
   isOpen,
   closeModal,
 }) => {
-  const { auth, notifications } = useStores();
-
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const votingToastURL = getAppURL() + Pathnames.VOTING_SESSION;
@@ -83,25 +82,24 @@ const OpenVotes: FunctionComponent<Props> = ({
                 return errors;
               }}
               onSubmit={async (values): Promise<void> => {
-                const request = http();
-
+                /* TODO: handle slack
                 const endpoint = values.notifySlack
                   ? getAPIEndpointWithSlackNotification(
                       APIPaths.TOAST_CURRENT_STATUS,
                       values.notificationMessage
                     )
                   : APIPaths.TOAST_CURRENT_STATUS;
+                */
 
-                const updatedToast: Toast = await request(endpoint, {
-                  method: "PUT",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    status: ToastStatus.OPEN_FOR_VOTE,
-                  }),
-                });
+                return firebase.database
+                  .ref(DatabaseRefPaths.CURRENT_TOAST)
+                  .child("status")
+                  .set(ToastStatus.OPEN_FOR_VOTE)
+                  .then(() => {
+                    closeModal();
+                  });
 
+                /*
                 notifications.send(
                   // @ts-ignore
                   auth.profile,
@@ -110,8 +108,7 @@ const OpenVotes: FunctionComponent<Props> = ({
                     status: ToastStatus.OPEN_FOR_VOTE,
                   }
                 );
-
-                closeModal();
+                 */
               }}
             >
               {({ values, isSubmitting, isValid }) => (

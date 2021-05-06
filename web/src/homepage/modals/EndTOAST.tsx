@@ -11,13 +11,14 @@ import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 import { Toast } from "@shared/models";
 import { ToastStatus, SubjectStatus } from "@shared/enums";
 
-import http from "@web/core/httpClient";
-import { APIPaths, pageColors } from "@web/core/constants";
+import firebase from "@web/core/firebase";
+import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import NotificationType from "@web/notifications/types/NotificationType";
 import useStores from "@web/core/hooks/useStores";
 import getUserFullname from "@web/core/helpers/getUserFullname";
+import { DatabaseRefPaths } from "@shared/firebase";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -38,15 +39,9 @@ const EndTOAST: FunctionComponent<Props> = ({
   isOpen,
   closeModal,
 }) => {
-  const { auth, notifications } = useStores();
-
   const [endingTOAST, setEndingTOAST] = useState(false);
 
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
-
-  const endTOAST = useCallback(async (): Promise<void> => {
-    setEndingTOAST(true);
-  }, [closeModal, currentToast.id, notifications, auth.profile]);
 
   return (
     <C.AlertDialog
@@ -72,58 +67,31 @@ const EndTOAST: FunctionComponent<Props> = ({
             return errors;
           }}
           onSubmit={async (values: FormValues): Promise<void> => {
-            const getRequest = () => http();
-
-            try {
-              const updateTOASTUpdateRequest = getRequest();
-
-              await updateTOASTUpdateRequest(APIPaths.TOAST_CURRENT_STATUS, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  status: ToastStatus.CLOSED,
-                }),
+            return firebase.database
+              .ref(DatabaseRefPaths.CURRENT_TOAST)
+              .child("status")
+              .set(ToastStatus.CLOSED)
+              .then(() => {
+                closeModal();
               });
 
-              await Promise.all(
-                values.givenSubjectsIds.map((givenSubjectsId) => {
-                  const changeSubjectRequest = getRequest();
-
-                  return changeSubjectRequest(
-                    APIPaths.SUBJECT_STATUS.replace(":id", givenSubjectsId),
-                    {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        status: SubjectStatus.DONE,
-                      }),
-                    }
-                  );
-                })
-              );
-
+            /*
               notifications.send(
-                // @ts-ignore
                 auth.profile,
                 NotificationType.EDIT_TOAST_STATUS,
                 {
                   status: ToastStatus.CLOSED,
                 }
               );
-
-              closeModal();
-            } catch (error) {
-              console.log("An error occured while ending TOAST", { error });
-
-              setEndingTOAST(false);
-            }
+              */
           }}
         >
-          {({ values, isValid, errors }: FormikProps<FormValues>) => {
+          {({
+            values,
+            isValid,
+            isSubmitting,
+            errors,
+          }: FormikProps<FormValues>) => {
             return (
               <Form>
                 <C.AlertDialogContent borderRadius="3px">
@@ -160,7 +128,8 @@ const EndTOAST: FunctionComponent<Props> = ({
                     <C.Divider my={5} />
 
                     <C.Stack my={10} spacing={5}>
-                      {currentToast.selectedSubjects.map(
+                      {/* TODO: handle selected subjects */}
+                      {currentToast.selectedSubjects?.map(
                         (selectedSubject, index) => {
                           return (
                             <Field
@@ -211,7 +180,13 @@ const EndTOAST: FunctionComponent<Props> = ({
                                     "{selectedSubject.title}"
                                   </C.Text>
                                   &nbsp;by&nbsp;
-                                  {selectedSubject.speakers
+                                  {selectedSubject.speakersIds
+                                    .map(
+                                      (speakerId) =>
+                                        firebase.users.find(
+                                          (user) => user.id === speakerId
+                                        )!
+                                    )
                                     .map(getUserFullname)
                                     .join(", ")}
                                 </C.Checkbox>
@@ -226,8 +201,8 @@ const EndTOAST: FunctionComponent<Props> = ({
                     <C.Stack spacing={3} direction="row">
                       <C.Button
                         type="submit"
-                        isLoading={endingTOAST}
-                        isDisabled={endingTOAST || !isValid}
+                        isLoading={isSubmitting}
+                        isDisabled={isSubmitting || !isValid}
                         loadingText="Ending TOAST..."
                         colorScheme="green"
                       >

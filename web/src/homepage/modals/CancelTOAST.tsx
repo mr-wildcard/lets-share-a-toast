@@ -4,12 +4,13 @@ import * as C from "@chakra-ui/react";
 import { ToastStatus } from "@shared/enums";
 import { Toast } from "@shared/models";
 
-import http from "@web/core/httpClient";
+import firebase from "@web/core/firebase";
 import { APIPaths, pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import useStores from "@web/core/hooks/useStores";
 import NotificationType from "@web/notifications/types/NotificationType";
+import { DatabaseRefPaths } from "@shared/firebase";
 
 interface Props {
   isOpen: boolean;
@@ -22,8 +23,6 @@ const CancelTOAST: FunctionComponent<Props> = ({
   isOpen,
   closeModal,
 }) => {
-  const { auth, notifications } = useStores();
-
   const [cancelling, setCancelling] = useState(false);
 
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
@@ -31,31 +30,25 @@ const CancelTOAST: FunctionComponent<Props> = ({
   const cancelTOAST = useCallback(async (): Promise<void> => {
     setCancelling(true);
 
-    const request = http();
-
     try {
-      await request(APIPaths.TOAST_CURRENT_STATUS, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: ToastStatus.CANCELLED,
-        }),
-      });
+      await firebase.database
+        .ref(DatabaseRefPaths.CURRENT_TOAST)
+        .set(null)
+        .then(() => {
+          closeModal();
+        });
 
-      // @ts-ignore
+      /* TODO: handle notifications
       notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
         status: ToastStatus.CANCELLED,
       });
-
-      closeModal();
+      */
     } catch (error) {
       console.error("An error occured while canceling TOAST", { error });
 
       setCancelling(false);
     }
-  }, [auth.profile, closeModal, currentToast.id, notifications]);
+  }, []);
 
   return (
     <C.AlertDialog

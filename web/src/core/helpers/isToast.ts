@@ -1,4 +1,4 @@
-import { DatabaseCurrentToast } from "@shared/firebase";
+import { CurrentToast } from "@shared/models";
 
 /**
  * This is a TypeScript custom type guard. It's value can't be assigned to a variable
@@ -11,6 +11,6 @@ import { DatabaseCurrentToast } from "@shared/firebase";
  * an helper to crack this point.
  * @param currentToast
  */
-export default function isToast(currentToast: DatabaseCurrentToast) {
-  return !!currentToast?.selectedSubjects;
+export default function isToast(currentToast: CurrentToast) {
+  return currentToast !== null;
 }

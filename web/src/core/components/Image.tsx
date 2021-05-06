@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useEffect, useState } from "react";
+import * as C from "@chakra-ui/react";
 
 interface CustomImageProps extends C.ImageProps {
   width: number;
@@ -7,7 +7,7 @@ interface CustomImageProps extends C.ImageProps {
 }
 
 const srcPlaceholder =
-  'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+  "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 
 const Img: FunctionComponent<CustomImageProps> = ({
   src,
@@ -25,7 +25,7 @@ const Img: FunctionComponent<CustomImageProps> = ({
       style={{
         ...style,
         opacity: imageLoaded ? 1 : 0,
-        visibility: imageLoaded ? 'visible' : 'hidden',
+        visibility: imageLoaded ? "visible" : "hidden",
       }}
       transition="opacity 1000ms ease-out"
       htmlWidth={`${width}px`}

@@ -12,11 +12,10 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 
-import { DatabaseCurrentToast } from "@shared/firebase";
-import { User } from "@shared/models";
+import { CurrentToast, User } from "@shared/models";
+import { DatabaseRefPaths } from "@shared/firebase";
 
 import firebase from "@web/core/firebase";
-import http from "@web/core/httpClient";
 import { APIPaths, Pathnames } from "@web/core/constants";
 import NotificationType from "@web/notifications/types/NotificationType";
 import getUserFullname from "@web/core/helpers/getUserFullname";
@@ -35,7 +34,7 @@ import DatePickerCaption from "./DatePickerCaption";
 import datePickerCSS from "./DatePicker.module.css";
 
 interface Props {
-  currentToast: DatabaseCurrentToast;
+  currentToast: CurrentToast;
   cancelButtonRef: Ref<HTMLButtonElement>;
   closeModal(toastCreated: boolean): void;
 }
@@ -101,12 +100,10 @@ const Form: FunctionComponent<Props> = ({
       initialValues={{
         dueDate: dueDateValue,
         organizer: currentToast
-          ? firebase.users.find(
-              (user) => user.uid === currentToast?.organizerId
-            )
+          ? firebase.users.find((user) => user.id === currentToast?.organizerId)
           : undefined,
         scribe: currentToast
-          ? firebase.users.find((user) => user.uid === currentToast?.scribeId)
+          ? firebase.users.find((user) => user.id === currentToast?.scribeId)
           : undefined,
         notifySlack: false,
         notificationMessage: defaultSlackNotificationMessage,
@@ -144,9 +141,9 @@ const Form: FunctionComponent<Props> = ({
         if (!isToast(currentToast)) {
           return firebase.functions
             .httpsCallable("createToast")({
-              date: values.dueDate,
-              organizerId: values.organizer!.uid,
-              scribeId: values.scribe!.uid,
+              date: values.dueDate.getTime(),
+              organizerId: values.organizer!.id,
+              scribeId: values.scribe!.id,
             })
             .then(() => {
               closeModal(true);
@@ -158,6 +155,18 @@ const Form: FunctionComponent<Props> = ({
           });
            */
         } else {
+          return firebase.database
+            .ref(DatabaseRefPaths.CURRENT_TOAST)
+            .update({
+              date: values.dueDate.getTime(),
+              organizerId: values.organizer!.id,
+              scribeId: values.scribe!.id,
+              modifiedDate: new Date().getTime(),
+            })
+            .then(() => {
+              closeModal(true);
+            });
+
           /*
           notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
           */

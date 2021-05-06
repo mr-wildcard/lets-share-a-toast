@@ -19,7 +19,7 @@ const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
     <C.Box fontWeight="bold" color="gray.800" textAlign="center">
       <C.Text fontSize="4xl" mt={0} mb={5}>
         TOAST is coming&nbsp;
-        {getTOASTElapsedTimeSinceCreation(new Date(toast.date))} !
+        {getTOASTElapsedTimeSinceCreation(toast.date)} !
       </C.Text>
 
       <C.Box my={5}>

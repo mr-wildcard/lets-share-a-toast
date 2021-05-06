@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useMemo } from "react";
 import * as C from "@chakra-ui/react";
 
-import { CurrentToast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
+import { CurrentToast, Toast } from "@shared/models";
 
 import isToast from "@web/core/helpers/isToast";
 import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
@@ -74,20 +74,20 @@ interface Props {
 
 const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
   const toastIsToday = useMemo(() => {
-    return isToast(currentToast) && isTOASTToday(new Date(currentToast.date));
+    return currentToast !== null && isTOASTToday(new Date(currentToast.date));
   }, [currentToast]);
 
   const toastDateHasPassed = useMemo(() => {
     return (
-      isToast(currentToast) && hasTOASTDatePassed(new Date(currentToast.date))
+      currentToast !== null && hasTOASTDatePassed(new Date(currentToast.date))
     );
   }, [currentToast]);
 
   return (
     <>
-      {!isToast(currentToast) && <NoTOAST />}
+      {currentToast === null && <NoTOAST />}
 
-      {isToast(currentToast) && (
+      {currentToast !== null && (
         <>
           {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast} />}
 

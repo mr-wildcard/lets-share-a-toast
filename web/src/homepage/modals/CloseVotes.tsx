@@ -4,9 +4,10 @@ import { mutate } from "swr";
 
 import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
+import { DatabaseRefPaths } from "@shared/firebase";
 
-import http from "@web/core/httpClient";
-import { APIPaths, pageColors } from "@web/core/constants";
+import firebase from "@web/core/firebase";
+import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import useStores from "@web/core/hooks/useStores";
 import Image from "@web/core/components/Image";
@@ -25,8 +26,6 @@ const CloseVotes: FunctionComponent<Props> = ({
   isOpen,
   closeModal,
 }) => {
-  const { auth, notifications } = useStores();
-
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const [closingVotes, setClosingVotes] = useState(false);
@@ -34,31 +33,26 @@ const CloseVotes: FunctionComponent<Props> = ({
   const closeVotingToast = useCallback(async (): Promise<void> => {
     setClosingVotes(true);
 
-    const request = http();
-
     try {
-      const updatedToast: Toast = await request(APIPaths.TOAST_CURRENT_STATUS, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: ToastStatus.VOTE_CLOSED,
-        }),
-      });
-
-      // @ts-ignore
-      notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
-        status: ToastStatus.VOTE_CLOSED,
-      });
+      await firebase.database
+        .ref(DatabaseRefPaths.CURRENT_TOAST)
+        .child("status")
+        .set(ToastStatus.VOTE_CLOSED)
+        .then(() => {});
 
       closeModal();
     } catch (error) {
-      console.error("An error occured while closing votes", { error });
+      console.error("Couldn't close the TOAST", { error });
 
       setClosingVotes(false);
     }
-  }, [auth.profile, closeModal, currentToast.id, notifications]);
+
+    /*
+      notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
+        status: ToastStatus.VOTE_CLOSED,
+      });
+      */
+  }, []);
 
   return (
     <C.Modal

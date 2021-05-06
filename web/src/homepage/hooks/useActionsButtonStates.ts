@@ -9,42 +9,44 @@ import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects
 
 const useActionsButtonStates = (currentToast: CurrentToast) => {
   return useMemo(() => {
+    const isToast = currentToast !== null;
+
     return {
       initiateTOAST: {
-        isSuccess: isToast(currentToast),
+        isSuccess: isToast,
       },
       openVotes: {
         isSuccess:
-          isToast(currentToast) &&
+          currentToast !== null &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_TO_CONTRIBUTION
           ),
       },
       closeVotes: {
         display:
-          isToast(currentToast) &&
+          currentToast !== null &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_TO_CONTRIBUTION
           ),
         isSuccess:
-          isToast(currentToast) &&
+          currentToast !== null &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_FOR_VOTE
           ),
       },
       deadHeatSubjects: {
         display:
-          isToast(currentToast) && toastHasDeadheatSubjects(currentToast),
+          currentToast !== null && toastHasDeadheatSubjects(currentToast),
       },
       markTOASTAsReady: {
         display:
-          isToast(currentToast) &&
+          currentToast !== null &&
           currentToast.status === ToastStatus.VOTE_CLOSED &&
           !toastHasDeadheatSubjects(currentToast),
       },
       endTOAST: {
         display:
-          isToast(currentToast) &&
+          currentToast !== null &&
           currentToast.status === ToastStatus.WAITING_FOR_TOAST,
       },
     };

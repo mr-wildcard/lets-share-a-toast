@@ -6,6 +6,7 @@ import { mutate } from "swr";
 import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
 
+import firebase from "@web/core/firebase";
 import { APIPaths, pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -16,6 +17,7 @@ import useStores from "@web/core/hooks/useStores";
 import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
 import getAPIEndpointWithSlackNotification from "@web/core/helpers/getAPIEndpointWithSlackNotification";
+import { DatabaseRefPaths } from "@shared/firebase";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -79,36 +81,33 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
 
               return errors;
             }}
-            onSubmit={async (values) => {
+            onSubmit={(values) => {
+              /* TODO: Handle Slack
               const endpoint = values.notifySlack
                 ? getAPIEndpointWithSlackNotification(
                     APIPaths.TOAST_CURRENT_STATUS,
                     values.notificationMessage
                   )
                 : APIPaths.TOAST_CURRENT_STATUS;
+              */
 
-              const request = http();
+              firebase.database
+                .ref(DatabaseRefPaths.CURRENT_TOAST)
+                .child("status")
+                .set(ToastStatus.WAITING_FOR_TOAST)
+                .then(() => {
+                  closeModal();
+                });
 
-              const updatedToast: Toast = await request(endpoint, {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  status: ToastStatus.WAITING_FOR_TOAST,
-                }),
-              });
-
+              /* TODO: Handle notifications
               notifications.send(
-                // @ts-ignore
                 auth.profile,
                 NotificationType.EDIT_TOAST_STATUS,
                 {
                   status: ToastStatus.WAITING_FOR_TOAST,
                 }
               );
-
-              closeModal();
+              */
             }}
           >
             {({ values, isSubmitting, isValid }) => (

@@ -2,7 +2,7 @@ import { ToastStatus } from "@shared/enums/ToastStatus";
 import { Subject, SubjectsTotalVotes } from "@shared/models";
 
 export interface DatabaseToast {
-  date: string;
+  date: number;
   organizerId: string;
   scribeId: string;
   status: ToastStatus;
@@ -11,4 +11,7 @@ export interface DatabaseToast {
   subjects?: Subject[];
   votes?: SubjectsTotalVotes;
   createdByUserId?: string;
+  createdDate: number;
+  modifiedByUserId?: string;
+  modifiedDate: number;
 }

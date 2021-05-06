@@ -8,11 +8,11 @@ import "firebase/functions";
 import {
   FirestoreUser,
   FirestoreSubject,
-  DatabaseCurrentToast,
+  DatabaseCurrentTOAST,
   DatabaseRefPaths,
   FirestoreCollection,
 } from "@shared/firebase";
-import { Subject, User } from "@shared/models";
+import { CurrentToast, Subject, User } from "@shared/models";
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -56,8 +56,8 @@ if (!firebase.apps.length) {
 }
 
 interface FirebaseInstance extends Record<string, any> {
-  connectedUser: FirestoreUser | null;
-  currentToast: DatabaseCurrentToast | null;
+  connectedUser: firebase.User | null;
+  currentToast?: CurrentToast;
   users: User[];
   subjects: Subject[];
 }
@@ -69,9 +69,10 @@ const firebaseInstance: FirebaseInstance = {
   auth: firebase.auth(),
 
   connectedUser: null,
-  currentToast: null,
   users: [],
   subjects: [],
+
+  currentToast: undefined,
 
   getCurrentUser(auth = firebase.auth()) {
     return auth.currentUser;
@@ -132,12 +133,22 @@ function onAuthChanged(user: firebase.User | null) {
       .database()
       .ref(DatabaseRefPaths.CURRENT_TOAST)
       .on("value", (snapshot) => {
-        const currentToast = snapshot.val();
+        const value: DatabaseCurrentTOAST = snapshot.val();
 
-        firebaseInstance.currentToast = currentToast;
+        const toast: CurrentToast =
+          value !== null
+            ? {
+                ...value,
+                date: new Date(value.date),
+                createdDate: new Date(value.createdDate),
+                modifiedDate: new Date(value.modifiedDate),
+              }
+            : null;
+
+        firebaseInstance.currentToast = toast;
 
         if (import.meta.env.DEV) {
-          console.log({ currentToast });
+          console.log({ toast });
         }
       });
 

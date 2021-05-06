@@ -2,13 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toJS } from "mobx";
 import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
-import useSWR from "swr";
 
 import { Subject } from "@shared/models";
 
 import firebase from "@web/core/firebase";
 import useStores from "@web/core/hooks/useStores";
-import { spacing, APIPaths, pageColors } from "@web/core/constants";
+import { spacing, pageColors } from "@web/core/constants";
 import ColoredBackground from "@web/core/components/ColoredBackground";
 import Image from "@web/core/components/Image";
 import { StatusFilterValue } from "@web/subjects/types";

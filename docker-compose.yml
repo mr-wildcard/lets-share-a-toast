@@ -33,14 +33,15 @@ services:
       - ./:/code:delegated
       - firestore-data:/home/firebase/firestore-data
     working_dir: /code/firebase
-    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firebase/firestore-data --export-on-exit --debug"
+    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firebase/firestore-data --export-on-exit"
     ports:
       - ${FIREBASE_EMULATOR_UI_PORT}:${FIREBASE_EMULATOR_UI_PORT}
       - ${FIREBASE_EMULATOR_FIRESTORE_PORT}:${FIREBASE_EMULATOR_FIRESTORE_PORT}
       - ${FIREBASE_EMULATOR_DATABASE_PORT}:${FIREBASE_EMULATOR_DATABASE_PORT}
       - ${FIREBASE_EMULATOR_AUTH_PORT}:${FIREBASE_EMULATOR_AUTH_PORT}
       - ${FIREBASE_EMULATOR_FUNCTIONS_PORT}:${FIREBASE_EMULATOR_FUNCTIONS_PORT}
-      - ${FIREBASE_EMULATOR_HUB}:${FIREBASE_EMULATOR_HUB}
+      - ${FIREBASE_EMULATOR_LOGS_PORT}:${FIREBASE_EMULATOR_LOGS_PORT}
+      - ${FIREBASE_EMULATOR_HUB_PORT}:${FIREBASE_EMULATOR_HUB_PORT}
     environment:
       - FIREBASE_PROJECT_ID
       - FIREBASE_TOKEN

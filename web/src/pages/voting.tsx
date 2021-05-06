@@ -3,15 +3,21 @@ import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import useSWR from "swr";
 
-import { Toast } from "@shared/models";
-import { ToastStatus } from "@shared/enums";
+import { Subject, Toast } from "@shared/models";
+import { SubjectStatus, ToastStatus } from "@shared/enums";
 
+import firebase from "@web/core/firebase";
 import { APIPaths, pageColors } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
 import isToast from "@web/core/helpers/isToast";
 import ColoredBackground from "@web/core/components/ColoredBackground";
 import { LoadingErrorCode } from "@web/votes/types";
 import LoadingError from "@web/votes/LoadingError";
+import {
+  DatabaseRefPaths,
+  DatabaseVotingSession,
+  FirestoreCollection,
+} from "@shared/firebase";
 
 const VotingSession = () => {
   const {
@@ -26,30 +32,52 @@ const VotingSession = () => {
     null
   );
 
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [
+    votingSession,
+    setVotingSession,
+  ] = useState<null | DatabaseVotingSession>(null);
+
   useEffect(() => {
     ui.currentPageBgColor = pageColors.votingSession;
     appLoader.pageIsReady = true;
-  }, []);
 
-  useEffect(() => {
-    if (isToast(toast)) {
-      if (toast.status === ToastStatus.OPEN_FOR_VOTE) {
+    let disposeFirebaseSubjectsListener: () => void;
+    let disposeFirebaseVotingSessionListener: () => void;
+
+    if (!!firebase.currentToast) {
+      if (firebase.currentToast.status === ToastStatus.OPEN_FOR_VOTE) {
         setLoadingError(null);
 
-        voting.initialize().catch((error) => {
-          setLoadingError(LoadingErrorCode.UNKNOWN_ERROR);
-
-          console.error("Error while initiatizing voting toast.", {
-            error,
+        disposeFirebaseSubjectsListener = firebase.firestore
+          .collection(FirestoreCollection.SUBJECTS)
+          .where("status", "==", SubjectStatus.AVAILABLE)
+          .onSnapshot((snapshot) => {
+            setSubjects(snapshot.docs.map((doc) => doc.data()));
           });
-        });
+
+        disposeFirebaseVotingSessionListener = firebase.database
+          .ref(DatabaseRefPaths.VOTING_SESSION)
+          .on("value", (snapshot) => {
+            setVotingSession(snapshot.val() as DatabaseVotingSession);
+          });
       } else {
         setLoadingError(LoadingErrorCode.WRONG_SESSION_STATUS);
       }
     } else {
       setLoadingError(LoadingErrorCode.NO_SESSION);
     }
-  }, [toast, voting]);
+
+    return () => {
+      if (typeof disposeFirebaseSubjectsListener === "function") {
+        disposeFirebaseSubjectsListener();
+      }
+
+      if (typeof disposeFirebaseVotingSessionListener === "function") {
+        disposeFirebaseVotingSessionListener();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     let listenToVotesHandler: Function;

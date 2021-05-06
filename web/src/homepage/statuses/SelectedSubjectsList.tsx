@@ -12,7 +12,8 @@ interface Props {
 const SelectedSubjectsList: FunctionComponent<Props> = ({ currentToast }) => {
   return (
     <C.List fontSize="lg" fontWeight="normal">
-      {currentToast.selectedSubjects.map((subject, index) => (
+      {/* TODO: handle selected subjects */}
+      {currentToast.selectedSubjects?.map((subject, index) => (
         <C.ListItem key={`subject-${subject.id}-${index}`}>
           &quot;
           <C.Text as="span" fontStyle="italic" fontWeight="bold">
