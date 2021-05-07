@@ -14,19 +14,16 @@ import {
 } from "formik";
 import Select from "react-select";
 
-import { Subject, Toast, User } from "@shared/models";
+import { Subject, User } from "@shared/models";
 import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
 
 import firebase from "@web/core/firebase";
-import NotificationType from "@web/notifications/types/NotificationType";
-import useStores from "@web/core/hooks/useStores";
-import { APIPaths, pageColors, urlRegex } from "@web/core/constants";
+import { pageColors, urlRegex } from "@web/core/constants";
 import { getTOASTRemainingDays } from "@web/core/helpers/timing";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
-import isToast from "@web/core/helpers/isToast";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
 import StatusField from "./StatusField";
@@ -90,7 +87,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
   const alertAboutStatusChange = useMemo(() => {
     return (
       !isCreatingSubject &&
-      currentToast !== null &&
+      !!currentToast &&
       subjectIsInVotingSession(currentToast.status, subject!.status)
     );
   }, [isCreatingSubject, currentToast, subject]);
@@ -110,11 +107,15 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
         speakers: isCreatingSubject
           ? []
           : subject!.speakersIds.map(
-              (spearkerId) => users.find((user) => user.uid === spearkerId)!
+              (spearkerId) => users.find((user) => user.id === spearkerId)!
             ),
         cover: isCreatingSubject ? "" : subject!.cover || "",
         comment: isCreatingSubject ? "" : subject!.comment || "",
-        status: isCreatingSubject ? SubjectStatus.AVAILABLE : subject!.status,
+        status: warnAboutNewSubjectDuringVotingSession
+          ? SubjectStatus.UNAVAILABLE
+          : isCreatingSubject
+          ? SubjectStatus.AVAILABLE
+          : subject!.status,
       }}
       validate={(values: FormValues) => {
         const errors: FormErrors = {};

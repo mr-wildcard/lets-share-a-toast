@@ -89,7 +89,12 @@ export function Subjects() {
         <C.Box>
           {subjects.map((subject) => {
             return (
-              <C.Button key={subject.id} m={3} onClick={() => vote(subject.id)}>
+              <C.Button
+                key={subject.id}
+                m={3}
+                onClick={() => vote(subject.id)}
+                disabled={!votingSession.peopleCanVote}
+              >
                 {subject.id} (
                 {votingSession.votes?.[subject.id]
                   ? getSubjectTotalVotes(votingSession.votes[subject.id])
