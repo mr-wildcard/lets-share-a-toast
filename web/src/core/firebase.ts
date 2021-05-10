@@ -107,7 +107,7 @@ function onAuthChanged(user: firebase.User | null) {
             date,
             createdDate,
             modifiedDate,
-            selectedSubjects = [],
+            selectedSubjectIds = [],
             ...restOfCurrentProps
           } = currentToast;
 
@@ -116,7 +116,13 @@ function onAuthChanged(user: firebase.User | null) {
             date: new Date(date),
             createdDate: new Date(createdDate),
             modifiedDate: new Date(modifiedDate),
-            selectedSubjects: selectedSubjects.map(
+            organizer: firebaseInstance.users.find(
+              (user) => user.id === currentToast.organizerId
+            )!,
+            scribe: firebaseInstance.users.find(
+              (user) => user.id === currentToast.scribeId
+            )!,
+            selectedSubjects: selectedSubjectIds.map(
               (selectedSubjectId) =>
                 firebaseInstance.subjects.find(
                   (subject) => subject.id === selectedSubjectId
@@ -128,7 +134,7 @@ function onAuthChanged(user: firebase.User | null) {
         }
 
         if (import.meta.env.DEV) {
-          console.log({ toast: firebaseInstance.currentToast });
+          console.log({ currentToast });
         }
       });
 
@@ -152,10 +158,18 @@ function onAuthChanged(user: firebase.User | null) {
       .firestore()
       .collection(FirestoreCollection.SUBJECTS)
       .onSnapshot((snapshot) => {
-        const subjects = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as FirestoreSubject),
-        }));
+        const subjects = snapshot.docs.map((doc) => {
+          const subject = doc.data() as FirestoreSubject;
+
+          return {
+            ...subject,
+            id: doc.id,
+            speakers: subject.speakersIds.map(
+              (speakerId) =>
+                firebaseInstance.users.find((user) => user.id === speakerId)!
+            ),
+          };
+        });
 
         firebaseInstance.subjects = subjects;
 

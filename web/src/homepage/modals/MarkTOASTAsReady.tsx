@@ -5,6 +5,7 @@ import { mutate } from "swr";
 
 import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
+import { DatabaseRefPaths } from "@shared/firebase";
 
 import firebase from "@web/core/firebase";
 import { APIPaths, pageColors } from "@web/core/constants";
@@ -17,7 +18,6 @@ import useStores from "@web/core/hooks/useStores";
 import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
 import getAPIEndpointWithSlackNotification from "@web/core/helpers/getAPIEndpointWithSlackNotification";
-import { DatabaseRefPaths } from "@shared/firebase";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -91,7 +91,7 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                 : APIPaths.TOAST_CURRENT_STATUS;
               */
 
-              firebase.database
+              return firebase.database
                 .ref(DatabaseRefPaths.CURRENT_TOAST)
                 .child("status")
                 .set(ToastStatus.WAITING_FOR_TOAST)

@@ -56,7 +56,7 @@ export default async function voteClosed() {
 
   for (let i = 0; i < allSortedTotalVotes.length; i++) {
     /**
-     * If `selectedSubjects` array was filled with enough subject ids
+     * If `selectedSubjectIds` array was filled with enough subject ids
      * during the previous loop, we don't need to iterate further.
      */
     if (selectedSubjects.length >= maxSelectableSubjects) {
@@ -87,6 +87,6 @@ export default async function voteClosed() {
   return admin
     .database()
     .ref(DatabaseRefPaths.CURRENT_TOAST)
-    .child("selectedSubjects")
+    .child("selectedSubjectIds")
     .set(selectedSubjects);
 }

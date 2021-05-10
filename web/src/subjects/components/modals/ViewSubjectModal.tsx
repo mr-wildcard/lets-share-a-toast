@@ -10,7 +10,6 @@ import SubjectInfoBadges from "@web/subjects/components/modals/SubjectInfoBadges
 
 interface Props {
   subject: Subject;
-  speakers: User[];
   closeModal(): void;
 }
 
@@ -45,7 +44,6 @@ const getRandomEdgePositions = (min: number, max: number): number[] => {
 
 const ViewSubjectModal: FunctionComponent<Props> = ({
   subject,
-  speakers,
   closeModal,
 }) => {
   const [coverLoaded, setCoverLoaded] = useState(!subject.cover);
@@ -171,7 +169,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                 </C.Heading>
 
                 <C.Box fontSize="md" fontWeight="normal">
-                  <SubjectSpeakers speakers={speakers} />
+                  <SubjectSpeakers speakers={subject.speakers} />
                 </C.Box>
 
                 {!subject.cover && (

@@ -1,7 +1,7 @@
-import { SubjectStatus } from "@shared/enums/SubjectStatus";
-import { SubjectLanguage } from "@shared/enums/SubjectLanguage";
 import { FirestoreSubject } from "@shared/firebase";
+import { User } from "@shared/models/User";
 
-export interface Subject extends FirestoreSubject {
+export interface Subject extends Omit<FirestoreSubject, "speakersIds"> {
   id: string;
+  speakers: User[];
 }

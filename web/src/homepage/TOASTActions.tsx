@@ -173,7 +173,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
               />
             </C.Box>
 
-            {currentToast !== null && (
+            {!!currentToast && (
               <>
                 <C.Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
                   <OpenVotes
@@ -266,7 +266,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
             />
           </C.Flex>
 
-          {currentToast !== null && (
+          {!!currentToast && (
             <C.Menu>
               <C.MenuButton
                 textDecoration="underline"

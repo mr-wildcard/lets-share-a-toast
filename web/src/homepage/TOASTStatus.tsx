@@ -74,13 +74,11 @@ interface Props {
 
 const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
   const toastIsToday = useMemo(() => {
-    return currentToast !== null && isTOASTToday(new Date(currentToast.date));
+    return !!currentToast && isTOASTToday(new Date(currentToast.date));
   }, [currentToast]);
 
   const toastDateHasPassed = useMemo(() => {
-    return (
-      currentToast !== null && hasTOASTDatePassed(new Date(currentToast.date))
-    );
+    return !!currentToast && hasTOASTDatePassed(new Date(currentToast.date));
   }, [currentToast]);
 
   return (

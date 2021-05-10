@@ -2,7 +2,7 @@ import React, { FunctionComponent, useMemo } from "react";
 import * as C from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
-import { FirestoreSubject } from "@shared/firebase";
+import { Subject } from "@shared/models";
 
 import { isSubjectNew } from "@web/subjects/helpers";
 import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
@@ -11,7 +11,7 @@ import SubjectDurationBadge from "@web/subjects/components/list/item/SubjectDura
 import SubjectNewBadge from "@web/subjects/components/list/item/SubjectNewBadge";
 
 interface Props {
-  subject: FirestoreSubject;
+  subject: Subject;
 }
 
 const SubjectInfoBadges: FunctionComponent<Props> = ({ subject }) => {

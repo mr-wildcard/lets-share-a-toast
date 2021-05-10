@@ -9,7 +9,7 @@ import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects
 
 const useActionsButtonStates = (currentToast: CurrentToast) => {
   return useMemo(() => {
-    const isToast = currentToast !== null;
+    const isToast = !!currentToast;
 
     return {
       initiateTOAST: {
@@ -17,36 +17,35 @@ const useActionsButtonStates = (currentToast: CurrentToast) => {
       },
       openVotes: {
         isSuccess:
-          currentToast !== null &&
+          !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_TO_CONTRIBUTION
           ),
       },
       closeVotes: {
         display:
-          currentToast !== null &&
+          !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_TO_CONTRIBUTION
           ),
         isSuccess:
-          currentToast !== null &&
+          !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_FOR_VOTE
           ),
       },
       deadHeatSubjects: {
-        display:
-          currentToast !== null && toastHasDeadheatSubjects(currentToast),
+        display: !!currentToast && toastHasDeadheatSubjects(currentToast),
       },
       markTOASTAsReady: {
         display:
-          currentToast !== null &&
+          !!currentToast &&
           currentToast.status === ToastStatus.VOTE_CLOSED &&
           !toastHasDeadheatSubjects(currentToast),
       },
       endTOAST: {
         display:
-          currentToast !== null &&
+          !!currentToast &&
           currentToast.status === ToastStatus.WAITING_FOR_TOAST,
       },
     };

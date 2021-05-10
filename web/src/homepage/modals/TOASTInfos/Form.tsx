@@ -99,12 +99,8 @@ const Form: FunctionComponent<Props> = ({
       validateOnMount={true}
       initialValues={{
         dueDate: dueDateValue,
-        organizer: currentToast
-          ? firebase.users.find((user) => user.id === currentToast?.organizerId)
-          : undefined,
-        scribe: currentToast
-          ? firebase.users.find((user) => user.id === currentToast?.scribeId)
-          : undefined,
+        organizer: currentToast?.organizer,
+        scribe: currentToast?.scribe,
         notifySlack: false,
         notificationMessage: defaultSlackNotificationMessage,
       }}
@@ -128,17 +124,15 @@ const Form: FunctionComponent<Props> = ({
          * validate those fields because they're not displayed.
          * Only while creating a TOAST.
          */
-        if (
-          !isToast(currentToast) &&
-          !slackNotificationFieldsAreValid(values)
-        ) {
+        if (!currentToast && !slackNotificationFieldsAreValid(values)) {
           errors.notificationMessage = true;
         }
 
         return errors;
       }}
       onSubmit={async (values): Promise<void> => {
-        if (!isToast(currentToast)) {
+        console.log({ values });
+        if (!currentToast) {
           return firebase.functions
             .httpsCallable("createToast")({
               date: values.dueDate.getTime(),
@@ -305,14 +299,13 @@ const Form: FunctionComponent<Props> = ({
 
               <C.ModalFooter justifyContent="center">
                 <C.Button
-                  isDisabled={!firebase.users.length || !isValid}
+                  type="submit"
+                  isDisabled={!isValid}
                   overflow="hidden"
                   colorScheme="blue"
                   isLoading={isSubmitting}
                   loadingText={
-                    !isToast(currentToast)
-                      ? "Initializing TOAST..."
-                      : "Editing infos..."
+                    !currentToast ? "Initializing TOAST..." : "Editing infos..."
                   }
                   mx={2}
                 >
@@ -325,8 +318,8 @@ const Form: FunctionComponent<Props> = ({
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
                   <C.Text as="span" pl={35}>
-                    {isToast(currentToast) && "Edit"}
-                    {!isToast(currentToast) && "Let's go !"}
+                    {currentToast && "Edit"}
+                    {!currentToast && "Let's go !"}
                   </C.Text>
                 </C.Button>
                 <C.Button

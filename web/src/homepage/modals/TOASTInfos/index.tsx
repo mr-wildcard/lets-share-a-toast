@@ -2,6 +2,8 @@ import React, { FunctionComponent, useRef } from "react";
 import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
+import { CurrentToast } from "@shared/models";
+
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import isToast from "@web/core/helpers/isToast";
@@ -31,7 +33,7 @@ const Form = React.lazy(
 const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   const cancelButtonRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const isCreatingToast = !isToast(firebase.currentToast);
+  const isCreatingToast = firebase.currentToast === null;
 
   return (
     <C.Modal
@@ -61,7 +63,7 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
           </C.ModalHeader>
           <C.ModalBody pb={6}>
             <Form
-              currentToast={firebase.currentToast}
+              currentToast={firebase.currentToast as CurrentToast}
               closeModal={props.closeModal}
               cancelButtonRef={cancelButtonRef}
             />

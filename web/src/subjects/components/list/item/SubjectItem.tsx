@@ -41,7 +41,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
   const { users, currentToast } = firebase;
 
   const subjectIsInCurrentTOASTVotingSession =
-    currentToast !== null &&
+    !!currentToast &&
     subjectIsInVotingSession(currentToast.status, subject.status);
 
   const theme = C.useTheme();
@@ -154,12 +154,6 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     };
   }, [subject.createdDate]);
 
-  const speakers = useMemo(() => {
-    return subject.speakersIds.map(
-      (spearkerId) => firebase.users.find((user) => user.uid === spearkerId)!
-    );
-  }, [subject.speakersIds]);
-
   const subjectIsNew = useMemo(() => {
     return isSubjectNew(subject.createdDate);
   }, [subject]);
@@ -208,7 +202,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             </C.Box>
 
             <C.Box>
-              <SubjectSpeakers speakers={speakers} />
+              <SubjectSpeakers speakers={subject.speakers} />
             </C.Box>
 
             <C.Divider
@@ -334,11 +328,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
       )}
 
       {viewModal.isOpen && (
-        <ViewSubjectModal
-          subject={subject}
-          speakers={speakers}
-          closeModal={viewModal.onClose}
-        />
+        <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
       )}
     </C.Box>
   );
