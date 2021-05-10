@@ -12,7 +12,7 @@ import {
   DatabaseRefPaths,
   FirestoreCollection,
 } from "@shared/firebase";
-import { CurrentToast, Subject, User } from "@shared/models";
+import { CurrentToast, Subject, Toast, User } from "@shared/models";
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -69,9 +69,9 @@ const firebaseInstance: FirebaseInstance = {
   auth: firebase.auth(),
 
   connectedUser: null,
+  currentToast: undefined,
   users: [],
   subjects: [],
-  currentToast: undefined,
 
   getCurrentUser(auth = firebase.auth()) {
     return auth.currentUser;
@@ -95,6 +95,42 @@ const removeAuthListener = firebase.auth().onAuthStateChanged(onAuthChanged);
 function onAuthChanged(user: firebase.User | null) {
   if (user) {
     firebaseInstance.connectedUser = user;
+
+    firebase
+      .database()
+      .ref(DatabaseRefPaths.CURRENT_TOAST)
+      .on("value", (snapshot) => {
+        const currentToast: DatabaseCurrentTOAST = snapshot.val();
+
+        if (currentToast !== null) {
+          const {
+            date,
+            createdDate,
+            modifiedDate,
+            selectedSubjects = [],
+            ...restOfCurrentProps
+          } = currentToast;
+
+          firebaseInstance.currentToast = {
+            ...restOfCurrentProps,
+            date: new Date(date),
+            createdDate: new Date(createdDate),
+            modifiedDate: new Date(modifiedDate),
+            selectedSubjects: selectedSubjects.map(
+              (selectedSubjectId) =>
+                firebaseInstance.subjects.find(
+                  (subject) => subject.id === selectedSubjectId
+                )!
+            ),
+          };
+        } else {
+          firebaseInstance.currentToast = currentToast;
+        }
+
+        if (import.meta.env.DEV) {
+          console.log({ toast: firebaseInstance.currentToast });
+        }
+      });
 
     firebase
       .firestore()
@@ -125,29 +161,6 @@ function onAuthChanged(user: firebase.User | null) {
 
         if (import.meta.env.DEV) {
           console.log({ subjects });
-        }
-      });
-
-    firebase
-      .database()
-      .ref(DatabaseRefPaths.CURRENT_TOAST)
-      .on("value", (snapshot) => {
-        const value: DatabaseCurrentTOAST = snapshot.val();
-
-        const toast: CurrentToast =
-          value !== null
-            ? {
-                ...value,
-                date: new Date(value.date),
-                createdDate: new Date(value.createdDate),
-                modifiedDate: new Date(value.modifiedDate),
-              }
-            : null;
-
-        firebaseInstance.currentToast = toast;
-
-        if (import.meta.env.DEV) {
-          console.log({ toast });
         }
       });
 
