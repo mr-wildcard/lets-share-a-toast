@@ -72,7 +72,7 @@ export const onToastStatusUpdate = functions.database
       }
 
       default: {
-        return;
+        return functions.logger.info("TOAST status changed to", newStatus);
       }
     }
   });
