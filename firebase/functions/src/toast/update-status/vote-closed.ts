@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths, SubjectsVotes } from "@shared/firebase";
-import { getSubjectTotalVotes } from "@shared/utils";
+import { getSubjectTotalVotes, unique } from "@shared/utils";
 
 export default async function voteClosed() {
   /**
@@ -49,6 +49,7 @@ export default async function voteClosed() {
 
   const allSortedTotalVotes = allSubjectsVotes
     .map(([, subjectTotalVotes]) => subjectTotalVotes)
+    .filter(unique)
     .sort()
     .reverse();
 
