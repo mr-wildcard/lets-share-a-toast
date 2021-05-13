@@ -14,8 +14,9 @@ function removeSubjectFromVotingSession(subjectId: string) {
 }
 
 /**
- * Watch all changes from all subjects then remove it from voting session
- * if status changed from AVAILABLE.
+ * Watch all changes from all subjects then remove a subject
+ * from voting session if its status changed
+ * to a status other than AVAILABLE.
  */
 export const syncSubjectsWithVotes = functions.firestore
   .document(`${FirestoreCollection.SUBJECTS}/{subjectId}`)
