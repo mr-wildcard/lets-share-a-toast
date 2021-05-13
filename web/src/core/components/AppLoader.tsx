@@ -62,7 +62,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (firebaseInstance) {
+    if (!appReady && firebaseInstance) {
       when(
         () =>
           toJS(firebaseInstance.currentToast) !== undefined &&
