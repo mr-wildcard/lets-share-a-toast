@@ -1,8 +1,13 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
+import { observer } from "mobx-react-lite";
+import { computed } from "mobx";
 
-import Image from '@web/core/components/Image';
+import { votingSessionHasAtLeastOneVote } from "@shared/utils";
+
+import Image from "@web/core/components/Image";
+import firebase from "@web/core/firebase";
 
 interface Props {
   isSuccess: boolean;
@@ -10,11 +15,16 @@ interface Props {
 }
 
 const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+  const isDisabled = computed(
+    () => !votingSessionHasAtLeastOneVote(firebase.votingSession!)
+  ).get();
+
   return (
     <>
       {!isSuccess && (
         <C.Button
           onClick={onClick}
+          disabled={isDisabled}
           variant="outline"
           position="relative"
           bg="white"
@@ -56,4 +66,4 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   );
 };
 
-export default React.memo(CloseVotes);
+export default observer(CloseVotes);
