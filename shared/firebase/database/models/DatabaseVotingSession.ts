@@ -11,7 +11,7 @@ export interface SubjectsVotes {
 
 export interface DatabaseVotingSession {
   peopleCanVote: boolean;
-  votes: SubjectsVotes;
+  votes?: SubjectsVotes;
 }
 
 /**
