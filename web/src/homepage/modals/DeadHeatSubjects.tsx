@@ -1,14 +1,11 @@
 import React, { FunctionComponent, useEffect, useMemo, useRef } from "react";
 import * as C from "@chakra-ui/react";
-
 import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
-import { mutate } from "swr";
 
 import { Toast, Subject } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
 
-import http from "@web/core/httpClient";
-import { APIPaths, pageColors } from "@web/core/constants";
+import { pageColors } from "@web/core/constants";
 import NotificationType from "@web/notifications/types/NotificationType";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -34,16 +31,15 @@ export function DeadHeatSubjectsModal({
   isOpen,
   closeModal,
 }: Props) {
+  console.log({ currentToast });
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
-
-  const { notifications, auth } = useStores();
 
   /**
    * Sort selected subjects by their total amout of votes.
    */
   const sortedSelectedSubjects: Subject[] = useMemo(() => {
-    return currentToast.selectedSubjects
-      .slice()
+    return currentToast
+      .selectedSubjects!.slice()
       .sort((selectedSubject1, selectedSubject2) => {
         return (
           currentToast.votes[selectedSubject2.id] -
@@ -104,6 +100,7 @@ export function DeadHeatSubjectsModal({
               }),
             });
 
+            /* TODO: activate notifications
             notifications.send(
               // @ts-ignore
               auth.profile,
@@ -112,6 +109,7 @@ export function DeadHeatSubjectsModal({
                 status: ToastStatus.WAITING_FOR_TOAST,
               }
             );
+            */
 
             closeModal();
           }}
