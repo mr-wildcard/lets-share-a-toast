@@ -131,7 +131,6 @@ const Form: FunctionComponent<Props> = ({
         return errors;
       }}
       onSubmit={async (values): Promise<void> => {
-        console.log({ values });
         if (!currentToast) {
           return firebase.functions
             .httpsCallable("createToast")({
