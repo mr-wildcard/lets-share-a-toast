@@ -3,7 +3,7 @@ import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import { ToastStatus } from "@shared/enums";
 
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
 import ColoredBackground from "@web/core/components/ColoredBackground";
@@ -17,13 +17,15 @@ const VotingSession = () => {
   const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
 
   useEffect(() => {
+    window.document.title = "Votes | Let&apos;s share a TOAST";
+
     ui.currentPageBgColor = pageColors.votingSession;
     appLoader.pageIsReady = true;
   }, []);
 
   useEffect(() => {
-    if (!!firebase.currentToast) {
-      if (firebase.currentToast.status === ToastStatus.OPEN_FOR_VOTE) {
+    if (!!firebaseData.currentToast) {
+      if (firebaseData.currentToast.status === ToastStatus.OPEN_FOR_VOTE) {
         setLoadingState(LoadingState.READY);
       } else {
         setLoadingState(LoadingState.ERROR_WRONG_SESSION_STATUS);

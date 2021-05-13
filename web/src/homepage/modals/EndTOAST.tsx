@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import React, {
   ChangeEvent,
   FunctionComponent,
@@ -9,9 +10,9 @@ import * as C from "@chakra-ui/react";
 import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
 import { Toast } from "@shared/models";
-import { ToastStatus, SubjectStatus } from "@shared/enums";
 
-import firebase from "@web/core/firebase";
+import { ToastStatus, SubjectStatus } from "@shared/enums";
+import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -67,7 +68,8 @@ const EndTOAST: FunctionComponent<Props> = ({
             return errors;
           }}
           onSubmit={async (values: FormValues): Promise<void> => {
-            return firebase.database
+            return firebase
+              .database()
               .ref(DatabaseRefPaths.CURRENT_TOAST)
               .child("status")
               .set(ToastStatus.CLOSED)
@@ -180,13 +182,7 @@ const EndTOAST: FunctionComponent<Props> = ({
                                     "{selectedSubject.title}"
                                   </C.Text>
                                   &nbsp;by&nbsp;
-                                  {selectedSubject.speakersIds
-                                    .map(
-                                      (speakerId) =>
-                                        firebase.users.find(
-                                          (user) => user.id === speakerId
-                                        )!
-                                    )
+                                  {selectedSubject.speakers
                                     .map(getUserFullname)
                                     .join(", ")}
                                 </C.Checkbox>

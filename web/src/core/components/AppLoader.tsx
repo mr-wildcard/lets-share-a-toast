@@ -30,50 +30,36 @@ const AppLoader: FunctionComponent = ({ children }) => {
   const [appReady, setAppReady] = useState(false);
   const [needToLogin, setNeedToLogin] = useState(false);
   const [firebaseInstance, setFirebaseInstance] = useState<
-    null | typeof import("@web/core/firebase").default
+    null | typeof import("@web/core/firebase")
   >();
 
   useEffect(() => {
     if (loaderAnimationState === LoaderAnimationState.ENTERED) {
-      import("@web/core/firebase").then(({ default: firebase }) => {
-        const user = firebase.getCurrentUser();
-
-        if (user) {
-          setFirebaseInstance(firebase);
-        } else {
-          setNeedToLogin(true);
-        }
-      });
+      import("@web/core/firebase/init")
+        .then(() => import("@web/core/firebase"))
+        .then(({ getCurrentUser }) => {
+          if (!getCurrentUser()) {
+            setNeedToLogin(true);
+          }
+        });
     }
   }, [loaderAnimationState]);
 
   const loggin = useCallback(() => {
-    import("@web/core/firebase").then(({ default: firebase }) => {
-      const { signin } = firebase;
-
-      signin()
-        .then(() => {
-          setFirebaseInstance(firebase);
-        })
-        .catch(() => {
-          setNeedToLogin(true);
-        });
+    import("@web/core/firebase").then(({ signin }) => {
+      signin().catch(() => {
+        setNeedToLogin(true);
+      });
     });
   }, []);
 
   useEffect(() => {
-    if (!appReady && firebaseInstance) {
-      when(
-        () =>
-          toJS(firebaseInstance.currentToast) !== undefined &&
-          firebaseInstance.users.length > 0 &&
-          firebaseInstance.subjects.length > 0,
-        () => {
-          setAppReady(true);
-        }
-      );
-    }
-  }, [firebaseInstance]);
+    import("@web/core/firebase/data").then(({ firebaseData }) => {
+      when(() => toJS(firebaseData.currentToast) !== undefined).then(() => {
+        setAppReady(true);
+      });
+    });
+  }, []);
 
   const bgAnimations = useTransition(appReady, {
     config: config.gentle,
@@ -143,9 +129,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
         </C.Box>
       )}
 
-      {appReady &&
-        loaderAnimationState !== LoaderAnimationState.INITIAL &&
-        children}
+      {appReady && children}
     </>
   );
 };

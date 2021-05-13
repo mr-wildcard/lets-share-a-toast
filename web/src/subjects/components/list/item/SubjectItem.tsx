@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import React, {
   FunctionComponent,
   ReactElement,
@@ -13,9 +14,9 @@ import { observer } from "mobx-react-lite";
 
 import { SubjectStatus, ToastStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
-import { Subject, User } from "@shared/models";
 
-import firebase from "@web/core/firebase";
+import { Subject, User } from "@shared/models";
+import { firebaseData } from "@web/core/firebase/data";
 import http from "@web/core/httpClient";
 import { APIPaths } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
@@ -38,7 +39,7 @@ interface Props {
 }
 
 const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
-  const { users, currentToast } = firebase;
+  const { users, currentToast } = firebaseData;
 
   const subjectIsInCurrentTOASTVotingSession =
     !!currentToast &&
@@ -55,7 +56,8 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     async (status: SubjectStatus) => {
       setLoading(true);
 
-      await firebase.firestore
+      await firebase
+        .firestore()
         .collection(FirestoreCollection.SUBJECTS)
         .doc(subject.id)
         .update({ status });
@@ -79,7 +81,8 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
       setLoading(true);
 
       if (userConfirmedDeletion) {
-        await firebase.firestore
+        await firebase
+          .firestore()
           .collection(FirestoreCollection.SUBJECTS)
           .doc(subject.id)
           .delete();

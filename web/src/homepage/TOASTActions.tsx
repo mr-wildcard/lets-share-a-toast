@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import React, { useCallback, useEffect } from "react";
 import * as C from "@chakra-ui/react";
 import {
   CloseIcon,
@@ -10,6 +11,7 @@ import { animated } from "@react-spring/web";
 
 import { CurrentToast } from "@shared/models";
 
+import { firebaseData } from "@web/core/firebase/data";
 import { spacing } from "@web/core/constants";
 import isToast from "@web/core/helpers/isToast";
 import Image from "@web/core/components/Image";
@@ -37,13 +39,11 @@ const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px ${
   spacing.stylizedGap
 }px`;
 
-interface Props {
-  currentToast: CurrentToast;
-}
+const TOASTActions = () => {
+  const { currentToast, votingSession } = firebaseData;
 
-const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
   const modalsStates = useActionsModalStates();
-  const buttonsStates = useActionsButtonStates(currentToast);
+  const buttonsStates = useActionsButtonStates(currentToast!);
   const animations = useActionsAnimations();
 
   const closeTOASTFormModal = useCallback(
@@ -303,4 +303,4 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
   );
 };
 
-export default TOASTActions;
+export default observer(TOASTActions);

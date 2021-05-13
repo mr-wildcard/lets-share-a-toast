@@ -1,9 +1,11 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { useMemo } from "react";
+import { observer } from "mobx-react-lite";
 import * as C from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
 import { CurrentToast, Toast } from "@shared/models";
 
+import { firebaseData } from "@web/core/firebase/data";
 import isToast from "@web/core/helpers/isToast";
 import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
 import useStores from "@web/core/hooks/useStores";
@@ -68,11 +70,9 @@ const WaitingForTOAST = React.lazy(
     )
 );
 
-interface Props {
-  currentToast: CurrentToast;
-}
+const TOASTStatus = () => {
+  const { currentToast } = firebaseData;
 
-const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
   const toastIsToday = useMemo(() => {
     return !!currentToast && isTOASTToday(new Date(currentToast.date));
   }, [currentToast]);
@@ -87,26 +87,26 @@ const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
 
       {currentToast !== null && (
         <>
-          {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast} />}
+          {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast!} />}
 
-          {toastIsToday && <TOASTIsToday toast={currentToast} />}
+          {toastIsToday && <TOASTIsToday toast={currentToast!} />}
 
           {!toastIsToday && !toastDateHasPassed && (
             <>
-              {currentToast.status === ToastStatus.OPEN_TO_CONTRIBUTION && (
-                <OpenForContributions toast={currentToast} />
+              {currentToast!.status === ToastStatus.OPEN_TO_CONTRIBUTION && (
+                <OpenForContributions toast={currentToast!} />
               )}
 
-              {currentToast.status === ToastStatus.OPEN_FOR_VOTE && (
-                <OpenForVotes toast={currentToast} />
+              {currentToast!.status === ToastStatus.OPEN_FOR_VOTE && (
+                <OpenForVotes toast={currentToast!} />
               )}
 
-              {currentToast.status === ToastStatus.WAITING_FOR_TOAST && (
-                <WaitingForTOAST toast={currentToast} />
+              {currentToast!.status === ToastStatus.WAITING_FOR_TOAST && (
+                <WaitingForTOAST toast={currentToast!} />
               )}
 
-              {currentToast.status === ToastStatus.VOTE_CLOSED && (
-                <VoteClosed toast={currentToast} />
+              {currentToast!.status === ToastStatus.VOTE_CLOSED && (
+                <VoteClosed toast={currentToast!} />
               )}
             </>
           )}
@@ -116,4 +116,4 @@ const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
   );
 };
 
-export default TOASTStatus;
+export default observer(TOASTStatus);

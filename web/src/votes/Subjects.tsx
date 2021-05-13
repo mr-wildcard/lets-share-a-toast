@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import firebaseLib from "firebase/app";
+import firebase from "firebase/app";
 import * as C from "@chakra-ui/react";
 
 import {
@@ -12,7 +12,7 @@ import {
 import { SubjectStatus } from "@shared/enums";
 import { Subject } from "@shared/models";
 
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import { LoadingState } from "./types";
 
 function getSubjectTotalVotes(votedSubject: SubjectVote) {
@@ -32,18 +32,19 @@ export function Subjects() {
   ] = useState<null | DatabaseVotingSession>(null);
 
   useEffect(() => {
-    const databaseVotingSessionRef = firebaseLib
+    const databaseVotingSessionRef = firebase
       .database()
       .ref(DatabaseRefPaths.VOTING_SESSION);
 
-    const disposeFirebaseSubjectsListener = firebaseLib
+    const disposeFirebaseSubjectsListener = firebase
       .firestore()
       .collection(FirestoreCollection.SUBJECTS)
       .where("status", "==", SubjectStatus.AVAILABLE)
       .onSnapshot((snapshot) => {
         const subjects = snapshot.docs.map((doc) => ({
-          id: doc.id,
           ...(doc.data() as FirestoreSubject),
+          id: doc.id,
+          speakers: [],
         }));
 
         setSubjects(subjects);
@@ -64,12 +65,12 @@ export function Subjects() {
   }, []);
 
   const vote = useCallback((subjectId) => {
-    return firebaseLib
+    return firebase
       .database()
       .ref(DatabaseRefPaths.VOTING_SESSION)
       .child("votes")
       .child(subjectId)
-      .child(firebase.connectedUser!.uid)
+      .child(firebaseData.connectedUser!.uid)
       .transaction((userTotalVotes: null | number) => {
         if (userTotalVotes) {
           if (userTotalVotes >= 3) {

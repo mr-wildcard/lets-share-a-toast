@@ -1,10 +1,10 @@
+import firebase from "firebase/app";
 import React, { FunctionComponent, useCallback, useRef, useState } from "react";
 import * as C from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
-import { Toast } from "@shared/models";
 
-import firebase from "@web/core/firebase";
+import { Toast } from "@shared/models";
 import { APIPaths, pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -31,7 +31,8 @@ const CancelTOAST: FunctionComponent<Props> = ({
     setCancelling(true);
 
     try {
-      await firebase.database
+      await firebase
+        .database()
         .ref(DatabaseRefPaths.CURRENT_TOAST)
         .set(null)
         .then(() => {

@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import React, {
   FunctionComponent,
   Ref,
@@ -13,9 +14,9 @@ import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 
 import { CurrentToast, User } from "@shared/models";
-import { DatabaseRefPaths } from "@shared/firebase";
 
-import firebase from "@web/core/firebase";
+import { DatabaseRefPaths } from "@shared/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import { APIPaths, Pathnames } from "@web/core/constants";
 import NotificationType from "@web/notifications/types/NotificationType";
 import getUserFullname from "@web/core/helpers/getUserFullname";
@@ -67,14 +68,14 @@ const Form: FunctionComponent<Props> = ({
   const getFormattedSlackNotification = useCallback(
     (notificationText, toastDueDate) => {
       return notificationText
-        .replace("{{PROFILE}}", firebase.connectedUser?.displayName)
+        .replace("{{PROFILE}}", firebaseData.connectedUser?.displayName)
         .replace(
           "{{DATE}}",
           getFormattedTOASTDateWithRemainingDays(toastDueDate)
         )
         .replace("{{URL}}", getAppURL() + Pathnames.SUBJECTS);
     },
-    [firebase.connectedUser]
+    [firebaseData.connectedUser]
   );
 
   const dueDateValue = useMemo(() => {
@@ -132,7 +133,8 @@ const Form: FunctionComponent<Props> = ({
       }}
       onSubmit={async (values): Promise<void> => {
         if (!currentToast) {
-          return firebase.functions
+          return firebase
+            .functions()
             .httpsCallable("createToast")({
               date: values.dueDate.getTime(),
               organizerId: values.organizer!.id,
@@ -148,7 +150,8 @@ const Form: FunctionComponent<Props> = ({
           });
            */
         } else {
-          return firebase.database
+          return firebase
+            .database()
             .ref(DatabaseRefPaths.CURRENT_TOAST)
             .update({
               date: values.dueDate.getTime(),
@@ -217,8 +220,8 @@ const Form: FunctionComponent<Props> = ({
                           </C.FormLabel>
                           <SelectUserInput
                             {...field}
-                            isDisabled={!firebase.users.length}
-                            options={firebase.users}
+                            isDisabled={!firebaseData.users.length}
+                            options={firebaseData.users}
                             isInvalid={isInvalid}
                             inputId={field.name}
                             value={field.value}
@@ -245,8 +248,8 @@ const Form: FunctionComponent<Props> = ({
                           <SelectUserInput
                             {...field}
                             isInvalid={isInvalid}
-                            isDisabled={!firebase.users.length}
-                            options={firebase.users}
+                            isDisabled={!firebaseData.users.length}
+                            options={firebaseData.users}
                             name={field.name}
                             inputId={field.name}
                             value={field.value}

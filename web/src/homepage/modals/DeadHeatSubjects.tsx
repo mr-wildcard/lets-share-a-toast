@@ -1,9 +1,11 @@
 import React, { FunctionComponent, useEffect, useMemo, useRef } from "react";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
+import { toJS } from "mobx";
 
 import { Toast, Subject } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
+import { DatabaseVotingSession } from "@shared/firebase";
 
 import { pageColors } from "@web/core/constants";
 import NotificationType from "@web/notifications/types/NotificationType";
@@ -31,21 +33,20 @@ export function DeadHeatSubjectsModal({
   isOpen,
   closeModal,
 }: Props) {
-  console.log({ currentToast });
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   /**
    * Sort selected subjects by their total amout of votes.
    */
   const sortedSelectedSubjects: Subject[] = useMemo(() => {
-    return currentToast
-      .selectedSubjects!.slice()
-      .sort((selectedSubject1, selectedSubject2) => {
+    return currentToast.selectedSubjects.sort(
+      (selectedSubject1, selectedSubject2) => {
         return (
-          currentToast.votes[selectedSubject2.id] -
-          currentToast.votes[selectedSubject1.id]
+          currentToast.votes![selectedSubject2.id] -
+          currentToast.votes![selectedSubject1.id]
         );
-      });
+      }
+    );
   }, [currentToast]);
 
   return (

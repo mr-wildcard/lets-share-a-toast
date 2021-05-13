@@ -1,5 +1,6 @@
-import { computed, makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable } from "mobx";
 
+// TODO: remove this useless class
 export default class AppLoader {
   public profileIsLoaded = false;
   public pageIsReady = false;

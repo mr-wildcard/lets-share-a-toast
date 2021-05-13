@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 import { votingSessionHasAtLeastOneVote } from "@shared/utils";
 
 import Image from "@web/core/components/Image";
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 
 interface Props {
   isSuccess: boolean;
@@ -19,7 +19,9 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
       {!isSuccess && (
         <C.Button
           onClick={onClick}
-          disabled={!votingSessionHasAtLeastOneVote(firebase.votingSession!)}
+          disabled={
+            !votingSessionHasAtLeastOneVote(firebaseData.votingSession!)
+          }
           variant="outline"
           position="relative"
           bg="white"

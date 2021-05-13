@@ -4,11 +4,11 @@ import { observer } from "mobx-react-lite";
 
 import { CurrentToast } from "@shared/models";
 
+import { firebaseData } from "@web/core/firebase/data";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import isToast from "@web/core/helpers/isToast";
 import { pageColors } from "@web/core/constants";
-import firebase from "@web/core/firebase";
 
 interface Props {
   isOpen: boolean;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Form = React.lazy(
-  () => import("./Form" /* webpackChunkName: "toast-infos-form" */)
+  () => import("./Form")
   /*
   {
     loading: function Loader() {
@@ -33,7 +33,7 @@ const Form = React.lazy(
 const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   const cancelButtonRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const isCreatingToast = firebase.currentToast === null;
+  const isCreatingToast = firebaseData.currentToast === null;
 
   return (
     <C.Modal
@@ -63,7 +63,7 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
           </C.ModalHeader>
           <C.ModalBody pb={6}>
             <Form
-              currentToast={firebase.currentToast as CurrentToast}
+              currentToast={firebaseData.currentToast as CurrentToast}
               closeModal={props.closeModal}
               cancelButtonRef={cancelButtonRef}
             />

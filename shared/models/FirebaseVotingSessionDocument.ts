@@ -15,7 +15,7 @@ export interface FirebaseVotingSessionDocument {
 }
 
 /**
- * Used on frontend side to anonymize who voted for whoch subject.
+ * Used on frontend side to anonymize who voted for which subject.
  */
 export interface SubjectsTotalVotes {
   [subjectId: string]: SubjectTotalVotes;

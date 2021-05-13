@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { computed, makeObservable, observable } from "mobx";
-import firebase from "firebase";
+import firebase from "firebase/app";
 
 import {
   FirebaseCollections,

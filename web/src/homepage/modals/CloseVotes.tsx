@@ -1,12 +1,11 @@
+import firebase from "firebase/app";
 import React, { FunctionComponent, useCallback, useRef, useState } from "react";
 import * as C from "@chakra-ui/react";
-import { mutate } from "swr";
 
 import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
-import { DatabaseRefPaths } from "@shared/firebase";
 
-import firebase from "@web/core/firebase";
+import { DatabaseRefPaths } from "@shared/firebase";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import useStores from "@web/core/hooks/useStores";
@@ -34,7 +33,8 @@ const CloseVotes: FunctionComponent<Props> = ({
     setClosingVotes(true);
 
     try {
-      await firebase.database
+      await firebase
+        .database()
         .ref(DatabaseRefPaths.CURRENT_TOAST)
         .child("status")
         .set(ToastStatus.VOTE_CLOSED)

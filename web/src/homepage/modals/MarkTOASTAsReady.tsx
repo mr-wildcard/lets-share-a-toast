@@ -1,13 +1,12 @@
+import firebase from "firebase/app";
 import React, { FunctionComponent, useRef } from "react";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
-import { mutate } from "swr";
 
 import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
-import { DatabaseRefPaths } from "@shared/firebase";
 
-import firebase from "@web/core/firebase";
+import { DatabaseRefPaths } from "@shared/firebase";
 import { APIPaths, pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -91,7 +90,8 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                 : APIPaths.TOAST_CURRENT_STATUS;
               */
 
-              return firebase.database
+              return firebase
+                .database()
                 .ref(DatabaseRefPaths.CURRENT_TOAST)
                 .child("status")
                 .set(ToastStatus.WAITING_FOR_TOAST)

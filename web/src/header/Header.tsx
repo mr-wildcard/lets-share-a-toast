@@ -8,7 +8,7 @@ import { useLocation } from "react-router";
 import { ToastStatus } from "@shared/enums";
 
 import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import Image from "@web/core/components/Image";
 import useStores from "@web/core/hooks/useStores";
 import Logo from "./Logo";
@@ -17,14 +17,10 @@ import LinkItem from "./LinkItem";
 const Header = () => {
   const { pathname } = useLocation();
 
-  const {
-    currentToastSession: { toast },
-    appLoader,
-    notifications,
-  } = useStores();
+  const { notifications } = useStores();
 
   const votesAreOpened =
-    firebase.currentToast?.status === ToastStatus.OPEN_FOR_VOTE;
+    firebaseData.currentToast?.status === ToastStatus.OPEN_FOR_VOTE;
 
   const votingPageIsOpened = pathname === Pathnames.VOTING_SESSION;
 
@@ -78,19 +74,19 @@ const Header = () => {
           )}
         </C.Flex>
 
-        {firebase.connectedUser && (
+        {firebaseData.connectedUser && (
           <C.Stack direction="row" spacing={5} align="center">
             <C.Text>
               Welcome
               <C.Text as="span" pl={1} fontWeight="bold" fontStyle="italic">
-                {firebase.connectedUser.displayName}!
+                {firebaseData.connectedUser.displayName}!
               </C.Text>
             </C.Text>
 
             <C.Box position="relative">
               <C.Avatar
-                name={firebase.connectedUser.displayName}
-                src={firebase.connectedUser.photoURL}
+                name={firebaseData.connectedUser.displayName!}
+                src={firebaseData.connectedUser.photoURL!}
                 size="sm"
               >
                 <C.AvatarBadge boxSize="1em" bg="green.500" />

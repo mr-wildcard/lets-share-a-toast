@@ -1,11 +1,13 @@
+import firebase from "firebase/app";
 import React, { FunctionComponent, useRef } from "react";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
+import { DatabaseRefPaths } from "@shared/firebase";
 
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import { pageColors, Pathnames } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -13,7 +15,6 @@ import getAppURL from "@web/core/helpers/getAppURL";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
-import { DatabaseRefPaths } from "@shared/firebase";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -87,7 +88,8 @@ const OpenVotes: FunctionComponent<Props> = ({
                   : APIPaths.TOAST_CURRENT_STATUS;
                 */
 
-                return firebase.database
+                return firebase
+                  .database()
                   .ref(DatabaseRefPaths.CURRENT_TOAST)
                   .child("status")
                   .set(ToastStatus.OPEN_FOR_VOTE)
@@ -126,7 +128,7 @@ const OpenVotes: FunctionComponent<Props> = ({
                             <br />
                             <C.Text as="span" fontWeight="bold">
                               {
-                                firebase.subjects.filter(
+                                firebaseData.subjects.filter(
                                   (subject) =>
                                     subject.status === SubjectStatus.AVAILABLE
                                 ).length

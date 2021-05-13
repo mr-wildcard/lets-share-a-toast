@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
-import { observer } from "mobx-react-lite";
 import * as C from "@chakra-ui/react";
-import { toJS } from "mobx";
 
-import { CurrentToast } from "@shared/models";
-
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import { APIPaths, pageColors } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
 import TOASTActions from "@web/homepage/TOASTActions";
@@ -15,9 +11,9 @@ import ColoredBackground from "@web/core/components/ColoredBackground";
 const Home = () => {
   const { ui, appLoader } = useStores();
 
-  const { currentToast } = firebase;
-
   useEffect(() => {
+    window.document.title = "Let&apos;s share a TOAST";
+
     ui.currentPageBgColor = pageColors.homepage;
     appLoader.pageIsReady = true;
   }, []);
@@ -27,14 +23,14 @@ const Home = () => {
       <ColoredBackground d="flex" flexDirection="column" p={0}>
         <C.Flex flex={1} h="100%" direction="column">
           <C.Box m="auto">
-            <TOASTStatus currentToast={toJS(currentToast as CurrentToast)} />
+            <TOASTStatus />
           </C.Box>
 
-          <TOASTActions currentToast={toJS(currentToast as CurrentToast)} />
+          <TOASTActions />
         </C.Flex>
       </ColoredBackground>
     </C.Box>
   );
 };
 
-export default observer(Home);
+export default Home;

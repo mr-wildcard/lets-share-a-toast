@@ -1,3 +1,4 @@
+import firebase from "firebase/app";
 import React, { FunctionComponent, useMemo } from "react";
 import * as C from "@chakra-ui/react";
 import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
@@ -18,7 +19,7 @@ import { Subject, User } from "@shared/models";
 import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
 
-import firebase from "@web/core/firebase";
+import { firebaseData } from "@web/core/firebase/data";
 import { pageColors, urlRegex } from "@web/core/constants";
 import { getTOASTRemainingDays } from "@web/core/helpers/timing";
 import HighlightedText from "@web/core/components/HighlightedText";
@@ -73,8 +74,7 @@ const languageOptions: LanguageValue[] = [
 
 const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
   const theme = C.useTheme();
-  const currentToast = firebase.currentToast;
-  const users = firebase.users;
+  const { currentToast, users } = firebaseData;
 
   const isCreatingSubject = !subject;
 
@@ -104,11 +104,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
               (option) => option.value === subject!.language
             )!,
         duration: isCreatingSubject ? 30 : subject!.duration,
-        speakers: isCreatingSubject
-          ? []
-          : subject!.speakersIds.map(
-              (spearkerId) => users.find((user) => user.id === spearkerId)!
-            ),
+        speakers: isCreatingSubject ? [] : subject!.speakers,
         cover: isCreatingSubject ? "" : subject!.cover || "",
         comment: isCreatingSubject ? "" : subject!.comment || "",
         status: warnAboutNewSubjectDuringVotingSession
@@ -159,24 +155,25 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
         };
 
         if (isCreatingSubject) {
-          await firebase.firestore
+          await firebase
+            .firestore()
             .collection(FirestoreCollection.SUBJECTS)
             .add(input);
 
-          /*
+          /* TODO: handle notifications
           notifications.send(auth.profile, NotificationType.ADD_SUBJECT, {
             subjectTitle: values.title,
           });
           */
         } else {
-          await firebase.firestore
+          await firebase
+            .firestore()
             .collection(FirestoreCollection.SUBJECTS)
             .doc(subject?.id)
             .update(input);
 
           /*
           notifications.send(
-            // @ts-ignore
             auth.profile,
             NotificationType.EDIT_SUBJECT_CONTENT,
             {

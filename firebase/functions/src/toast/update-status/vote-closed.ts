@@ -1,6 +1,10 @@
 import * as admin from "firebase-admin";
 
-import { DatabaseRefPaths, SubjectsVotes } from "@shared/firebase";
+import {
+  DatabaseRefPaths,
+  SubjectsTotalVotes,
+  SubjectsVotes,
+} from "@shared/firebase";
 import { getSubjectTotalVotes, unique } from "@shared/utils";
 
 export default async function voteClosed() {
@@ -85,9 +89,17 @@ export default async function voteClosed() {
    * organizer so that it can decide which subjects will be presented
    * during the TOAST.
    */
-  return admin
-    .database()
-    .ref(DatabaseRefPaths.CURRENT_TOAST)
-    .child("selectedSubjectIds")
-    .set(selectedSubjects);
+  const updates = {
+    "/selectedSubjectIds": selectedSubjects,
+    "/votes": allSubjectsVotes.reduce(
+      (subjectsTotalVotes, [subjectId, subjectTotalVotes]) => {
+        subjectsTotalVotes[subjectId] = subjectTotalVotes;
+
+        return subjectsTotalVotes;
+      },
+      {}
+    ),
+  };
+
+  return admin.database().ref(DatabaseRefPaths.CURRENT_TOAST).update(updates);
 }
