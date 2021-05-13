@@ -9,7 +9,6 @@ export interface DatabaseToast {
   maxSelectableSubjects: number;
   selectedSubjectIds?: string[];
   subjects?: string[];
-  votes?: SubjectsTotalVotes;
   createdByUserId?: string;
   createdDate: number;
   modifiedByUserId?: string;
