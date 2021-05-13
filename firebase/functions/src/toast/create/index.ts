@@ -13,7 +13,7 @@ export const createToast = functions.https.onCall((data, context) => {
       status: ToastStatus.OPEN_TO_CONTRIBUTION,
       organizerId: data.organizerId,
       scribeId: data.scribeId,
-      maxSelectableSubjects: data.maxSelectableSubjects || 3,
+      maxSelectableSubjects: data.maxSelectableSubjects || 2,
       createdByUserId: context.auth?.uid,
       createdDate: admin.database.ServerValue.TIMESTAMP,
       modifiedDate: admin.database.ServerValue.TIMESTAMP,
