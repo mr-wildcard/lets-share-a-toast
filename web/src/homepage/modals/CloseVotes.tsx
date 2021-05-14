@@ -3,16 +3,12 @@ import React, { FunctionComponent, useCallback, useRef, useState } from "react";
 import * as C from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
-import { ToastStatus } from "@shared/enums";
+import { CloudFunctionName } from "@shared/firebase";
 
-import { DatabaseRefPaths } from "@shared/firebase";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
-import useStores from "@web/core/hooks/useStores";
 import Image from "@web/core/components/Image";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
-import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
-import NotificationType from "@web/notifications/types/NotificationType";
 
 interface Props {
   isOpen: boolean;
@@ -33,14 +29,7 @@ const CloseVotes: FunctionComponent<Props> = ({
     setClosingVotes(true);
 
     try {
-      await firebase
-        .database()
-        .ref(DatabaseRefPaths.CURRENT_TOAST)
-        .child("status")
-        .set(ToastStatus.VOTE_CLOSED)
-        .then(() => {});
-
-      closeModal();
+      await firebase.functions().httpsCallable(CloudFunctionName.CLOSE_VOTES)();
     } catch (error) {
       console.error("Couldn't close the TOAST", { error });
 

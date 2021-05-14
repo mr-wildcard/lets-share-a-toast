@@ -6,8 +6,7 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import dayjs from "dayjs";
 
 import { CurrentToast, User } from "@shared/models";
-import CloudFunctionName from "@shared/firebase/functions/enum/CloudFunctionName";
-import { DatabaseRefPaths } from "@shared/firebase";
+import { DatabaseRefPaths, CloudFunctionName } from "@shared/firebase";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { Pathnames } from "@web/core/constants";

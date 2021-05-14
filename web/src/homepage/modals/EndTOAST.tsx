@@ -1,25 +1,16 @@
 import firebase from "firebase/app";
-import React, {
-  ChangeEvent,
-  FunctionComponent,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, FunctionComponent, useRef, useState } from "react";
 import * as C from "@chakra-ui/react";
 import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
 import { Toast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
+import { DatabaseRefPaths } from "@shared/firebase";
 
-import { ToastStatus, SubjectStatus } from "@shared/enums";
-import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
-import NotificationType from "@web/notifications/types/NotificationType";
-import useStores from "@web/core/hooks/useStores";
 import getUserFullname from "@web/core/helpers/getUserFullname";
-import { DatabaseRefPaths } from "@shared/firebase";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -45,14 +36,14 @@ const EndTOAST: FunctionComponent<Props> = ({
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
-    <C.AlertDialog
+    <C.Modal
       isCentered
       isOpen={isOpen}
-      leastDestructiveRef={cancelBtn}
+      initialFocusRef={cancelBtn}
       onClose={closeModal}
-      size="lg"
+      size="xl"
     >
-      <C.AlertDialogOverlay>
+      <C.ModalOverlay>
         <Formik
           validateOnMount={true}
           initialValues={{
@@ -96,8 +87,8 @@ const EndTOAST: FunctionComponent<Props> = ({
           }: FormikProps<FormValues>) => {
             return (
               <Form>
-                <C.AlertDialogContent borderRadius="3px">
-                  <C.AlertDialogHeader textAlign="center">
+                <C.ModalContent borderRadius="3px">
+                  <C.ModalHeader textAlign="center">
                     <C.Text position="relative" pr={5}>
                       <HighlightedText bgColor={pageColors.homepage}>
                         End current TOAST
@@ -111,7 +102,7 @@ const EndTOAST: FunctionComponent<Props> = ({
                         src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
                       />
                     </C.Text>
-                  </C.AlertDialogHeader>
+                  </C.ModalHeader>
                   <C.AlertDialogBody fontSize="lg">
                     <C.Box mb={5}>
                       <C.Alert status="info" variant="left-accent">
@@ -130,9 +121,12 @@ const EndTOAST: FunctionComponent<Props> = ({
                     <C.Divider my={5} />
 
                     <C.Stack my={10} spacing={5}>
-                      {/* TODO: handle selected subjects */}
-                      {currentToast.selectedSubjects?.map(
+                      {currentToast.selectedSubjects!.map(
                         (selectedSubject, index) => {
+                          const subjectIsSelected = values.givenSubjectsIds.includes(
+                            selectedSubject.id
+                          );
+
                           return (
                             <Field
                               key={`${selectedSubject.id}-${index}`}
@@ -145,12 +139,23 @@ const EndTOAST: FunctionComponent<Props> = ({
                                 FormValues["givenSubjectsIds"],
                                 FormValues
                               >) => (
-                                <C.Checkbox
-                                  alignItems="start"
-                                  size="lg"
-                                  onChange={(
-                                    event: ChangeEvent<HTMLInputElement>
-                                  ) => {
+                                <C.Box
+                                  as="button"
+                                  type="button"
+                                  key={`subject-${selectedSubject.id}`}
+                                  p={3}
+                                  borderRadius="md"
+                                  borderWidth="1px"
+                                  borderStyle="solid"
+                                  borderColor="gray.200"
+                                  color={
+                                    subjectIsSelected ? "white" : "gray.600"
+                                  }
+                                  backgroundColor={
+                                    subjectIsSelected ? "green.500" : "white"
+                                  }
+                                  boxShadow={subjectIsSelected ? "none" : "sm"}
+                                  onClick={() => {
                                     if (
                                       values.givenSubjectsIds.includes(
                                         selectedSubject.id
@@ -170,9 +175,6 @@ const EndTOAST: FunctionComponent<Props> = ({
                                       );
                                     }
                                   }}
-                                  isChecked={values.givenSubjectsIds.includes(
-                                    selectedSubject.id
-                                  )}
                                 >
                                   <C.Text
                                     as="span"
@@ -185,7 +187,7 @@ const EndTOAST: FunctionComponent<Props> = ({
                                   {selectedSubject.speakers
                                     .map(getUserFullname)
                                     .join(", ")}
-                                </C.Checkbox>
+                                </C.Box>
                               )}
                             </Field>
                           );
@@ -214,13 +216,13 @@ const EndTOAST: FunctionComponent<Props> = ({
                       </C.Button>
                     </C.Stack>
                   </C.AlertDialogFooter>
-                </C.AlertDialogContent>
+                </C.ModalContent>
               </Form>
             );
           }}
         </Formik>
-      </C.AlertDialogOverlay>
-    </C.AlertDialog>
+      </C.ModalOverlay>
+    </C.Modal>
   );
 };
 

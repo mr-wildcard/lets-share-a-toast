@@ -14,14 +14,17 @@ interface Props {
 }
 
 const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+  const { votingSession } = firebaseData;
+
+  const isDisabled =
+    !!votingSession && !votingSessionHasAtLeastOneVote(votingSession);
+
   return (
     <>
       {!isSuccess && (
         <C.Button
           onClick={onClick}
-          disabled={
-            !votingSessionHasAtLeastOneVote(firebaseData.votingSession!)
-          }
+          disabled={isDisabled}
           variant="outline"
           position="relative"
           bg="white"

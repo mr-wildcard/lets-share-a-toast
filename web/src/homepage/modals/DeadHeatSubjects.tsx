@@ -4,7 +4,7 @@ import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
 import firebase from "firebase/app";
 
 import { Toast, Subject } from "@shared/models";
-import CloudFunctionName from "@shared/firebase/functions/enum/CloudFunctionName";
+import { CloudFunctionName } from "@shared/firebase";
 
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
@@ -53,7 +53,7 @@ export function DeadHeatSubjectsModal({
       isOpen={isOpen}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
-      size="lg"
+      size="xl"
     >
       <C.ModalOverlay>
         <Formik
@@ -158,6 +158,7 @@ export function DeadHeatSubjectsModal({
 
                               return (
                                 <C.Box
+                                  as="button"
                                   key={`subject-${subject.id}`}
                                   p={3}
                                   borderRadius="md"
@@ -171,7 +172,6 @@ export function DeadHeatSubjectsModal({
                                     subjectIsSelected ? "green.500" : "white"
                                   }
                                   boxShadow={subjectIsSelected ? "none" : "sm"}
-                                  cursor="pointer"
                                   onClick={() => {
                                     if (subjectIsSelected) {
                                       /**

@@ -7,4 +7,4 @@ export * from "./database/models/DatabaseCurrentTOAST";
 export * from "./database/models/DatabaseVotingSession";
 export * from "./database/enum/DatabaseRefPaths";
 
-export * from "./functions/enum/FunctionsCallableNames";
+export * from "./functions/enum/CloudFunctionName";
