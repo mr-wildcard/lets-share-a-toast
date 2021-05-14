@@ -6,3 +6,5 @@ export * from "./database/models/DatabaseTOAST";
 export * from "./database/models/DatabaseCurrentTOAST";
 export * from "./database/models/DatabaseVotingSession";
 export * from "./database/enum/DatabaseRefPaths";
+
+export * from "./functions/enum/FunctionsCallableNames";

@@ -57,14 +57,14 @@ export default async function voteClosed() {
     .sort()
     .reverse();
 
-  const selectedSubjects: string[] = [];
+  const selectedSubjectIds: string[] = [];
 
   for (let i = 0; i < allSortedTotalVotes.length; i++) {
     /**
      * If `selectedSubjectIds` array was filled with enough subject ids
      * during the previous loop, we don't need to iterate further.
      */
-    if (selectedSubjects.length >= maxSelectableSubjects) {
+    if (selectedSubjectIds.length >= maxSelectableSubjects) {
       break;
     }
 
@@ -77,7 +77,7 @@ export default async function voteClosed() {
       const [subjectId, subjectTotalVotes] = subjectVotes;
 
       if (subjectTotalVotes === totalVotes) {
-        selectedSubjects.push(subjectId);
+        selectedSubjectIds.push(subjectId);
       }
     });
   }
@@ -90,9 +90,14 @@ export default async function voteClosed() {
    * during the TOAST.
    */
   const updates = {
-    "/selectedSubjectIds": selectedSubjects,
+    "/selectedSubjectIds": selectedSubjectIds,
     "/votes": allSubjectsVotes.reduce(
-      (subjectsTotalVotes, [subjectId, subjectTotalVotes]) => {
+      (
+        subjectsTotalVotes: SubjectsTotalVotes,
+        subjectVotes: [string, number]
+      ) => {
+        const [subjectId, subjectTotalVotes] = subjectVotes;
+
         subjectsTotalVotes[subjectId] = subjectTotalVotes;
 
         return subjectsTotalVotes;

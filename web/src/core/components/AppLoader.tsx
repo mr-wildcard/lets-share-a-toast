@@ -7,7 +7,6 @@ import React, {
 import * as C from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import { animated, to, useTransition, config } from "@react-spring/web";
-import firebase from "firebase/app";
 import { toJS, when } from "mobx";
 
 import Loader from "@web/core/components/Loader";
@@ -29,9 +28,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
 
   const [appReady, setAppReady] = useState(false);
   const [needToLogin, setNeedToLogin] = useState(false);
-  const [firebaseInstance, setFirebaseInstance] = useState<
-    null | typeof import("@web/core/firebase")
-  >();
 
   useEffect(() => {
     if (loaderAnimationState === LoaderAnimationState.ENTERED) {

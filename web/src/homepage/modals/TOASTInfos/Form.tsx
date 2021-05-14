@@ -1,32 +1,22 @@
 import firebase from "firebase/app";
-import React, {
-  FunctionComponent,
-  Ref,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { FunctionComponent, Ref, useCallback, useMemo } from "react";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
 import DayPickerInput from "react-day-picker/DayPickerInput";
-import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 
 import { CurrentToast, User } from "@shared/models";
-
+import CloudFunctionName from "@shared/firebase/functions/enum/CloudFunctionName";
 import { DatabaseRefPaths } from "@shared/firebase";
+
 import { firebaseData } from "@web/core/firebase/data";
-import { APIPaths, Pathnames } from "@web/core/constants";
-import NotificationType from "@web/notifications/types/NotificationType";
-import getUserFullname from "@web/core/helpers/getUserFullname";
+import { Pathnames } from "@web/core/constants";
 import getAppURL from "@web/core/helpers/getAppURL";
 import isToast from "@web/core/helpers/isToast";
 import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
 import useStores from "@web/core/hooks/useStores";
 import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
-import getAPIEndpointWithSlackNotification from "@web/core/helpers/getAPIEndpointWithSlackNotification";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
 import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
 import DateInput from "./DateInput";
@@ -135,7 +125,7 @@ const Form: FunctionComponent<Props> = ({
         if (!currentToast) {
           return firebase
             .functions()
-            .httpsCallable("createToast")({
+            .httpsCallable(CloudFunctionName.CREATE_TOAST)({
               date: values.dueDate.getTime(),
               organizerId: values.organizer!.id,
               scribeId: values.scribe!.id,

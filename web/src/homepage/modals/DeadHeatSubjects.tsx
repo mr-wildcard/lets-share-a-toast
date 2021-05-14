@@ -1,18 +1,15 @@
-import React, { FunctionComponent, useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import * as C from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
-import { toJS } from "mobx";
+import firebase from "firebase/app";
 
 import { Toast, Subject } from "@shared/models";
-import { ToastStatus } from "@shared/enums";
-import { DatabaseVotingSession } from "@shared/firebase";
+import CloudFunctionName from "@shared/firebase/functions/enum/CloudFunctionName";
 
 import { pageColors } from "@web/core/constants";
-import NotificationType from "@web/notifications/types/NotificationType";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import getUserFullname from "@web/core/helpers/getUserFullname";
-import useStores from "@web/core/hooks/useStores";
 
 interface FormErrors {
   selectedSubjectsIds?: boolean;
@@ -39,7 +36,7 @@ export function DeadHeatSubjectsModal({
    * Sort selected subjects by their total amout of votes.
    */
   const sortedSelectedSubjects: Subject[] = useMemo(() => {
-    return currentToast.selectedSubjects.sort(
+    return currentToast.selectedSubjects!.sort(
       (selectedSubject1, selectedSubject2) => {
         return (
           currentToast.votes![selectedSubject2.id] -
@@ -77,29 +74,14 @@ export function DeadHeatSubjectsModal({
             return errors;
           }}
           onSubmit={async (values: FormValues): Promise<void> => {
-            const request = http();
-
-            console.log("Dead heat subjects", { values });
-
-            await request(APIPaths.TOAST_CURRENT_SELECTED_SUBJECT, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
+            return firebase
+              .functions()
+              .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
                 selectedSubjectsIds: values.selectedSubjectsIds,
-              }),
-            });
-
-            await request(APIPaths.TOAST_CURRENT_STATUS, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                status: ToastStatus.WAITING_FOR_TOAST,
-              }),
-            });
+              })
+              .then(() => {
+                closeModal();
+              });
 
             /* TODO: activate notifications
             notifications.send(
@@ -111,8 +93,6 @@ export function DeadHeatSubjectsModal({
               }
             );
             */
-
-            closeModal();
           }}
         >
           {({
@@ -250,7 +230,7 @@ export function DeadHeatSubjectsModal({
                                       .join(", ")}
                                   </C.Text>
                                   <C.Text textAlign="right">
-                                    Votes: {currentToast.votes[subject.id]}
+                                    Votes: {currentToast.votes![subject.id]}
                                   </C.Text>
                                 </C.Box>
                               );

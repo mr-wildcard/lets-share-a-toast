@@ -1,19 +1,21 @@
 import React, { FunctionComponent } from "react";
 import * as C from "@chakra-ui/react";
 
-import { Toast } from "@shared/models";
+import { Subject, Toast } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props {
-  currentToast: Toast;
+  selectedSubjects: Subject[];
 }
 
-const SelectedSubjectsList: FunctionComponent<Props> = ({ currentToast }) => {
+const SelectedSubjectsList: FunctionComponent<Props> = ({
+  selectedSubjects,
+}) => {
   return (
     <C.List fontSize="lg" fontWeight="normal">
       {/* TODO: handle selected subjects */}
-      {currentToast.selectedSubjects?.map((subject, index) => (
+      {selectedSubjects.map((subject, index) => (
         <C.ListItem key={`subject-${subject.id}-${index}`}>
           &quot;
           <C.Text as="span" fontStyle="italic" fontWeight="bold">

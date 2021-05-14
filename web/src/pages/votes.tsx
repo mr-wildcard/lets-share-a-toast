@@ -17,7 +17,7 @@ const VotingSession = () => {
   const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
 
   useEffect(() => {
-    window.document.title = "Votes | Let&apos;s share a TOAST";
+    window.document.title = "Votes | Let's share a TOAST";
 
     ui.currentPageBgColor = pageColors.votingSession;
     appLoader.pageIsReady = true;
@@ -37,8 +37,6 @@ const VotingSession = () => {
 
   return (
     <C.Box as="main">
-      <title>Voting session | Let&apos;s share a TOAST</title>
-
       <ColoredBackground>
         <C.Flex direction="column">
           {loadingState === null && "Chargement en cours..."}

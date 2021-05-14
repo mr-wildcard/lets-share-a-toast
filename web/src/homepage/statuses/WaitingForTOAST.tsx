@@ -35,7 +35,7 @@ const WaitingForTOAST: FunctionComponent<Props> = observer(({ toast }) => {
       </C.Text>
 
       <C.Flex align="center" direction="column">
-        <SelectedSubjectsList currentToast={toast} />
+        <SelectedSubjectsList selectedSubjects={toast.selectedSubjects!} />
       </C.Flex>
 
       <C.Flex my={5} justify="center">
