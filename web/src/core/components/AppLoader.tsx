@@ -20,8 +20,6 @@ enum LoaderAnimationState {
 const USER_NOT_CONNECTED_ERROR_MESSAGE = "user.not.connected";
 
 const AppLoader: FunctionComponent = ({ children }) => {
-  const [anim, setAnim] = useState(false);
-
   const [
     loaderAnimationState,
     setLoaderAnimationState,
@@ -108,9 +106,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
     <>
       {loaderAnimationState !== LoaderAnimationState.LEFT && (
         <C.Box
-          onClick={() => {
-            setAnim(!anim);
-          }}
           position="fixed"
           top={0}
           right={0}
