@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  frontend:
+  web:
     image: ${NODE_DOCKER_IMAGE}
     command: /bin/sh -c "yarn && yarn dev --port ${FRONTEND_PORT}"
     volumes:
