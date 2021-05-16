@@ -28,7 +28,7 @@ const Subjects = () => {
   const [searchFilter, setSearchFilter] = useState<string>("");
 
   useEffect(() => {
-    window.document.title = "Subjects | Let&apos;s share a TOAST";
+    window.document.title = "Subjects | Let's share a TOAST";
 
     ui.currentPageBgColor = pageColors.subjects;
     appLoader.pageIsReady = true;

@@ -12,7 +12,7 @@ const Home = () => {
   const { ui, appLoader } = useStores();
 
   useEffect(() => {
-    window.document.title = "Let&apos;s share a TOAST";
+    window.document.title = "Let's share a TOAST";
 
     ui.currentPageBgColor = pageColors.homepage;
     appLoader.pageIsReady = true;
