@@ -7,9 +7,7 @@ import { DatabaseVotingSession, SubjectVote } from "@shared/firebase";
 export function votingSessionHasAtLeastOneVote(
   votingSession: DatabaseVotingSession
 ) {
-  return (
-    "votes" in votingSession && Object.keys(votingSession.votes).length > 0
-  );
+  return Object.keys(votingSession?.votes ?? {}).length > 0;
 }
 
 export function getSubjectTotalVotes(votedSubject: SubjectVote) {

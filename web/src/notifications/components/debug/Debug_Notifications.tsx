@@ -1,10 +1,10 @@
+// @ts-nocheck
 import React, { useState } from "react";
 import * as C from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 import { ToastStatus, SubjectStatus } from "@shared/enums";
 
-import useStores from "@web/core/hooks/useStores";
 import NotificationType from "../../types/NotificationType";
 
 const fakeProfile: Partial<User> = {
@@ -23,7 +23,6 @@ const SUBJECT_STATUSES = Object.values(SubjectStatus).filter(
 
 const Debug_Notifications = () => {
   const [opened, open] = useState(true);
-  const { notifications } = useStores();
 
   return (
     <C.Drawer

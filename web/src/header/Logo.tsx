@@ -3,7 +3,7 @@ import * as C from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 
-import { customFonts, Pathnames } from "@web/core/constants";
+import { Pathnames } from "@web/core/constants";
 import css from "./Logo.module.css";
 
 const baseProps = {
