@@ -6,6 +6,9 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
+  "hosting": {
+    "public": "dist"
+  },
   "emulators": {
     "auth": {
       "host": "0.0.0.0",
