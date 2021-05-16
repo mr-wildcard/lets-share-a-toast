@@ -5,7 +5,7 @@ import { CurrentToast, Subject, User } from "@shared/models";
 import { DatabaseVotingSession } from "@shared/firebase";
 
 interface FirebaseInstance extends Record<string, any> {
-  connectedUser: firebase.User | null;
+  connectedUser?: firebase.User | null;
   currentToast?: CurrentToast;
   votingSession?: DatabaseVotingSession | null;
   users: User[];
@@ -13,7 +13,7 @@ interface FirebaseInstance extends Record<string, any> {
 }
 
 const firebaseInstance: FirebaseInstance = {
-  connectedUser: null,
+  connectedUser: undefined,
   currentToast: undefined,
   votingSession: undefined,
   users: [],

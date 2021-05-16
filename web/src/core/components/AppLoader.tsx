@@ -10,13 +10,14 @@ import { animated, to, useTransition, config } from "@react-spring/web";
 import { toJS, when } from "mobx";
 
 import Loader from "@web/core/components/Loader";
-import useStores from "@web/core/hooks/useStores";
 
 enum LoaderAnimationState {
   INITIAL,
   ENTERED,
   LEFT,
 }
+
+const USER_NOT_CONNECTED_ERROR_MESSAGE = "user.not.connected";
 
 const AppLoader: FunctionComponent = ({ children }) => {
   const [anim, setAnim] = useState(false);
@@ -29,15 +30,48 @@ const AppLoader: FunctionComponent = ({ children }) => {
   const [appReady, setAppReady] = useState(false);
   const [needToLogin, setNeedToLogin] = useState(false);
 
+  const loadFirebaseData = useCallback(async () => {
+    const { firebaseData } = await import("@web/core/firebase/data");
+
+    /**
+     * Wait for Firebase to retrieve the current connected user.
+     * `null` : user is signed out.
+     * not `null` : user signed in.
+     * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
+     */
+    await when(() => typeof toJS(firebaseData.connectedUser) !== "undefined");
+
+    /**
+     * If user is signed out.
+     */
+    if (firebaseData.connectedUser === null) {
+      /**
+       * Make the login button appear.
+       */
+      setNeedToLogin(true);
+
+      /**
+       * Wait for the `connectedUser` to be a plain object.
+       */
+      await when(() => toJS(firebaseData.connectedUser) !== null);
+    }
+
+    /**
+     * Wait for the current TOAST data to be retrieved.
+     */
+    await when(() => toJS(firebaseData.currentToast) !== undefined);
+
+    /**
+     * Make the loader disappear.
+     */
+    setAppReady(true);
+  }, []);
+
   useEffect(() => {
     if (loaderAnimationState === LoaderAnimationState.ENTERED) {
-      import("@web/core/firebase/init")
-        .then(() => import("@web/core/firebase"))
-        .then(({ getCurrentUser }) => {
-          if (!getCurrentUser()) {
-            setNeedToLogin(true);
-          }
-        });
+      import("@web/core/firebase").then(loadFirebaseData).catch((error) => {
+        console.error("An error occured while loading Firebase", { error });
+      });
     }
   }, [loaderAnimationState]);
 
@@ -45,14 +79,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
     import("@web/core/firebase").then(({ signin }) => {
       signin().catch(() => {
         setNeedToLogin(true);
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    import("@web/core/firebase/data").then(({ firebaseData }) => {
-      when(() => toJS(firebaseData.currentToast) !== undefined).then(() => {
-        setAppReady(true);
       });
     });
   }, []);
@@ -75,6 +101,8 @@ const AppLoader: FunctionComponent = ({ children }) => {
       setLoaderAnimationState(LoaderAnimationState.LEFT);
     },
   });
+
+  console.log(LoaderAnimationState[loaderAnimationState]);
 
   return (
     <>
