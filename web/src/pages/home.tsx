@@ -9,13 +9,12 @@ import TOASTStatus from "@web/homepage/TOASTStatus";
 import ColoredBackground from "@web/core/components/ColoredBackground";
 
 const Home = () => {
-  const { ui, appLoader } = useStores();
+  const { ui } = useStores();
 
   useEffect(() => {
     window.document.title = "Let's share a TOAST";
 
     ui.currentPageBgColor = pageColors.homepage;
-    appLoader.pageIsReady = true;
   }, []);
 
   return (

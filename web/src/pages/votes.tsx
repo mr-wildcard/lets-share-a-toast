@@ -12,7 +12,7 @@ import LoadingError from "@web/votes/LoadingError";
 import { Subjects } from "@web/votes/Subjects";
 
 const VotingSession = () => {
-  const { ui, appLoader } = useStores();
+  const { ui } = useStores();
 
   const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
 
@@ -20,7 +20,6 @@ const VotingSession = () => {
     window.document.title = "Votes | Let's share a TOAST";
 
     ui.currentPageBgColor = pageColors.votingSession;
-    appLoader.pageIsReady = true;
   }, []);
 
   useEffect(() => {

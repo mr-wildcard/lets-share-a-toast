@@ -1,21 +1,18 @@
-import React, { useEffect } from 'react';
-import * as C from '@chakra-ui/react';
-import { observer } from 'mobx-react-lite';
+import React, { useEffect } from "react";
+import * as C from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
 
-import useStores from '@web/core/hooks/useStores';
-import ColoredBackground from '@web/core/components/ColoredBackground';
-import Image from '@web/core/components/Image';
-import HighlightedText from '@web/core/components/HighlightedText';
+import useStores from "@web/core/hooks/useStores";
+import ColoredBackground from "@web/core/components/ColoredBackground";
+import Image from "@web/core/components/Image";
+import HighlightedText from "@web/core/components/HighlightedText";
 
 const Custom404Page = () => {
   const theme = C.useTheme();
 
-  const { ui, appLoader } = useStores();
-
   useEffect(() => {
-    ui.currentPageBgColor = theme.colors.purple['400'];
-    appLoader.pageIsReady = true;
-  }, [ui, appLoader, theme]);
+    ui.currentPageBgColor = theme.colors.purple["400"];
+  }, [ui, theme]);
 
   return (
     <C.Box as="main">

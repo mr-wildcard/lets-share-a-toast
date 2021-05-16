@@ -19,7 +19,7 @@ import FilterSearch from "@web/subjects/components/list/filters/FilterSearch";
 const Subjects = () => {
   const formDrawerState = C.useDisclosure();
 
-  const { ui, appLoader } = useStores();
+  const { ui } = useStores();
 
   const { subjects, users } = firebaseData;
 
@@ -31,7 +31,6 @@ const Subjects = () => {
     window.document.title = "Subjects | Let's share a TOAST";
 
     ui.currentPageBgColor = pageColors.subjects;
-    appLoader.pageIsReady = true;
   }, []);
 
   const filteredSubjects = useMemo<Subject[]>(() => {

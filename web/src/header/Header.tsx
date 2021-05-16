@@ -1,9 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 import * as C from "@chakra-ui/react";
-import { SettingsIcon } from "@chakra-ui/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faBellSlash } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router";
 import { ToastStatus } from "@shared/enums";
 
@@ -16,8 +13,6 @@ import LinkItem from "./LinkItem";
 
 const Header = () => {
   const { pathname } = useLocation();
-
-  const { notifications } = useStores();
 
   const votesAreOpened =
     firebaseData.currentToast?.status === ToastStatus.OPEN_FOR_VOTE;
@@ -91,39 +86,6 @@ const Header = () => {
               >
                 <C.AvatarBadge boxSize="1em" bg="green.500" />
               </C.Avatar>
-              <C.Menu closeOnSelect={false}>
-                <C.MenuButton
-                  as={C.IconButton}
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  width="100%"
-                  height="100%"
-                  opacity={0}
-                  icon={<SettingsIcon />}
-                  size="sm"
-                  aria-label="User settings"
-                  title="Your settings"
-                  borderRadius="full"
-                  _hover={{ opacity: 1 }}
-                />
-                <C.MenuList>
-                  <C.MenuItem
-                    onClick={() => {
-                      notifications.showNotifications = !notifications.showNotifications;
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={
-                        notifications.showNotifications ? faBell : faBellSlash
-                      }
-                    />
-                    <C.Text as="span" pl={3}>
-                      Notifications
-                    </C.Text>
-                  </C.MenuItem>
-                </C.MenuList>
-              </C.Menu>
             </C.Box>
           </C.Stack>
         )}

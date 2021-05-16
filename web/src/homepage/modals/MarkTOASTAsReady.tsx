@@ -37,8 +37,6 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
 }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const { notifications, auth } = useStores();
-
   return (
     <C.Modal
       isCentered

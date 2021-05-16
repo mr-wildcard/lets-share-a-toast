@@ -13,7 +13,6 @@ import { Pathnames } from "@web/core/constants";
 import getAppURL from "@web/core/helpers/getAppURL";
 import isToast from "@web/core/helpers/isToast";
 import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
-import useStores from "@web/core/hooks/useStores";
 import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
@@ -52,8 +51,6 @@ const Form: FunctionComponent<Props> = ({
   cancelButtonRef,
   closeModal,
 }) => {
-  const { notifications } = useStores();
-
   const getFormattedSlackNotification = useCallback(
     (notificationText, toastDueDate) => {
       return notificationText
@@ -133,11 +130,7 @@ const Form: FunctionComponent<Props> = ({
               closeModal(true);
             });
 
-          /*
-          notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
-            dueDate: values.dueDate.toString(),
-          });
-           */
+          // TODO: handle notification
         } else {
           return firebase
             .database()
@@ -152,9 +145,7 @@ const Form: FunctionComponent<Props> = ({
               closeModal(true);
             });
 
-          /*
-          notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
-          */
+          // TODO: handle notification
         }
       }}
     >

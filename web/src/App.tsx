@@ -22,7 +22,7 @@ import useStores from "./core/hooks/useStores";
 export default function LetsShareATOAST() {
   const toaster = useToast();
 
-  const { ui, notifications } = useStores();
+  const { ui } = useStores();
 
   useEffect(() => {
     console.log(
@@ -33,7 +33,7 @@ export default function LetsShareATOAST() {
     ui.setWindowSize();
     // TODO: handle notifications
     // notifications.initialize(toaster);
-  }, [ui, notifications]);
+  }, [ui]);
 
   return (
     <Suspense
