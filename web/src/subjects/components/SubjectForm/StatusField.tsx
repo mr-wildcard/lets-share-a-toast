@@ -6,9 +6,16 @@ import React, {
   useState,
 } from "react";
 import { FieldProps } from "formik";
-import * as C from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  FormControl,
+  FormLabel,
+  Text,
+  useTheme,
+} from "@chakra-ui/react";
 
-import { Subject } from "@shared/models";
 import { SubjectStatus } from "@shared/enums";
 
 import { getStatusButtonStyleProps } from "@web/subjects/components/SubjectForm/helpers";
@@ -23,9 +30,9 @@ const StatusInfos = {
   [SubjectStatus.AVAILABLE]: (
     <>
       You marked this subject as&nbsp;
-      <C.Text as="span" fontWeight="bold">
+      <Text as="span" fontWeight="bold">
         Available
-      </C.Text>
+      </Text>
       .
       <br />
       It will be automatically submitted to votes for the next TOAST.
@@ -34,9 +41,9 @@ const StatusInfos = {
   [SubjectStatus.UNAVAILABLE]: (
     <>
       You marked this subject as&nbsp;
-      <C.Text as="span" fontWeight="bold">
+      <Text as="span" fontWeight="bold">
         Unavailable
-      </C.Text>
+      </Text>
       &nbsp;⚠️
       <br />
       People won&apos;t be able to vote for this subject for all upcoming TOAST
@@ -46,9 +53,9 @@ const StatusInfos = {
   [SubjectStatus.DONE]: (
     <>
       You marked this subject as&nbsp;
-      <C.Text as="span" fontWeight="bold">
+      <Text as="span" fontWeight="bold">
         Already given
-      </C.Text>
+      </Text>
       .
       <br />
       You already gave a talk about this subject in a previous TOAST.
@@ -66,7 +73,7 @@ const StatusField: FunctionComponent<Props> = ({
   form,
   showHints = true,
 }) => {
-  const theme = C.useTheme();
+  const theme = useTheme();
 
   const [bgStyles, setBgStyles] = useState<StatusBackgroundStyles>({
     x: 0,
@@ -111,17 +118,17 @@ const StatusField: FunctionComponent<Props> = ({
   }, [field]);
 
   return (
-    <C.FormControl ref={rootElement}>
-      <C.Box>
-        <C.FormLabel htmlFor={field.name}>Subject status</C.FormLabel>
-      </C.Box>
-      <C.Box
+    <FormControl ref={rootElement}>
+      <Box>
+        <FormLabel htmlFor={field.name}>Subject status</FormLabel>
+      </Box>
+      <Box
         position="relative"
         borderRadius={6}
         overflow="hidden"
         d="inline-block"
       >
-        <C.Box
+        <Box
           position="absolute"
           width="1px"
           top={0}
@@ -133,8 +140,8 @@ const StatusField: FunctionComponent<Props> = ({
             backgroundColor: bgStyles.color,
           }}
         />
-        <C.ButtonGroup isAttached variant="outline">
-          <C.Button
+        <ButtonGroup isAttached variant="outline">
+          <Button
             type="button"
             mr="-1px"
             onClick={() => {
@@ -143,8 +150,8 @@ const StatusField: FunctionComponent<Props> = ({
             {...computeStatusButtonStyleProps(SubjectStatus.AVAILABLE)}
           >
             Available
-          </C.Button>
-          <C.Button
+          </Button>
+          <Button
             type="button"
             mr="-1px"
             onClick={() => {
@@ -153,8 +160,8 @@ const StatusField: FunctionComponent<Props> = ({
             {...computeStatusButtonStyleProps(SubjectStatus.UNAVAILABLE)}
           >
             Unavailable
-          </C.Button>
-          <C.Button
+          </Button>
+          <Button
             type="button"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.DONE);
@@ -162,16 +169,16 @@ const StatusField: FunctionComponent<Props> = ({
             {...computeStatusButtonStyleProps(SubjectStatus.DONE)}
           >
             Already given
-          </C.Button>
-        </C.ButtonGroup>
-      </C.Box>
+          </Button>
+        </ButtonGroup>
+      </Box>
 
       {showHints && (
-        <C.Text mt={2} fontSize="sm">
+        <Text mt={2} fontSize="sm">
           {StatusInfos[field.value]}
-        </C.Text>
+        </Text>
       )}
-    </C.FormControl>
+    </FormControl>
   );
 };
 

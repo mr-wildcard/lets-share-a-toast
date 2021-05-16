@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import firebase from "firebase/app";
-import * as C from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 
 import {
   DatabaseRefPaths,
@@ -13,7 +13,6 @@ import { SubjectStatus } from "@shared/enums";
 import { Subject } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
-import { LoadingState } from "./types";
 
 function getSubjectTotalVotes(votedSubject: SubjectVote) {
   const allVotes = Object.values(votedSubject);
@@ -85,12 +84,12 @@ export function Subjects() {
   }, []);
 
   return (
-    <C.Box>
+    <Box>
       {votingSession !== null && (
-        <C.Box>
+        <Box>
           {subjects.map((subject) => {
             return (
-              <C.Button
+              <Button
                 key={subject.id}
                 m={3}
                 onClick={() => vote(subject.id)}
@@ -101,11 +100,11 @@ export function Subjects() {
                   ? getSubjectTotalVotes(votingSession.votes[subject.id])
                   : 0}
                 )
-              </C.Button>
+              </Button>
             );
           })}
-        </C.Box>
+        </Box>
       )}
-    </C.Box>
+    </Box>
   );
 }

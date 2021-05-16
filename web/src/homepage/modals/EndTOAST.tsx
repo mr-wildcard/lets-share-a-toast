@@ -1,6 +1,20 @@
 import firebase from "firebase/app";
-import React, { ChangeEvent, FunctionComponent, useRef, useState } from "react";
-import * as C from "@chakra-ui/react";
+import React, { FunctionComponent, useRef, useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertDialogBody,
+  AlertDialogFooter,
+  Box,
+  Button,
+  Divider,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
 import { Toast } from "@shared/models";
@@ -36,14 +50,14 @@ const EndTOAST: FunctionComponent<Props> = ({
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
-    <C.Modal
+    <Modal
       isCentered
       isOpen={isOpen}
       initialFocusRef={cancelBtn}
       onClose={closeModal}
       size="xl"
     >
-      <C.ModalOverlay>
+      <ModalOverlay>
         <Formik
           validateOnMount={true}
           initialValues={{
@@ -87,9 +101,9 @@ const EndTOAST: FunctionComponent<Props> = ({
           }: FormikProps<FormValues>) => {
             return (
               <Form>
-                <C.ModalContent borderRadius="3px">
-                  <C.ModalHeader textAlign="center">
-                    <C.Text position="relative" pr={5}>
+                <ModalContent borderRadius="3px">
+                  <ModalHeader textAlign="center">
+                    <Text position="relative" pr={5}>
                       <HighlightedText bgColor={pageColors.homepage}>
                         End current TOAST
                       </HighlightedText>
@@ -101,26 +115,26 @@ const EndTOAST: FunctionComponent<Props> = ({
                         height={120}
                         src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
                       />
-                    </C.Text>
-                  </C.ModalHeader>
-                  <C.AlertDialogBody fontSize="lg">
-                    <C.Box mb={5}>
-                      <C.Alert status="info" variant="left-accent">
-                        <C.Box flex={1}>
-                          <C.AlertDescription>
+                    </Text>
+                  </ModalHeader>
+                  <AlertDialogBody fontSize="lg">
+                    <Box mb={5}>
+                      <Alert status="info" variant="left-accent">
+                        <Box flex={1}>
+                          <AlertDescription>
                             In order to end the TOAST, you need to specify which
                             subject(s) has been given. (at least one subject).
                             <br />
                             If no subject has been given, you might want to
                             cancel the TOAST instead.
-                          </C.AlertDescription>
-                        </C.Box>
-                      </C.Alert>
-                    </C.Box>
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                    </Box>
 
-                    <C.Divider my={5} />
+                    <Divider my={5} />
 
-                    <C.Stack my={10} spacing={5}>
+                    <Stack my={10} spacing={5}>
                       {currentToast.selectedSubjects!.map(
                         (selectedSubject, index) => {
                           const subjectIsSelected = values.givenSubjectsIds.includes(
@@ -139,7 +153,7 @@ const EndTOAST: FunctionComponent<Props> = ({
                                 FormValues["givenSubjectsIds"],
                                 FormValues
                               >) => (
-                                <C.Box
+                                <Box
                                   as="button"
                                   type="button"
                                   key={`subject-${selectedSubject.id}`}
@@ -176,28 +190,28 @@ const EndTOAST: FunctionComponent<Props> = ({
                                     }
                                   }}
                                 >
-                                  <C.Text
+                                  <Text
                                     as="span"
                                     fontWeight="bold"
                                     fontStyle="italic"
                                   >
                                     "{selectedSubject.title}"
-                                  </C.Text>
+                                  </Text>
                                   &nbsp;by&nbsp;
                                   {selectedSubject.speakers
                                     .map(getUserFullname)
                                     .join(", ")}
-                                </C.Box>
+                                </Box>
                               )}
                             </Field>
                           );
                         }
                       )}
-                    </C.Stack>
-                  </C.AlertDialogBody>
-                  <C.AlertDialogFooter justifyContent="center">
-                    <C.Stack spacing={3} direction="row">
-                      <C.Button
+                    </Stack>
+                  </AlertDialogBody>
+                  <AlertDialogFooter justifyContent="center">
+                    <Stack spacing={3} direction="row">
+                      <Button
                         type="submit"
                         isLoading={isSubmitting}
                         isDisabled={isSubmitting || !isValid}
@@ -205,24 +219,24 @@ const EndTOAST: FunctionComponent<Props> = ({
                         colorScheme="green"
                       >
                         I do want to end the TOAST
-                      </C.Button>
-                      <C.Button
+                      </Button>
+                      <Button
                         position="relative"
                         overflow="hidden"
                         ref={cancelBtn}
                         onClick={closeModal}
                       >
                         Do nothing
-                      </C.Button>
-                    </C.Stack>
-                  </C.AlertDialogFooter>
-                </C.ModalContent>
+                      </Button>
+                    </Stack>
+                  </AlertDialogFooter>
+                </ModalContent>
               </Form>
             );
           }}
         </Formik>
-      </C.ModalOverlay>
-    </C.Modal>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

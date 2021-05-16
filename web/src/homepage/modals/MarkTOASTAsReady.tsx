@@ -1,6 +1,18 @@
 import firebase from "firebase/app";
 import React, { FunctionComponent, useRef } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
@@ -34,7 +46,7 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
-    <C.Modal
+    <Modal
       isCentered
       onClose={closeModal}
       isOpen={isOpen}
@@ -42,10 +54,10 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
       closeOnEsc={true}
       size="lg"
     >
-      <C.ModalOverlay>
-        <C.ModalContent borderRadius="3px">
-          <C.ModalHeader textAlign="center">
-            <C.Text position="relative">
+      <ModalOverlay>
+        <ModalContent borderRadius="3px">
+          <ModalHeader textAlign="center">
+            <Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
                 Mark TOAST as ready
               </HighlightedText>
@@ -57,8 +69,8 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                 bottom="-20px"
                 src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif"
               />
-            </C.Text>
-          </C.ModalHeader>
+            </Text>
+          </ModalHeader>
 
           <Formik
             initialValues={{
@@ -106,19 +118,19 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
           >
             {({ values, isSubmitting, isValid }) => (
               <Form>
-                <C.ModalBody>
+                <ModalBody>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
-                      <C.Checkbox mb={2} defaultIsChecked={false} {...field}>
+                      <Checkbox mb={2} defaultIsChecked={false} {...field}>
                         Also notify #bordeaux Slack channel:
-                      </C.Checkbox>
+                      </Checkbox>
                     )}
                   </Field>
 
                   <Field name="notificationMessage">
                     {({ field, meta }: FieldProps) => (
-                      <C.FormControl>
-                        <C.Textarea
+                      <FormControl>
+                        <Textarea
                           {...field}
                           height="150px"
                           isRequired={values.notifySlack}
@@ -126,13 +138,13 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                           isInvalid={meta.touched && !!meta.error}
                           value={values.notificationMessage}
                         />
-                      </C.FormControl>
+                      </FormControl>
                     )}
                   </Field>
-                </C.ModalBody>
+                </ModalBody>
 
-                <C.ModalFooter justifyContent="center">
-                  <C.Button
+                <ModalFooter justifyContent="center">
+                  <Button
                     isDisabled={!isValid}
                     type="submit"
                     colorScheme="blue"
@@ -141,8 +153,8 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                     mx={2}
                   >
                     GO!
-                  </C.Button>
-                  <C.Button
+                  </Button>
+                  <Button
                     ref={cancelBtn}
                     isDisabled={isSubmitting}
                     onClick={closeModal}
@@ -152,14 +164,14 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                     mx={2}
                   >
                     Cancel
-                  </C.Button>
-                </C.ModalFooter>
+                  </Button>
+                </ModalFooter>
               </Form>
             )}
           </Formik>
-        </C.ModalContent>
-      </C.ModalOverlay>
-    </C.Modal>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

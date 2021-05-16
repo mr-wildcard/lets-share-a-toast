@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
 import { Subject } from "@shared/models";
@@ -20,26 +20,26 @@ const SubjectInfoBadges: FunctionComponent<Props> = ({ subject }) => {
   }, [subject]);
 
   return (
-    <C.Flex align="center">
+    <Flex align="center">
       {subjectIsNew && subject.status !== SubjectStatus.DONE && (
         <>
           <SubjectNewBadge />
-          <C.Box as="span" px={2}>
+          <Box as="span" px={2}>
             &bull;
-          </C.Box>
+          </Box>
         </>
       )}
 
       <SubjectStatusBadge status={subject.status} />
-      <C.Box as="span" px={2}>
+      <Box as="span" px={2}>
         &bull;
-      </C.Box>
+      </Box>
       <SubjectLanguageBadge language={subject.language} />
-      <C.Box as="span" px={2}>
+      <Box as="span" px={2}>
         &bull;
-      </C.Box>
+      </Box>
       <SubjectDurationBadge duration={subject.duration} />
-    </C.Flex>
+    </Flex>
   );
 };
 

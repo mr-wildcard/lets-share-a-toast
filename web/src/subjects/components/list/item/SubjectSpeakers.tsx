@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo } from "react";
-import * as C from "@chakra-ui/react";
+import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 
@@ -17,16 +17,16 @@ const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
   const highNumberOfSpeakers = speakers.length > 2;
 
   return (
-    <C.Flex
+    <Flex
       direction={highNumberOfSpeakers ? "column" : "row"}
       align={highNumberOfSpeakers ? "start" : "center"}
     >
-      <C.AvatarGroup size="sm">
+      <AvatarGroup size="sm">
         {speakers.map((speaker, index) => {
           const fullname = getUserFullname(speaker);
 
           return (
-            <C.Avatar
+            <Avatar
               key={`speaker-${index}-${speaker.id}`}
               src={speaker.photoURL || undefined}
               name={fullname}
@@ -34,9 +34,9 @@ const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
             />
           );
         })}
-      </C.AvatarGroup>
-      <C.Text fontStyle="italic">{namesList}</C.Text>
-    </C.Flex>
+      </AvatarGroup>
+      <Text fontStyle="italic">{namesList}</Text>
+    </Flex>
   );
 };
 

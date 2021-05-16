@@ -1,21 +1,18 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Flex, useTheme } from "@chakra-ui/react";
 import { MenuItem } from "react-contextmenu";
-
-import { SubjectStatus } from "@shared/enums";
 
 interface Props {
   onClick: () => void;
 }
 
 const ContextMenuItem: FunctionComponent<Props> = ({ onClick, children }) => {
-  const theme = C.useTheme();
+  const theme = useTheme();
 
   return (
     <MenuItem onClick={onClick}>
-      <C.Box
-        d="flex"
-        alignItems="center"
+      <Flex
+        align="center"
         cursor="pointer"
         _hover={{
           bg: theme.colors.gray["100"],
@@ -24,7 +21,7 @@ const ContextMenuItem: FunctionComponent<Props> = ({ onClick, children }) => {
         px={3}
       >
         {children}
-      </C.Box>
+      </Flex>
     </MenuItem>
   );
 };

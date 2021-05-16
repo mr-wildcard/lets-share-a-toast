@@ -1,5 +1,20 @@
 import React, { useMemo, useRef } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Box,
+  Button,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
 import firebase from "firebase/app";
 
@@ -47,7 +62,7 @@ export function DeadHeatSubjectsModal({
   }, [currentToast]);
 
   return (
-    <C.Modal
+    <Modal
       isCentered
       onClose={closeModal}
       isOpen={isOpen}
@@ -55,7 +70,7 @@ export function DeadHeatSubjectsModal({
       closeOnEsc={true}
       size="xl"
     >
-      <C.ModalOverlay>
+      <ModalOverlay>
         <Formik
           validateOnMount={true}
           initialValues={{
@@ -106,9 +121,9 @@ export function DeadHeatSubjectsModal({
 
             return (
               <Form>
-                <C.ModalContent borderRadius="3px">
-                  <C.ModalHeader textAlign="center">
-                    <C.Text position="relative">
+                <ModalContent borderRadius="3px">
+                  <ModalHeader textAlign="center">
+                    <Text position="relative">
                       <HighlightedText bgColor={pageColors.homepage}>
                         Almost there...
                       </HighlightedText>
@@ -120,31 +135,31 @@ export function DeadHeatSubjectsModal({
                         bottom="-44px"
                         src="https://media.giphy.com/media/XcMbKY8KIkXMJTLdse/giphy.gif"
                       />
-                    </C.Text>
-                  </C.ModalHeader>
-                  <C.ModalBody p={0}>
-                    <C.Box my={5} px={5}>
-                      <C.Alert status="warning" variant="left-accent">
-                        <C.Box flex={1}>
-                          <C.AlertTitle>What&apos;s happening ?</C.AlertTitle>
-                          <C.AlertDescription>
+                    </Text>
+                  </ModalHeader>
+                  <ModalBody p={0}>
+                    <Box my={5} px={5}>
+                      <Alert status="warning" variant="left-accent">
+                        <Box flex={1}>
+                          <AlertTitle>What&apos;s happening ?</AlertTitle>
+                          <AlertDescription>
                             The following subjects ended up with the same amout
                             of votes. You need to chose a total of&nbsp;
-                            <C.Text as="span" fontWeight="bold">
+                            <Text as="span" fontWeight="bold">
                               {currentToast.maxSelectableSubjects}
-                            </C.Text>
+                            </Text>
                             &nbsp;subjects in order to proceed.
-                          </C.AlertDescription>
-                        </C.Box>
-                      </C.Alert>
-                    </C.Box>
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                    </Box>
 
-                    <C.Divider />
+                    <Divider />
 
-                    <C.Box mt={5}>
+                    <Box mt={5}>
                       <Field name="selectedSubjectsIds">
                         {({ field, form }: FieldProps) => (
-                          <C.Stack
+                          <Stack
                             spacing={3}
                             px={5}
                             maxHeight="40vh"
@@ -156,8 +171,8 @@ export function DeadHeatSubjectsModal({
                               );
 
                               return (
-                                <C.Box
-                                  as={C.Button}
+                                <Box
+                                  as={Button}
                                   type="button"
                                   key={`subject-${subject.id}`}
                                   p={3}
@@ -219,29 +234,29 @@ export function DeadHeatSubjectsModal({
                                     }
                                   }}
                                 >
-                                  <C.Text fontSize="xl" fontWeight="bold">
+                                  <Text fontSize="xl" fontWeight="bold">
                                     {subject.title}
-                                  </C.Text>
+                                  </Text>
 
-                                  <C.Text>
+                                  <Text>
                                     By:&nbsp;
                                     {subject.speakers
                                       .map(getUserFullname)
                                       .join(", ")}
-                                  </C.Text>
-                                  <C.Text textAlign="right">
+                                  </Text>
+                                  <Text textAlign="right">
                                     Votes: {currentToast.votes![subject.id]}
-                                  </C.Text>
-                                </C.Box>
+                                  </Text>
+                                </Box>
                               );
                             })}
-                          </C.Stack>
+                          </Stack>
                         )}
                       </Field>
-                    </C.Box>
-                  </C.ModalBody>
-                  <C.ModalFooter justifyContent="center">
-                    <C.Button
+                    </Box>
+                  </ModalBody>
+                  <ModalFooter justifyContent="center">
+                    <Button
                       isDisabled={!isValid}
                       type="submit"
                       colorScheme="blue"
@@ -254,8 +269,8 @@ export function DeadHeatSubjectsModal({
                         }`}
 
                       {isValid && "Save selected subjects"}
-                    </C.Button>
-                    <C.Button
+                    </Button>
+                    <Button
                       ref={cancelBtn}
                       isDisabled={isSubmitting}
                       onClick={closeModal}
@@ -265,14 +280,14 @@ export function DeadHeatSubjectsModal({
                       mx={2}
                     >
                       Do nothing
-                    </C.Button>
-                  </C.ModalFooter>
-                </C.ModalContent>
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
               </Form>
             );
           }}
         </Formik>
-      </C.ModalOverlay>
-    </C.Modal>
+      </ModalOverlay>
+    </Modal>
   );
 }

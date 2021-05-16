@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toJS } from "mobx";
-import * as C from "@chakra-ui/react";
+import { Box, Flex, useDisclosure } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { Subject } from "@shared/models";
@@ -17,7 +17,7 @@ import FilterSubjectStatus from "@web/subjects/components/list/filters/FilterSub
 import FilterSearch from "@web/subjects/components/list/filters/FilterSearch";
 
 const Subjects = () => {
-  const formDrawerState = C.useDisclosure();
+  const formDrawerState = useDisclosure();
 
   const { ui } = useStores();
 
@@ -67,10 +67,10 @@ const Subjects = () => {
   );
 
   return (
-    <C.Box as="main">
+    <Box as="main">
       <ColoredBackground d="flex">
-        <C.Flex flex={1} position="relative" direction="column">
-          <C.Box position="relative">
+        <Flex flex={1} position="relative" direction="column">
+          <Box position="relative">
             {filteredSubjects.length === 0 && (
               <Image
                 src="https://media.giphy.com/media/A5PYmtufdQIjD37IC0/giphy.gif"
@@ -83,7 +83,7 @@ const Subjects = () => {
               />
             )}
 
-            <C.Flex
+            <Flex
               pt={`${spacing.stylizedGap * 2}px`}
               pb={`${spacing.stylizedGap * 3}px`}
               fontWeight="bold"
@@ -95,9 +95,9 @@ const Subjects = () => {
               <FilterSearch onSearchChanged={setSearchFilter} />
               &nbsp;among&nbsp;
               <FilterSubjectStatus onStatusChanged={setStatusFilter} />.
-            </C.Flex>
+            </Flex>
 
-            <C.Box>
+            <Box>
               <SubjectsList
                 subjects={filteredSubjects}
                 creatingSubject={
@@ -106,7 +106,7 @@ const Subjects = () => {
                 onEditSubject={toggleSubjectEditForm}
                 onAddSubject={formDrawerState.onOpen}
               />
-            </C.Box>
+            </Box>
 
             {!!users && (
               <SubjectForm
@@ -115,10 +115,10 @@ const Subjects = () => {
                 closeForm={toggleSubjectEditForm}
               />
             )}
-          </C.Box>
-        </C.Flex>
+          </Box>
+        </Flex>
       </ColoredBackground>
-    </C.Box>
+    </Box>
   );
 };
 

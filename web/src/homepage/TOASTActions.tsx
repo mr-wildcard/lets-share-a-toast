@@ -1,6 +1,15 @@
 import { observer } from "mobx-react-lite";
 import React, { useCallback, useEffect } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Image,
+} from "@chakra-ui/react";
 import {
   CloseIcon,
   SettingsIcon,
@@ -9,13 +18,8 @@ import {
 } from "@chakra-ui/icons";
 import { animated } from "@react-spring/web";
 
-import { CurrentToast } from "@shared/models";
-
 import { firebaseData } from "@web/core/firebase/data";
 import { spacing } from "@web/core/constants";
-import isToast from "@web/core/helpers/isToast";
-import Image from "@web/core/components/Image";
-import useStores from "@web/core/hooks/useStores";
 import useActionsModalStates from "./hooks/useActionsModalStates";
 import useActionsButtonStates from "./hooks/useActionsButtonStates";
 import useActionsAnimations from "./hooks/useActionsAnimations";
@@ -66,8 +70,8 @@ const TOASTActions = () => {
   }, []);
 
   return (
-    <C.Box position="relative">
-      <C.Button
+    <Box position="relative">
+      <Button
         variant="link"
         position="absolute"
         color="black"
@@ -95,7 +99,7 @@ const TOASTActions = () => {
       >
         {animations.background.opened && "Close"}
         {!animations.background.opened && (
-          <C.Box position="relative">
+          <Box position="relative">
             Manage TOAST
             {buttonsStates.deadHeatSubjects.display && (
               <Image
@@ -106,10 +110,10 @@ const TOASTActions = () => {
                 src="https://media.giphy.com/media/2yxItMecS1FwrhNitr/giphy.gif"
               />
             )}
-          </C.Box>
+          </Box>
         )}
-      </C.Button>
-      <C.Box
+      </Button>
+      <Box
         as={animated.div}
         p={padding}
         position="relative"
@@ -131,7 +135,7 @@ const TOASTActions = () => {
         {animations.toastCreation.animation(
           (style, item) =>
             item && (
-              <C.Image
+              <Image
                 as={animated.img}
                 src="https://media.giphy.com/media/l0IyaxKjZqenpMIQ8/giphy.webp"
                 position="absolute"
@@ -147,7 +151,7 @@ const TOASTActions = () => {
             )
         )}
 
-        <C.Box
+        <Box
           as={animated.div}
           position="absolute"
           bg="white"
@@ -164,18 +168,18 @@ const TOASTActions = () => {
           }}
         />
 
-        <C.Flex justify="space-between" position="relative">
-          <C.Flex>
-            <C.Box>
+        <Flex justify="space-between" position="relative">
+          <Flex>
+            <Box>
               <InitiateTOAST
                 onClick={modalsStates.toast.onOpen}
                 isSuccess={buttonsStates.initiateTOAST.isSuccess}
               />
-            </C.Box>
+            </Box>
 
             {!!currentToast && (
               <>
-                <C.Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
+                <Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
                   <OpenVotes
                     isSuccess={buttonsStates.openVotes.isSuccess}
                     onClick={modalsStates.openVotes.onOpen}
@@ -188,10 +192,10 @@ const TOASTActions = () => {
                       closeModal={modalsStates.openVotes.onClose}
                     />
                   )}
-                </C.Box>
+                </Box>
 
                 {buttonsStates.closeVotes.display && (
-                  <C.Box
+                  <Box
                     ml={getActionSpacing(buttonsStates.closeVotes.isSuccess)}
                   >
                     <CloseVotes
@@ -206,11 +210,11 @@ const TOASTActions = () => {
                         closeModal={modalsStates.closeVotes.onClose}
                       />
                     )}
-                  </C.Box>
+                  </Box>
                 )}
 
                 {buttonsStates.deadHeatSubjects.display && (
-                  <C.Box ml="30px">
+                  <Box ml="30px">
                     <DeadHeatSubjects
                       onClick={modalsStates.deadHeatSubjects.onOpen}
                     />
@@ -220,11 +224,11 @@ const TOASTActions = () => {
                       isOpen={modalsStates.deadHeatSubjects.isOpen}
                       closeModal={modalsStates.deadHeatSubjects.onClose}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
                 {buttonsStates.markTOASTAsReady.display && (
-                  <C.Box ml="30px">
+                  <Box ml="30px">
                     <MarkTOASTAsReady
                       onClick={modalsStates.markTOASTAsReady.onOpen}
                     />
@@ -234,11 +238,11 @@ const TOASTActions = () => {
                       isOpen={modalsStates.markTOASTAsReady.isOpen}
                       closeModal={modalsStates.markTOASTAsReady.onClose}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
                 {buttonsStates.endTOAST.display && (
-                  <C.Box ml="30px">
+                  <Box ml="30px">
                     <EndTOAST
                       currentToast={currentToast}
                       onClick={modalsStates.endTOAST.onOpen}
@@ -249,7 +253,7 @@ const TOASTActions = () => {
                       isOpen={modalsStates.endTOAST.isOpen}
                       closeModal={modalsStates.endTOAST.onClose}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
                 <CancelTOASTModal
@@ -264,11 +268,11 @@ const TOASTActions = () => {
               isOpen={modalsStates.toast.isOpen}
               closeModal={closeTOASTFormModal}
             />
-          </C.Flex>
+          </Flex>
 
           {!!currentToast && (
-            <C.Menu>
-              <C.MenuButton
+            <Menu>
+              <MenuButton
                 textDecoration="underline"
                 position="relative"
                 size="lg"
@@ -277,29 +281,26 @@ const TOASTActions = () => {
                 variant="link"
               >
                 More actions
-              </C.MenuButton>
-              <C.MenuList>
-                <C.MenuItem
-                  onClick={modalsStates.toast.onOpen}
-                  fontWeight="bold"
-                >
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={modalsStates.toast.onOpen} fontWeight="bold">
                   <EditIcon mr={3} />
                   Edit TOAST
-                </C.MenuItem>
-                <C.MenuItem
+                </MenuItem>
+                <MenuItem
                   onClick={modalsStates.cancelTOAST.onOpen}
                   fontWeight="bold"
                   color="red.500"
                 >
                   <DeleteIcon mr={3} />
                   Cancel TOAST
-                </C.MenuItem>
-              </C.MenuList>
-            </C.Menu>
+                </MenuItem>
+              </MenuList>
+            </Menu>
           )}
-        </C.Flex>
-      </C.Box>
-    </C.Box>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

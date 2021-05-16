@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Flex, Heading, useTheme } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import useStores from "@web/core/hooks/useStores";
@@ -8,7 +8,7 @@ import Image from "@web/core/components/Image";
 import HighlightedText from "@web/core/components/HighlightedText";
 
 const PageNotFound = () => {
-  const theme = C.useTheme();
+  const theme = useTheme();
 
   const { ui } = useStores();
 
@@ -17,9 +17,9 @@ const PageNotFound = () => {
   }, [ui, theme]);
 
   return (
-    <C.Box as="main">
+    <Box as="main">
       <ColoredBackground d="flex" p={0}>
-        <C.Flex
+        <Flex
           flex={1}
           position="relative"
           direction="column"
@@ -42,7 +42,7 @@ const PageNotFound = () => {
             src="https://media.giphy.com/media/dsWhAIVlKZJrn5VdZv/giphy.gif"
           />
 
-          <C.Heading
+          <Heading
             as="h2"
             fontSize="2xl"
             fontWeight="bold"
@@ -50,10 +50,10 @@ const PageNotFound = () => {
             mt={3}
           >
             <HighlightedText bgColor="black">Page not found</HighlightedText>
-          </C.Heading>
-        </C.Flex>
+          </Heading>
+        </Flex>
       </ColoredBackground>
-    </C.Box>
+    </Box>
   );
 };
 

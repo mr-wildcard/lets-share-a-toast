@@ -1,6 +1,22 @@
 import firebase from "firebase/app";
 import React, { FunctionComponent, useRef } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
@@ -38,7 +54,7 @@ const OpenVotes: FunctionComponent<Props> = ({
   const votingToastURL = getAppURL() + Pathnames.VOTING_SESSION;
 
   return (
-    <C.Modal
+    <Modal
       isCentered
       onClose={closeModal}
       isOpen={isOpen}
@@ -46,10 +62,10 @@ const OpenVotes: FunctionComponent<Props> = ({
       closeOnEsc={true}
       size="lg"
     >
-      <C.ModalOverlay>
-        <C.ModalContent borderRadius="3px">
-          <C.ModalHeader textAlign="center">
-            <C.Text position="relative">
+      <ModalOverlay>
+        <ModalContent borderRadius="3px">
+          <ModalHeader textAlign="center">
+            <Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
                 Open voting session !
               </HighlightedText>
@@ -61,9 +77,9 @@ const OpenVotes: FunctionComponent<Props> = ({
                 height={100}
                 src="https://media.giphy.com/media/QLREiT3pNpO2VPbGjj/giphy.gif"
               />
-            </C.Text>
-          </C.ModalHeader>
-          <C.ModalBody>
+            </Text>
+          </ModalHeader>
+          <ModalBody>
             <Formik
               initialValues={{
                 notifySlack: false,
@@ -111,53 +127,49 @@ const OpenVotes: FunctionComponent<Props> = ({
             >
               {({ values, isSubmitting, isValid }) => (
                 <Form>
-                  <C.Box>
-                    <C.Box my={5}>
-                      <C.Alert status="warning" variant="left-accent">
-                        <C.Box flex={1}>
-                          <C.AlertTitle textDecoration="underline">
+                  <Box>
+                    <Box my={5}>
+                      <Alert status="warning" variant="left-accent">
+                        <Box flex={1}>
+                          <AlertTitle textDecoration="underline">
                             TOAST has been created&nbsp;
                             {getTOASTElapsedTimeSinceCreation(
                               new Date(currentToast.createdDate)
                             )}
                             .
-                          </C.AlertTitle>
-                          <C.AlertDescription>
+                          </AlertTitle>
+                          <AlertDescription>
                             Be sure that people had enough time to manage their
                             subject(s) before opening votes!
                             <br />
-                            <C.Text as="span" fontWeight="bold">
+                            <Text as="span" fontWeight="bold">
                               {
                                 firebaseData.subjects.filter(
                                   (subject) =>
                                     subject.status === SubjectStatus.AVAILABLE
                                 ).length
                               }
-                            </C.Text>
+                            </Text>
                             &nbsp;available subjects will be added to the voting
                             session.
-                          </C.AlertDescription>
-                        </C.Box>
-                      </C.Alert>
-                    </C.Box>
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                    </Box>
 
-                    <C.Box>
+                    <Box>
                       <Field name="notifySlack">
                         {({ field }: FieldProps) => (
-                          <C.Checkbox
-                            mb={2}
-                            defaultIsChecked={false}
-                            {...field}
-                          >
+                          <Checkbox mb={2} defaultIsChecked={false} {...field}>
                             Also notify #bordeaux Slack channel:
-                          </C.Checkbox>
+                          </Checkbox>
                         )}
                       </Field>
 
                       <Field name="notificationMessage">
                         {({ field, meta }: FieldProps) => (
-                          <C.FormControl>
-                            <C.Textarea
+                          <FormControl>
+                            <Textarea
                               {...field}
                               height="150px"
                               isRequired={values.notifySlack}
@@ -165,14 +177,14 @@ const OpenVotes: FunctionComponent<Props> = ({
                               isInvalid={meta.touched && !!meta.error}
                               value={values.notificationMessage}
                             />
-                          </C.FormControl>
+                          </FormControl>
                         )}
                       </Field>
-                    </C.Box>
-                  </C.Box>
+                    </Box>
+                  </Box>
 
-                  <C.ModalFooter justifyContent="center">
-                    <C.Button
+                  <ModalFooter justifyContent="center">
+                    <Button
                       isDisabled={!isValid}
                       type="submit"
                       colorScheme="blue"
@@ -181,8 +193,8 @@ const OpenVotes: FunctionComponent<Props> = ({
                       mx={2}
                     >
                       Open votes!
-                    </C.Button>
-                    <C.Button
+                    </Button>
+                    <Button
                       ref={cancelBtn}
                       isDisabled={isSubmitting}
                       onClick={closeModal}
@@ -192,15 +204,15 @@ const OpenVotes: FunctionComponent<Props> = ({
                       mx={2}
                     >
                       Cancel
-                    </C.Button>
-                  </C.ModalFooter>
+                    </Button>
+                  </ModalFooter>
                 </Form>
               )}
             </Formik>
-          </C.ModalBody>
-        </C.ModalContent>
-      </C.ModalOverlay>
-    </C.Modal>
+          </ModalBody>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

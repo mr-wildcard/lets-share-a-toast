@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
-import * as C from "@chakra-ui/react";
+import { Image, ImageProps } from "@chakra-ui/react";
 
-interface CustomImageProps extends C.ImageProps {
+interface CustomImageProps extends ImageProps {
   width: number;
   height: number;
 }
@@ -19,7 +19,7 @@ const Img: FunctionComponent<CustomImageProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <C.Image
+    <Image
       src={src}
       fallbackSrc={srcPlaceholder}
       style={{

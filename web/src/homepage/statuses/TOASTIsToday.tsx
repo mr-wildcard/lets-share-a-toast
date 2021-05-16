@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { Toast } from "@shared/models";
@@ -13,16 +13,16 @@ interface Props {
 
 const TOASTIsToday: FunctionComponent<Props> = ({ toast }) => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={5}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={5}>
         TOAST is today !
-      </C.Text>
+      </Text>
 
-      <C.Box mb={10}>
+      <Box mb={10}>
         <WhosInChargeRecap toast={toast} />
-      </C.Box>
+      </Box>
 
-      <C.Button
+      <Button
         as={Link}
         to={Pathnames.SUBJECTS}
         cursor="pointer"
@@ -32,8 +32,8 @@ const TOASTIsToday: FunctionComponent<Props> = ({ toast }) => {
         colorScheme="blue"
       >
         Propose a subject for the next TOAST!
-      </C.Button>
-    </C.Box>
+      </Button>
+    </Box>
   );
 };
 

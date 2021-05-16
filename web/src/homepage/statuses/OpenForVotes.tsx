@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { Toast } from "@shared/models";
@@ -16,17 +16,17 @@ interface Props {
 
 const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={5}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={5}>
         Votes are opened for the upcoming TOAST !
-      </C.Text>
+      </Text>
 
-      <C.Box mb={10}>
+      <Box mb={10}>
         <WhosInChargeRecap toast={toast} />
-      </C.Box>
+      </Box>
 
-      <C.Box d="inline-block" position="relative">
-        <C.Button
+      <Box d="inline-block" position="relative">
+        <Button
           as={Link}
           to={Pathnames.VOTING_SESSION}
           className={css.link}
@@ -39,8 +39,8 @@ const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
           size="lg"
           px={4}
         >
-          <C.Text pl="60px">Join voting session !</C.Text>
-        </C.Button>
+          <Text pl="60px">Join voting session !</Text>
+        </Button>
         <Image
           position="absolute"
           left="-10px"
@@ -50,8 +50,8 @@ const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
           src="https://media.giphy.com/media/B1eGdIUyOhfPi/giphy.webp"
           pointerEvents="none"
         />
-      </C.Box>
-    </C.Box>
+      </Box>
+    </Box>
   );
 });
 

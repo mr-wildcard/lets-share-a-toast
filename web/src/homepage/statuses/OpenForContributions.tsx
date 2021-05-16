@@ -1,6 +1,5 @@
-import { observer } from "mobx-react-lite";
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { Toast } from "@shared/models";
@@ -15,21 +14,21 @@ interface Props {
 
 const OpenForContributions: FunctionComponent<Props> = ({ toast }) => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={5}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={5}>
         A new TOAST has been scheduled
         <br />
         and&nbsp;
-        <C.Text as="span" textDecoration="underline">
+        <Text as="span" textDecoration="underline">
           we need you!
-        </C.Text>
-      </C.Text>
+        </Text>
+      </Text>
 
-      <C.Box mb={10}>
+      <Box mb={10}>
         <WhosInChargeRecap toast={toast} />
-      </C.Box>
+      </Box>
 
-      <C.Button
+      <Button
         as={Link}
         to={Pathnames.SUBJECTS}
         cursor="pointer"
@@ -47,8 +46,8 @@ const OpenForContributions: FunctionComponent<Props> = ({ toast }) => {
           bottom="-33px"
           src="https://media.giphy.com/media/lMClXMEGuSJLZBqBh9/giphy.gif"
         />
-      </C.Button>
-    </C.Box>
+      </Button>
+    </Box>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { List, ListItem, Text } from "@chakra-ui/react";
 
-import { Subject, Toast } from "@shared/models";
+import { Subject } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
 
@@ -13,26 +13,26 @@ const SelectedSubjectsList: FunctionComponent<Props> = ({
   selectedSubjects,
 }) => {
   return (
-    <C.List fontSize="lg" fontWeight="normal">
+    <List fontSize="lg" fontWeight="normal">
       {selectedSubjects.map((subject, index) => (
-        <C.ListItem key={`subject-${subject.id}-${index}`}>
+        <ListItem key={`subject-${subject.id}-${index}`}>
           &quot;
-          <C.Text as="span" fontStyle="italic" fontWeight="bold">
+          <Text as="span" fontStyle="italic" fontWeight="bold">
             {subject.title}
-          </C.Text>
-          &quot;&nbsp;-&nbsp;<C.Text as="span">a</C.Text>&nbsp;
-          <C.Text as="span" fontWeight="bold">
+          </Text>
+          &quot;&nbsp;-&nbsp;<Text as="span">a</Text>&nbsp;
+          <Text as="span" fontWeight="bold">
             {subject.duration} min
-          </C.Text>
+          </Text>
           &nbsp;
-          <C.Text as="span">talk by</C.Text>&nbsp;
-          <C.Text as="span" fontWeight="bold">
+          <Text as="span">talk by</Text>&nbsp;
+          <Text as="span" fontWeight="bold">
             {subject.speakers.map(getUserFullname).join(", ")}
-          </C.Text>
+          </Text>
           .
-        </C.ListItem>
+        </ListItem>
       ))}
-    </C.List>
+    </List>
   );
 };
 

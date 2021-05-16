@@ -1,6 +1,16 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerCloseButton,
+  Stack,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 import { ToastStatus, SubjectStatus } from "@shared/enums";
@@ -25,24 +35,24 @@ const Debug_Notifications = () => {
   const [opened, open] = useState(true);
 
   return (
-    <C.Drawer
+    <Drawer
       isOpen={opened}
       placement="right"
       onClose={() => open(false)}
       size="xl"
     >
-      <C.DrawerOverlay>
-        <C.DrawerContent overflowY="auto">
-          <C.DrawerCloseButton />
-          <C.DrawerHeader>Notifications Debbuger</C.DrawerHeader>
+      <DrawerOverlay>
+        <DrawerContent overflowY="auto">
+          <DrawerCloseButton />
+          <DrawerHeader>Notifications Debbuger</DrawerHeader>
 
-          <C.DrawerBody>
-            <C.Stack direction="row">
-              <C.Stack>
-                <C.Text>
+          <DrawerBody>
+            <Stack direction="row">
+              <Stack>
+                <Text>
                   Notifications related to TOAST object manipulations :
-                </C.Text>
-                <C.Button
+                </Text>
+                <Button
                   onClick={() => {
                     notifications.send(
                       fakeProfile as User,
@@ -54,8 +64,8 @@ const Debug_Notifications = () => {
                   }}
                 >
                   Create TOAST
-                </C.Button>
-                <C.Button
+                </Button>
+                <Button
                   onClick={() => {
                     notifications.send(
                       fakeProfile as User,
@@ -64,10 +74,10 @@ const Debug_Notifications = () => {
                   }}
                 >
                   Edit TOAST Infos
-                </C.Button>
+                </Button>
                 {SESSIONS_STATUSES.map((status, index) => {
                   return (
-                    <C.Button
+                    <Button
                       justifyContent="space-between"
                       key={index}
                       onClick={() => {
@@ -80,19 +90,19 @@ const Debug_Notifications = () => {
                         );
                       }}
                     >
-                      <C.Text>TOAST status changed to :</C.Text> {status}
-                    </C.Button>
+                      <Text>TOAST status changed to :</Text> {status}
+                    </Button>
                   );
                 })}
-              </C.Stack>
-            </C.Stack>
+              </Stack>
+            </Stack>
 
             <br />
 
-            <C.Stack direction="row">
-              <C.Stack>
-                <C.Text>Notifications related to subjects :</C.Text>
-                <C.Button
+            <Stack direction="row">
+              <Stack>
+                <Text>Notifications related to subjects :</Text>
+                <Button
                   onClick={() => {
                     notifications.send(
                       fakeProfile as User,
@@ -104,8 +114,8 @@ const Debug_Notifications = () => {
                   }}
                 >
                   Create a subject
-                </C.Button>
-                <C.Button
+                </Button>
+                <Button
                   onClick={() => {
                     notifications.send(
                       fakeProfile as User,
@@ -117,10 +127,10 @@ const Debug_Notifications = () => {
                   }}
                 >
                   Edit a subject content
-                </C.Button>
+                </Button>
                 {SUBJECT_STATUSES.map((status, index) => {
                   return (
-                    <C.Button
+                    <Button
                       justifyContent="space-between"
                       key={index}
                       onClick={() => {
@@ -135,16 +145,16 @@ const Debug_Notifications = () => {
                         );
                       }}
                     >
-                      <C.Text>Subject status changed to {status}</C.Text>
-                    </C.Button>
+                      <Text>Subject status changed to {status}</Text>
+                    </Button>
                   );
                 })}
-              </C.Stack>
-            </C.Stack>
-          </C.DrawerBody>
-        </C.DrawerContent>
-      </C.DrawerOverlay>
-    </C.Drawer>
+              </Stack>
+            </Stack>
+          </DrawerBody>
+        </DrawerContent>
+      </DrawerOverlay>
+    </Drawer>
   );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
 
@@ -13,7 +13,7 @@ const baseProps = {
 const Content = () => (
   <>
     Let&apos;s share a
-    <C.Text
+    <Text
       as="span"
       className={css.toast}
       d="inline-block"
@@ -23,7 +23,7 @@ const Content = () => (
       aria-labelledby="Logo"
     >
       🍞
-    </C.Text>
+    </Text>
     !
   </>
 );
@@ -33,17 +33,17 @@ const Logo = () => {
 
   if (pathname === Pathnames.HOME) {
     return (
-      <C.Heading size="xl" {...baseProps}>
+      <Heading size="xl" {...baseProps}>
         <Content />
-      </C.Heading>
+      </Heading>
     );
   }
 
   return (
     <Link to={Pathnames.HOME}>
-      <C.Box
+      <Box
         {...baseProps}
-        as={C.Heading}
+        as={Heading}
         position="relative"
         className={css.heading}
         _after={{
@@ -61,7 +61,7 @@ const Logo = () => {
         }}
       >
         <Content />
-      </C.Box>
+      </Box>
     </Link>
   );
 };

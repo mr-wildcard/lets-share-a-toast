@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { animated, config, useTransition } from "@react-spring/web";
 
 import ImageComponent from "@web/core/components/Image";
@@ -136,7 +136,7 @@ const Loader = () => {
   });
 
   return (
-    <C.Flex
+    <Flex
       align="center"
       justify="center"
       h="400px"
@@ -153,7 +153,7 @@ const Loader = () => {
       {loaders((styles, item) => {
         return (
           ALL_GIFS[item] && (
-            <C.Box
+            <Box
               as={animated.img}
               alt="Loading..."
               src={ALL_GIFS[item].src}
@@ -167,7 +167,7 @@ const Loader = () => {
           )
         );
       })}
-    </C.Flex>
+    </Flex>
   );
 };
 

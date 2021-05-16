@@ -1,6 +1,17 @@
 import firebase from "firebase/app";
 import React, { FunctionComponent, Ref, useCallback, useMemo } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  ModalFooter,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import dayjs from "dayjs";
@@ -152,16 +163,16 @@ const Form: FunctionComponent<Props> = ({
       {({ values, setFieldValue, isSubmitting, isValid }) => {
         return (
           <FormikForm>
-            <C.Stack spacing={8}>
-              <C.Box>
+            <Stack spacing={8}>
+              <Box>
                 <Field name="dueDate">
                   {({ field, meta }: FieldProps) => (
-                    <C.FormControl
+                    <FormControl
                       isRequired
                       isInvalid={meta.touched && !!meta.error}
                     >
-                      <C.FormLabel htmlFor="dueDate">Due Date</C.FormLabel>
-                      <C.Box position="relative">
+                      <FormLabel htmlFor="dueDate">Due Date</FormLabel>
+                      <Box position="relative">
                         {/* datePickerCSS : needs to be of type react-day-picker/ClassNames instead of CSSModuleClasses.
                         @ts-ignore */}
                         <DayPickerInput
@@ -181,23 +192,21 @@ const Form: FunctionComponent<Props> = ({
                             captionElement: DatePickerCaption,
                           }}
                         />
-                      </C.Box>
-                    </C.FormControl>
+                      </Box>
+                    </FormControl>
                   )}
                 </Field>
-              </C.Box>
+              </Box>
 
-              <C.Stack spacing={5} direction="row">
-                <C.Box flex={1}>
+              <Stack spacing={5} direction="row">
+                <Box flex={1}>
                   <Field name="organizer">
                     {({ field, meta }: FieldProps) => {
                       const isInvalid = meta.touched && !!meta.error;
 
                       return (
-                        <C.FormControl isRequired isInvalid={isInvalid}>
-                          <C.FormLabel htmlFor={field.name}>
-                            Organizer
-                          </C.FormLabel>
+                        <FormControl isRequired isInvalid={isInvalid}>
+                          <FormLabel htmlFor={field.name}>Organizer</FormLabel>
                           <SelectUserInput
                             {...field}
                             isDisabled={!firebaseData.users.length}
@@ -211,20 +220,20 @@ const Form: FunctionComponent<Props> = ({
                               }
                             }}
                           />
-                        </C.FormControl>
+                        </FormControl>
                       );
                     }}
                   </Field>
-                </C.Box>
+                </Box>
 
-                <C.Box flex={1}>
+                <Box flex={1}>
                   <Field name="scribe">
                     {({ field, meta }: FieldProps) => {
                       const isInvalid = meta.touched && !!meta.error;
 
                       return (
-                        <C.FormControl isRequired isInvalid={isInvalid}>
-                          <C.FormLabel htmlFor={field.name}>Scribe</C.FormLabel>
+                        <FormControl isRequired isInvalid={isInvalid}>
+                          <FormLabel htmlFor={field.name}>Scribe</FormLabel>
                           <SelectUserInput
                             {...field}
                             isInvalid={isInvalid}
@@ -239,27 +248,27 @@ const Form: FunctionComponent<Props> = ({
                               }
                             }}
                           />
-                        </C.FormControl>
+                        </FormControl>
                       );
                     }}
                   </Field>
-                </C.Box>
-              </C.Stack>
+                </Box>
+              </Stack>
 
               {!isToast(currentToast) && (
-                <C.Box>
+                <Box>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
-                      <C.Checkbox mb={2} defaultIsChecked={false} {...field}>
+                      <Checkbox mb={2} defaultIsChecked={false} {...field}>
                         Also notify #bordeaux Slack channel:
-                      </C.Checkbox>
+                      </Checkbox>
                     )}
                   </Field>
 
                   <Field name="notificationMessage">
                     {({ field, meta }: FieldProps) => (
-                      <C.FormControl>
-                        <C.Textarea
+                      <FormControl>
+                        <Textarea
                           {...field}
                           height="150px"
                           isRequired={values.notifySlack}
@@ -270,17 +279,17 @@ const Form: FunctionComponent<Props> = ({
                             values.dueDate
                           )}
                         />
-                        <C.FormHelperText id="notificationMessage">
+                        <FormHelperText id="notificationMessage">
                           You can use Slack formatting message.
-                        </C.FormHelperText>
-                      </C.FormControl>
+                        </FormHelperText>
+                      </FormControl>
                     )}
                   </Field>
-                </C.Box>
+                </Box>
               )}
 
-              <C.ModalFooter justifyContent="center">
-                <C.Button
+              <ModalFooter justifyContent="center">
+                <Button
                   type="submit"
                   isDisabled={!isValid}
                   overflow="hidden"
@@ -299,12 +308,12 @@ const Form: FunctionComponent<Props> = ({
                     height={50}
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
-                  <C.Text as="span" pl={35}>
+                  <Text as="span" pl={35}>
                     {currentToast && "Edit"}
                     {!currentToast && "Let's go !"}
-                  </C.Text>
-                </C.Button>
-                <C.Button
+                  </Text>
+                </Button>
+                <Button
                   ref={cancelButtonRef}
                   isDisabled={isSubmitting}
                   onClick={() => closeModal(false)}
@@ -322,12 +331,12 @@ const Form: FunctionComponent<Props> = ({
                     height={35}
                     src="https://media.giphy.com/media/4a6NdCWK5QQLWBJpsH/giphy.webp"
                   />
-                  <C.Text as="span" pl={35}>
+                  <Text as="span" pl={35}>
                     Cancel
-                  </C.Text>
-                </C.Button>
-              </C.ModalFooter>
-            </C.Stack>
+                  </Text>
+                </Button>
+              </ModalFooter>
+            </Stack>
           </FormikForm>
         );
       }}

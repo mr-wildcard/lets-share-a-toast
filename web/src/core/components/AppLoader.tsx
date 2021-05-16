@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 import { animated, to, useTransition, config } from "@react-spring/web";
 import { toJS, when } from "mobx";
@@ -105,7 +105,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
   return (
     <>
       {loaderAnimationState !== LoaderAnimationState.LEFT && (
-        <C.Box
+        <Box
           position="fixed"
           top={0}
           right={0}
@@ -122,7 +122,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
           {bgAnimations(({ clipPath }, appIsLoaded) => {
             return (
               !appIsLoaded && (
-                <C.Flex
+                <Flex
                   as={animated.div}
                   align="center"
                   justify="center"
@@ -140,12 +140,12 @@ const AppLoader: FunctionComponent = ({ children }) => {
                   }}
                 >
                   <Loader />
-                  {needToLogin && <C.Button onClick={loggin}>Login</C.Button>}
-                </C.Flex>
+                  {needToLogin && <Button onClick={loggin}>Login</Button>}
+                </Flex>
               )
             );
           })}
-        </C.Box>
+        </Box>
       )}
 
       {appReady && children}

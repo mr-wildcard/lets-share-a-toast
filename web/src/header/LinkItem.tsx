@@ -1,11 +1,11 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { useLocation } from 'react-router';
-import { Link } from 'react-router-dom';
+import React, { FunctionComponent, useEffect, useState } from "react";
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { useLocation } from "react-router";
+import { Link as RouterLink } from "react-router-dom";
 
-import useStores from '@web/core/hooks/useStores';
-import { pageColorsByPathname, Pathnames } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
+import useStores from "@web/core/hooks/useStores";
+import { pageColorsByPathname, Pathnames } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
 
 interface Props {
   href: Pathnames;
@@ -23,8 +23,8 @@ const LinkItem: FunctionComponent<Props> = ({ children, href, bgColor }) => {
 
   useEffect(() => {
     const currentPageBgColor =
-      pageColorsByPathname[pathname as Pathnames | '*'] ||
-      pageColorsByPathname['*'];
+      pageColorsByPathname[pathname as Pathnames | "*"] ||
+      pageColorsByPathname["*"];
 
     ui.currentPageBgColor = hovered ? bgColor : currentPageBgColor;
   }, [bgColor, hovered, pathname, ui]);
@@ -32,8 +32,8 @@ const LinkItem: FunctionComponent<Props> = ({ children, href, bgColor }) => {
   return (
     <>
       {!currentlySelected && (
-        <C.Link
-          as={Link}
+        <ChakraLink
+          as={RouterLink}
           to={href}
           fontWeight="bold"
           fontSize="lg"
@@ -41,7 +41,7 @@ const LinkItem: FunctionComponent<Props> = ({ children, href, bgColor }) => {
           onMouseLeave={() => setHover(false)}
         >
           {children}
-        </C.Link>
+        </ChakraLink>
       )}
 
       {currentlySelected && (

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo } from "react";
-import * as C from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
@@ -22,12 +22,12 @@ const SubjectsList: FunctionComponent<Props> = ({
 }) => {
   const subjectAddButton = useMemo(() => {
     return (
-      <C.Box className="list-item">
+      <Box className="list-item">
         <SubjectAddButton
           onClick={onAddSubject}
           creatingSubject={creatingSubject}
         />
-      </C.Box>
+      </Box>
     );
   }, [creatingSubject, onAddSubject]);
 

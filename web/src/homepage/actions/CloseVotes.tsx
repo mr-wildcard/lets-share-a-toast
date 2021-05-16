@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Button, Flex, Text } from "@chakra-ui/react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import { observer } from "mobx-react-lite";
 
@@ -22,7 +22,7 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   return (
     <>
       {!isSuccess && (
-        <C.Button
+        <Button
           onClick={onClick}
           disabled={isDisabled}
           variant="outline"
@@ -42,14 +42,14 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
             transform="scaleX(-1) rotate(5deg)"
           />
 
-          <C.Text fontWeight="bold" pr="50px">
+          <Text fontWeight="bold" pr="50px">
             Close votes
-          </C.Text>
-        </C.Button>
+          </Text>
+        </Button>
       )}
 
       {isSuccess && (
-        <C.Flex
+        <Flex
           h="100%"
           align="center"
           fontWeight="bold"
@@ -60,7 +60,7 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
         >
           Votes closed
           <CheckCircleIcon ml={3} color="white" boxSize="24px" />
-        </C.Flex>
+        </Flex>
       )}
     </>
   );

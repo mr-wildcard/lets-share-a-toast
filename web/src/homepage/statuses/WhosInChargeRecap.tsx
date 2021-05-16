@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useMemo } from "react";
-import * as C from "@chakra-ui/react";
+import React, { FunctionComponent } from "react";
+import { Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
 
@@ -17,7 +17,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
   const scribeFullname = getUserFullname(toast.scribe);
 
   return (
-    <C.Text fontSize="lg">
+    <Text fontSize="lg">
       Due date:&nbsp;
       <HighlightedText bgColor="orange.300">
         {getFormattedTOASTDateWithRemainingDays(new Date(toast.date))}
@@ -51,7 +51,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
         {scribeFullname}
       </HighlightedText>
       as the scribe.
-    </C.Text>
+    </Text>
   );
 };
 

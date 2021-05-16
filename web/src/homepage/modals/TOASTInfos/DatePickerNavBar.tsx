@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
-import { NavbarElementProps } from 'react-day-picker';
+import React, { FunctionComponent } from "react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
+import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { NavbarElementProps } from "react-day-picker";
 
 const DatePickerNavBar: FunctionComponent<NavbarElementProps> = ({
   showPreviousButton,
@@ -10,8 +10,8 @@ const DatePickerNavBar: FunctionComponent<NavbarElementProps> = ({
   onNextClick,
 }) => {
   return (
-    <C.ButtonGroup d="flex" isAttached size="md" spacing={0}>
-      <C.Button
+    <ButtonGroup d="flex" isAttached size="md" spacing={0}>
+      <Button
         borderRadius={0}
         roundedTopLeft="3px"
         flex={1}
@@ -20,8 +20,8 @@ const DatePickerNavBar: FunctionComponent<NavbarElementProps> = ({
         leftIcon={<ArrowBackIcon />}
       >
         Previous month
-      </C.Button>
-      <C.Button
+      </Button>
+      <Button
         borderRadius={0}
         borderTopRightRadius="3px"
         flex={1}
@@ -30,8 +30,8 @@ const DatePickerNavBar: FunctionComponent<NavbarElementProps> = ({
         rightIcon={<ArrowForwardIcon />}
       >
         Next month
-      </C.Button>
-    </C.ButtonGroup>
+      </Button>
+    </ButtonGroup>
   );
 };
 

@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import { Button } from "@chakra-ui/react";
 
-import Image from '@web/core/components/Image';
-import css from './DeadHeatSubjects.module.css';
+import Image from "@web/core/components/Image";
+import css from "./DeadHeatSubjects.module.css";
 
 interface Props {
   onClick: () => void;
@@ -10,7 +10,7 @@ interface Props {
 
 const DeadHeatSubjects: FunctionComponent<Props> = ({ onClick }) => {
   return (
-    <C.Button
+    <Button
       className={css.button}
       onClick={onClick}
       variant="outline"
@@ -28,11 +28,11 @@ const DeadHeatSubjects: FunctionComponent<Props> = ({ onClick }) => {
         top="-20px"
         right="-20px"
         style={{
-          filter: 'invert(1)',
+          filter: "invert(1)",
         }}
         src="https://media.giphy.com/media/XdUcEiOP7M3n99Rj4L/giphy.gif"
       />
-    </C.Button>
+    </Button>
   );
 };
 

@@ -1,26 +1,18 @@
 import React, { Suspense, useEffect } from "react";
-import {
-  ChakraProvider,
-  CSSReset,
-  useToast,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
+import { ChakraProvider, CSSReset, Flex, Spinner } from "@chakra-ui/react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./core/styles.css";
 import Header from "./header/Header";
-import Home from "./pages/home";
-import Subjects from "./pages/subjects";
-import Votes from "./pages/votes";
-import PageNotFound from "./pages/404";
 import customTheme from "./core/theme";
 import AppLoader from "./core/components/AppLoader";
 import useStores from "./core/hooks/useStores";
+import Home from "@web/pages/home";
+import Subjects from "@web/pages/subjects";
+import Votes from "@web/pages/votes";
+import PageNotFound from "@web/pages/404";
 
 export default function LetsShareATOAST() {
-  const toaster = useToast();
-
   const { ui } = useStores();
 
   useEffect(() => {
@@ -42,11 +34,11 @@ export default function LetsShareATOAST() {
         </Flex>
       }
     >
-      <Router>
-        <ChakraProvider theme={customTheme}>
-          <CSSReset />
+      <ChakraProvider theme={customTheme}>
+        <CSSReset />
 
-          <AppLoader>
+        <AppLoader>
+          <Router>
             <Header />
             <Switch>
               <Route exact path="/" component={Home} />
@@ -54,9 +46,9 @@ export default function LetsShareATOAST() {
               <Route path="/vote" component={Votes} />
               <Route component={PageNotFound} />
             </Switch>
-          </AppLoader>
-        </ChakraProvider>
-      </Router>
+          </Router>
+        </AppLoader>
+      </ChakraProvider>
     </Suspense>
   );
 }

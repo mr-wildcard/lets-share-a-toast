@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 import { pageColors } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
@@ -17,17 +17,17 @@ const Home = () => {
   }, []);
 
   return (
-    <C.Box as="main">
+    <Box as="main">
       <ColoredBackground d="flex" flexDirection="column" p={0}>
-        <C.Flex flex={1} h="100%" direction="column">
-          <C.Box m="auto">
+        <Flex flex={1} h="100%" direction="column">
+          <Box m="auto">
             <TOASTStatus />
-          </C.Box>
+          </Box>
 
           <TOASTActions />
-        </C.Flex>
+        </Flex>
       </ColoredBackground>
-    </C.Box>
+    </Box>
   );
 };
 

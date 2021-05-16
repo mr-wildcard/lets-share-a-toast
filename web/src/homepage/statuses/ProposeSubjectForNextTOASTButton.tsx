@@ -1,9 +1,9 @@
-import React from 'react';
-import * as C from '@chakra-ui/react';
-import { animated, useSpring } from '@react-spring/web';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Button, Image } from "@chakra-ui/react";
+import { animated, useSpring } from "@react-spring/web";
+import { Link } from "react-router-dom";
 
-import { Pathnames } from '@web/core/constants';
+import { Pathnames } from "@web/core/constants";
 
 const ProposeSubjectForNextTOASTButton = () => {
   const anim = useSpring({
@@ -28,7 +28,7 @@ const ProposeSubjectForNextTOASTButton = () => {
   });
 
   return (
-    <C.Button
+    <Button
       to={Pathnames.SUBJECTS}
       as={Link}
       cursor="pointer"
@@ -39,7 +39,7 @@ const ProposeSubjectForNextTOASTButton = () => {
       colorScheme="blue"
     >
       Propose a subject for the next TOAST!
-      <C.Image
+      <Image
         pointerEvents="none"
         as={animated.img}
         position="absolute"
@@ -54,7 +54,7 @@ const ProposeSubjectForNextTOASTButton = () => {
           ),
         }}
       />
-    </C.Button>
+    </Button>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
+
 import { ToastStatus } from "@shared/enums";
 
 import { firebaseData } from "@web/core/firebase/data";
@@ -8,10 +9,9 @@ import { pageColors } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
 import ColoredBackground from "@web/core/components/ColoredBackground";
 import { LoadingState } from "@web/votes/types";
-import LoadingError from "@web/votes/LoadingError";
 import { Subjects } from "@web/votes/Subjects";
 
-const VotingSession = () => {
+const Votes = () => {
   const { ui } = useStores();
 
   const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
@@ -35,9 +35,9 @@ const VotingSession = () => {
   }, []);
 
   return (
-    <C.Box as="main">
+    <Box as="main">
       <ColoredBackground>
-        <C.Flex direction="column">
+        <Flex direction="column">
           {loadingState === null && "Chargement en cours..."}
           {loadingState !== null && (
             <>
@@ -53,10 +53,10 @@ const VotingSession = () => {
               {loadingState === LoadingState.READY && <Subjects />}
             </>
           )}
-        </C.Flex>
+        </Flex>
       </ColoredBackground>
-    </C.Box>
+    </Box>
   );
 };
 
-export default observer(VotingSession);
+export default observer(Votes);

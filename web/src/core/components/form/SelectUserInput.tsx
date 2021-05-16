@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
 import Select, { Props as SelectProps } from "react-select";
 
 import { User } from "@shared/models";

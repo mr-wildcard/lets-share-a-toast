@@ -1,13 +1,13 @@
-import * as C from '@chakra-ui/react';
+import { useDisclosure } from "@chakra-ui/react";
 
 const useActionsModalStates = () => {
-  const toast = C.useDisclosure();
-  const cancelTOAST = C.useDisclosure();
-  const openVotes = C.useDisclosure();
-  const closeVotes = C.useDisclosure();
-  const markTOASTAsReady = C.useDisclosure();
-  const deadHeatSubjects = C.useDisclosure();
-  const endTOAST = C.useDisclosure();
+  const toast = useDisclosure();
+  const cancelTOAST = useDisclosure();
+  const openVotes = useDisclosure();
+  const closeVotes = useDisclosure();
+  const markTOASTAsReady = useDisclosure();
+  const deadHeatSubjects = useDisclosure();
+  const endTOAST = useDisclosure();
 
   return {
     toast,

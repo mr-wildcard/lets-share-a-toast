@@ -1,18 +1,18 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { observer } from 'mobx-react-lite';
+import React, { FunctionComponent } from "react";
+import { Box, BoxProps } from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
 
-import useStores from '@web/core/hooks/useStores';
-import { spacing } from '@web/core/constants';
+import useStores from "@web/core/hooks/useStores";
+import { spacing } from "@web/core/constants";
 
-const ColoredBackground: FunctionComponent<C.BoxProps> = ({
+const ColoredBackground: FunctionComponent<BoxProps> = ({
   children,
   ...boxProps
 }) => {
   const { ui } = useStores();
 
   return (
-    <C.Box
+    <Box
       style={{
         backgroundColor: ui.currentPageBgColor,
         minHeight: `${ui.innerContentHeight}px`,
@@ -24,7 +24,7 @@ const ColoredBackground: FunctionComponent<C.BoxProps> = ({
       {...boxProps}
     >
       {children}
-    </C.Box>
+    </Box>
   );
 };
 

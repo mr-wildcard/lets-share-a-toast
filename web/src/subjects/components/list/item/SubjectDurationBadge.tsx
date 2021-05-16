@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { TimeIcon } from '@chakra-ui/icons';
+import React, { FunctionComponent } from "react";
+import { Badge } from "@chakra-ui/react";
+import { TimeIcon } from "@chakra-ui/icons";
 
 interface Props {
   duration: number;
@@ -8,7 +8,7 @@ interface Props {
 
 const SubjectDurationBadge: FunctionComponent<Props> = ({ duration }) => {
   return (
-    <C.Badge
+    <Badge
       d="flex"
       alignItems="center"
       variant="outline"
@@ -17,7 +17,7 @@ const SubjectDurationBadge: FunctionComponent<Props> = ({ duration }) => {
     >
       <TimeIcon boxSize="10px" mr={1} />
       &nbsp;{duration} mins
-    </C.Badge>
+    </Badge>
   );
 };
 

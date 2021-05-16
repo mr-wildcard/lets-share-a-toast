@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { FunctionComponent } from "react";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 interface Props {
   creatingSubject: boolean;
@@ -15,7 +15,7 @@ const SubjectAddButton: FunctionComponent<Props> = ({
   onClick,
 }) => {
   return (
-    <C.Button
+    <Button
       position="relative"
       variant="outline"
       colorScheme="gray"
@@ -40,18 +40,18 @@ const SubjectAddButton: FunctionComponent<Props> = ({
         />
       )}
 
-      <C.Flex
-        as={C.Text}
+      <Flex
+        as={Text}
         align="center"
         m={0}
-        visibility={creatingSubject ? 'hidden' : 'visible'}
+        visibility={creatingSubject ? "hidden" : "visible"}
       >
-        <C.Text as="span" pr={3}>
+        <Text as="span" pr={3}>
           <FontAwesomeIcon icon={faPlus} size="2x" />
-        </C.Text>
-        <C.Text as="span">Add your subject</C.Text>
-      </C.Flex>
-    </C.Button>
+        </Text>
+        <Text as="span">Add your subject</Text>
+      </Flex>
+    </Button>
   );
 };
 

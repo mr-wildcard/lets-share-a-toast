@@ -1,21 +1,18 @@
 import React, { useMemo } from "react";
 import { observer } from "mobx-react-lite";
-import * as C from "@chakra-ui/react";
+import { Spinner, useTheme } from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
-import { CurrentToast, Toast } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
-import isToast from "@web/core/helpers/isToast";
 import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
-import useStores from "@web/core/hooks/useStores";
 
 const lazyLoadConfig = {
   loading: function Loader() {
-    const theme = C.useTheme();
+    const theme = useTheme();
 
     return (
-      <C.Spinner
+      <Spinner
         thickness="4px"
         speed="0.65s"
         emptyColor={theme.colors.gray["800"]}

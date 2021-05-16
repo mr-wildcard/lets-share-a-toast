@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { Toast } from "@shared/models";
@@ -13,12 +13,12 @@ interface Props {
 
 const TOASTDateHasPassed: FunctionComponent<Props> = ({ toast }) => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={10}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={10}>
         Last TOAST was {getTOASTElapsedTimeSinceCreation(new Date(toast.date))}.
-      </C.Text>
+      </Text>
 
-      <C.Button
+      <Button
         to={Pathnames.SUBJECTS}
         as={Link}
         cursor="pointer"
@@ -28,8 +28,8 @@ const TOASTDateHasPassed: FunctionComponent<Props> = ({ toast }) => {
         colorScheme="blue"
       >
         Propose a subject for the next TOAST!
-      </C.Button>
-    </C.Box>
+      </Button>
+    </Box>
   );
 };
 

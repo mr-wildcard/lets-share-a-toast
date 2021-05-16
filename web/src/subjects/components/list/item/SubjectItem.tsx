@@ -6,7 +6,18 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  ButtonGroup,
+  Divider,
+  Flex,
+  IconButton,
+  Spinner,
+  Text,
+  useDisclosure,
+  useTheme,
+} from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
@@ -40,9 +51,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     !!currentToast &&
     subjectIsInVotingSession(currentToast.status, subject.status);
 
-  const theme = C.useTheme();
-  const viewModal = C.useDisclosure();
-  const deleteModal = C.useDisclosure();
+  const theme = useTheme();
+  const viewModal = useDisclosure();
+  const deleteModal = useDisclosure();
 
   const [contextualMenuOpened, setContextualMenuOpened] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -105,9 +116,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           key="item-status-available"
         >
           Mark as&nbsp;
-          <C.Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
+          <Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
             AVAILABLE
-          </C.Badge>
+          </Badge>
         </ContextMenuItem>
       );
     }
@@ -119,9 +130,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           key="item-status-unavailable"
         >
           Mark as&nbsp;
-          <C.Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
+          <Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
             UNAVAILABLE
-          </C.Badge>
+          </Badge>
         </ContextMenuItem>
       );
     }
@@ -133,9 +144,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           key="item-status-done"
         >
           Mark as&nbsp;
-          <C.Badge variant="solid" m="1px 0 0 5px">
+          <Badge variant="solid" m="1px 0 0 5px">
             ALREADY GIVEN
-          </C.Badge>
+          </Badge>
         </ContextMenuItem>
       );
     }
@@ -157,9 +168,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
   }, [subject]);
 
   return (
-    <C.Box className="list-item">
+    <Box className="list-item">
       <ContextMenuTrigger id={`subject-${subject.id}`}>
-        <C.Box
+        <Box
           className={css.subjectItem}
           position="relative"
           boxShadow="sm"
@@ -172,7 +183,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
               : theme.colors.white,
           }}
         >
-          <C.Box
+          <Box
             p={contextualMenuOpened ? "15px" : "20px"}
             borderWidth={contextualMenuOpened ? "5px" : 0}
             borderColor={theme.colors.cyan["400"]}
@@ -193,62 +204,58 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
               />
             )}
 
-            <C.Box mb={2}>
-              <C.Text fontSize="xl" fontWeight="bold">
+            <Box mb={2}>
+              <Text fontSize="xl" fontWeight="bold">
                 {subject.title}
-              </C.Text>
-            </C.Box>
+              </Text>
+            </Box>
 
-            <C.Box>
+            <Box>
               <SubjectSpeakers speakers={subject.speakers} />
-            </C.Box>
+            </Box>
 
-            <C.Divider
-              mt="30px"
-              mb={3}
-              borderColor={theme.colors.gray["300"]}
-            />
+            <Divider mt="30px" mb={3} borderColor={theme.colors.gray["300"]} />
 
-            <C.Flex align="center">
+            <Flex align="center">
               {subjectIsNew && subject.status !== SubjectStatus.DONE && (
                 <>
                   <SubjectNewBadge />
-                  <C.Box as="span" px={2}>
+                  <Box as="span" px={2}>
                     &bull;
-                  </C.Box>
+                  </Box>
                 </>
               )}
 
               <SubjectStatusBadge status={subject.status} />
 
-              <C.Box ml="auto" className={css.actions} opacity={0}>
-                <C.ButtonGroup isAttached variant="outline" size="sm">
-                  <C.IconButton
+              <Box ml="auto" className={css.actions} opacity={0}>
+                <ButtonGroup isAttached variant="outline" size="sm">
+                  <IconButton
                     icon={<ViewIcon />}
                     onClick={viewModal.onOpen}
                     mr="-1px"
                     title="View"
                     aria-label="View"
                   />
-                  <C.IconButton
+                  <IconButton
                     icon={<EditIcon />}
                     onClick={() => onEditSubject(subject)}
                     mr="-1px"
                     title="Edit"
                     aria-label="Edit"
                   />
-                  <C.IconButton
+                  <IconButton
                     icon={<DeleteIcon />}
                     onClick={deleteModal.onOpen}
                     title="Delete"
                     aria-label="Delete"
                   />
-                </C.ButtonGroup>
-              </C.Box>
-            </C.Flex>
+                </ButtonGroup>
+              </Box>
+            </Flex>
 
             {loading && (
-              <C.Flex
+              <Flex
                 className={css.loader}
                 align="center"
                 justify="center"
@@ -259,14 +266,14 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
                 h="100%"
                 zIndex={1}
               >
-                <C.Spinner />
-              </C.Flex>
+                <Spinner />
+              </Flex>
             )}
-          </C.Box>
-        </C.Box>
+          </Box>
+        </Box>
       </ContextMenuTrigger>
 
-      <C.Box
+      <Box
         borderRadius={4}
         boxShadow="lg"
         bg="white"
@@ -281,12 +288,12 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           contextMenuStatusOptions.length > 0 && (
             <>
               {contextMenuStatusOptions}
-              <C.Divider />
+              <Divider />
             </>
           )}
 
         <MenuItem onClick={() => onEditSubject(subject)}>
-          <C.Box
+          <Box
             d="flex"
             alignItems="center"
             cursor="pointer"
@@ -297,11 +304,11 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             px={3}
           >
             <EditIcon mr={3} />
-            <C.Text fontWeight="bold">Edit</C.Text>
-          </C.Box>
+            <Text fontWeight="bold">Edit</Text>
+          </Box>
         </MenuItem>
         <MenuItem onClick={deleteModal.onOpen}>
-          <C.Box
+          <Box
             d="flex"
             alignItems="center"
             cursor="pointer"
@@ -312,10 +319,10 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             px={3}
           >
             <DeleteIcon mr={3} />
-            <C.Text fontWeight="bold">Delete</C.Text>
-          </C.Box>
+            <Text fontWeight="bold">Delete</Text>
+          </Box>
         </MenuItem>
-      </C.Box>
+      </Box>
 
       {deleteModal.isOpen && (
         <DeleteSubjectModal
@@ -328,7 +335,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
       {viewModal.isOpen && (
         <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
       )}
-    </C.Box>
+    </Box>
   );
 };
 

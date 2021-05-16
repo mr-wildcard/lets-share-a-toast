@@ -1,9 +1,7 @@
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Drawer, DrawerContent, DrawerOverlay } from "@chakra-ui/react";
 
-import { CurrentToast, Subject, User } from "@shared/models";
-
-import { pageColors } from "@web/core/constants";
+import { Subject } from "@shared/models";
 
 interface Props {
   subject?: Subject;
@@ -15,18 +13,18 @@ const Form = React.lazy(
   () => import("./Form" /* webpackChunkName: "subject-form" */)
   /*{
     loading: function Loader() {
-      const theme = C.useTheme();
+      const theme = useTheme();
 
       return (
-        <C.Flex h="100%" justifyContent="center" alignItems="center">
-          <C.Spinner
+        <Flex h="100%" justifyContent="center" alignItems="center">
+          <Spinner
             thickness="4px"
             speed="0.65s"
             emptyColor={theme.colors.gray['800']}
             color={pageColors.subjects}
             size="xl"
           />
-        </C.Flex>
+        </Flex>
       );
     },
   }
@@ -39,19 +37,19 @@ const SubjectForm: FunctionComponent<Props> = ({
   isOpen,
 }) => {
   return (
-    <C.Drawer
+    <Drawer
       isOpen={isOpen}
       onClose={closeForm}
       placement="right"
       size="xl"
       closeOnEsc={true}
     >
-      <C.DrawerOverlay>
-        <C.DrawerContent overflowY="auto">
+      <DrawerOverlay>
+        <DrawerContent overflowY="auto">
           <Form subject={subject} closeForm={closeForm} />
-        </C.DrawerContent>
-      </C.DrawerOverlay>
-    </C.Drawer>
+        </DrawerContent>
+      </DrawerOverlay>
+    </Drawer>
   );
 };
 

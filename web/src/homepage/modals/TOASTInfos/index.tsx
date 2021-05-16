@@ -1,5 +1,12 @@
 import React, { FunctionComponent, useRef } from "react";
-import * as C from "@chakra-ui/react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+} from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { CurrentToast } from "@shared/models";
@@ -7,7 +14,6 @@ import { CurrentToast } from "@shared/models";
 import { firebaseData } from "@web/core/firebase/data";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
-import isToast from "@web/core/helpers/isToast";
 import { pageColors } from "@web/core/constants";
 
 interface Props {
@@ -21,9 +27,9 @@ const Form = React.lazy(
   {
     loading: function Loader() {
       return (
-        <C.Flex my={10} align="center" justify="center">
-          <C.Spinner />
-        </C.Flex>
+        <Flex my={10} align="center" justify="center">
+          <Spinner />
+        </Flex>
       );
     },
   }
@@ -36,7 +42,7 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   const isCreatingToast = firebaseData.currentToast === null;
 
   return (
-    <C.Modal
+    <Modal
       onClose={() => props.closeModal(false)}
       initialFocusRef={cancelButtonRef}
       isOpen={props.isOpen}
@@ -44,10 +50,10 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
       size="lg"
       isCentered
     >
-      <C.ModalOverlay>
-        <C.ModalContent borderRadius="3px">
-          <C.ModalHeader textAlign="center">
-            <C.Text position="relative">
+      <ModalOverlay>
+        <ModalContent borderRadius="3px">
+          <ModalHeader textAlign="center">
+            <Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
                 {isCreatingToast ? "Start a new TOAST" : "Edit current TOAST"}
               </HighlightedText>
@@ -59,18 +65,18 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
                 height={100}
                 src="https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp"
               />
-            </C.Text>
-          </C.ModalHeader>
-          <C.ModalBody pb={6}>
+            </Text>
+          </ModalHeader>
+          <ModalBody pb={6}>
             <Form
               currentToast={firebaseData.currentToast as CurrentToast}
               closeModal={props.closeModal}
               cancelButtonRef={cancelButtonRef}
             />
-          </C.ModalBody>
-        </C.ModalContent>
-      </C.ModalOverlay>
-    </C.Modal>
+          </ModalBody>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

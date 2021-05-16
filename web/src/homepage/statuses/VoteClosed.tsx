@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { FunctionComponent } from "react";
-import * as C from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
 
@@ -16,18 +16,18 @@ interface Props {
 
 const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={5}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={5}>
         TOAST is coming&nbsp;
         {getTOASTElapsedTimeSinceCreation(toast.date)} !
-      </C.Text>
+      </Text>
 
-      <C.Box my={5}>
+      <Box my={5}>
         <WhosInChargeRecap toast={toast} />
-      </C.Box>
+      </Box>
 
       {toastHasDeadheatSubjects(toast) && (
-        <C.Box my={5}>
+        <Box my={5}>
           <Image
             mx="auto"
             mb={3}
@@ -35,20 +35,20 @@ const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
             height={100}
             src="https://media.giphy.com/media/Ve5vfhwsox2G3bJ44O/giphy.gif"
           />
-          <C.Text fontSize="lg">
+          <Text fontSize="lg">
             Voting session ended with more than {toast.maxSelectableSubjects}
             &nbsp; subjects. <br />
             Go to TOAST management below to settle this.
-          </C.Text>
-        </C.Box>
+          </Text>
+        </Box>
       )}
 
       {!toastHasDeadheatSubjects(toast) && (
-        <C.Box mt={5}>
+        <Box mt={5}>
           <ProposeSubjectForNextTOASTButton />
-        </C.Box>
+        </Box>
       )}
-    </C.Box>
+    </Box>
   );
 });
 
