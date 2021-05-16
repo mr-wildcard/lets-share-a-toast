@@ -17,7 +17,7 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   const { votingSession } = firebaseData;
 
   const isDisabled =
-    !!votingSession && !votingSessionHasAtLeastOneVote(votingSession);
+    !votingSession || !votingSessionHasAtLeastOneVote(votingSession);
 
   return (
     <>
