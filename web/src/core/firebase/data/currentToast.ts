@@ -15,7 +15,7 @@ firebase
         date,
         createdDate,
         modifiedDate,
-        selectedSubjectIds = [],
+        selectedSubjectsIds = [],
         ...restOfCurrentTOASTProps
       } = currentToast;
 
@@ -30,7 +30,7 @@ firebase
         scribe: firebaseData.users.find(
           (user) => user.id === currentToast.scribeId
         )!,
-        selectedSubjects: selectedSubjectIds.map(
+        selectedSubjects: selectedSubjectsIds.map(
           (selectedSubjectId) =>
             firebaseData.subjects.find(
               (subject) => subject.id === selectedSubjectId

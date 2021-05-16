@@ -8,7 +8,7 @@ export interface DatabaseToast {
   scribeId: string;
   status: ToastStatus;
   maxSelectableSubjects: number;
-  selectedSubjectIds?: string[];
+  selectedSubjectsIds?: string[];
   subjects?: string[];
   votes?: SubjectsTotalVotes;
   createdByUserId?: string;

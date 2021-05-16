@@ -10,7 +10,7 @@ type TOASTWithoutFirebaseProperties = Omit<
   | "date"
   | "createdDate"
   | "modifiedDate"
-  | "selectedSubjectIds"
+  | "selectedSubjectsIds"
 >;
 
 export interface Toast extends TOASTWithoutFirebaseProperties {

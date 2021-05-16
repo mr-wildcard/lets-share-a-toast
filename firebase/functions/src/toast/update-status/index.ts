@@ -128,7 +128,7 @@ export const closeVotes = functions.https.onCall(async () => {
 
   for (let i = 0; i < allSortedTotalVotes.length; i++) {
     /**
-     * If `selectedSubjectIds` array was filled with enough subject ids
+     * If `selectedSubjectsIds` array was filled with enough subject ids
      * during the previous loop, we don't need to iterate further.
      */
     if (selectedSubjectsIds.length >= maxSelectableSubjects) {
@@ -158,7 +158,7 @@ export const closeVotes = functions.https.onCall(async () => {
    */
   const updates = {
     status: ToastStatus.VOTE_CLOSED,
-    "/selectedSubjectIds": selectedSubjectsIds,
+    "/selectedSubjectsIds": selectedSubjectsIds,
     "/votes": allSubjectsVotes.reduce(
       (
         subjectsTotalVotes: SubjectsTotalVotes,
