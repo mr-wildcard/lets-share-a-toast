@@ -7,8 +7,10 @@ import ColoredBackground from "@web/core/components/ColoredBackground";
 import Image from "@web/core/components/Image";
 import HighlightedText from "@web/core/components/HighlightedText";
 
-const Custom404Page = () => {
+const PageNotFound = () => {
   const theme = C.useTheme();
+
+  const { ui } = useStores();
 
   useEffect(() => {
     ui.currentPageBgColor = theme.colors.purple["400"];
@@ -55,4 +57,4 @@ const Custom404Page = () => {
   );
 };
 
-export default observer(Custom404Page);
+export default observer(PageNotFound);

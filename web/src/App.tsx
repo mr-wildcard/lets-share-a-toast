@@ -1,4 +1,4 @@
-import React, { Suspense, FunctionComponent, useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   ChakraProvider,
   CSSReset,
@@ -6,7 +6,6 @@ import {
   Flex,
   Spinner,
 } from "@chakra-ui/react";
-import { SWRConfig } from "swr";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./core/styles.css";
@@ -14,8 +13,8 @@ import Header from "./header/Header";
 import Home from "./pages/home";
 import Subjects from "./pages/subjects";
 import Votes from "./pages/votes";
+import PageNotFound from "./pages/404";
 import customTheme from "./core/theme";
-import http from "./core/httpClient";
 import AppLoader from "./core/components/AppLoader";
 import useStores from "./core/hooks/useStores";
 
@@ -53,6 +52,7 @@ export default function LetsShareATOAST() {
               <Route exact path="/" component={Home} />
               <Route path="/subjects" component={Subjects} />
               <Route path="/vote" component={Votes} />
+              <Route component={PageNotFound} />
             </Switch>
           </AppLoader>
         </ChakraProvider>
