@@ -12,16 +12,11 @@ import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { observer } from "mobx-react-lite";
 
-import { SubjectStatus, ToastStatus } from "@shared/enums";
+import { SubjectStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
+import { Subject } from "@shared/models";
 
-import { Subject, User } from "@shared/models";
 import { firebaseData } from "@web/core/firebase/data";
-import http from "@web/core/httpClient";
-import { APIPaths } from "@web/core/constants";
-import useStores from "@web/core/hooks/useStores";
-import isToast from "@web/core/helpers/isToast";
-import NotificationType from "@web/notifications/types/NotificationType";
 import Image from "@web/core/components/Image";
 import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectModal";
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";

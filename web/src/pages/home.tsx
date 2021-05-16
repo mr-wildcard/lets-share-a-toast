@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import * as C from "@chakra-ui/react";
 
-import { firebaseData } from "@web/core/firebase/data";
-import { APIPaths, pageColors } from "@web/core/constants";
+import { pageColors } from "@web/core/constants";
 import useStores from "@web/core/hooks/useStores";
 import TOASTActions from "@web/homepage/TOASTActions";
 import TOASTStatus from "@web/homepage/TOASTStatus";

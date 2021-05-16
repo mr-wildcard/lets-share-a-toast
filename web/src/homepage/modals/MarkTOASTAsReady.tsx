@@ -7,16 +7,12 @@ import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
 
 import { DatabaseRefPaths } from "@shared/firebase";
-import { APIPaths, pageColors } from "@web/core/constants";
+import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getTOASTIsReadySlackMessage } from "@web/homepage/helpers";
-import http from "@web/core/httpClient";
-import NotificationType from "@web/notifications/types/NotificationType";
-import useStores from "@web/core/hooks/useStores";
 import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
 import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
-import getAPIEndpointWithSlackNotification from "@web/core/helpers/getAPIEndpointWithSlackNotification";
 
 interface FormErrors {
   notificationMessage?: boolean;

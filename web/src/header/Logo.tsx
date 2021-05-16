@@ -1,13 +1,13 @@
-import React from 'react';
-import * as C from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router';
+import React from "react";
+import * as C from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
 
-import { customFonts, Pathnames } from '@web/core/constants';
-import css from './Logo.module.css';
+import { customFonts, Pathnames } from "@web/core/constants";
+import css from "./Logo.module.css";
 
 const baseProps = {
-  fontFamily: customFonts.logo,
+  fontFamily: '"Kaushan Script", cursive',
 };
 
 const Content = () => (
@@ -49,15 +49,15 @@ const Logo = () => {
         _after={{
           // @ts-ignore
           content: `""`,
-          position: 'absolute',
-          bottom: '-2px',
-          height: '2px',
-          width: '100%',
+          position: "absolute",
+          bottom: "-2px",
+          height: "2px",
+          width: "100%",
           left: 0,
-          transition: 'transform 500ms cubic-bezier(1, 0, 0, 1)',
-          backgroundColor: 'black',
-          transformOrigin: '50% 50%',
-          transform: 'scaleX(0)',
+          transition: "transform 500ms cubic-bezier(1, 0, 0, 1)",
+          backgroundColor: "black",
+          transformOrigin: "50% 50%",
+          transform: "scaleX(0)",
         }}
       >
         <Content />
