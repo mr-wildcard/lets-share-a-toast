@@ -73,15 +73,14 @@ export function DeadHeatSubjectsModal({
 
             return errors;
           }}
-          onSubmit={async (values: FormValues): Promise<void> => {
+          onSubmit={async (
+            values: FormValues
+          ): Promise<firebase.functions.HttpsCallableResult> => {
             return firebase
               .functions()
               .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
-                selectedSubjectsIds: values.selectedSubjectsIds,
-              })
-              .then(() => {
-                closeModal();
-              });
+              selectedSubjectsIds: values.selectedSubjectsIds,
+            });
 
             /* TODO: activate notifications
             notifications.send(
@@ -158,7 +157,8 @@ export function DeadHeatSubjectsModal({
 
                               return (
                                 <C.Box
-                                  as="button"
+                                  as={C.Button}
+                                  type="button"
                                   key={`subject-${subject.id}`}
                                   p={3}
                                   borderRadius="md"
