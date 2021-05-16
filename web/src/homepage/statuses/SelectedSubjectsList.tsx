@@ -14,7 +14,6 @@ const SelectedSubjectsList: FunctionComponent<Props> = ({
 }) => {
   return (
     <C.List fontSize="lg" fontWeight="normal">
-      {/* TODO: handle selected subjects */}
       {selectedSubjects.map((subject, index) => (
         <C.ListItem key={`subject-${subject.id}-${index}`}>
           &quot;
