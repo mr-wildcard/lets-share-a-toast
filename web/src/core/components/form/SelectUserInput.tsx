@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import Select, { Props as SelectProps } from "react-select";
+import { Avatar, Stack, Text, useTheme } from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 
@@ -14,7 +15,7 @@ const SelectUserInput: FunctionComponent<Props> = ({
   isInvalid,
   ...props
 }) => {
-  const { space, colors } = C.useTheme();
+  const { space, colors } = useTheme();
 
   return (
     <Select
@@ -26,14 +27,14 @@ const SelectUserInput: FunctionComponent<Props> = ({
       getOptionValue={(user: User) => user.id}
       getOptionLabel={(user: User) => getUserFullname(user)}
       formatOptionLabel={(user: User) => (
-        <C.Stack align="center" spacing={2} direction="row">
-          <C.Avatar
+        <Stack align="center" spacing={2} direction="row">
+          <Avatar
             size="xs"
             name={getUserFullname(user)}
             src={user.photoURL || undefined}
           />
-          <C.Text as="span">{getUserFullname(user)}</C.Text>
-        </C.Stack>
+          <Text as="span">{getUserFullname(user)}</Text>
+        </Stack>
       )}
       styles={{
         control: (baseStyles) => ({
