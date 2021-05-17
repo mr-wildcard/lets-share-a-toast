@@ -7,10 +7,11 @@ import Header from "./header/Header";
 import customTheme from "./core/theme";
 import AppLoader from "./core/components/AppLoader";
 import useStores from "./core/hooks/useStores";
-import Home from "@web/pages/home";
-import Subjects from "@web/pages/subjects";
-import Votes from "@web/pages/votes";
-import PageNotFound from "@web/pages/404";
+
+const Home = React.lazy(() => import("./pages/home"));
+const Subjects = React.lazy(() => import("./pages/subjects"));
+const Votes = React.lazy(() => import("./pages/votes"));
+const PageNotFound = React.lazy(() => import("./pages/404"));
 
 export default function LetsShareATOAST() {
   const { ui } = useStores();
