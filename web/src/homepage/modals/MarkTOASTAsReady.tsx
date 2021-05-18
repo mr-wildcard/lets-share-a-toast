@@ -23,8 +23,8 @@ import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getTOASTIsReadySlackMessage } from "@web/homepage/helpers";
-import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
-import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
+import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -80,40 +80,20 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
             validate={(values: FormValues) => {
               const errors: FormErrors = {};
 
-              if (!slackNotificationFieldsAreValid(values)) {
+              if (!validateSlackNotificationField(values)) {
                 errors.notificationMessage = true;
               }
 
               return errors;
             }}
-            onSubmit={(values) => {
-              /* TODO: Handle Slack
-              const endpoint = values.notifySlack
-                ? getAPIEndpointWithSlackNotification(
-                    APIPaths.TOAST_CURRENT_STATUS,
-                    values.notificationMessage
-                  )
-                : APIPaths.TOAST_CURRENT_STATUS;
-              */
+            onSubmit={() => {
+              // TODO: Handle Slack
 
               return firebase
                 .database()
                 .ref(DatabaseRefPaths.CURRENT_TOAST)
                 .child("status")
-                .set(ToastStatus.WAITING_FOR_TOAST)
-                .then(() => {
-                  closeModal();
-                });
-
-              /* TODO: Handle notifications
-              notifications.send(
-                auth.profile,
-                NotificationType.EDIT_TOAST_STATUS,
-                {
-                  status: ToastStatus.WAITING_FOR_TOAST,
-                }
-              );
-              */
+                .set(ToastStatus.WAITING_FOR_TOAST);
             }}
           >
             {({ values, isSubmitting, isValid }) => (

@@ -88,25 +88,12 @@ export function DeadHeatSubjectsModal({
 
             return errors;
           }}
-          onSubmit={async (
-            values: FormValues
-          ): Promise<firebase.functions.HttpsCallableResult> => {
+          onSubmit={async (values: FormValues) => {
             return firebase
               .functions()
               .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
               selectedSubjectsIds: values.selectedSubjectsIds,
             });
-
-            /* TODO: activate notifications
-            notifications.send(
-              // @ts-ignore
-              auth.profile,
-              NotificationType.EDIT_TOAST_STATUS,
-              {
-                status: ToastStatus.WAITING_FOR_TOAST,
-              }
-            );
-            */
           }}
         >
           {({

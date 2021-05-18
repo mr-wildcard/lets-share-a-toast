@@ -45,8 +45,6 @@ const EndTOAST: FunctionComponent<Props> = ({
   isOpen,
   closeModal,
 }) => {
-  const [endingTOAST, setEndingTOAST] = useState(false);
-
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
@@ -77,20 +75,7 @@ const EndTOAST: FunctionComponent<Props> = ({
               .database()
               .ref(DatabaseRefPaths.CURRENT_TOAST)
               .child("status")
-              .set(ToastStatus.CLOSED)
-              .then(() => {
-                closeModal();
-              });
-
-            /*
-              notifications.send(
-                auth.profile,
-                NotificationType.EDIT_TOAST_STATUS,
-                {
-                  status: ToastStatus.CLOSED,
-                }
-              );
-              */
+              .set(ToastStatus.CLOSED);
           }}
         >
           {({

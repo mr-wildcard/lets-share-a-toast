@@ -38,19 +38,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
     setCancelling(true);
 
     try {
-      await firebase
-        .database()
-        .ref(DatabaseRefPaths.CURRENT_TOAST)
-        .set(null)
-        .then(() => {
-          closeModal();
-        });
-
-      /* TODO: handle notifications
-      notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
-        status: ToastStatus.CANCELLED,
-      });
-      */
+      await firebase.database().ref(DatabaseRefPaths.CURRENT_TOAST).set(null);
     } catch (error) {
       console.error("An error occured while canceling TOAST", { error });
 

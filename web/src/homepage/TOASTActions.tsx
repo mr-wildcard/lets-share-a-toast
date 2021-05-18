@@ -184,14 +184,6 @@ const TOASTActions = () => {
                     isSuccess={buttonsStates.openVotes.isSuccess}
                     onClick={modalsStates.openVotes.onOpen}
                   />
-
-                  {!buttonsStates.openVotes.isSuccess && (
-                    <OpenVotesModal
-                      currentToast={currentToast}
-                      isOpen={modalsStates.openVotes.isOpen}
-                      closeModal={modalsStates.openVotes.onClose}
-                    />
-                  )}
                 </Box>
 
                 {buttonsStates.closeVotes.display && (
@@ -202,14 +194,6 @@ const TOASTActions = () => {
                       isSuccess={buttonsStates.closeVotes.isSuccess}
                       onClick={modalsStates.closeVotes.onOpen}
                     />
-
-                    {!buttonsStates.closeVotes.isSuccess && (
-                      <CloseVotesModal
-                        currentToast={currentToast}
-                        isOpen={modalsStates.closeVotes.isOpen}
-                        closeModal={modalsStates.closeVotes.onClose}
-                      />
-                    )}
                   </Box>
                 )}
 
@@ -218,12 +202,6 @@ const TOASTActions = () => {
                     <DeadHeatSubjects
                       onClick={modalsStates.deadHeatSubjects.onOpen}
                     />
-
-                    <DeadHeatSubjectsModal
-                      currentToast={currentToast}
-                      isOpen={modalsStates.deadHeatSubjects.isOpen}
-                      closeModal={modalsStates.deadHeatSubjects.onClose}
-                    />
                   </Box>
                 )}
 
@@ -231,12 +209,6 @@ const TOASTActions = () => {
                   <Box ml="30px">
                     <MarkTOASTAsReady
                       onClick={modalsStates.markTOASTAsReady.onOpen}
-                    />
-
-                    <MarkTOASTAsReadyModal
-                      currentToast={currentToast}
-                      isOpen={modalsStates.markTOASTAsReady.isOpen}
-                      closeModal={modalsStates.markTOASTAsReady.onClose}
                     />
                   </Box>
                 )}
@@ -247,14 +219,38 @@ const TOASTActions = () => {
                       currentToast={currentToast}
                       onClick={modalsStates.endTOAST.onOpen}
                     />
-
-                    <EndTOASTModal
-                      currentToast={currentToast}
-                      isOpen={modalsStates.endTOAST.isOpen}
-                      closeModal={modalsStates.endTOAST.onClose}
-                    />
                   </Box>
                 )}
+
+                <OpenVotesModal
+                  currentToast={currentToast}
+                  isOpen={modalsStates.openVotes.isOpen}
+                  closeModal={modalsStates.openVotes.onClose}
+                />
+
+                <CloseVotesModal
+                  currentToast={currentToast}
+                  isOpen={modalsStates.closeVotes.isOpen}
+                  closeModal={modalsStates.closeVotes.onClose}
+                />
+
+                <DeadHeatSubjectsModal
+                  currentToast={currentToast}
+                  isOpen={modalsStates.deadHeatSubjects.isOpen}
+                  closeModal={modalsStates.deadHeatSubjects.onClose}
+                />
+
+                <MarkTOASTAsReadyModal
+                  currentToast={currentToast}
+                  isOpen={modalsStates.markTOASTAsReady.isOpen}
+                  closeModal={modalsStates.markTOASTAsReady.onClose}
+                />
+
+                <EndTOASTModal
+                  currentToast={currentToast}
+                  isOpen={modalsStates.endTOAST.isOpen}
+                  closeModal={modalsStates.endTOAST.onClose}
+                />
 
                 <CancelTOASTModal
                   currentToast={currentToast}

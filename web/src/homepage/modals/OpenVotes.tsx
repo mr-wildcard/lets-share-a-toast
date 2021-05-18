@@ -29,8 +29,8 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import getAppURL from "@web/core/helpers/getAppURL";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
-import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
-import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
+import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
 
 interface FormErrors {
   notificationMessage?: boolean;
@@ -88,41 +88,20 @@ const OpenVotes: FunctionComponent<Props> = ({
               validate={(values: FormValues) => {
                 const errors: FormErrors = {};
 
-                if (!slackNotificationFieldsAreValid(values)) {
+                if (!validateSlackNotificationField(values)) {
                   errors.notificationMessage = true;
                 }
 
                 return errors;
               }}
               onSubmit={async (values): Promise<void> => {
-                /* TODO: handle slack
-                const endpoint = values.notifySlack
-                  ? getAPIEndpointWithSlackNotification(
-                      APIPaths.TOAST_CURRENT_STATUS,
-                      values.notificationMessage
-                    )
-                  : APIPaths.TOAST_CURRENT_STATUS;
-                */
+                // TODO: handle slack
 
                 return firebase
                   .database()
                   .ref(DatabaseRefPaths.CURRENT_TOAST)
                   .child("status")
-                  .set(ToastStatus.OPEN_FOR_VOTE)
-                  .then(() => {
-                    closeModal();
-                  });
-
-                /*
-                notifications.send(
-                  // @ts-ignore
-                  auth.profile,
-                  NotificationType.EDIT_TOAST_STATUS,
-                  {
-                    status: ToastStatus.OPEN_FOR_VOTE,
-                  }
-                );
-                 */
+                  .set(ToastStatus.OPEN_FOR_VOTE);
               }}
             >
               {({ values, isSubmitting, isValid }) => (

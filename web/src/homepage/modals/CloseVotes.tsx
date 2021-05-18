@@ -43,17 +43,13 @@ const CloseVotes: FunctionComponent<Props> = ({
 
     try {
       await firebase.functions().httpsCallable(CloudFunctionName.CLOSE_VOTES)();
+
+      // TODO: Handle slack
     } catch (error) {
       console.error("Couldn't close the TOAST", { error });
 
       setClosingVotes(false);
     }
-
-    /*
-      notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
-        status: ToastStatus.VOTE_CLOSED,
-      });
-      */
   }, []);
 
   return (
