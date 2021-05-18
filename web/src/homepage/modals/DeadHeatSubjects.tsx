@@ -92,8 +92,9 @@ export function DeadHeatSubjectsModal({
             return firebase
               .functions()
               .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
-              selectedSubjectsIds: values.selectedSubjectsIds,
-            });
+                selectedSubjectsIds: values.selectedSubjectsIds,
+              })
+              .then(closeModal);
           }}
         >
           {({

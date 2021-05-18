@@ -75,7 +75,8 @@ const EndTOAST: FunctionComponent<Props> = ({
               .database()
               .ref(DatabaseRefPaths.CURRENT_TOAST)
               .child("status")
-              .set(ToastStatus.CLOSED);
+              .set(ToastStatus.CLOSED)
+              .then(closeModal);
           }}
         >
           {({

@@ -38,7 +38,13 @@ const CancelTOAST: FunctionComponent<Props> = ({
     setCancelling(true);
 
     try {
-      await firebase.database().ref(DatabaseRefPaths.CURRENT_TOAST).set(null);
+      await firebase
+        .database()
+        .ref(DatabaseRefPaths.CURRENT_TOAST)
+        .set(null)
+        .then(() => {
+          closeModal();
+        });
     } catch (error) {
       console.error("An error occured while canceling TOAST", { error });
 

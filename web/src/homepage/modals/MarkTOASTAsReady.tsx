@@ -93,7 +93,8 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                 .database()
                 .ref(DatabaseRefPaths.CURRENT_TOAST)
                 .child("status")
-                .set(ToastStatus.WAITING_FOR_TOAST);
+                .set(ToastStatus.WAITING_FOR_TOAST)
+                .then(closeModal);
             }}
           >
             {({ values, isSubmitting, isValid }) => (

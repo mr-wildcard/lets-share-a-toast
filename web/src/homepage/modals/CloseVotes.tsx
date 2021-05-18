@@ -42,7 +42,10 @@ const CloseVotes: FunctionComponent<Props> = ({
     setClosingVotes(true);
 
     try {
-      await firebase.functions().httpsCallable(CloudFunctionName.CLOSE_VOTES)();
+      await firebase
+        .functions()
+        .httpsCallable(CloudFunctionName.CLOSE_VOTES)()
+        .then(closeModal);
 
       // TODO: Handle slack
     } catch (error) {

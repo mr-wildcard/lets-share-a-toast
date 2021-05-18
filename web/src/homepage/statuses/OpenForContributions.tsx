@@ -43,7 +43,7 @@ const OpenForContributions: FunctionComponent<Props> = ({ toast }) => {
           position="absolute"
           width={58}
           height={62}
-          bottom="-33px"
+          bottom="-32px"
           src="https://media.giphy.com/media/lMClXMEGuSJLZBqBh9/giphy.gif"
         />
       </Button>
