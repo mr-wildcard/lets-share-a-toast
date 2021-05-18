@@ -100,8 +100,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
     },
   });
 
-  console.log(LoaderAnimationState[loaderAnimationState]);
-
   return (
     <>
       {loaderAnimationState !== LoaderAnimationState.LEFT && (

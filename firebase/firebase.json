@@ -10,22 +10,24 @@
     "public": "dist"
   },
   "emulators": {
+    "firestore": {
+      "host": "0.0.0.0",
+      "port": 5001
+    },
     "auth": {
       "host": "0.0.0.0",
       "port": 5003
+    },
+    "database": {
+      "host": "0.0.0.0",
+      "port": 5005
     },
     "functions": {
       "host": "0.0.0.0",
       "port": 5006
     },
-    "firestore": {
-      "host": "0.0.0.0",
-      "port": 5001
-    },
-    "database": {
     "hosting": {
       "host": "0.0.0.0",
-      "port": 5005
       "port": 5007,
       "enabled": true
     },

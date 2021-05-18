@@ -136,6 +136,9 @@ const Form: FunctionComponent<Props> = ({
               date: values.dueDate.getTime(),
               organizerId: values.organizer!.id,
               scribeId: values.scribe!.id,
+              slackMessage: values.notifySlack
+                ? values.notificationMessage
+                : null,
             })
             .then(() => {
               closeModal(true);
