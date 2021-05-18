@@ -180,6 +180,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
           comment: values.comment,
           cover: values.cover,
           status: values.status,
+          createdDate: firebase.firestore.FieldValue.serverTimestamp(),
         };
 
         if (isCreatingSubject) {
@@ -187,28 +188,12 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
             .firestore()
             .collection(FirestoreCollection.SUBJECTS)
             .add(input);
-
-          /* TODO: handle notifications
-          notifications.send(auth.profile, NotificationType.ADD_SUBJECT, {
-            subjectTitle: values.title,
-          });
-          */
         } else {
           await firebase
             .firestore()
             .collection(FirestoreCollection.SUBJECTS)
             .doc(subject?.id)
             .update(input);
-
-          /*
-          notifications.send(
-            auth.profile,
-            NotificationType.EDIT_SUBJECT_CONTENT,
-            {
-              subjectTitle: subject!.title,
-            }
-          );
-          */
         }
 
         closeForm();
