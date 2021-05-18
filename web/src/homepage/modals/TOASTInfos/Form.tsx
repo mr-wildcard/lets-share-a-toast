@@ -26,8 +26,8 @@ import isToast from "@web/core/helpers/isToast";
 import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
 import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
-import SlackNotificationFieldsValues from "@web/core/models/form/SlackNotificationFieldsValues";
-import slackNotificationFieldsAreValid from "@web/core/helpers/form/validateSlackNotificationFields";
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
+import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
 import DateInput from "./DateInput";
 import DatePickerNavBar from "./DatePickerNavBar";
 import DatePickerCaption from "./DatePickerCaption";
@@ -122,7 +122,7 @@ const Form: FunctionComponent<Props> = ({
          * validate those fields because they're not displayed.
          * Only while creating a TOAST.
          */
-        if (!currentToast && !slackNotificationFieldsAreValid(values)) {
+        if (!currentToast && !validateSlackNotificationField(values)) {
           errors.notificationMessage = true;
         }
 
