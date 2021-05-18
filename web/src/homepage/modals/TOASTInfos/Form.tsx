@@ -153,13 +153,14 @@ const Form: FunctionComponent<Props> = ({
               date: values.dueDate.getTime(),
               organizerId: values.organizer!.id,
               scribeId: values.scribe!.id,
-              modifiedDate: new Date().getTime(),
+              modifiedDate: firebase.database.ServerValue.TIMESTAMP,
             })
             .then(() => {
               closeModal(true);
             });
 
           // TODO: handle notification
+            .then(closeModal);
         }
       }}
     >
