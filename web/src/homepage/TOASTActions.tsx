@@ -118,7 +118,6 @@ const TOASTActions = () => {
           // @ts-ignore
           clipPath: animations.background.animation.clipPath.to(
             (path1, path2) => {
-              console.log(path1, bgClipPath1, path2, bgClipPath2);
               /**
                * Disable `clip-path` at the end of the animation
                * to let the menu displays correctly.
