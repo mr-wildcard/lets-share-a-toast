@@ -68,13 +68,6 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
         .doc(subject.id)
         .update({ status });
 
-      /*
-      notifications.send(auth.profile, NotificationType.EDIT_SUBJECT_STATUS, {
-        subjectTitle: subject.title,
-        newStatus: status,
-      });
-      */
-
       setLoading(false);
     },
     [subject.id, subject.title]

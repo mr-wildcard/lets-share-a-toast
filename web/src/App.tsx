@@ -1,6 +1,8 @@
 import React, { Suspense, useEffect } from "react";
 import { ChakraProvider, CSSReset, Flex, Spinner } from "@chakra-ui/react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import "./core/styles.css";
 import Header from "./header/Header";
@@ -12,6 +14,8 @@ const Home = React.lazy(() => import("./pages/home"));
 const Subjects = React.lazy(() => import("./pages/subjects"));
 const Votes = React.lazy(() => import("./pages/votes"));
 const PageNotFound = React.lazy(() => import("./pages/404"));
+
+dayjs.extend(relativeTime);
 
 export default function LetsShareATOAST() {
   const { ui } = useStores();

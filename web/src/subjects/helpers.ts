@@ -1,7 +1,5 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
-export const isSubjectNew = (subjectCreationDate: string) => {
-  const creationDate = dayjs(subjectCreationDate);
-
-  return creationDate.isAfter(dayjs().subtract(2, 'week'));
+export const isSubjectNew = (subjectCreationDate: Date) => {
+  return dayjs(subjectCreationDate).isAfter(dayjs().subtract(2, "week"));
 };

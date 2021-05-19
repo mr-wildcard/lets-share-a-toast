@@ -171,7 +171,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
          */
         const speakers = values.speakers.filter(Boolean);
 
-        const input = {
+        let input = {
           title: values.title,
           speakersIds: speakers.map((speaker) => speaker.id),
           description: values.description,
@@ -180,7 +180,14 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
           comment: values.comment,
           cover: values.cover,
           status: values.status,
-          createdDate: firebase.firestore.FieldValue.serverTimestamp(),
+          createdDate: isCreatingSubject
+            ? firebase.firestore.FieldValue.serverTimestamp()
+            : subject?.createdDate,
+          createdByUserId: isCreatingSubject
+            ? firebaseData.connectedUser?.uid
+            : subject?.createdByUser.id,
+          lastModifiedDate: firebase.firestore.FieldValue.serverTimestamp(),
+          lastModifiedByUserId: firebaseData.connectedUser?.uid,
         };
 
         if (isCreatingSubject) {

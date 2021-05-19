@@ -1,5 +1,5 @@
-import { FirestoreUser } from "@shared/firebase";
 import { SubjectLanguage, SubjectStatus } from "@shared/enums";
+import { FirestoreTimestamp } from "@shared/firebase/firestore/models/FirestoreTimestamp";
 
 export interface FirestoreSubject {
   title: string;
@@ -10,8 +10,8 @@ export interface FirestoreSubject {
   language: SubjectLanguage;
   cover?: string;
   comment?: string;
+  createdDate: FirestoreTimestamp;
   createdByUserId?: string;
-  createdDate: string;
+  lastModifiedDate: FirestoreTimestamp;
   lastModifiedByUserId?: string;
-  lastModifiedDate: string;
 }

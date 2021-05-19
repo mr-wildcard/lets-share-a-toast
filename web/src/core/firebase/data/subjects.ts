@@ -10,9 +10,25 @@ firebase
     const subjects = snapshot.docs.map((doc) => {
       const subject = doc.data() as FirestoreSubject;
 
+      const { createdDate, lastModifiedDate } = subject;
+
       return {
         ...subject,
         id: doc.id,
+        createdDate: new firebase.firestore.Timestamp(
+          createdDate.seconds,
+          createdDate.nanoseconds
+        ).toDate(),
+        createdByUser: firebaseData.users.find(
+          (user) => user.id === subject.createdByUserId
+        )!,
+        lastModifiedDate: new firebase.firestore.Timestamp(
+          lastModifiedDate.seconds,
+          lastModifiedDate.nanoseconds
+        ).toDate(),
+        lastModifiedByUser: firebaseData.users.find(
+          (user) => user.id === subject.lastModifiedByUserId
+        )!,
         speakers: subject.speakersIds.map(
           (speakerId) =>
             firebaseData.users.find((user) => user.id === speakerId)!
