@@ -36,7 +36,7 @@ import datePickerCSS from "./DatePicker.module.css";
 interface Props {
   currentToast: CurrentToast;
   cancelButtonRef: Ref<HTMLButtonElement>;
-  closeModal(toastCreated: boolean): void;
+  closeModal(toastCreated?: boolean): void;
 }
 
 interface FormErrors {
@@ -85,6 +85,9 @@ const Form: FunctionComponent<Props> = ({
        * If we're already on friday.
        */
       if (today.day() === 5) {
+        /**
+         * Set date to next week's friday.
+         */
         return today.add(1, "week").hour(14).toDate();
       } else {
         return today.day(5).hour(14).toDate();
@@ -143,8 +146,6 @@ const Form: FunctionComponent<Props> = ({
             .then(() => {
               closeModal(true);
             });
-
-          // TODO: handle notification
         } else {
           return firebase
             .database()
@@ -155,12 +156,7 @@ const Form: FunctionComponent<Props> = ({
               scribeId: values.scribe!.id,
               modifiedDate: firebase.database.ServerValue.TIMESTAMP,
             })
-            .then(() => {
-              closeModal(true);
-            });
-
-          // TODO: handle notification
-            .then(closeModal);
+            .then(() => closeModal());
         }
       }}
     >
