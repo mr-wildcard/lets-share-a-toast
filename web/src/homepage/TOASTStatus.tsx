@@ -1,27 +1,12 @@
-import React, { useMemo } from "react";
+import React, { Suspense, useMemo } from "react";
 import { observer } from "mobx-react-lite";
-import { Spinner, useTheme } from "@chakra-ui/react";
+import { SkeletonText, Spinner, useTheme } from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
-
-const lazyLoadConfig = {
-  loading: function Loader() {
-    const theme = useTheme();
-
-    return (
-      <Spinner
-        thickness="4px"
-        speed="0.65s"
-        emptyColor={theme.colors.gray["800"]}
-        color={theme.colors.orange["300"]}
-        size="xl"
-      />
-    );
-  },
-};
+import { pageColors } from "@web/core/constants";
 
 const NoTOAST = React.lazy(
   () => import("./statuses/NoTOAST" /* webpackChunkName: "status-no-toast" */)
@@ -68,6 +53,8 @@ const WaitingForTOAST = React.lazy(
 );
 
 const TOASTStatus = () => {
+  const theme = useTheme();
+
   const { currentToast } = firebaseData;
 
   const toastIsToday = useMemo(() => {
@@ -79,7 +66,17 @@ const TOASTStatus = () => {
   }, [currentToast]);
 
   return (
-    <>
+    <Suspense
+      fallback={
+        <SkeletonText
+          w="30vw"
+          skeletonHeight="20px"
+          noOfLines={5}
+          spacing="4"
+          startColor={pageColors.homepage}
+        />
+      }
+    >
       {currentToast === null && <NoTOAST />}
 
       {currentToast !== null && (
@@ -109,7 +106,7 @@ const TOASTStatus = () => {
           )}
         </>
       )}
-    </>
+    </Suspense>
   );
 };
 

@@ -1,10 +1,12 @@
-import React, { FunctionComponent, useRef } from "react";
+import React, { Suspense, FunctionComponent, useRef } from "react";
 import {
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
@@ -21,20 +23,7 @@ interface Props {
   closeModal(toastCreated: boolean): void;
 }
 
-const Form = React.lazy(
-  () => import("./Form")
-  /*
-  {
-    loading: function Loader() {
-      return (
-        <Flex my={10} align="center" justify="center">
-          <Spinner />
-        </Flex>
-      );
-    },
-  }
- */
-);
+const Form = React.lazy(() => import("./Form"));
 
 const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   const cancelButtonRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
@@ -68,11 +57,19 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
             </Text>
           </ModalHeader>
           <ModalBody pb={6}>
-            <Form
-              currentToast={firebaseData.currentToast as CurrentToast}
-              closeModal={props.closeModal}
-              cancelButtonRef={cancelButtonRef}
-            />
+            <Suspense
+              fallback={
+                <Flex my={10} align="center" justify="center">
+                  <Spinner />
+                </Flex>
+              }
+            >
+              <Form
+                currentToast={firebaseData.currentToast as CurrentToast}
+                closeModal={props.closeModal}
+                cancelButtonRef={cancelButtonRef}
+              />
+            </Suspense>
           </ModalBody>
         </ModalContent>
       </ModalOverlay>

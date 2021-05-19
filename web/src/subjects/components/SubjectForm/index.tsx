@@ -1,7 +1,16 @@
-import React, { FunctionComponent } from "react";
-import { Drawer, DrawerContent, DrawerOverlay } from "@chakra-ui/react";
+import React, { Suspense, FunctionComponent } from "react";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  Flex,
+  Spinner,
+  useTheme,
+} from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
+
+import { pageColors } from "@web/core/constants";
 
 interface Props {
   subject?: Subject;
@@ -11,24 +20,6 @@ interface Props {
 
 const Form = React.lazy(
   () => import("./Form" /* webpackChunkName: "subject-form" */)
-  /*{
-    loading: function Loader() {
-      const theme = useTheme();
-
-      return (
-        <Flex h="100%" justifyContent="center" alignItems="center">
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor={theme.colors.gray['800']}
-            color={pageColors.subjects}
-            size="xl"
-          />
-        </Flex>
-      );
-    },
-  }
-  */
 );
 
 const SubjectForm: FunctionComponent<Props> = ({
@@ -36,6 +27,8 @@ const SubjectForm: FunctionComponent<Props> = ({
   closeForm,
   isOpen,
 }) => {
+  const theme = useTheme();
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -46,7 +39,21 @@ const SubjectForm: FunctionComponent<Props> = ({
     >
       <DrawerOverlay>
         <DrawerContent overflowY="auto">
-          <Form subject={subject} closeForm={closeForm} />
+          <Suspense
+            fallback={
+              <Flex h="100%" justifyContent="center" alignItems="center">
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor={theme.colors.gray["800"]}
+                  color={pageColors.subjects}
+                  size="xl"
+                />
+              </Flex>
+            }
+          >
+            <Form subject={subject} closeForm={closeForm} />
+          </Suspense>
         </DrawerContent>
       </DrawerOverlay>
     </Drawer>
