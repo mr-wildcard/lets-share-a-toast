@@ -19,7 +19,7 @@ import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
 import { Toast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
-import { DatabaseRefPaths } from "@shared/firebase";
+import { CloudFunctionName, DatabaseRefPaths } from "@shared/firebase";
 
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
@@ -72,10 +72,8 @@ const EndTOAST: FunctionComponent<Props> = ({
           }}
           onSubmit={async (values: FormValues): Promise<void> => {
             return firebase
-              .database()
-              .ref(DatabaseRefPaths.CURRENT_TOAST)
-              .child("status")
-              .set(ToastStatus.CLOSED)
+              .functions()
+              .httpsCallable(CloudFunctionName.END_TOAST)()
               .then(closeModal);
           }}
         >
