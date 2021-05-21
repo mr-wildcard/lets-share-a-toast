@@ -1,7 +1,7 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { observer } from "mobx-react-lite";
 import { Avatar, AvatarBadge, Box, Flex, Stack, Text } from "@chakra-ui/react";
-import { useLocation } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { ToastStatus } from "@shared/enums";
 
 import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
@@ -10,8 +10,10 @@ import Image from "@web/core/components/Image";
 import Logo from "./Logo";
 import LinkItem from "./LinkItem";
 
-const Header = () => {
-  const { pathname } = useLocation();
+type Props = RouteComponentProps;
+
+const Header: FunctionComponent<Props> = ({ location }) => {
+  const { pathname } = location;
 
   const votesAreOpened =
     firebaseData.currentToast?.status === ToastStatus.OPEN_FOR_VOTE;
