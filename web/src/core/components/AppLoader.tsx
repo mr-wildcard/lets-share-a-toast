@@ -145,7 +145,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
         </div>
       )}
 
-      {/* appReady && children */}
+      {appReady && children}
     </>
   );
 };

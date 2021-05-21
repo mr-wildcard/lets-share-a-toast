@@ -24,10 +24,6 @@ const PageNotFound = React.lazy(() => import("./pages/404"));
 
 dayjs.extend(relativeTime);
 
-configure({
-  enforceActions: "never",
-});
-
 export default function LetsShareATOAST() {
   const theme = useTheme();
 
