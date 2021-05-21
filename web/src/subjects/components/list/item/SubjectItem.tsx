@@ -80,14 +80,21 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
       setLoading(true);
 
       if (userConfirmedDeletion) {
-        await firebase
-          .firestore()
-          .collection(FirestoreCollection.SUBJECTS)
-          .doc(subject.id)
-          .delete();
-      }
+        try {
+          await firebase
+            .firestore()
+            .collection(FirestoreCollection.SUBJECTS)
+            .doc(subject.id)
+            .delete();
+        } catch (error) {
+          setLoading(false);
 
-      setLoading(false);
+          console.error(
+            `An error occured while deleting the subject ${subject.id}:`,
+            error
+          );
+        }
+      }
     },
     [subject.id]
   );
@@ -147,18 +154,15 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     return statusOptions;
   }, [subject.status]);
 
-  const { subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
+  const { subjectIsNew, subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
     const creationDate = dayjs(subject.createdDate);
 
     return {
+      subjectIsNew: isSubjectNew(subject.createdDate),
       subjectIsOld: creationDate.isBefore(dayjs().subtract(3, "month")),
       oldSubjectImageAlt: `Subject has been submitted ${creationDate.fromNow()}`,
     };
-  }, [subject.createdDate]);
-
-  const subjectIsNew = useMemo(() => {
-    return isSubjectNew(subject.createdDate);
-  }, [subject]);
+  }, [subject.createdDate.getTime()]);
 
   return (
     <Box className="list-item">
