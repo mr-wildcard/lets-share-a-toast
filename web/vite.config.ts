@@ -1,4 +1,5 @@
 import { resolve } from "path";
+import { ConfigEnv } from "vite";
 import reactRefresh from "@vitejs/plugin-react-refresh";
 import { visualizer } from "rollup-plugin-visualizer";
 
@@ -13,8 +14,7 @@ const aliases = {
   "@web": resolve(__dirname, "src"),
 };
 
-// https://vitejs.dev/config/
-export default function getConfig(command: string, mode: string) {
+export default function getConfig({ command }: ConfigEnv) {
   if (command === "serve") {
     return {
       plugins: [reactRefresh()],
