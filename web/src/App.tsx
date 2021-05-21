@@ -1,22 +1,14 @@
 import React, { Suspense, useEffect } from "react";
-import {
-  Box,
-  ChakraProvider,
-  CSSReset,
-  Flex,
-  Skeleton,
-  useTheme,
-} from "@chakra-ui/react";
+import { ChakraProvider, CSSReset, Flex, useTheme } from "@chakra-ui/react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { configure } from "mobx";
 
 import customTheme from "./core/theme";
-import { header, spacing } from "@web/core/constants";
+import { spacing } from "@web/core/constants";
 import { PageSkeleton } from "@web/core/components/PageSkeleton";
+import Header from "@web/header/Header";
 
-const Header = React.lazy(() => import("./header/Header"));
 const Home = React.lazy(() => import("./pages/home"));
 const Subjects = React.lazy(() => import("./pages/subjects"));
 const Votes = React.lazy(() => import("./pages/votes"));
@@ -40,15 +32,7 @@ export default function LetsShareATOAST() {
 
       <Flex minH="100%" direction="column" p={`${spacing.stylizedGap}px`}>
         <Router>
-          <Suspense
-            fallback={
-              <Skeleton>
-                <Box height={`${header.height}px`} />
-              </Skeleton>
-            }
-          >
-            <Route component={Header} />
-          </Suspense>
+          <Route component={Header} />
 
           <Flex
             as="main"
