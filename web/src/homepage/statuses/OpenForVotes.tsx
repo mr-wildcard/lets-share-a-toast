@@ -9,12 +9,15 @@ import Image from "@web/core/components/Image";
 import { Pathnames } from "@web/core/constants";
 import WhosInChargeRecap from "./WhosInChargeRecap";
 import css from "./OpenForVotes.module.css";
+import { firebaseData } from "@web/core/firebase/data";
 
 interface Props {
   toast: Toast;
 }
 
 const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
+  const votingSessionCreated = !!firebaseData.votingSession;
+
   return (
     <Box fontWeight="bold" color="gray.800" textAlign="center">
       <Text fontSize="4xl" mt={0} mb={5}>
@@ -30,6 +33,7 @@ const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
           as={Link}
           to={Pathnames.VOTING_SESSION}
           className={css.link}
+          disabled={!votingSessionCreated}
           position="relative"
           color="orange.500"
           cursor="pointer"
@@ -55,4 +59,4 @@ const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
   );
 });
 
-export default OpenForVotes;
+export default observer(OpenForVotes);
