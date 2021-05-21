@@ -140,7 +140,10 @@ const Form: FunctionComponent<Props> = ({
               organizerId: values.organizer!.id,
               scribeId: values.scribe!.id,
               slackMessage: values.notifySlack
-                ? values.notificationMessage
+                ? getFormattedSlackNotification(
+                    values.notificationMessage,
+                    values.dueDate
+                  )
                 : null,
             })
             .then(() => {
