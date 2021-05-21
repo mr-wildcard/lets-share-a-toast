@@ -3,6 +3,8 @@ import { Button, Flex, Text } from "@chakra-ui/react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 
 import Image from "@web/core/components/Image";
+import { firebaseData } from "@web/core/firebase/data";
+import { SubjectStatus } from "@shared/enums";
 
 interface Props {
   isSuccess: boolean;
@@ -10,10 +12,16 @@ interface Props {
 }
 
 const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+  const availableSubjects = firebaseData.subjects.filter(
+    (subject) => subject.status === SubjectStatus.AVAILABLE
+  );
+  const notEnoughAvailableSubjects = availableSubjects.length <= 1;
+
   return (
     <>
       {!isSuccess && (
         <Button
+          disabled={notEnoughAvailableSubjects}
           onClick={onClick}
           variant="outline"
           position="relative"
@@ -31,7 +39,9 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
           />
 
           <Text fontWeight="bold" pr="40px">
-            Open votes
+            {notEnoughAvailableSubjects
+              ? "Not enough subjects to vote for"
+              : "Open votes"}
           </Text>
         </Button>
       )}
@@ -54,4 +64,4 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   );
 };
 
-export default React.memo(OpenVotes);
+export default OpenVotes;
