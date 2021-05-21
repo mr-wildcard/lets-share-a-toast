@@ -15,6 +15,8 @@ type Props = RouteComponentProps;
 const Header: FunctionComponent<Props> = ({ location }) => {
   const { pathname } = location;
 
+  const toastHasBeenCreated = !!firebaseData.currentToast;
+
   const votesAreOpened =
     firebaseData.currentToast?.status === ToastStatus.OPEN_FOR_VOTE;
 
@@ -29,7 +31,7 @@ const Header: FunctionComponent<Props> = ({ location }) => {
           </Box>
 
           <LinkItem href={Pathnames.HOME} bgColor={pageColors.homepage}>
-            Next TOAST
+            {toastHasBeenCreated ? "Current TOAST" : "Next TOAST"}
           </LinkItem>
           <Text as="span" mx={5}>
             |
