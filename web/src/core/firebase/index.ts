@@ -59,9 +59,9 @@ function onAuthChanged(user: firebase.User | null) {
      * 3. everything else
      */
     import("./data/users")
-      .then(() => when(() => firebaseData.users.length > 0))
+      .then(() => when(() => firebaseData.usersLoaded))
       .then(() => import("./data/subjects"))
-      .then(() => when(() => firebaseData.subjects.length > 0))
+      .then(() => when(() => firebaseData.subjectsLoaded))
       .then(() =>
         Promise.all([
           import("./data/currentToast"),

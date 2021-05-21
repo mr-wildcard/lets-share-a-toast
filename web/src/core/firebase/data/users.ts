@@ -14,8 +14,9 @@ firebase
     }));
 
     firebaseData.users = users;
+    firebaseData.usersLoaded = true;
 
     if (import.meta.env.DEV) {
-      console.log({ users });
+      console.log({ users: snapshot.docs.map((doc) => doc.data()) });
     }
   });

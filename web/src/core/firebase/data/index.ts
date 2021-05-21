@@ -9,7 +9,9 @@ interface FirebaseInstance extends Record<string, any> {
   currentToast?: CurrentToast;
   votingSession?: DatabaseVotingSession | null;
   users: User[];
+  usersLoaded: boolean;
   subjects: Subject[];
+  subjectsLoaded: boolean;
 }
 
 const firebaseInstance: FirebaseInstance = {
@@ -18,6 +20,10 @@ const firebaseInstance: FirebaseInstance = {
   votingSession: undefined,
   users: [],
   subjects: [],
+
+  // loading states
+  usersLoaded: false,
+  subjectsLoaded: false,
 };
 
 export const firebaseData = makeObservable(firebaseInstance, {
@@ -25,5 +31,7 @@ export const firebaseData = makeObservable(firebaseInstance, {
   currentToast: observable,
   votingSession: observable,
   users: observable,
+  usersLoaded: observable,
   subjects: observable,
+  subjectsLoaded: observable,
 });
