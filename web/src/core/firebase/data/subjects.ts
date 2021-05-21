@@ -7,7 +7,7 @@ firebase
   .firestore()
   .collection(FirestoreCollection.SUBJECTS)
   .onSnapshot((snapshot) => {
-    const subjects = snapshot.docs.map((doc) => {
+    firebaseData.subjects = snapshot.docs.map((doc) => {
       const subject = doc.data() as FirestoreSubject;
 
       const { createdDate, lastModifiedDate } = subject;
@@ -36,7 +36,6 @@ firebase
       };
     });
 
-    firebaseData.subjects = subjects;
     firebaseData.subjectsLoaded = true;
 
     if (import.meta.env.DEV) {

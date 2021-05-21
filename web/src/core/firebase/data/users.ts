@@ -8,12 +8,11 @@ firebase
   .firestore()
   .collection(FirestoreCollection.USERS)
   .onSnapshot((snapshot) => {
-    const users = snapshot.docs.map((doc) => ({
+    firebaseData.users = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...(doc.data() as FirestoreUser),
     }));
 
-    firebaseData.users = users;
     firebaseData.usersLoaded = true;
 
     if (import.meta.env.DEV) {
