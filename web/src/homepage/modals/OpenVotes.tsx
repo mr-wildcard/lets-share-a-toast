@@ -101,7 +101,8 @@ const OpenVotes: FunctionComponent<Props> = ({
                   .database()
                   .ref(DatabaseRefPaths.CURRENT_TOAST)
                   .child("status")
-                  .set(ToastStatus.OPEN_FOR_VOTE);
+                  .set(ToastStatus.OPEN_FOR_VOTE)
+                  .then(closeModal);
               }}
             >
               {({ values, isSubmitting, isValid }) => (
