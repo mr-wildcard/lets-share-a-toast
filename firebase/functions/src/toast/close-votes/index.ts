@@ -6,71 +6,8 @@ import {
   SubjectsTotalVotes,
   SubjectsVotes,
 } from "@shared/firebase";
-import { ToastStatus } from "@shared/enums";
 import { getSubjectTotalVotes, unique } from "@shared/utils";
-
-import voteOpened from "./vote-opened";
-import closed from "./closed";
-import cancelledWhileVoting from "./cancelled-while-voting";
-
-export const onToastStatusUpdate = functions.database
-  .ref(`${DatabaseRefPaths.CURRENT_TOAST}/status`)
-  .onUpdate((change) => {
-    const beforeStatus: ToastStatus = change.before.val();
-    const newStatus: ToastStatus = change.after.val();
-
-    switch (newStatus) {
-      case ToastStatus.OPEN_FOR_VOTE: {
-        functions.logger.info("Create voting session.");
-
-        return voteOpened()
-          .then(() => {
-            functions.logger.info("Voting session successfully opened.");
-          })
-          .catch((error) => {
-            functions.logger.error(error);
-          });
-      }
-
-      case ToastStatus.CANCELLED: {
-        functions.logger.info("TOAST cancelled.");
-
-        if (beforeStatus === ToastStatus.OPEN_FOR_VOTE) {
-          functions.logger.info("TOAST cancelled while votes where opened.");
-
-          return cancelledWhileVoting()
-            .then(() => {
-              functions.logger.info(
-                "Voting session object successfully cleared."
-              );
-            })
-            .catch((error) => {
-              functions.logger.error(error);
-            });
-        } else {
-          return;
-        }
-      }
-
-      case ToastStatus.CLOSED: {
-        functions.logger.info("TOAST closed.");
-
-        return closed()
-          .then(() => {
-            functions.logger.info(
-              "Current TOAST and Voting session objects cleared."
-            );
-          })
-          .catch((error) => {
-            functions.logger.error(error);
-          });
-      }
-
-      default: {
-        return functions.logger.info("TOAST status changed to", newStatus);
-      }
-    }
-  });
+import { ToastStatus } from "@shared/enums";
 
 export const closeVotes = functions.https.onCall(async () => {
   functions.logger.info("Close voting session.");
