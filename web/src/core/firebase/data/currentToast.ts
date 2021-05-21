@@ -41,7 +41,7 @@ firebase
       firebaseData.currentToast = currentToast;
     }
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || window._log_firebase) {
       console.log({ currentToast });
     }
   });

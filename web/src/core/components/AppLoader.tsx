@@ -50,16 +50,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
        */
       await when(() => toJS(firebaseData.connectedUser) !== null);
     }
-
-    /**
-     * Wait for the current TOAST data to be retrieved.
-     */
-    await when(() => toJS(firebaseData.currentToast) !== undefined);
-
-    /**
-     * Make the loader disappear.
-     */
-    setAppReady(true);
   }, []);
 
   useEffect(() => {
@@ -71,6 +61,8 @@ const AppLoader: FunctionComponent = ({ children }) => {
   }, [loaderAnimationState]);
 
   const loggin = useCallback(() => {
+    setNeedToLogin(false);
+
     import("@web/core/firebase").then(({ signin }) => {
       signin().catch(() => {
         setNeedToLogin(true);
@@ -144,8 +136,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
           })}
         </div>
       )}
-
-      {appReady && children}
     </>
   );
 };

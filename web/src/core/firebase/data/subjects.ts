@@ -38,7 +38,7 @@ firebase
 
     firebaseData.subjectsLoaded = true;
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || window._log_firebase) {
       console.log({ subjects: snapshot.docs.map((doc) => doc.data()) });
     }
   });

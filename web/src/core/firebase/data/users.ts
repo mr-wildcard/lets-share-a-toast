@@ -15,7 +15,7 @@ firebase
 
     firebaseData.usersLoaded = true;
 
-    if (import.meta.env.DEV) {
+    if (import.meta.env.DEV || window._log_firebase) {
       console.log({ users: snapshot.docs.map((doc) => doc.data()) });
     }
   });
