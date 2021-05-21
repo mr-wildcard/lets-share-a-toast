@@ -4,7 +4,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { Box, Button, Flex } from "@chakra-ui/react";
 import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { animated, to, useTransition, config } from "@react-spring/web";
@@ -101,14 +100,14 @@ const AppLoader: FunctionComponent = ({ children }) => {
   return (
     <>
       {loaderAnimationState !== BackgroundAnimationState.LEFT && (
-        <Box
-          position="fixed"
-          top={0}
-          right={0}
-          bottom={0}
-          left={0}
-          zIndex={9}
+        <div
           style={{
+            position: "fixed",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            zIndex: 9,
             backgroundColor:
               loaderAnimationState === BackgroundAnimationState.INITIAL
                 ? "white"
@@ -118,16 +117,14 @@ const AppLoader: FunctionComponent = ({ children }) => {
           {bgAnimations(({ clipPath }, appIsLoaded) => {
             return (
               !appIsLoaded && (
-                <Flex
-                  as={animated.div}
-                  align="center"
-                  justify="center"
-                  w="100%"
-                  h="100%"
-                  backgroundColor="yellow.300"
-                  zIndex={10}
+                <animated.div
                   style={{
-                    // @ts-ignore
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "#f6e05e",
                     clipPath: to(
                       clipPath,
                       (path1, path2, path3, path4) =>
@@ -136,15 +133,19 @@ const AppLoader: FunctionComponent = ({ children }) => {
                   }}
                 >
                   <Loader />
-                  {needToLogin && <Button onClick={loggin}>Login</Button>}
-                </Flex>
+                  {needToLogin && (
+                    <button type="button" onClick={loggin}>
+                      Login
+                    </button>
+                  )}
+                </animated.div>
               )
             );
           })}
-        </Box>
+        </div>
       )}
 
-      {appReady && children}
+      {/* appReady && children */}
     </>
   );
 };

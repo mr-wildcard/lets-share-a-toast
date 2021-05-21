@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Image, ImageProps } from "@chakra-ui/react";
 
 interface CustomImageProps extends ImageProps {

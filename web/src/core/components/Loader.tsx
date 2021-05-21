@@ -5,10 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Box, Flex } from "@chakra-ui/react";
 import { animated, config, useTransition } from "@react-spring/web";
-
-import ImageComponent from "@web/core/components/Image";
 
 const defaultTransitions = {
   from: {
@@ -136,15 +133,21 @@ const Loader = () => {
   });
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      h="400px"
-      w="400px"
-      position="relative"
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "400px",
+        height: "300px",
+        position: "relative",
+      }}
     >
-      <ImageComponent
-        position="absolute"
+      <img
+        style={{
+          position: "absolute",
+        }}
+        alt="Background loader animation"
         src="https://media.giphy.com/media/j2AqKHK9rq217Ag8EX/giphy.gif"
         width={248}
         height={264}
@@ -153,21 +156,21 @@ const Loader = () => {
       {loaders((styles, item) => {
         return (
           ALL_GIFS[item] && (
-            <Box
-              as={animated.img}
+            <animated.img
               alt="Loading..."
               src={ALL_GIFS[item].src}
-              position="absolute"
-              transformOrigin="center center"
-              maxWidth="190px"
-              height="auto"
-              // @ts-ignore
-              style={styles}
+              style={{
+                ...styles,
+                position: "absolute",
+                transformOrigin: "center center",
+                maxWidth: "190px",
+                height: "auto",
+              }}
             />
           )
         );
       })}
-    </Flex>
+    </div>
   );
 };
 
