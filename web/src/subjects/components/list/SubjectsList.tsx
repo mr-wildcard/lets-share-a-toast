@@ -3,7 +3,6 @@ import { Box } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
-import MasonryGrid from "@web/subjects/components/list/MasonryGrid";
 import SubjectItem from "./item/SubjectItem";
 import SubjectAddButton from "./SubjectAddButton";
 
@@ -31,18 +30,18 @@ const SubjectsList: FunctionComponent<Props> = ({
     );
   }, [creatingSubject, onAddSubject]);
 
-  return subjects.length > 0 ? (
-    <MasonryGrid>
-      {subjects.map((subject, index) => (
-        <React.Fragment key={`list-item-${index}`}>
-          {index === 0 && subjectAddButton}
+  return (
+    <Box>
+      {subjects.length > 0
+        ? subjects.map((subject, index) => (
+            <React.Fragment key={`list-item-${index}`}>
+              {index === 0 && subjectAddButton}
 
-          <SubjectItem onEditSubject={onEditSubject} subject={subject} />
-        </React.Fragment>
-      ))}
-    </MasonryGrid>
-  ) : (
-    <MasonryGrid>{subjectAddButton}</MasonryGrid>
+              <SubjectItem onEditSubject={onEditSubject} subject={subject} />
+            </React.Fragment>
+          ))
+        : subjectAddButton}
+    </Box>
   );
 };
 

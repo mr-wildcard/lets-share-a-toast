@@ -5,25 +5,23 @@ import React, {
   useState,
 } from "react";
 import { Box, Button, Flex } from "@chakra-ui/react";
+import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { animated, to, useTransition, config } from "@react-spring/web";
-import { toJS, when } from "mobx";
 
 import Loader from "@web/core/components/Loader";
 
-enum LoaderAnimationState {
+enum BackgroundAnimationState {
   INITIAL,
   ENTERED,
   LEFT,
 }
 
-const USER_NOT_CONNECTED_ERROR_MESSAGE = "user.not.connected";
-
 const AppLoader: FunctionComponent = ({ children }) => {
   const [
     loaderAnimationState,
     setLoaderAnimationState,
-  ] = useState<LoaderAnimationState>(LoaderAnimationState.INITIAL);
+  ] = useState<BackgroundAnimationState>(BackgroundAnimationState.INITIAL);
 
   const [appReady, setAppReady] = useState(false);
   const [needToLogin, setNeedToLogin] = useState(false);
@@ -66,7 +64,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (loaderAnimationState === LoaderAnimationState.ENTERED) {
+    if (loaderAnimationState === BackgroundAnimationState.ENTERED) {
       import("@web/core/firebase").then(loadFirebaseData).catch((error) => {
         console.error("An error occured while loading Firebase", { error });
       });
@@ -89,20 +87,20 @@ const AppLoader: FunctionComponent = ({ children }) => {
     enter: {
       clipPath: [0, 0, 100, 150],
       onRest() {
-        setLoaderAnimationState(LoaderAnimationState.ENTERED);
+        setLoaderAnimationState(BackgroundAnimationState.ENTERED);
       },
     },
     leave: {
       clipPath: [0, 0, 0, 0],
     },
     onDestroyed() {
-      setLoaderAnimationState(LoaderAnimationState.LEFT);
+      setLoaderAnimationState(BackgroundAnimationState.LEFT);
     },
   });
 
   return (
     <>
-      {loaderAnimationState !== LoaderAnimationState.LEFT && (
+      {loaderAnimationState !== BackgroundAnimationState.LEFT && (
         <Box
           position="fixed"
           top={0}
@@ -112,7 +110,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
           zIndex={9}
           style={{
             backgroundColor:
-              loaderAnimationState === LoaderAnimationState.INITIAL
+              loaderAnimationState === BackgroundAnimationState.INITIAL
                 ? "white"
                 : "transparent",
           }}

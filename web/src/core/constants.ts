@@ -7,7 +7,7 @@ export enum Pathnames {
 }
 
 export const header = {
-  height: 60,
+  height: 40,
 };
 
 export const pageColors = {

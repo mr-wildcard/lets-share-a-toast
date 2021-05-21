@@ -1,6 +1,6 @@
 import React, { Suspense, useMemo } from "react";
 import { observer } from "mobx-react-lite";
-import { SkeletonText, Spinner, useTheme } from "@chakra-ui/react";
+import { SkeletonText, useTheme } from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
 

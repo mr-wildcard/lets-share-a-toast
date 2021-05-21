@@ -5,15 +5,13 @@ import { observer } from "mobx-react-lite";
 import { ToastStatus } from "@shared/enums";
 
 import { firebaseData } from "@web/core/firebase/data";
-import { pageColors } from "@web/core/constants";
-import useStores from "@web/core/hooks/useStores";
+import { pageColors, spacing } from "@web/core/constants";
 import ColoredBackground from "@web/core/components/ColoredBackground";
 import { LoadingState } from "@web/votes/types";
 import { Subjects } from "@web/votes/Subjects";
+import { ui } from "@web/core/stores/ui";
 
 const Votes = () => {
-  const { ui } = useStores();
-
   const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
 
   useEffect(() => {
@@ -35,27 +33,25 @@ const Votes = () => {
   }, []);
 
   return (
-    <Box as="main">
-      <ColoredBackground>
-        <Flex direction="column">
-          {loadingState === null && "Chargement en cours..."}
-          {loadingState !== null && (
-            <>
-              {loadingState === LoadingState.ERROR_NO_SESSION &&
-                "La session n'existe pas!"}
+    <ColoredBackground flex={1}>
+      <Flex direction="column" p={`${spacing.stylizedGap}px`}>
+        {loadingState === null && "Chargement en cours..."}
+        {loadingState !== null && (
+          <>
+            {loadingState === LoadingState.ERROR_NO_SESSION &&
+              "La session n'existe pas!"}
 
-              {loadingState === LoadingState.ERROR_WRONG_SESSION_STATUS &&
-                "Ce n'est pas le moment de voter!"}
+            {loadingState === LoadingState.ERROR_WRONG_SESSION_STATUS &&
+              "Ce n'est pas le moment de voter!"}
 
-              {loadingState === LoadingState.ERROR_UNKNOWN_ERROR &&
-                "Une erreur inconnue s'est produite... 🤔"}
+            {loadingState === LoadingState.ERROR_UNKNOWN_ERROR &&
+              "Une erreur inconnue s'est produite... 🤔"}
 
-              {loadingState === LoadingState.READY && <Subjects />}
-            </>
-          )}
-        </Flex>
-      </ColoredBackground>
-    </Box>
+            {loadingState === LoadingState.READY && <Subjects />}
+          </>
+        )}
+      </Flex>
+    </ColoredBackground>
   );
 };
 

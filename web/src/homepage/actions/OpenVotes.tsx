@@ -15,6 +15,7 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   const availableSubjects = firebaseData.subjects.filter(
     (subject) => subject.status === SubjectStatus.AVAILABLE
   );
+
   const notEnoughAvailableSubjects = availableSubjects.length <= 1;
 
   return (

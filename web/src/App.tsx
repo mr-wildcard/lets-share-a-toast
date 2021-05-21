@@ -1,15 +1,22 @@
 import React, { Suspense, useEffect } from "react";
-import { ChakraProvider, CSSReset, Flex, Spinner } from "@chakra-ui/react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  Box,
+  ChakraProvider,
+  CSSReset,
+  Flex,
+  Skeleton,
+  useTheme,
+} from "@chakra-ui/react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { configure } from "mobx";
 
-import "./core/styles.css";
-import Header from "./header/Header";
 import customTheme from "./core/theme";
-import AppLoader from "./core/components/AppLoader";
-import useStores from "./core/hooks/useStores";
+import { header, spacing } from "@web/core/constants";
+import { PageSkeleton } from "@web/core/components/PageSkeleton";
 
+const Header = React.lazy(() => import("./header/Header"));
 const Home = React.lazy(() => import("./pages/home"));
 const Subjects = React.lazy(() => import("./pages/subjects"));
 const Votes = React.lazy(() => import("./pages/votes"));
@@ -17,43 +24,53 @@ const PageNotFound = React.lazy(() => import("./pages/404"));
 
 dayjs.extend(relativeTime);
 
+configure({
+  enforceActions: "never",
+});
+
 export default function LetsShareATOAST() {
-  const { ui } = useStores();
+  const theme = useTheme();
 
   useEffect(() => {
     console.log(
       "%cLet's share a 🍞 !",
       "padding-left: 70px; background: url(https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif); background-size: contain; background-repeat: no-repeat; font-size: 60px;color: black; font-weight: bold; font-style: italic; font-family: serif; text-shadow: 3px 3px 0 rgb(245,221,8)"
     );
-
-    ui.setWindowSize();
-    // TODO: handle notifications
-    // notifications.initialize(toaster);
-  }, [ui]);
+  }, []);
 
   return (
-    <Suspense
-      fallback={
-        <Flex my={10} align="center" justify="center">
-          <Spinner />
-        </Flex>
-      }
-    >
-      <ChakraProvider theme={customTheme}>
-        <CSSReset />
+    <ChakraProvider theme={customTheme}>
+      <CSSReset />
 
-        <AppLoader>
-          <Router>
-            <Header />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/subjects" component={Subjects} />
-              <Route path="/vote" component={Votes} />
-              <Route component={PageNotFound} />
-            </Switch>
-          </Router>
-        </AppLoader>
-      </ChakraProvider>
-    </Suspense>
+      <Flex minH="100%" direction="column" p={`${spacing.stylizedGap}px`}>
+        <Router>
+          <Suspense
+            fallback={
+              <Skeleton>
+                <Box height={`${header.height}px`} />
+              </Skeleton>
+            }
+          >
+            <Route component={Header} />
+          </Suspense>
+
+          <Flex
+            as="main"
+            direction="column"
+            flex={1}
+            marginTop={`${spacing.stylizedGap}px`}
+          >
+            <Suspense fallback={<PageSkeleton />}>
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/subjects" component={Subjects} />
+                <Route path="/vote" component={Votes} />
+                <Route component={PageNotFound} />
+              </Switch>
+            </Suspense>
+          </Flex>
+        </Router>
+      </Flex>
+    </ChakraProvider>
   );
 }

@@ -21,11 +21,7 @@ const Header: FunctionComponent<Props> = ({ location }) => {
   const votingPageIsOpened = pathname === Pathnames.VOTING_SESSION;
 
   return (
-    <Box
-      px={`${spacing.stylizedGap}px`}
-      height={`${header.height}px`}
-      as="header"
-    >
+    <Box height={`${header.height}px`} as="header">
       <Flex justify="space-between" align="center" h="100%">
         <Flex flex={1} align="center">
           <Box mr={20}>
