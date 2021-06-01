@@ -48,7 +48,7 @@ import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
 
 import { firebaseData } from "@web/core/firebase/data";
-import { pageColors, urlRegex } from "@web/core/constants";
+import { pageColors } from "@web/core/constants";
 import { getTOASTRemainingDays } from "@web/core/helpers/timing";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -156,8 +156,14 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
           errors.description = true;
         }
 
-        if (values.cover && !urlRegex.test(values.cover)) {
-          errors.cover = true;
+        if (values.cover) {
+          try {
+            new URL(values.cover);
+          } catch (error) {
+            if (error instanceof TypeError) {
+              errors.cover = true;
+            }
+          }
         }
 
         return errors;
@@ -463,8 +469,8 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                 </Box>
                 <Box>
                   <Field name="cover">
-                    {({ field }: FieldProps<FormValues["cover"]>) => {
-                      const urlIsValid = urlRegex.test(field.value);
+                    {({ field, meta }: FieldProps<FormValues["cover"]>) => {
+                      const urlIsValid = !meta.error;
 
                       return (
                         <FormControl>
@@ -476,6 +482,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                             height="170px"
                             marginLeft={`-${theme.space["6"]}`}
                             marginRight={`-${theme.space["6"]}`}
+                            backgroundColor={theme.colors.gray["300"]}
                             backgroundImage={`url(${
                               urlIsValid ? field.value : coverPlaceholder
                             })`}
@@ -494,7 +501,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                                 placeholder="Image URL"
                                 bg="white"
                               />
-                              {urlIsValid && (
+                              {field.value && urlIsValid && (
                                 <InputRightAddon>
                                   <CheckIcon color="green.500" />
                                 </InputRightAddon>
