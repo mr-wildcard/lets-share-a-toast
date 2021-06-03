@@ -28,7 +28,7 @@ export const openVotes = functions.https.onCall(async (data, context) => {
     })
     .then((result) => {
       if (data.slackMessage) {
-        return notifySlackChannel(data.slackMessage);
+        notifySlackChannel(data.slackMessage);
       }
 
       return result;

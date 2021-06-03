@@ -8,9 +8,9 @@ export const getTOASTIsReadySlackMessage = (toast: Toast) => {
   const listOfSubjects = toast.selectedSubjects
     ?.map(
       (subject) =>
-        `- "_${subject.title}_" *presented by* ${subject.speakers
+        `- "_${subject.title}_" presented by *${subject.speakers
           .map(getUserFullname)
-          .join(", ")}.`
+          .join(", ")}*.`
     )
     .join("\n");
 

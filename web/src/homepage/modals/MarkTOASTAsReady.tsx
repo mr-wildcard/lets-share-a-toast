@@ -16,9 +16,8 @@ import {
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
-import { ToastStatus } from "@shared/enums";
+import { CloudFunctionName } from "@shared/firebase";
 
-import { DatabaseRefPaths } from "@shared/firebase";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
@@ -86,14 +85,12 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
 
               return errors;
             }}
-            onSubmit={() => {
-              // TODO: Handle Slack
-
+            onSubmit={(values: FormValues) => {
               return firebase
-                .database()
-                .ref(DatabaseRefPaths.CURRENT_TOAST)
-                .child("status")
-                .set(ToastStatus.WAITING_FOR_TOAST)
+                .functions()
+                .httpsCallable(CloudFunctionName.TOAST_READY)({
+                  slackMessage: values.notifySlack ? values.slackMessage : null,
+                })
                 .then(closeModal);
             }}
           >

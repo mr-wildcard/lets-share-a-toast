@@ -46,8 +46,6 @@ const CloseVotes: FunctionComponent<Props> = ({
         .functions()
         .httpsCallable(CloudFunctionName.CLOSE_VOTES)()
         .then(closeModal);
-
-      // TODO: Handle slack
     } catch (error) {
       console.error("Couldn't close the TOAST", { error });
 

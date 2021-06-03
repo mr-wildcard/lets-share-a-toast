@@ -18,8 +18,7 @@ import {
 import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
 import { Toast } from "@shared/models";
-import { ToastStatus } from "@shared/enums";
-import { CloudFunctionName, DatabaseRefPaths } from "@shared/firebase";
+import { CloudFunctionName } from "@shared/firebase";
 
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";

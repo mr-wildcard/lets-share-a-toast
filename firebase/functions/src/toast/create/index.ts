@@ -24,7 +24,7 @@ export const createToast = functions.https.onCall((data, context) => {
     })
     .then((result) => {
       if (data.slackMessage) {
-        return notifySlackChannel(data.slackMessage);
+        notifySlackChannel(data.slackMessage);
       }
 
       return result;
