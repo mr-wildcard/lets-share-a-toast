@@ -299,7 +299,7 @@ const Form: FunctionComponent<Props> = ({
                   colorScheme="blue"
                   isLoading={isSubmitting}
                   loadingText={
-                    !currentToast ? "Initializing TOAST..." : "Editing infos..."
+                    !currentToast ? "Creating TOAST..." : "Saving..."
                   }
                   mx={2}
                 >
@@ -312,7 +312,7 @@ const Form: FunctionComponent<Props> = ({
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
                   <Text as="span" pl={35}>
-                    {currentToast && "Edit"}
+                    {currentToast && "Save modifications"}
                     {!currentToast && "Let's go !"}
                   </Text>
                 </Button>
