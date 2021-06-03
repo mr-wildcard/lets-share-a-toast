@@ -3,7 +3,6 @@ import * as functions from "firebase-functions";
 import { DatabaseRefPaths } from "@shared/firebase";
 import { ToastStatus } from "@shared/enums";
 
-import voteOpened from "./vote-opened";
 import cancelledWhileVoting from "./cancelled-while-voting";
 
 export const onToastStatusUpdate = functions.database
@@ -13,18 +12,6 @@ export const onToastStatusUpdate = functions.database
     const newStatus: ToastStatus = change.after.val();
 
     switch (newStatus) {
-      case ToastStatus.OPEN_FOR_VOTE: {
-        functions.logger.info("Create voting session.");
-
-        return voteOpened()
-          .then(() => {
-            functions.logger.info("Voting session successfully opened.");
-          })
-          .catch((error) => {
-            functions.logger.error(error);
-          });
-      }
-
       case ToastStatus.CANCELLED: {
         functions.logger.info("TOAST cancelled.");
 

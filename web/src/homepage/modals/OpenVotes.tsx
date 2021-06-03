@@ -20,8 +20,8 @@ import {
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
-import { SubjectStatus, ToastStatus } from "@shared/enums";
-import { DatabaseRefPaths } from "@shared/firebase";
+import { SubjectStatus } from "@shared/enums";
+import { CloudFunctionName } from "@shared/firebase";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { pageColors, Pathnames } from "@web/core/constants";
@@ -83,7 +83,7 @@ const OpenVotes: FunctionComponent<Props> = ({
             <Formik
               initialValues={{
                 notifySlack: false,
-                slackMessage: `@here 🍞TOAST 🍞 Ladies and gentlemen, it's time to vote for your favorite subjects: ${votingToastURL}`,
+                slackMessage: `@here 🍞TOAST 🍞 Ladies and gentlemen, it's time to vote for your favorite subject(s): ${votingToastURL}`,
               }}
               validate={(values: FormValues) => {
                 const errors: FormErrors = {};
@@ -95,13 +95,13 @@ const OpenVotes: FunctionComponent<Props> = ({
                 return errors;
               }}
               onSubmit={async (values): Promise<void> => {
-                // TODO: handle slack
-
-                return firebase
-                  .database()
-                  .ref(DatabaseRefPaths.CURRENT_TOAST)
-                  .child("status")
-                  .set(ToastStatus.OPEN_FOR_VOTE)
+                await firebase
+                  .functions()
+                  .httpsCallable(CloudFunctionName.OPEN_VOTES)({
+                    slackMessage: values.notifySlack
+                      ? values.slackMessage
+                      : null,
+                  })
                   .then(closeModal);
               }}
             >
@@ -147,15 +147,15 @@ const OpenVotes: FunctionComponent<Props> = ({
                       </Field>
 
                       <Field name="slackMessage">
-                        {({ field, meta }: FieldProps) => (
+                        {({ field, meta, form }: FieldProps) => (
                           <FormControl>
                             <Textarea
                               {...field}
                               height="150px"
-                              isRequired={values.notifySlack}
-                              isDisabled={!values.notifySlack}
+                              isRequired={form.values.notifySlack}
+                              isDisabled={!form.values.notifySlack}
                               isInvalid={meta.touched && !!meta.error}
-                              value={values.slackMessage}
+                              value={field.value}
                             />
                           </FormControl>
                         )}
