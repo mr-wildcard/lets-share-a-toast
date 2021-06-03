@@ -5,17 +5,17 @@ import { Link } from "react-router-dom";
 
 import { Toast } from "@shared/models";
 
+import { firebaseData } from "@web/core/firebase/data";
 import Image from "@web/core/components/Image";
 import { Pathnames } from "@web/core/constants";
 import WhosInChargeRecap from "./WhosInChargeRecap";
 import css from "./OpenForVotes.module.css";
-import { firebaseData } from "@web/core/firebase/data";
 
 interface Props {
   toast: Toast;
 }
 
-const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
+const OpenForVotes: FunctionComponent<Props> = ({ toast }) => {
   const votingSessionCreated = !!firebaseData.votingSession;
 
   return (
@@ -57,6 +57,6 @@ const OpenForVotes: FunctionComponent<Props> = observer(({ toast }) => {
       </Box>
     </Box>
   );
-});
+};
 
 export default observer(OpenForVotes);

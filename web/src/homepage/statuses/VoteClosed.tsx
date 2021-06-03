@@ -14,7 +14,7 @@ interface Props {
   toast: Toast;
 }
 
-const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
+const VotesClosed: FunctionComponent<Props> = ({ toast }) => {
   return (
     <Box fontWeight="bold" color="gray.800" textAlign="center">
       <Text fontSize="4xl" mt={0} mb={5}>
@@ -50,6 +50,6 @@ const VotesClosed: FunctionComponent<Props> = observer(({ toast }) => {
       )}
     </Box>
   );
-});
+};
 
-export default VotesClosed;
+export default observer(VotesClosed);

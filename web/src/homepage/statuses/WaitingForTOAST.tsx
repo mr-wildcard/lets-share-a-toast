@@ -14,7 +14,7 @@ interface Props {
   toast: Toast;
 }
 
-const WaitingForTOAST: FunctionComponent<Props> = observer(({ toast }) => {
+const WaitingForTOAST: FunctionComponent<Props> = ({ toast }) => {
   return (
     <Box fontWeight="bold" color="gray.800" textAlign="center">
       <Text fontSize="4xl" mt={0} mb={5}>
@@ -49,6 +49,6 @@ const WaitingForTOAST: FunctionComponent<Props> = observer(({ toast }) => {
       <ProposeSubjectForNextTOASTButton />
     </Box>
   );
-});
+};
 
-export default WaitingForTOAST;
+export default observer(WaitingForTOAST);
