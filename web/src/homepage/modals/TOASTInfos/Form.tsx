@@ -41,7 +41,7 @@ interface Props {
 
 interface FormErrors {
   dueDate?: boolean;
-  notificationMessage?: boolean;
+  slackMessage?: boolean;
   organizer?: boolean;
   scribe?: boolean;
 }
@@ -103,7 +103,7 @@ const Form: FunctionComponent<Props> = ({
         organizer: currentToast?.organizer,
         scribe: currentToast?.scribe,
         notifySlack: false,
-        notificationMessage: defaultSlackNotificationMessage,
+        slackMessage: defaultSlackNotificationMessage,
       }}
       validate={(values: FormValues) => {
         const errors: FormErrors = {};
@@ -126,7 +126,7 @@ const Form: FunctionComponent<Props> = ({
          * Only while creating a TOAST.
          */
         if (!currentToast && !validateSlackNotificationField(values)) {
-          errors.notificationMessage = true;
+          errors.slackMessage = true;
         }
 
         return errors;
@@ -141,7 +141,7 @@ const Form: FunctionComponent<Props> = ({
               scribeId: values.scribe!.id,
               slackMessage: values.notifySlack
                 ? getFormattedSlackNotification(
-                    values.notificationMessage,
+                    values.slackMessage,
                     values.dueDate
                   )
                 : null,
@@ -268,7 +268,7 @@ const Form: FunctionComponent<Props> = ({
                     )}
                   </Field>
 
-                  <Field name="notificationMessage">
+                  <Field name="slackMessage">
                     {({ field, meta }: FieldProps) => (
                       <FormControl>
                         <Textarea
@@ -278,11 +278,11 @@ const Form: FunctionComponent<Props> = ({
                           isDisabled={!values.notifySlack}
                           isInvalid={meta.touched && !!meta.error}
                           value={getFormattedSlackNotification(
-                            values.notificationMessage,
+                            values.slackMessage,
                             values.dueDate
                           )}
                         />
-                        <FormHelperText id="notificationMessage">
+                        <FormHelperText id="slackMessage">
                           You can use Slack formatting message.
                         </FormHelperText>
                       </FormControl>

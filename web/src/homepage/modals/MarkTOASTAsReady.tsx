@@ -27,7 +27,7 @@ import { validateSlackNotificationField } from "@web/core/helpers/form/validateS
 import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
 
 interface FormErrors {
-  notificationMessage?: boolean;
+  slackMessage?: boolean;
 }
 
 type FormValues = SlackNotificationFieldsValues;
@@ -75,13 +75,13 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
           <Formik
             initialValues={{
               notifySlack: false,
-              notificationMessage: getTOASTIsReadySlackMessage(currentToast),
+              slackMessage: getTOASTIsReadySlackMessage(currentToast),
             }}
             validate={(values: FormValues) => {
               const errors: FormErrors = {};
 
               if (!validateSlackNotificationField(values)) {
-                errors.notificationMessage = true;
+                errors.slackMessage = true;
               }
 
               return errors;
@@ -108,7 +108,7 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                     )}
                   </Field>
 
-                  <Field name="notificationMessage">
+                  <Field name="slackMessage">
                     {({ field, meta }: FieldProps) => (
                       <FormControl>
                         <Textarea
@@ -117,7 +117,7 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                           isRequired={values.notifySlack}
                           isDisabled={!values.notifySlack}
                           isInvalid={meta.touched && !!meta.error}
-                          value={values.notificationMessage}
+                          value={values.slackMessage}
                         />
                       </FormControl>
                     )}

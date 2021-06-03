@@ -33,7 +33,7 @@ import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotifi
 import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
 
 interface FormErrors {
-  notificationMessage?: boolean;
+  slackMessage?: boolean;
 }
 
 type FormValues = SlackNotificationFieldsValues;
@@ -83,13 +83,13 @@ const OpenVotes: FunctionComponent<Props> = ({
             <Formik
               initialValues={{
                 notifySlack: false,
-                notificationMessage: `@here 🍞TOAST 🍞 Ladies and gentlemen, it's time to vote for your favorite subjects: ${votingToastURL}`,
+                slackMessage: `@here 🍞TOAST 🍞 Ladies and gentlemen, it's time to vote for your favorite subjects: ${votingToastURL}`,
               }}
               validate={(values: FormValues) => {
                 const errors: FormErrors = {};
 
                 if (!validateSlackNotificationField(values)) {
-                  errors.notificationMessage = true;
+                  errors.slackMessage = true;
                 }
 
                 return errors;
@@ -146,7 +146,7 @@ const OpenVotes: FunctionComponent<Props> = ({
                         )}
                       </Field>
 
-                      <Field name="notificationMessage">
+                      <Field name="slackMessage">
                         {({ field, meta }: FieldProps) => (
                           <FormControl>
                             <Textarea
@@ -155,7 +155,7 @@ const OpenVotes: FunctionComponent<Props> = ({
                               isRequired={values.notifySlack}
                               isDisabled={!values.notifySlack}
                               isInvalid={meta.touched && !!meta.error}
-                              value={values.notificationMessage}
+                              value={values.slackMessage}
                             />
                           </FormControl>
                         )}

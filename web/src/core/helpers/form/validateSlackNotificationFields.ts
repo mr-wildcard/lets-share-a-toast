@@ -5,6 +5,6 @@ export function validateSlackNotificationField(
 ) {
   return (
     !values.notifySlack ||
-    (values.notifySlack && values.notificationMessage.length > 0)
+    (values.notifySlack && values.slackMessage.length > 0)
   );
 }
