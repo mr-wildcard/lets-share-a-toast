@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toJS } from "mobx";
-import { Box, Flex, useDisclosure } from "@chakra-ui/react";
+import { Flex, useDisclosure } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { Subject } from "@shared/models";
@@ -64,6 +64,8 @@ const Subjects = () => {
     [formDrawerState]
   );
 
+  console.log(formDrawerState.isOpen, editedSubject === null);
+
   return (
     <ColoredBackground flex={1}>
       <Flex
@@ -98,14 +100,12 @@ const Subjects = () => {
           <FilterSubjectStatus onStatusChanged={setStatusFilter} />.
         </Flex>
 
-        <Box>
-          <SubjectsList
-            subjects={filteredSubjects}
-            creatingSubject={formDrawerState.isOpen && editedSubject === null}
-            onEditSubject={toggleSubjectEditForm}
-            onAddSubject={formDrawerState.onOpen}
-          />
-        </Box>
+        <SubjectsList
+          subjects={filteredSubjects}
+          creatingSubject={formDrawerState.isOpen && !editedSubject}
+          onEditSubject={toggleSubjectEditForm}
+          onAddSubject={formDrawerState.onOpen}
+        />
 
         {!!users && (
           <SubjectForm

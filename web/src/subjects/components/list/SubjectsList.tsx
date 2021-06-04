@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo } from "react";
-import { Box } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
@@ -21,28 +21,26 @@ const SubjectsList: FunctionComponent<Props> = ({
 }) => {
   const subjectAddButton = useMemo(() => {
     return (
-      <Box className="list-item">
-        <SubjectAddButton
-          onClick={onAddSubject}
-          creatingSubject={creatingSubject}
-        />
-      </Box>
+      <SubjectAddButton
+        onClick={onAddSubject}
+        creatingSubject={creatingSubject}
+      />
     );
   }, [creatingSubject, onAddSubject]);
 
   return (
-    <Box>
-      {subjects.length > 0
-        ? subjects.map((subject, index) => (
-            <React.Fragment key={`list-item-${index}`}>
-              {index === 0 && subjectAddButton}
+    <SimpleGrid columns={3} spacing={4}>
+      {subjectAddButton}
 
-              <SubjectItem onEditSubject={onEditSubject} subject={subject} />
-            </React.Fragment>
-          ))
-        : subjectAddButton}
-    </Box>
+      {subjects.map((subject, index) => (
+        <SubjectItem
+          key={`subject-${subject.id}-${index}`}
+          onEditSubject={onEditSubject}
+          subject={subject}
+        />
+      ))}
+    </SimpleGrid>
   );
 };
 
-export default React.memo(SubjectsList);
+export default SubjectsList;
