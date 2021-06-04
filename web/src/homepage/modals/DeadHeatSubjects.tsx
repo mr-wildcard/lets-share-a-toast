@@ -27,11 +27,11 @@ import Image from "@web/core/components/Image";
 import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface FormErrors {
-  selectedSubjectsIds?: boolean;
+  selectedSubjectIds?: boolean;
 }
 
 interface FormValues {
-  selectedSubjectsIds: string[];
+  selectedSubjectIds: string[];
 }
 
 interface Props {
@@ -74,16 +74,16 @@ export function DeadHeatSubjectsModal({
         <Formik
           validateOnMount={true}
           initialValues={{
-            selectedSubjectsIds: [],
+            selectedSubjectIds: [],
           }}
           validate={(values: FormValues): FormErrors => {
             const errors: FormErrors = {};
 
             if (
-              values.selectedSubjectsIds.length <
+              values.selectedSubjectIds.length <
               currentToast.maxSelectableSubjects
             ) {
-              errors.selectedSubjectsIds = true;
+              errors.selectedSubjectIds = true;
             }
 
             return errors;
@@ -92,7 +92,7 @@ export function DeadHeatSubjectsModal({
             return firebase
               .functions()
               .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
-                selectedSubjectsIds: values.selectedSubjectsIds,
+                selectedSubjectIds: values.selectedSubjectIds,
               })
               .then(closeModal);
           }}
@@ -105,7 +105,7 @@ export function DeadHeatSubjectsModal({
           }: FormikProps<FormValues>) => {
             const remainingSubjectsToSelect =
               currentToast.maxSelectableSubjects -
-              values.selectedSubjectsIds.length;
+              values.selectedSubjectIds.length;
 
             return (
               <Form>
@@ -145,7 +145,7 @@ export function DeadHeatSubjectsModal({
                     <Divider />
 
                     <Box mt={5}>
-                      <Field name="selectedSubjectsIds">
+                      <Field name="selectedSubjectIds">
                         {({ field, form }: FieldProps) => (
                           <Stack
                             spacing={3}
@@ -154,7 +154,7 @@ export function DeadHeatSubjectsModal({
                             overflowY="auto"
                           >
                             {sortedSelectedSubjects.map((subject) => {
-                              const subjectIsSelected = values.selectedSubjectsIds.includes(
+                              const subjectIsSelected = values.selectedSubjectIds.includes(
                                 subject.id
                               );
 
@@ -182,14 +182,14 @@ export function DeadHeatSubjectsModal({
                                        */
                                       form.setFieldValue(
                                         field.name,
-                                        values.selectedSubjectsIds.filter(
+                                        values.selectedSubjectIds.filter(
                                           (selectedSubjectId) =>
                                             selectedSubjectId !== subject.id
                                         )
                                       );
                                     } else {
                                       if (
-                                        values.selectedSubjectsIds.length ===
+                                        values.selectedSubjectIds.length ===
                                         currentToast.maxSelectableSubjects
                                       ) {
                                         /**
@@ -200,7 +200,7 @@ export function DeadHeatSubjectsModal({
                                         const [
                                           ,
                                           ...restOfSelectedSubjectIds
-                                        ] = values.selectedSubjectsIds;
+                                        ] = values.selectedSubjectIds;
 
                                         form.setFieldValue(
                                           field.name,
@@ -214,7 +214,7 @@ export function DeadHeatSubjectsModal({
                                          */
                                         form.setFieldValue(
                                           field.name,
-                                          values.selectedSubjectsIds.concat(
+                                          values.selectedSubjectIds.concat(
                                             subject.id
                                           )
                                         );

@@ -61,14 +61,14 @@ export const closeVotes = functions.https.onCall(async () => {
     .sort()
     .reverse();
 
-  const selectedSubjectsIds: string[] = [];
+  const selectedSubjectIds: string[] = [];
 
   for (let i = 0; i < allSortedTotalVotes.length; i++) {
     /**
-     * If `selectedSubjectsIds` array was filled with enough subject ids
+     * If `selectedSubjectIds` array was filled with enough subject ids
      * during the previous loop, we don't need to iterate further.
      */
-    if (selectedSubjectsIds.length >= maxSelectableSubjects) {
+    if (selectedSubjectIds.length >= maxSelectableSubjects) {
       break;
     }
 
@@ -81,7 +81,7 @@ export const closeVotes = functions.https.onCall(async () => {
       const [subjectId, subjectTotalVotes] = subjectVotes;
 
       if (subjectTotalVotes === totalVotes) {
-        selectedSubjectsIds.push(subjectId);
+        selectedSubjectIds.push(subjectId);
       }
     });
   }
@@ -95,7 +95,7 @@ export const closeVotes = functions.https.onCall(async () => {
    */
   const updates = {
     status: ToastStatus.VOTE_CLOSED,
-    "/selectedSubjectsIds": selectedSubjectsIds,
+    "/selectedSubjectIds": selectedSubjectIds,
     "/votes": allSubjectsVotes.reduce(
       (
         subjectsTotalVotes: SubjectsTotalVotes,

@@ -11,10 +11,10 @@ export const endToast = functions.https.onCall(async (data, context) => {
   const selectedSubjectsQuery = await admin
     .database()
     .ref(DatabaseRefPaths.CURRENT_TOAST)
-    .child("selectedSubjectsIds")
+    .child("selectedSubjectIds")
     .get();
 
-  const selectedSubjectsIds: string[] = selectedSubjectsQuery.val();
+  const selectedSubjectIds: string[] = selectedSubjectsQuery.val();
 
   /**
    * Update all selected subjects statuses to "DONE"
@@ -23,7 +23,7 @@ export const endToast = functions.https.onCall(async (data, context) => {
   const subjectsCollection = firestore.collection("subjects");
   const subjectsStatusesUpdates = firestore.batch();
 
-  selectedSubjectsIds.forEach((selectedSubjectId) => {
+  selectedSubjectIds.forEach((selectedSubjectId) => {
     const subjectRef = subjectsCollection.doc(selectedSubjectId);
 
     subjectsStatusesUpdates.update(subjectRef, { status: SubjectStatus.DONE });
