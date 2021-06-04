@@ -64,8 +64,6 @@ const Subjects = () => {
     [formDrawerState]
   );
 
-  console.log(formDrawerState.isOpen, editedSubject === null);
-
   return (
     <ColoredBackground flex={1}>
       <Flex
