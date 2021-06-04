@@ -9,10 +9,10 @@ import { spacing } from "@web/core/constants";
 import { PageSkeleton } from "@web/core/components/PageSkeleton";
 import Header from "@web/header/Header";
 
-const Home = React.lazy(() => import("./pages/home"));
-const Subjects = React.lazy(() => import("./pages/subjects"));
-const Votes = React.lazy(() => import("./pages/votes"));
-const PageNotFound = React.lazy(() => import("./pages/404"));
+const Home = React.lazy(() => import("./homepage"));
+const Subjects = React.lazy(() => import("./subjects"));
+const Votes = React.lazy(() => import("./votes"));
+const PageNotFound = React.lazy(() => import("./pages/PageNotFound"));
 
 dayjs.extend(relativeTime);
 
