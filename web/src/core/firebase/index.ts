@@ -81,10 +81,7 @@ firebase.auth().onAuthStateChanged(onAuthChanged);
 export const signin = () => {
   return firebase
     .auth()
-    .signInWithPopup(new firebase.auth.GoogleAuthProvider())
-    .catch((error) => {
-      console.log({ error });
-    });
+    .signInWithPopup(new firebase.auth.GoogleAuthProvider());
 };
 
 export const signout = (): Promise<void> => {

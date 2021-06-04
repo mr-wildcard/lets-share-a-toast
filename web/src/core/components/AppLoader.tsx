@@ -64,7 +64,9 @@ const AppLoader: FunctionComponent = ({ children }) => {
     setNeedToLogin(false);
 
     import("@web/core/firebase").then(({ signin }) => {
-      signin().catch(() => {
+      signin().catch((error) => {
+        console.error("An error occured while signin to Firebase", error);
+
         setNeedToLogin(true);
       });
     });
@@ -124,9 +126,35 @@ const AppLoader: FunctionComponent = ({ children }) => {
                     ),
                   }}
                 >
-                  <Loader />
+                  {!needToLogin && <Loader />}
+
                   {needToLogin && (
-                    <button type="button" onClick={loggin}>
+                    <button
+                      style={{
+                        position: "relative",
+                        padding: "15px 20px 15px 70px",
+                        borderRadius: "6px",
+                        border: "2px solid cornflowerblue",
+                        backgroundColor: "white",
+                        fontFamily: "Quicksand, sans-serif",
+                        fontSize: "20px",
+                        cursor: "pointer",
+                      }}
+                      type="button"
+                      onClick={loggin}
+                    >
+                      <img
+                        style={{
+                          position: "absolute",
+                          left: "-30px",
+                          top: "-30px",
+                          pointerEvents: "none",
+                        }}
+                        width={110}
+                        height={110}
+                        src="https://media.giphy.com/media/oxYfkYJp6ycxrs1paJ/giphy.gif"
+                        alt="Page behind a login button"
+                      />
                       Login
                     </button>
                   )}
