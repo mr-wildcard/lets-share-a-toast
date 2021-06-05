@@ -2,8 +2,8 @@
   "name": "functions",
   "private": true,
   "scripts": {
-    "build": "rimraf lib && rollup --config rollup.config.js",
-    "serve": "rimraf lib && node esbuild.config.dev.js",
+    "build": "rimraf lib && node esbuild.config.js",
+    "serve": "rimraf lib && node esbuild.config.js --watch",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",

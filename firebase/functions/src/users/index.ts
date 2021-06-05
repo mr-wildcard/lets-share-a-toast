@@ -21,7 +21,7 @@ export const storeIntoFirestoreOnCreation = functions.auth
       });
   });
 
-export const deleteFromFirestoreOnCreation = functions.auth
+export const deleteFromFirestoreOnDeletion = functions.auth
   .user()
   .onDelete((user: functions.auth.UserRecord) => {
     return admin
