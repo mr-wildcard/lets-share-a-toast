@@ -46,7 +46,7 @@ services:
     volumes:
       - ./:/code:delegated
     working_dir: /code/firebase/functions
-    command: /bin/sh -c "yarn && yarn serve"
+    command: /bin/sh -c "yarn --frozen-lockfile && yarn serve"
 
 volumes:
   firestore-data:
