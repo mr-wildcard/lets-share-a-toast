@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     image: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "yarn && yarn dev --port ${FRONTEND_PORT} --host"
+    command: /bin/sh -c "yarn --frozen-lockfile && yarn dev --port ${FRONTEND_PORT} --host"
     volumes:
       - ./:/code:delegated
     working_dir: /code/web
