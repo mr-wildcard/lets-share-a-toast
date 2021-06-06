@@ -32,14 +32,12 @@ interface FormErrors {
 type FormValues = SlackNotificationFieldsValues;
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
 const MarkTOASTAsReady: FunctionComponent<Props> = ({
   currentToast,
-  isOpen,
   closeModal,
 }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
@@ -48,7 +46,7 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
     <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
       size="lg"

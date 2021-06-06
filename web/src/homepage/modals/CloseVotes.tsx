@@ -24,16 +24,11 @@ import Image from "@web/core/components/Image";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-const CloseVotes: FunctionComponent<Props> = ({
-  currentToast,
-  isOpen,
-  closeModal,
-}) => {
+const CloseVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const [closingVotes, setClosingVotes] = useState(false);
@@ -57,7 +52,7 @@ const CloseVotes: FunctionComponent<Props> = ({
     <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
       size="lg"

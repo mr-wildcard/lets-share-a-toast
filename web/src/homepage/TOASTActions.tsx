@@ -176,12 +176,14 @@ const TOASTActions = () => {
 
             {!!currentToast && (
               <>
-                <Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
-                  <OpenVotes
-                    isSuccess={buttonsStates.openVotes.isSuccess}
-                    onClick={modalsStates.openVotes.onOpen}
-                  />
-                </Box>
+                {buttonsStates.openVotes.display && (
+                  <Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
+                    <OpenVotes
+                      isSuccess={buttonsStates.openVotes.isSuccess}
+                      onClick={modalsStates.openVotes.onOpen}
+                    />
+                  </Box>
+                )}
 
                 {buttonsStates.closeVotes.display && (
                   <Box
@@ -219,41 +221,47 @@ const TOASTActions = () => {
                   </Box>
                 )}
 
-                <OpenVotesModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.openVotes.isOpen}
-                  closeModal={modalsStates.openVotes.onClose}
-                />
+                {modalsStates.openVotes.isOpen && (
+                  <OpenVotesModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.openVotes.onClose}
+                  />
+                )}
 
-                <CloseVotesModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.closeVotes.isOpen}
-                  closeModal={modalsStates.closeVotes.onClose}
-                />
+                {modalsStates.closeVotes.isOpen && (
+                  <CloseVotesModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.closeVotes.onClose}
+                  />
+                )}
 
-                <DeadHeatSubjectsModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.deadHeatSubjects.isOpen}
-                  closeModal={modalsStates.deadHeatSubjects.onClose}
-                />
+                {modalsStates.deadHeatSubjects.isOpen && (
+                  <DeadHeatSubjectsModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.deadHeatSubjects.onClose}
+                  />
+                )}
 
-                <MarkTOASTAsReadyModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.markTOASTAsReady.isOpen}
-                  closeModal={modalsStates.markTOASTAsReady.onClose}
-                />
+                {modalsStates.markTOASTAsReady.isOpen && (
+                  <MarkTOASTAsReadyModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.markTOASTAsReady.onClose}
+                  />
+                )}
 
-                <EndTOASTModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.endTOAST.isOpen}
-                  closeModal={modalsStates.endTOAST.onClose}
-                />
+                {modalsStates.endTOAST.isOpen && (
+                  <EndTOASTModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.endTOAST.onClose}
+                  />
+                )}
 
-                <CancelTOASTModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.cancelTOAST.isOpen}
-                  closeModal={modalsStates.cancelTOAST.onClose}
-                />
+                {modalsStates.cancelTOAST.isOpen && (
+                  <CancelTOASTModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.cancelTOAST.onClose}
+                  />
+                )}
               </>
             )}
 

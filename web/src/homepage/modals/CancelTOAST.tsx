@@ -20,14 +20,12 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
 const CancelTOAST: FunctionComponent<Props> = ({
   currentToast,
-  isOpen,
   closeModal,
 }) => {
   const [cancelling, setCancelling] = useState(false);
@@ -55,7 +53,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
   return (
     <AlertDialog
       isCentered
-      isOpen={isOpen}
+      isOpen={true}
       leastDestructiveRef={cancelBtn}
       onClose={closeModal}
     >

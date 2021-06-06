@@ -35,16 +35,11 @@ interface FormValues {
 }
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-export function DeadHeatSubjectsModal({
-  currentToast,
-  isOpen,
-  closeModal,
-}: Props) {
+export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   /**
@@ -65,7 +60,7 @@ export function DeadHeatSubjectsModal({
     <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
       size="xl"

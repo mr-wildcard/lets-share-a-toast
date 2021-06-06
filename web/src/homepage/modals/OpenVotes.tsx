@@ -39,16 +39,11 @@ interface FormErrors {
 type FormValues = SlackNotificationFieldsValues;
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-const OpenVotes: FunctionComponent<Props> = ({
-  currentToast,
-  isOpen,
-  closeModal,
-}) => {
+const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const votingToastURL = getAppURL() + Pathnames.VOTING_SESSION;
@@ -57,7 +52,7 @@ const OpenVotes: FunctionComponent<Props> = ({
     <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
       size="lg"

@@ -34,22 +34,17 @@ interface FormValues {
 }
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-const EndTOAST: FunctionComponent<Props> = ({
-  currentToast,
-  isOpen,
-  closeModal,
-}) => {
+const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
     <Modal
       isCentered
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       onClose={closeModal}
       size="xl"

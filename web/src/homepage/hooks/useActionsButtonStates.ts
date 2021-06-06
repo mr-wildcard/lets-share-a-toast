@@ -16,6 +16,9 @@ const useActionsButtonStates = (currentToast: CurrentToast) => {
         isSuccess: isToast,
       },
       openVotes: {
+        display:
+          !!currentToast &&
+          currentToast.status === ToastStatus.OPEN_TO_CONTRIBUTION,
         isSuccess:
           !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(

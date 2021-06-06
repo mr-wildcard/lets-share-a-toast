@@ -23,12 +23,17 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
       {!isSuccess && (
         <Button
           disabled={notEnoughAvailableSubjects}
-          onClick={onClick}
           variant="outline"
           position="relative"
           bg="white"
           size="lg"
           colorScheme="blue"
+          onClick={onClick}
+          title={
+            notEnoughAvailableSubjects
+              ? "There is not enough available subjects to open the voting session."
+              : "Open voting session."
+          }
         >
           <Image
             position="absolute"
@@ -40,9 +45,7 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
           />
 
           <Text fontWeight="bold" pr="40px">
-            {notEnoughAvailableSubjects
-              ? "Not enough subjects to vote for"
-              : "Open votes"}
+            Open votes
           </Text>
         </Button>
       )}

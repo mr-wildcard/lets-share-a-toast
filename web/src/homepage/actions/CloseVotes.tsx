@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
-import { observer } from "mobx-react-lite";
 
 import { votingSessionHasAtLeastOneVote } from "@shared/utils";
 
@@ -16,7 +15,7 @@ interface Props {
 const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   const { votingSession } = firebaseData;
 
-  const isDisabled =
+  const notEnoughVotes =
     !votingSession || !votingSessionHasAtLeastOneVote(votingSession);
 
   return (
@@ -24,13 +23,18 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
       {!isSuccess && (
         <Button
           onClick={onClick}
-          disabled={isDisabled}
+          disabled={notEnoughVotes}
           variant="outline"
           position="relative"
           bg="white"
           size="lg"
           colorScheme="blue"
           fontWeight="bold"
+          title={
+            notEnoughVotes
+              ? "Nobody voted for any subject yet."
+              : "Close voting session."
+          }
         >
           <Image
             src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
@@ -66,4 +70,4 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   );
 };
 
-export default observer(CloseVotes);
+export default CloseVotes;
