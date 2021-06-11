@@ -7,6 +7,16 @@ firebase
   .firestore()
   .collection(FirestoreCollection.SUBJECTS)
   .onSnapshot((snapshot) => {
+    if (import.meta.env.DEV || window._log_firebase) {
+      console.log({
+        subjects: snapshot.docs.map((doc) =>
+          doc.data({
+            serverTimestamps: "estimate",
+          })
+        ),
+      });
+    }
+
     firebaseData.subjects = snapshot.docs.map((doc) => {
       const subject = doc.data() as FirestoreSubject;
 
@@ -37,8 +47,4 @@ firebase
     });
 
     firebaseData.subjectsLoaded = true;
-
-    if (import.meta.env.DEV || window._log_firebase) {
-      console.log({ subjects: snapshot.docs.map((doc) => doc.data()) });
-    }
   });
