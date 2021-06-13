@@ -21,6 +21,7 @@ import { Subject } from "@shared/models";
 
 import SubjectSpeakers from "@web/subjects/components/list/item/SubjectSpeakers";
 import SubjectInfoBadges from "@web/subjects/components/modals/SubjectInfoBadges";
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props {
   subject: Subject;
@@ -150,10 +151,6 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                     />
                   )}
 
-                  {/*
-                   * Had to use native img as `onLoad` was fired twice
-                   * with Chakra's Image component.
-                   * */}
                   <Img
                     src={subject.cover}
                     transition="opacity 500ms"
@@ -226,20 +223,13 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
 
             <Box pt={4} pb={10} px={4}>
               <Text fontStyle="italic" fontSize="sm">
-                <Text as="span" fontWeight="bold">
-                  Created by
-                </Text>
-                {/* &nbsp;{subject.createdBy} {dayjs(subject.createdDate).fromNow()} */}
-                .
+                Created by&nbsp;{getUserFullname(subject.createdByUser)}.
               </Text>
 
               {subject.createdDate !== subject.lastModifiedDate && (
                 <Text fontStyle="italic" fontSize="sm">
-                  <Text as="span" fontWeight="bold">
-                    Edited by
-                  </Text>
-                  {/* &nbsp;{subject.lastModifiedBy}&nbsp; */}
-                  {dayjs(subject.lastModifiedDate).fromNow()}.
+                  Edited by&nbsp;{getUserFullname(subject.lastModifiedByUser)}
+                  &nbsp;{dayjs(subject.lastModifiedDate).fromNow()}.
                 </Text>
               )}
             </Box>
