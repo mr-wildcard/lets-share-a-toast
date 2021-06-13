@@ -112,7 +112,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
     );
   }, [isCreatingSubject, currentToast]);
 
-  const alertAboutStatusChange = useMemo(() => {
+  const alertAboutStatusChangeDuringVotingSession = useMemo(() => {
     return (
       !isCreatingSubject &&
       !!currentToast &&
@@ -231,7 +231,6 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
         setFieldValue,
         isSubmitting,
         isValid,
-        validateForm,
       }: FormikProps<FormValues>) => {
         return (
           <FormikForm>
@@ -283,7 +282,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                     </Box>
                   </Alert>
                 )}
-                {alertAboutStatusChange && (
+                {alertAboutStatusChangeDuringVotingSession && (
                   <Alert status="error" variant="left-accent">
                     <AlertIcon />
                     <Box flex="1">
@@ -478,7 +477,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                   <Field
                     name="status"
                     component={StatusField}
-                    showHints={!alertAboutStatusChange}
+                    showHints={!alertAboutStatusChangeDuringVotingSession}
                   />
                 </Box>
                 <Box>
