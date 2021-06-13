@@ -7,13 +7,19 @@ firebase
   .firestore()
   .collection(FirestoreCollection.SUBJECTS)
   .onSnapshot((snapshot) => {
+    if (snapshot.metadata.hasPendingWrites) {
+      /**
+       * As we use FieldValue.serverTimestamp() for subjects `lastModifiedDate`,
+       * the value of this field is resolved on backend side and returned as `null`
+       * in the snapshot. Therefore we need to wait for the snapshot to finish its pending writes.
+       * https://github.com/firebase/firebase-js-sdk/issues/1929#issuecomment-506982593
+       */
+      return;
+    }
+
     if (import.meta.env.DEV || window._log_firebase) {
       console.log({
-        subjects: snapshot.docs.map((doc) =>
-          doc.data({
-            serverTimestamps: "estimate",
-          })
-        ),
+        subjects: snapshot.docs.map((doc) => doc.data()),
       });
     }
 
