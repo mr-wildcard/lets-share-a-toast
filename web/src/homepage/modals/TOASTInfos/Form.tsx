@@ -22,7 +22,6 @@ import { DatabaseRefPaths, CloudFunctionName } from "@shared/firebase";
 import { firebaseData } from "@web/core/firebase/data";
 import { Pathnames } from "@web/core/constants";
 import getAppURL from "@web/core/helpers/getAppURL";
-import isToast from "@web/core/helpers/isToast";
 import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
 import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
@@ -258,7 +257,7 @@ const Form: FunctionComponent<Props> = ({
                 </Box>
               </Stack>
 
-              {!isToast(currentToast) && (
+              {!!currentToast && (
                 <Box>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (

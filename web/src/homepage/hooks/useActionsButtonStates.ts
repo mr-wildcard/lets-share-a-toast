@@ -4,7 +4,6 @@ import { CurrentToast } from "@shared/models";
 import { ToastStatus } from "@shared/enums";
 
 import toastStatusUtils from "@web/core/helpers/toastStatusUtils";
-import isToast from "@web/core/helpers/isToast";
 import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
 
 const useActionsButtonStates = (currentToast: CurrentToast) => {
