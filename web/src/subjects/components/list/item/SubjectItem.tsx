@@ -66,7 +66,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
         .firestore()
         .collection(FirestoreCollection.SUBJECTS)
         .doc(subject.id)
-        .update({ status });
+        .update("status", status);
 
       setLoading(false);
     },
