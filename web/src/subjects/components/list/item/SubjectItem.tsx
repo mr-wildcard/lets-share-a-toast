@@ -45,7 +45,7 @@ interface Props {
 }
 
 const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
-  const { users, currentToast } = firebaseData;
+  const { users, currentToast, connectedUser } = firebaseData;
 
   const subjectIsInCurrentTOASTVotingSession =
     !!currentToast &&
@@ -66,7 +66,11 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
         .firestore()
         .collection(FirestoreCollection.SUBJECTS)
         .doc(subject.id)
-        .update("status", status);
+        .update({
+          status,
+          lastModifiedDate: firebase.firestore.FieldValue.serverTimestamp(),
+          lastModifiedByUserId: connectedUser?.uid,
+        });
 
       setLoading(false);
     },
