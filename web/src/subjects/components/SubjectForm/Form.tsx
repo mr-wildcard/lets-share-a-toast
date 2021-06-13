@@ -355,7 +355,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                             placeholder="Bryan is in the kitchen"
                             options={languageOptions}
                             onChange={(language) =>
-                              setFieldValue("language", language)
+                              setFieldValue(field.name, language)
                             }
                           />
                         </FormControl>
@@ -384,7 +384,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                             size="lg"
                             onChange={(value) => {
                               if (value !== field.value) {
-                                setFieldValue("duration", value);
+                                setFieldValue(field.name, value);
                               }
                             }}
                           >
