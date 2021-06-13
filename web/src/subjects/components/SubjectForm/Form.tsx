@@ -170,7 +170,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
 
         return errors;
       }}
-      onSubmit={async (values: FormValues) => {
+      onSubmit={(values: FormValues) => {
         /**
          * When adding a Field for a new speaker, its default value is `null`.
          * If the form is submitted without selecting a user in the select input,
@@ -199,19 +199,31 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
         };
 
         if (isCreatingSubject) {
-          await firebase
+          return firebase
             .firestore()
             .collection(FirestoreCollection.SUBJECTS)
-            .add(input);
+            .add(input)
+            .then(() => closeForm())
+            .catch((error) => {
+              console.error(
+                "Couldn't create subject because of Firebase error :",
+                error
+              );
+            });
         } else {
-          await firebase
+          return firebase
             .firestore()
             .collection(FirestoreCollection.SUBJECTS)
             .doc(subject?.id)
-            .update(input);
+            .set(input)
+            .then(() => closeForm())
+            .catch((error) => {
+              console.error(
+                "Couldn't update subject because of Firebase error :",
+                error
+              );
+            });
         }
-
-        closeForm();
       }}
     >
       {({
