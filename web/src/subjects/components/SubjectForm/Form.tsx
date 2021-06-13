@@ -102,7 +102,7 @@ const languageOptions: LanguageValue[] = [
 
 const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
   const theme = useTheme();
-  const { currentToast, users } = firebaseData;
+  const { currentToast, users, connectedUser } = firebaseData;
 
   const isCreatingSubject = !subject;
 
@@ -132,7 +132,9 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
               (option) => option.value === subject!.language
             )!,
         duration: isCreatingSubject ? 30 : subject!.duration,
-        speakers: isCreatingSubject ? [] : subject!.speakers,
+        speakers: isCreatingSubject
+          ? [users.find((user) => user.id === connectedUser?.uid)!]
+          : subject!.speakers,
         cover: isCreatingSubject ? "" : subject!.cover || "",
         comment: isCreatingSubject ? "" : subject!.comment || "",
         status: warnAboutNewSubjectDuringVotingSession
