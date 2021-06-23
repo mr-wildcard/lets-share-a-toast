@@ -23,7 +23,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
   ] = useState<BackgroundAnimationState>(BackgroundAnimationState.INITIAL);
 
   const [appReady, setAppReady] = useState(false);
-  const [needToLogin, setNeedToLogin] = useState(false);
 
   const loadFirebaseData = useCallback(async () => {
     const { firebaseData } = await import("@web/core/firebase/data");
@@ -43,7 +42,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
       /**
        * Make the login button appear.
        */
-      setNeedToLogin(true);
+      loggin();
 
       /**
        * Wait for the `connectedUser` to be a plain object.
@@ -61,13 +60,9 @@ const AppLoader: FunctionComponent = ({ children }) => {
   }, [loaderAnimationState]);
 
   const loggin = useCallback(() => {
-    setNeedToLogin(false);
-
     import("@web/core/firebase").then(({ signin }) => {
       signin().catch((error) => {
         console.error("An error occured while signin to Firebase", error);
-
-        setNeedToLogin(true);
       });
     });
   }, []);
@@ -126,38 +121,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
                     ),
                   }}
                 >
-                  {!needToLogin && <Loader />}
-
-                  {needToLogin && (
-                    <button
-                      style={{
-                        position: "relative",
-                        padding: "15px 20px 15px 70px",
-                        borderRadius: "6px",
-                        border: "2px solid cornflowerblue",
-                        backgroundColor: "white",
-                        fontFamily: "Quicksand, sans-serif",
-                        fontSize: "20px",
-                        cursor: "pointer",
-                      }}
-                      type="button"
-                      onClick={loggin}
-                    >
-                      <img
-                        style={{
-                          position: "absolute",
-                          left: "-30px",
-                          top: "-30px",
-                          pointerEvents: "none",
-                        }}
-                        width={110}
-                        height={110}
-                        src="https://media.giphy.com/media/oxYfkYJp6ycxrs1paJ/giphy.gif"
-                        alt="Page behind a login button"
-                      />
-                      Login
-                    </button>
-                  )}
+                  <Loader />
                 </animated.div>
               )
             );
