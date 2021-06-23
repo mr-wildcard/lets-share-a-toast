@@ -4,7 +4,7 @@ import { makeObservable, observable } from "mobx";
 import { CurrentToast, Subject, User } from "@shared/models";
 import { DatabaseVotingSession } from "@shared/firebase";
 
-interface FirebaseInstance extends Record<string, any> {
+interface State extends Record<string, any> {
   connectedUser?: firebase.User | null;
   currentToast?: CurrentToast;
   votingSession?: DatabaseVotingSession | null;
@@ -14,19 +14,17 @@ interface FirebaseInstance extends Record<string, any> {
   subjectsLoaded: boolean;
 }
 
-const firebaseInstance: FirebaseInstance = {
+const state: State = {
   connectedUser: undefined,
   currentToast: undefined,
   votingSession: undefined,
   users: [],
-  subjects: [],
-
-  // loading states
   usersLoaded: false,
+  subjects: [],
   subjectsLoaded: false,
 };
 
-export const firebaseData = makeObservable(firebaseInstance, {
+export const firebaseData = makeObservable(state, {
   connectedUser: observable,
   currentToast: observable,
   votingSession: observable,
