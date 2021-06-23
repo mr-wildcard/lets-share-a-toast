@@ -257,7 +257,7 @@ const Form: FunctionComponent<Props> = ({
                 </Box>
               </Stack>
 
-              {!!currentToast && (
+              {!currentToast && (
                 <Box>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
