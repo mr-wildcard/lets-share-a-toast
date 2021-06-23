@@ -5,6 +5,7 @@ import "firebase/auth";
 import "firebase/database";
 import "firebase/functions";
 
+import { useFirebaseEmulators } from "./emulators";
 import { firebaseData } from "./data";
 
 if (!firebase.apps.length) {
@@ -17,34 +18,7 @@ if (!firebase.apps.length) {
   });
 
   if (import.meta.env.DEV) {
-    firebase
-      .auth()
-      .useEmulator(import.meta.env.VITE_FIREBASE_EMULATOR_AUTH_HOST as string);
-
-    firebase
-      .firestore()
-      .useEmulator(
-        import.meta.env.VITE_LOCAL_HOSTNAME as string,
-        parseInt(
-          import.meta.env.VITE_FIREBASE_EMULATOR_FIRESTORE_PORT as string
-        )
-      );
-
-    firebase
-      .database()
-      .useEmulator(
-        import.meta.env.VITE_LOCAL_HOSTNAME as string,
-        parseInt(import.meta.env.VITE_FIREBASE_EMULATOR_DATABASE_PORT as string)
-      );
-
-    firebase
-      .functions()
-      .useEmulator(
-        import.meta.env.VITE_LOCAL_HOSTNAME as string,
-        parseInt(
-          import.meta.env.VITE_FIREBASE_EMULATOR_FUNCTIONS_PORT as string
-        )
-      );
+    useFirebaseEmulators();
   }
 }
 
@@ -56,7 +30,7 @@ function onAuthChanged(user: firebase.User | null) {
      * Sequentially load and watch :
      * 1. users
      * 2. subjects
-     * 3. everything else
+     * 3. current toast and voting session
      */
     import("./data/users")
       .then(() => when(() => firebaseData.usersLoaded))
