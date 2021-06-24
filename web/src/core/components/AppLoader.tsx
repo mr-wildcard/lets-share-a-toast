@@ -39,10 +39,13 @@ const AppLoader: FunctionComponent = ({ children }) => {
      * If user is signed out.
      */
     if (firebaseData.connectedUser === null) {
-      /**
-       * Make the login button appear.
-       */
-      loggin();
+      const { signin } = await import("@web/core/firebase");
+
+      try {
+        await signin();
+      } catch (error) {
+        console.error("An error occured while signin to Firebase", error);
+      }
 
       /**
        * Wait for the `connectedUser` to be a plain object.
@@ -58,14 +61,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
       });
     }
   }, [loaderAnimationState]);
-
-  const loggin = useCallback(() => {
-    import("@web/core/firebase").then(({ signin }) => {
-      signin().catch((error) => {
-        console.error("An error occured while signin to Firebase", error);
-      });
-    });
-  }, []);
 
   const bgAnimations = useTransition(appReady, {
     config: config.gentle,
