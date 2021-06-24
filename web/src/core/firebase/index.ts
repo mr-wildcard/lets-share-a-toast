@@ -53,6 +53,19 @@ function onAuthChanged(user: firebase.User | null) {
 firebase.auth().onAuthStateChanged(onAuthChanged);
 
 export const signin = () => {
+  if (import.meta.env.DEV) {
+    const urlQueryParams = new URLSearchParams(window.location.search);
+
+    if (urlQueryParams.has("userEmail") && urlQueryParams.has("userPassword")) {
+      const userEmail = urlQueryParams.get("userEmail");
+      const userPassword = urlQueryParams.get("userPassword");
+
+      return firebase
+        .auth()
+        .signInWithEmailAndPassword(userEmail!, userPassword!);
+    }
+  }
+
   return firebase
     .auth()
     .signInWithPopup(new firebase.auth.GoogleAuthProvider());

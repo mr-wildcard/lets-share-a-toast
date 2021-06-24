@@ -94,6 +94,7 @@ export function Subjects() {
                 m={3}
                 onClick={() => vote(subject.id)}
                 disabled={!votingSession.peopleCanVote}
+                className="vote-button"
               >
                 {subject.id} (
                 {votingSession.votes?.[subject.id]
