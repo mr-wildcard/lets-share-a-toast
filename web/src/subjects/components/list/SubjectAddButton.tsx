@@ -1,7 +1,15 @@
 import React, { FunctionComponent } from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import Image from "@web/core/components/Image";
 
@@ -16,6 +24,7 @@ const SubjectAddButton: FunctionComponent<Props> = ({
 }) => {
   return (
     <Button
+      d="block"
       position="relative"
       variant="outline"
       colorScheme="gray"
@@ -24,11 +33,12 @@ const SubjectAddButton: FunctionComponent<Props> = ({
       isDisabled={creatingSubject}
       w="100%"
       h="auto"
-      p={5}
+      p={0}
       fontWeight="bold"
       fontSize="lg"
       textTransform="uppercase"
       bg="white"
+      overflow={creatingSubject ? "visible" : " hidden"}
     >
       {creatingSubject && (
         <Image
@@ -40,17 +50,38 @@ const SubjectAddButton: FunctionComponent<Props> = ({
         />
       )}
 
-      <Flex
-        as={Text}
-        align="center"
-        m={0}
-        visibility={creatingSubject ? "hidden" : "visible"}
-      >
-        <Text as="span" pr={3}>
-          <FontAwesomeIcon icon={faPlus} size="2x" />
-        </Text>
-        <Text as="span">Add your subject</Text>
-      </Flex>
+      {!creatingSubject && (
+        <>
+          <Stack borderRadius="3px" h="100%" spacing={4} p={5}>
+            <SkeletonText noOfLines={1} skeletonHeight="25px" />
+            <HStack mb={10}>
+              <SkeletonCircle size="28px" />
+              <SkeletonText flex={1} noOfLines={1} skeletonHeight="25px" />
+            </HStack>
+            <Box />
+            <Divider mb={3} />
+          </Stack>
+
+          <Flex
+            position="absolute"
+            top={0}
+            left={0}
+            w="100%"
+            h="100%"
+            align="center"
+            justify="center"
+            bgGradient="linear(rgba(255, 255, 255, 0.7), white 80%)"
+            borderRadius="3px"
+          >
+            <Image
+              src="https://media.giphy.com/media/ZBfx0z9cMmmziSyhQl/giphy.gif"
+              width={133}
+              height={70}
+            />
+            <Text>Add your subject</Text>
+          </Flex>
+        </>
+      )}
     </Button>
   );
 };
