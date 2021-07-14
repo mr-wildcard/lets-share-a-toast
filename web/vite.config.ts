@@ -27,6 +27,7 @@ export default function getConfig({ command }: ConfigEnv) {
   return {
     build: {
       outDir: resolve(__dirname, "..", "firebase", "dist"),
+      sourcemap: true,
     },
     plugins: [visualizer()],
     resolve: {
