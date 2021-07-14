@@ -1,8 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import React, { FunctionComponent } from "react";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
+import { firebaseData } from "@web/core/firebase/data";
+import { SubjectStatus } from "@shared/enums";
 
 interface Props {
   isSuccess: boolean;
@@ -10,16 +12,28 @@ interface Props {
 }
 
 const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+  const availableSubjects = firebaseData.subjects.filter(
+    (subject) => subject.status === SubjectStatus.AVAILABLE
+  );
+
+  const notEnoughAvailableSubjects = availableSubjects.length <= 1;
+
   return (
     <>
       {!isSuccess && (
-        <C.Button
-          onClick={onClick}
+        <Button
+          disabled={notEnoughAvailableSubjects}
           variant="outline"
           position="relative"
           bg="white"
           size="lg"
           colorScheme="blue"
+          onClick={onClick}
+          title={
+            notEnoughAvailableSubjects
+              ? "There is not enough available subjects to open the voting session."
+              : "Open voting session."
+          }
         >
           <Image
             position="absolute"
@@ -30,14 +44,14 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
             transform="rotate(-10deg)"
           />
 
-          <C.Text fontWeight="bold" pr="40px">
+          <Text fontWeight="bold" pr="40px">
             Open votes
-          </C.Text>
-        </C.Button>
+          </Text>
+        </Button>
       )}
 
       {isSuccess && (
-        <C.Flex
+        <Flex
           h="100%"
           align="center"
           fontWeight="bold"
@@ -48,10 +62,10 @@ const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
         >
           Votes opened
           <CheckCircleIcon ml={3} color="white" boxSize="24px" />
-        </C.Flex>
+        </Flex>
       )}
     </>
   );
 };
 
-export default React.memo(OpenVotes);
+export default OpenVotes;

@@ -1,3 +1,3 @@
-import { SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
 
-export type StatusFilterValue = 'all' | SubjectStatus;
+export type StatusFilterValue = "all" | SubjectStatus;

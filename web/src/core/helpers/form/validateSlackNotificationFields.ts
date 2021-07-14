@@ -1,10 +1,10 @@
-import SlackNotificationFieldsValues from '@web/core/models/form/SlackNotificationFieldsValues';
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
 
-export default function slackNotificationFieldsAreValid<
-  T extends SlackNotificationFieldsValues
->(values: T) {
+export function validateSlackNotificationField(
+  values: SlackNotificationFieldsValues
+) {
   return (
     !values.notifySlack ||
-    (values.notifySlack && values.notificationMessage.length > 0)
+    (values.notifySlack && values.slackMessage.length > 0)
   );
 }

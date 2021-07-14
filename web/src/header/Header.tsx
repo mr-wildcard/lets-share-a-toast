@@ -1,87 +1,54 @@
-import React, { useEffect, useMemo } from 'react';
-import { observer } from 'mobx-react-lite';
-import * as C from '@chakra-ui/react';
-import { SettingsIcon } from '@chakra-ui/icons';
-import useSWR from 'swr';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faBellSlash } from '@fortawesome/free-solid-svg-icons';
-import { useLocation } from 'react-router';
+import React, { FunctionComponent } from "react";
+import { observer } from "mobx-react-lite";
+import { Avatar, AvatarBadge, Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { RouteComponentProps } from "react-router";
+import { ToastStatus } from "@shared/enums";
 
-import { CurrentToast, User, ToastStatus } from '@shared';
+import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
+import { firebaseData } from "@web/core/firebase/data";
+import Image from "@web/core/components/Image";
+import Logo from "./Logo";
+import LinkItem from "./LinkItem";
 
-import {
-  APIPaths,
-  header,
-  pageColors,
-  Pathnames,
-  spacing,
-} from '@web/core/constants';
-import Image from '@web/core/components/Image';
-import useStores from '@web/core/hooks/useStores';
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import isToast from '@web/core/helpers/isToast';
-import Logo from './Logo';
-import LinkItem from './LinkItem';
+type Props = RouteComponentProps;
 
-const Header = () => {
-  const { pathname } = useLocation();
+const Header: FunctionComponent<Props> = ({ location }) => {
+  const { pathname } = location;
 
-  const {
-    currentToastSession: { toast },
-    auth,
-    appLoader,
-    notifications,
-  } = useStores();
+  const toastHasBeenCreated = !!firebaseData.currentToast;
 
-  const { data: profile } = useSWR<User>(APIPaths.PROFILE, {
-    // We don't need profile to be fetched more than once.
-    revalidateOnFocus: false,
-  });
-
-  const votesAreOpened = useMemo(() => {
-    return isToast(toast) && toast.status === ToastStatus.OPEN_FOR_VOTE;
-  }, [toast]);
+  const votesAreOpened =
+    firebaseData.currentToast?.status === ToastStatus.OPEN_FOR_VOTE;
 
   const votingPageIsOpened = pathname === Pathnames.VOTING_SESSION;
 
-  useEffect(() => {
-    if (profile) {
-      auth.profile = profile;
-      appLoader.profileIsLoaded = true;
-    }
-  }, [profile, auth, appLoader]);
-
   return (
-    <C.Box
-      px={`${spacing.stylizedGap}px`}
-      height={`${header.height}px`}
-      as="header"
-    >
-      <C.Flex justify="space-between" align="center" h="100%">
-        <C.Flex flex={1} align="center">
-          <C.Box mr={20}>
+    <Box height={`${header.height}px`} as="header">
+      <Flex justify="space-between" align="center" h="100%">
+        <Flex flex={1} align="center">
+          <Box mr={20}>
             <Logo />
-          </C.Box>
+          </Box>
 
           <LinkItem href={Pathnames.HOME} bgColor={pageColors.homepage}>
-            Next TOAST
+            {toastHasBeenCreated ? "Current TOAST" : "Next TOAST"}
           </LinkItem>
-          <C.Text as="span" mx={5}>
+          <Text as="span" mx={5}>
             |
-          </C.Text>
+          </Text>
           <LinkItem href={Pathnames.SUBJECTS} bgColor={pageColors.subjects}>
             Subjects
           </LinkItem>
           {votesAreOpened && (
             <>
-              <C.Text as="span" mx={5}>
+              <Text as="span" mx={5}>
                 |
-              </C.Text>
+              </Text>
               <LinkItem
                 href={Pathnames.VOTING_SESSION}
                 bgColor={pageColors.votingSession}
               >
-                <C.Text position="relative" pr={1}>
+                <Text position="relative" pr={1}>
                   Vote!
                   {!votingPageIsOpened && (
                     <Image
@@ -95,67 +62,34 @@ const Header = () => {
                       title="now"
                     />
                   )}
-                </C.Text>
+                </Text>
               </LinkItem>
             </>
           )}
-        </C.Flex>
+        </Flex>
 
-        {profile && (
-          <C.Stack direction="row" spacing={5} align="center">
-            <C.Text>
+        {firebaseData.connectedUser && (
+          <Stack direction="row" spacing={5} align="center">
+            <Text>
               Welcome
-              <C.Text as="span" pl={1} fontWeight="bold" fontStyle="italic">
-                {profile.firstName}!
-              </C.Text>
-            </C.Text>
+              <Text as="span" pl={1} fontWeight="bold" fontStyle="italic">
+                {firebaseData.connectedUser.displayName}!
+              </Text>
+            </Text>
 
-            <C.Box position="relative">
-              <C.Avatar
-                name={getUserFullname(profile)}
-                src={profile.picture}
+            <Box position="relative">
+              <Avatar
+                name={firebaseData.connectedUser.displayName!}
+                src={firebaseData.connectedUser.photoURL!}
                 size="sm"
               >
-                <C.AvatarBadge boxSize="1em" bg="green.500" />
-              </C.Avatar>
-              <C.Menu closeOnSelect={false}>
-                <C.MenuButton
-                  as={C.IconButton}
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  width="100%"
-                  height="100%"
-                  opacity={0}
-                  icon={<SettingsIcon />}
-                  size="sm"
-                  aria-label="User settings"
-                  title="Your settings"
-                  borderRadius="full"
-                  _hover={{ opacity: 1 }}
-                />
-                <C.MenuList>
-                  <C.MenuItem
-                    onClick={() => {
-                      notifications.showNotifications = !notifications.showNotifications;
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={
-                        notifications.showNotifications ? faBell : faBellSlash
-                      }
-                    />
-                    <C.Text as="span" pl={3}>
-                      Notifications
-                    </C.Text>
-                  </C.MenuItem>
-                </C.MenuList>
-              </C.Menu>
-            </C.Box>
-          </C.Stack>
+                <AvatarBadge boxSize="1em" bg="green.500" />
+              </Avatar>
+            </Box>
+          </Stack>
         )}
-      </C.Flex>
-    </C.Box>
+      </Flex>
+    </Box>
   );
 };
 

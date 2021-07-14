@@ -1,73 +1,56 @@
-import React, { Suspense, FunctionComponent, useEffect } from 'react';
-import {
-  ChakraProvider,
-  CSSReset,
-  useToast,
-  Flex,
-  Spinner,
-} from '@chakra-ui/react';
-import { SWRConfig } from 'swr';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import React, { Suspense, useEffect } from "react";
+import { ChakraProvider, CSSReset, Flex, useTheme } from "@chakra-ui/react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
-import './core/styles.css';
-import Header from './header/Header';
-import Home from './pages/home';
-import Subjects from './pages/subjects';
-import Vote from './pages/vote';
-import customTheme from './core/theme';
-import http from './core/httpClient';
-import AppLoader from './core/components/AppLoader';
-import useStores from './core/hooks/useStores';
+import customTheme from "./core/theme";
+import { spacing } from "@web/core/constants";
+import { PageSkeleton } from "@web/core/components/PageSkeleton";
+import Header from "@web/header/Header";
+
+const Home = React.lazy(() => import("./homepage"));
+const Subjects = React.lazy(() => import("./subjects"));
+const Votes = React.lazy(() => import("./votes"));
+const PageNotFound = React.lazy(() => import("./pages/PageNotFound"));
+
+dayjs.extend(relativeTime);
 
 export default function LetsShareATOAST() {
-  const toaster = useToast();
-
-  const { ui, notifications } = useStores();
+  const theme = useTheme();
 
   useEffect(() => {
     console.log(
       "%cLet's share a 🍞 !",
-      'padding-left: 70px; background: url(https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif); background-size: contain; background-repeat: no-repeat; font-size: 60px;color: black; font-weight: bold; font-style: italic; font-family: serif; text-shadow: 3px 3px 0 rgb(245,221,8)'
+      "padding-left: 70px; background: url(https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif); background-size: contain; background-repeat: no-repeat; font-size: 60px;color: black; font-weight: bold; font-style: italic; font-family: serif; text-shadow: 3px 3px 0 rgb(245,221,8)"
     );
-
-    ui.setWindowSize();
-    // notifications.initialize(toaster);
-  }, [ui, notifications]);
+  }, []);
 
   return (
-    <Suspense
-      fallback={
-        <Flex my={10} align="center" justify="center">
-          <Spinner />
-        </Flex>
-      }
-    >
-      <Router>
-        <ChakraProvider theme={customTheme}>
-          <CSSReset />
+    <ChakraProvider theme={customTheme}>
+      <CSSReset />
 
-          <SWRConfig
-            value={{
-              fetcher: http(),
-            }}
+      <Flex minH="100%" direction="column" p={`${spacing.stylizedGap}px`}>
+        <Router>
+          <Route component={Header} />
+
+          <Flex
+            as="main"
+            direction="column"
+            flex={1}
+            marginTop={`${spacing.stylizedGap}px`}
           >
-            <AppLoader>
-              <Header />
+            <Suspense fallback={<PageSkeleton />}>
               <Switch>
-                <Route exact path="/">
-                  <Home />
-                </Route>
-                <Route path="/subjects">
-                  <Subjects />
-                </Route>
-                <Route path="/vote">
-                  <Vote />
-                </Route>
+                <Route exact path="/" component={Home} />
+                <Route path="/subjects" component={Subjects} />
+                <Route path="/vote" component={Votes} />
+                <Route component={PageNotFound} />
               </Switch>
-            </AppLoader>
-          </SWRConfig>
-        </ChakraProvider>
-      </Router>
-    </Suspense>
+            </Suspense>
+          </Flex>
+        </Router>
+      </Flex>
+    </ChakraProvider>
   );
 }

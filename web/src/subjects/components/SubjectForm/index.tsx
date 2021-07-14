@@ -1,66 +1,62 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { Suspense, FunctionComponent } from "react";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  Flex,
+  Spinner,
+  useTheme,
+} from "@chakra-ui/react";
 
-import { CurrentToast, Subject, User } from '@shared';
+import { Subject } from "@shared/models";
 
-import { pageColors } from '@web/core/constants';
+import { pageColors } from "@web/core/constants";
 
 interface Props {
   subject?: Subject;
-  allUsers: User[];
   isOpen: boolean;
-  revalidateSubjects(): Promise<boolean>;
   closeForm(): void;
 }
 
 const Form = React.lazy(
-  () => import('./Form' /* webpackChunkName: "subject-form" */)
-  /*{
-    loading: function Loader() {
-      const theme = C.useTheme();
-
-      return (
-        <C.Flex h="100%" justifyContent="center" alignItems="center">
-          <C.Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor={theme.colors.gray['800']}
-            color={pageColors.subjects}
-            size="xl"
-          />
-        </C.Flex>
-      );
-    },
-  }
-  */
+  () => import("./Form" /* webpackChunkName: "subject-form" */)
 );
 
 const SubjectForm: FunctionComponent<Props> = ({
-  allUsers,
   subject,
   closeForm,
-  revalidateSubjects,
   isOpen,
 }) => {
+  const theme = useTheme();
+
   return (
-    <C.Drawer
+    <Drawer
       isOpen={isOpen}
       onClose={closeForm}
       placement="right"
       size="xl"
       closeOnEsc={true}
     >
-      <C.DrawerOverlay>
-        <C.DrawerContent overflowY="auto">
-          <Form
-            revalidateSubjects={revalidateSubjects}
-            subject={subject}
-            allUsers={allUsers}
-            closeForm={closeForm}
-          />
-        </C.DrawerContent>
-      </C.DrawerOverlay>
-    </C.Drawer>
+      <DrawerOverlay>
+        <DrawerContent overflowY="auto">
+          <Suspense
+            fallback={
+              <Flex h="100%" justifyContent="center" alignItems="center">
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor={theme.colors.gray["800"]}
+                  color={pageColors.subjects}
+                  size="xl"
+                />
+              </Flex>
+            }
+          >
+            <Form subject={subject} closeForm={closeForm} />
+          </Suspense>
+        </DrawerContent>
+      </DrawerOverlay>
+    </Drawer>
   );
 };
 

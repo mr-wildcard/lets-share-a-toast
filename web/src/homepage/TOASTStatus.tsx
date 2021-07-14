@@ -1,120 +1,113 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { Suspense, useMemo } from "react";
+import { observer } from "mobx-react-lite";
+import { SkeletonText, useTheme } from "@chakra-ui/react";
 
-import { ToastStatus, CurrentToast } from '@shared';
+import { ToastStatus } from "@shared/enums";
 
-import isToast from '@web/core/helpers/isToast';
-import { hasTOASTDatePassed, isTOASTToday } from '@web/core/helpers/timing';
-import useStores from '@web/core/hooks/useStores';
-
-const lazyLoadConfig = {
-  loading: function Loader() {
-    const theme = C.useTheme();
-
-    return (
-      <C.Spinner
-        thickness="4px"
-        speed="0.65s"
-        emptyColor={theme.colors.gray['800']}
-        color={theme.colors.orange['300']}
-        size="xl"
-      />
-    );
-  },
-};
+import { firebaseData } from "@web/core/firebase/data";
+import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
+import { pageColors } from "@web/core/constants";
 
 const NoTOAST = React.lazy(
-  () => import('./statuses/NoTOAST' /* webpackChunkName: "status-no-toast" */)
+  () => import("./statuses/NoTOAST" /* webpackChunkName: "status-no-toast" */)
 );
 
 const TOASTIsToday = React.lazy(
   () =>
     import(
-      './statuses/TOASTIsToday' /* webpackChunkName: "status-toast-today" */
+      "./statuses/TOASTIsToday" /* webpackChunkName: "status-toast-today" */
     )
 );
 
 const TOASTDateHasPassed = React.lazy(
   () =>
     import(
-      './statuses/TOASTDateHasPassed' /* webpackChunkName: "status-toast-date-passed" */
+      "./statuses/TOASTDateHasPassed" /* webpackChunkName: "status-toast-date-passed" */
     )
 );
 
 const OpenForContributions = React.lazy(
   () =>
     import(
-      './statuses/OpenForContributions' /* webpackChunkName: "status-open-for-contribution" */
+      "./statuses/OpenForContributions" /* webpackChunkName: "status-open-for-contribution" */
     )
 );
 
 const OpenForVotes = React.lazy(
   () =>
     import(
-      './statuses/OpenForVotes' /* webpackChunkName: "status-open-for-votes" */
+      "./statuses/OpenForVotes" /* webpackChunkName: "status-open-for-votes" */
     )
 );
 
 const VoteClosed = React.lazy(
   () =>
-    import('./statuses/VoteClosed' /* webpackChunkName: "status-vote-closed" */)
+    import("./statuses/VoteClosed" /* webpackChunkName: "status-vote-closed" */)
 );
 
 const WaitingForTOAST = React.lazy(
   () =>
     import(
-      './statuses/WaitingForTOAST' /* webpackChunkName: "status-waiting-for-toast" */
+      "./statuses/WaitingForTOAST" /* webpackChunkName: "status-waiting-for-toast" */
     )
 );
 
-interface Props {
-  currentToast: CurrentToast;
-}
+const TOASTStatus = () => {
+  const theme = useTheme();
 
-const TOASTStatus: FunctionComponent<Props> = ({ currentToast }) => {
+  const { currentToast } = firebaseData;
+
   const toastIsToday = useMemo(() => {
-    return isToast(currentToast) && isTOASTToday(new Date(currentToast.date));
+    return !!currentToast && isTOASTToday(new Date(currentToast.date));
   }, [currentToast]);
 
   const toastDateHasPassed = useMemo(() => {
-    return (
-      isToast(currentToast) && hasTOASTDatePassed(new Date(currentToast.date))
-    );
+    return !!currentToast && hasTOASTDatePassed(new Date(currentToast.date));
   }, [currentToast]);
 
   return (
-    <>
-      {!isToast(currentToast) && <NoTOAST />}
+    <Suspense
+      fallback={
+        <SkeletonText
+          w="30vw"
+          skeletonHeight="20px"
+          noOfLines={5}
+          spacing="4"
+          startColor={pageColors.homepage}
+        />
+      }
+    >
+      {currentToast === null && <NoTOAST />}
 
-      {isToast(currentToast) && (
+      {currentToast !== null && (
         <>
-          {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast} />}
+          {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast!} />}
 
-          {toastIsToday && <TOASTIsToday toast={currentToast} />}
+          {toastIsToday && <TOASTIsToday toast={currentToast!} />}
 
           {!toastIsToday && !toastDateHasPassed && (
             <>
-              {currentToast.status === ToastStatus.OPEN_TO_CONTRIBUTION && (
-                <OpenForContributions toast={currentToast} />
+              {currentToast!.status === ToastStatus.OPEN_TO_CONTRIBUTION && (
+                <OpenForContributions toast={currentToast!} />
               )}
 
-              {currentToast.status === ToastStatus.OPEN_FOR_VOTE && (
-                <OpenForVotes toast={currentToast} />
+              {currentToast!.status === ToastStatus.OPEN_FOR_VOTE && (
+                <OpenForVotes toast={currentToast!} />
               )}
 
-              {currentToast.status === ToastStatus.WAITING_FOR_TOAST && (
-                <WaitingForTOAST toast={currentToast} />
+              {currentToast!.status === ToastStatus.WAITING_FOR_TOAST && (
+                <WaitingForTOAST toast={currentToast!} />
               )}
 
-              {currentToast.status === ToastStatus.VOTE_CLOSED && (
-                <VoteClosed toast={currentToast} />
+              {currentToast!.status === ToastStatus.VOTE_CLOSED && (
+                <VoteClosed toast={currentToast!} />
               )}
             </>
           )}
         </>
       )}
-    </>
+    </Suspense>
   );
 };
 
-export default TOASTStatus;
+export default observer(TOASTStatus);

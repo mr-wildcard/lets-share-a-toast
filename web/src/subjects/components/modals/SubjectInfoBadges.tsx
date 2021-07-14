@@ -1,13 +1,14 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useMemo } from "react";
+import { Box, Flex } from "@chakra-ui/react";
 
-import { Subject, SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
+import { Subject } from "@shared/models";
 
-import { isSubjectNew } from '@web/subjects/helpers';
-import SubjectStatusBadge from '@web/subjects/components/list/item/SubjectStatusBadge';
-import SubjectLanguageBadge from '@web/subjects/components/list/item/SubjectLanguageBadge';
-import SubjectDurationBadge from '@web/subjects/components/list/item/SubjectDurationBadge';
-import SubjectNewBadge from '@web/subjects/components/list/item/SubjectNewBadge';
+import { isSubjectNew } from "@web/subjects/helpers";
+import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
+import SubjectLanguageBadge from "@web/subjects/components/list/item/SubjectLanguageBadge";
+import SubjectDurationBadge from "@web/subjects/components/list/item/SubjectDurationBadge";
+import SubjectNewBadge from "@web/subjects/components/list/item/SubjectNewBadge";
 
 interface Props {
   subject: Subject;
@@ -19,26 +20,26 @@ const SubjectInfoBadges: FunctionComponent<Props> = ({ subject }) => {
   }, [subject]);
 
   return (
-    <C.Flex align="center">
+    <Flex align="center">
       {subjectIsNew && subject.status !== SubjectStatus.DONE && (
         <>
           <SubjectNewBadge />
-          <C.Box as="span" px={2}>
+          <Box as="span" px={2}>
             &bull;
-          </C.Box>
+          </Box>
         </>
       )}
 
       <SubjectStatusBadge status={subject.status} />
-      <C.Box as="span" px={2}>
+      <Box as="span" px={2}>
         &bull;
-      </C.Box>
+      </Box>
       <SubjectLanguageBadge language={subject.language} />
-      <C.Box as="span" px={2}>
+      <Box as="span" px={2}>
         &bull;
-      </C.Box>
+      </Box>
       <SubjectDurationBadge duration={subject.duration} />
-    </C.Flex>
+    </Flex>
   );
 };
 

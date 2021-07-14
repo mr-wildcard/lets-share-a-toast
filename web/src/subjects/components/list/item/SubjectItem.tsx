@@ -1,57 +1,59 @@
+import firebase from "firebase/app";
 import React, {
   FunctionComponent,
   ReactElement,
   useCallback,
   useMemo,
   useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
-import dayjs from 'dayjs';
-import { DeleteIcon, EditIcon, ViewIcon } from '@chakra-ui/icons';
-import { ContextMenu, MenuItem, ContextMenuTrigger } from 'react-contextmenu';
-import { observer } from 'mobx-react-lite';
+} from "react";
+import {
+  Badge,
+  Box,
+  ButtonGroup,
+  Divider,
+  Flex,
+  IconButton,
+  Spinner,
+  Text,
+  useDisclosure,
+  useTheme,
+} from "@chakra-ui/react";
+import dayjs from "dayjs";
+import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { observer } from "mobx-react-lite";
 
-import { SubjectStatus, Subject, ToastStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
+import { FirestoreCollection } from "@shared/firebase";
+import { Subject } from "@shared/models";
 
-import http from '@web/core/httpClient';
-import { APIPaths } from '@web/core/constants';
-import useStores from '@web/core/hooks/useStores';
-import isToast from '@web/core/helpers/isToast';
-import NotificationType from '@web/notifications/types/NotificationType';
-import Image from '@web/core/components/Image';
-import DeleteSubjectModal from '@web/subjects/components/modals/DeleteSubjectModal';
-import ViewSubjectModal from '@web/subjects/components/modals/ViewSubjectModal';
-import { isSubjectNew } from '@web/subjects/helpers';
-import SubjectStatusBadge from './SubjectStatusBadge';
-import SubjectSpeakers from './SubjectSpeakers';
-import SubjectNewBadge from './SubjectNewBadge';
-import css from './SubjectItem.module.css';
-import ContextMenuItem from './ContextMenuItem';
-import subjectIsInVotingSession from '@web/core/helpers/subjectIsInVotingSession';
+import { firebaseData } from "@web/core/firebase/data";
+import Image from "@web/core/components/Image";
+import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectModal";
+import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
+import { isSubjectNew } from "@web/subjects/helpers";
+import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
+import SubjectStatusBadge from "./SubjectStatusBadge";
+import SubjectSpeakers from "./SubjectSpeakers";
+import SubjectNewBadge from "./SubjectNewBadge";
+import css from "./SubjectItem.module.css";
+import ContextMenuItem from "./ContextMenuItem";
 
 interface Props {
   subject: Subject;
-  revalidateSubjects(): Promise<boolean>;
   onEditSubject(subject: Subject): void;
 }
 
-const SubjectItem: FunctionComponent<Props> = ({
-  revalidateSubjects,
-  onEditSubject,
-  subject,
-}) => {
-  const {
-    currentToastSession: { toast },
-  } = useStores();
+const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
+  const { users, currentToast, connectedUser } = firebaseData;
 
   const subjectIsInCurrentTOASTVotingSession =
-    isToast(toast) && subjectIsInVotingSession(toast.status, subject.status);
+    !!currentToast &&
+    subjectIsInVotingSession(currentToast.status, subject.status);
 
-  const theme = C.useTheme();
-  const viewModal = C.useDisclosure();
-  const deleteModal = C.useDisclosure();
-
-  const { auth, notifications } = useStores();
+  const theme = useTheme();
+  const viewModal = useDisclosure();
+  const deleteModal = useDisclosure();
 
   const [contextualMenuOpened, setContextualMenuOpened] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -60,79 +62,45 @@ const SubjectItem: FunctionComponent<Props> = ({
     async (status: SubjectStatus) => {
       setLoading(true);
 
-      try {
-        const request = http();
-
-        await request(APIPaths.SUBJECT_STATUS.replace(':id', subject.id), {
-          method: 'PUT',
-          body: JSON.stringify({
-            status,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      await firebase
+        .firestore()
+        .collection(FirestoreCollection.SUBJECTS)
+        .doc(subject.id)
+        .update({
+          status,
+          lastModifiedDate: firebase.firestore.FieldValue.serverTimestamp(),
+          lastModifiedByUserId: connectedUser?.uid,
         });
-
-        await revalidateSubjects();
-
-        // @ts-ignore
-        notifications.send(auth.profile, NotificationType.EDIT_SUBJECT_STATUS, {
-          subjectTitle: subject.title,
-          newStatus: status,
-        });
-      } catch (error) {
-        console.error(
-          `An error occured while changing subject ${subject.id} status`,
-          { error }
-        );
-      }
 
       setLoading(false);
     },
-    [subject.id, subject.title, revalidateSubjects, notifications, auth.profile]
+    [subject.id, subject.title]
   );
 
   const onCloseDeleteSubjectModal = useCallback(
     async (userConfirmedDeletion: boolean) => {
       deleteModal.onClose();
 
+      setLoading(true);
+
       if (userConfirmedDeletion) {
-        setLoading(true);
-
         try {
-          const request = http();
-
-          await request(APIPaths.SUBJECT.replace(':id', subject.id), {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'DELETE',
-          });
-
-          await revalidateSubjects();
-
-          // @ts-ignore
-          notifications.send(auth.profile, NotificationType.REMOVE_SUBJECT, {
-            subjectTitle: subject.title,
-          });
+          await firebase
+            .firestore()
+            .collection(FirestoreCollection.SUBJECTS)
+            .doc(subject.id)
+            .delete();
         } catch (error) {
+          setLoading(false);
+
           console.error(
-            `An error occured while deleting subject ${subject.id}`,
-            { error }
+            `An error occured while deleting the subject ${subject.id}:`,
+            error
           );
         }
-
-        setLoading(false);
       }
     },
-    [
-      deleteModal,
-      subject.id,
-      subject.title,
-      revalidateSubjects,
-      notifications,
-      auth.profile,
-    ]
+    [subject.id]
   );
 
   const contextMenuStatusOptions = useMemo(() => {
@@ -145,68 +113,65 @@ const SubjectItem: FunctionComponent<Props> = ({
 
     const statusOptions: ReactElement[] = [];
 
-    if (!switchToAvailableStatus) {
+    if (switchToAvailableStatus) {
       statusOptions.push(
         <ContextMenuItem
           onClick={() => changeSubjectStatus(SubjectStatus.AVAILABLE)}
           key="item-status-available"
         >
           Mark as&nbsp;
-          <C.Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
+          <Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
             AVAILABLE
-          </C.Badge>
+          </Badge>
         </ContextMenuItem>
       );
     }
 
-    if (!switchToUnavailbleStatus) {
+    if (switchToUnavailbleStatus) {
       statusOptions.push(
         <ContextMenuItem
           onClick={() => changeSubjectStatus(SubjectStatus.UNAVAILABLE)}
           key="item-status-unavailable"
         >
           Mark as&nbsp;
-          <C.Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
+          <Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
             UNAVAILABLE
-          </C.Badge>
+          </Badge>
         </ContextMenuItem>
       );
     }
 
-    if (!switchToDoneStatus) {
+    if (switchToDoneStatus) {
       statusOptions.push(
         <ContextMenuItem
           onClick={() => changeSubjectStatus(SubjectStatus.DONE)}
           key="item-status-done"
         >
           Mark as&nbsp;
-          <C.Badge variant="solid" m="1px 0 0 5px">
+          <Badge variant="solid" m="1px 0 0 5px">
             ALREADY GIVEN
-          </C.Badge>
+          </Badge>
         </ContextMenuItem>
       );
     }
 
     return statusOptions;
-  }, [toast, subject, changeSubjectStatus]);
+  }, [subject.status]);
 
-  const { subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
+  const { subjectIsNew, subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
     const creationDate = dayjs(subject.createdDate);
 
     return {
-      subjectIsOld: creationDate.isBefore(dayjs().subtract(3, 'month')),
+      subjectIsNew: isSubjectNew(subject.createdDate),
+      subjectIsOld: creationDate.isBefore(dayjs().subtract(3, "month")),
       oldSubjectImageAlt: `Subject has been submitted ${creationDate.fromNow()}`,
     };
-  }, [subject]);
-
-  const subjectIsNew = useMemo(() => {
-    return isSubjectNew(subject.createdDate);
-  }, [subject]);
+  }, [subject.createdDate.getTime()]);
 
   return (
-    <C.Box className="list-item">
+    <Box className="list-item">
       <ContextMenuTrigger id={`subject-${subject.id}`}>
-        <C.Box
+        <Box
           className={css.subjectItem}
           position="relative"
           boxShadow="sm"
@@ -215,14 +180,14 @@ const SubjectItem: FunctionComponent<Props> = ({
           style={{
             transform: `scale(${contextualMenuOpened ? 0.98 : 1})`,
             backgroundColor: contextualMenuOpened
-              ? theme.colors.gray['50']
+              ? theme.colors.gray["50"]
               : theme.colors.white,
           }}
         >
-          <C.Box
-            p={contextualMenuOpened ? '15px' : '20px'}
-            borderWidth={contextualMenuOpened ? '5px' : 0}
-            borderColor={theme.colors.cyan['400']}
+          <Box
+            p={contextualMenuOpened ? "15px" : "20px"}
+            borderWidth={contextualMenuOpened ? "5px" : 0}
+            borderColor={theme.colors.cyan["400"]}
             borderStyle="solid"
           >
             {subjectIsOld && (
@@ -235,67 +200,63 @@ const SubjectItem: FunctionComponent<Props> = ({
                 top={0}
                 right={0}
                 style={{
-                  filter: 'invert(1)',
+                  filter: "invert(1)",
                 }}
               />
             )}
 
-            <C.Box mb={2}>
-              <C.Text fontSize="xl" fontWeight="bold">
+            <Box mb={2}>
+              <Text fontSize="xl" fontWeight="bold">
                 {subject.title}
-              </C.Text>
-            </C.Box>
+              </Text>
+            </Box>
 
-            <C.Box>
+            <Box>
               <SubjectSpeakers speakers={subject.speakers} />
-            </C.Box>
+            </Box>
 
-            <C.Divider
-              mt="30px"
-              mb={3}
-              borderColor={theme.colors.gray['300']}
-            />
+            <Divider mt="30px" mb={3} borderColor={theme.colors.gray["300"]} />
 
-            <C.Flex align="center">
+            <Flex align="center">
               {subjectIsNew && subject.status !== SubjectStatus.DONE && (
                 <>
                   <SubjectNewBadge />
-                  <C.Box as="span" px={2}>
+                  <Box as="span" px={2}>
                     &bull;
-                  </C.Box>
+                  </Box>
                 </>
               )}
 
               <SubjectStatusBadge status={subject.status} />
 
-              <C.Box ml="auto" className={css.actions} opacity={0}>
-                <C.ButtonGroup isAttached variant="outline" size="sm">
-                  <C.IconButton
+              <Box ml="auto" className={css.actions} opacity={0}>
+                <ButtonGroup isAttached variant="outline" size="sm">
+                  <IconButton
                     icon={<ViewIcon />}
                     onClick={viewModal.onOpen}
                     mr="-1px"
                     title="View"
                     aria-label="View"
                   />
-                  <C.IconButton
+                  <IconButton
                     icon={<EditIcon />}
                     onClick={() => onEditSubject(subject)}
                     mr="-1px"
                     title="Edit"
                     aria-label="Edit"
                   />
-                  <C.IconButton
+                  <IconButton
                     icon={<DeleteIcon />}
                     onClick={deleteModal.onOpen}
                     title="Delete"
                     aria-label="Delete"
                   />
-                </C.ButtonGroup>
-              </C.Box>
-            </C.Flex>
+                </ButtonGroup>
+              </Box>
+            </Flex>
 
             {loading && (
-              <C.Flex
+              <Flex
                 className={css.loader}
                 align="center"
                 justify="center"
@@ -306,14 +267,14 @@ const SubjectItem: FunctionComponent<Props> = ({
                 h="100%"
                 zIndex={1}
               >
-                <C.Spinner />
-              </C.Flex>
+                <Spinner />
+              </Flex>
             )}
-          </C.Box>
-        </C.Box>
+          </Box>
+        </Box>
       </ContextMenuTrigger>
 
-      <C.Box
+      <Box
         borderRadius={4}
         boxShadow="lg"
         bg="white"
@@ -328,41 +289,41 @@ const SubjectItem: FunctionComponent<Props> = ({
           contextMenuStatusOptions.length > 0 && (
             <>
               {contextMenuStatusOptions}
-              <C.Divider />
+              <Divider />
             </>
           )}
 
         <MenuItem onClick={() => onEditSubject(subject)}>
-          <C.Box
+          <Box
             d="flex"
             alignItems="center"
             cursor="pointer"
             _hover={{
-              bg: theme.colors.gray['100'],
+              bg: theme.colors.gray["100"],
             }}
             p={2}
             px={3}
           >
             <EditIcon mr={3} />
-            <C.Text fontWeight="bold">Edit</C.Text>
-          </C.Box>
+            <Text fontWeight="bold">Edit</Text>
+          </Box>
         </MenuItem>
         <MenuItem onClick={deleteModal.onOpen}>
-          <C.Box
+          <Box
             d="flex"
             alignItems="center"
             cursor="pointer"
             _hover={{
-              bg: theme.colors.gray['100'],
+              bg: theme.colors.gray["100"],
             }}
             p={2}
             px={3}
           >
             <DeleteIcon mr={3} />
-            <C.Text fontWeight="bold">Delete</C.Text>
-          </C.Box>
+            <Text fontWeight="bold">Delete</Text>
+          </Box>
         </MenuItem>
-      </C.Box>
+      </Box>
 
       {deleteModal.isOpen && (
         <DeleteSubjectModal
@@ -375,7 +336,7 @@ const SubjectItem: FunctionComponent<Props> = ({
       {viewModal.isOpen && (
         <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
       )}
-    </C.Box>
+    </Box>
   );
 };
 

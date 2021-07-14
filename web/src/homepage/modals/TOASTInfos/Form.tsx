@@ -1,39 +1,46 @@
-import React, { FunctionComponent, Ref, useCallback, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
-import { Field, FieldProps, Formik, Form as FormikForm } from 'formik';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import useSWR, { mutate } from 'swr';
-import dayjs from 'dayjs';
+import firebase from "firebase/app";
+import React, { FunctionComponent, Ref, useCallback, useMemo } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  ModalFooter,
+  Stack,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
+import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import dayjs from "dayjs";
 
-import { User, CurrentToast, Toast, URLQueryParams } from '@shared';
+import { CurrentToast, User } from "@shared/models";
+import { DatabaseRefPaths, CloudFunctionName } from "@shared/firebase";
 
-import http from '@web/core/httpClient';
-import { APIPaths, Pathnames } from '@web/core/constants';
-import NotificationType from '@web/notifications/types/NotificationType';
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import getAppURL from '@web/core/helpers/getAppURL';
-import isToast from '@web/core/helpers/isToast';
-import { getFormattedTOASTDateWithRemainingDays } from '@web/core/helpers/timing';
-import useStores from '@web/core/hooks/useStores';
-import Image from '@web/core/components/Image';
-import SelectUserInput from '@web/core/components/form/SelectUserInput';
-import getAPIEndpointWithSlackNotification from '@web/core/helpers/getAPIEndpointWithSlackNotification';
-import SlackNotificationFieldsValues from '@web/core/models/form/SlackNotificationFieldsValues';
-import slackNotificationFieldsAreValid from '@web/core/helpers/form/validateSlackNotificationFields';
-import DateInput from './DateInput';
-import DatePickerNavBar from './DatePickerNavBar';
-import DatePickerCaption from './DatePickerCaption';
-import datePickerCSS from './DatePicker.module.css';
+import { firebaseData } from "@web/core/firebase/data";
+import { Pathnames } from "@web/core/constants";
+import getAppURL from "@web/core/helpers/getAppURL";
+import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
+import Image from "@web/core/components/Image";
+import SelectUserInput from "@web/core/components/form/SelectUserInput";
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
+import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
+import DateInput from "./DateInput";
+import DatePickerNavBar from "./DatePickerNavBar";
+import DatePickerCaption from "./DatePickerCaption";
+import datePickerCSS from "./DatePicker.module.css";
 
 interface Props {
+  currentToast: CurrentToast;
   cancelButtonRef: Ref<HTMLButtonElement>;
-  currentToast?: CurrentToast;
-  closeModal(toastCreated: boolean): void;
+  closeModal(toastCreated?: boolean): void;
 }
 
 interface FormErrors {
   dueDate?: boolean;
-  notificationMessage?: boolean;
+  slackMessage?: boolean;
   organizer?: boolean;
   scribe?: boolean;
 }
@@ -54,27 +61,21 @@ const Form: FunctionComponent<Props> = ({
   cancelButtonRef,
   closeModal,
 }) => {
-  const { auth, notifications } = useStores();
-  const { data: users } = useSWR<User[]>(APIPaths.USERS);
-
   const getFormattedSlackNotification = useCallback(
     (notificationText, toastDueDate) => {
       return notificationText
+        .replace("{{PROFILE}}", firebaseData.connectedUser?.displayName)
         .replace(
-          '{{PROFILE}}',
-          !!auth.profile ? getUserFullname(auth.profile) : ''
-        )
-        .replace(
-          '{{DATE}}',
+          "{{DATE}}",
           getFormattedTOASTDateWithRemainingDays(toastDueDate)
         )
-        .replace('{{URL}}', getAppURL() + Pathnames.SUBJECTS);
+        .replace("{{URL}}", getAppURL() + Pathnames.SUBJECTS);
     },
-    [auth.profile]
+    [firebaseData.connectedUser]
   );
 
   const dueDateValue = useMemo(() => {
-    if (isToast(currentToast)) {
+    if (currentToast) {
       return dayjs(currentToast.date).hour(14).toDate();
     } else {
       const today = dayjs();
@@ -83,7 +84,10 @@ const Form: FunctionComponent<Props> = ({
        * If we're already on friday.
        */
       if (today.day() === 5) {
-        return today.add(1, 'week').hour(14).toDate();
+        /**
+         * Set date to next week's friday.
+         */
+        return today.add(1, "week").hour(14).toDate();
       } else {
         return today.day(5).hour(14).toDate();
       }
@@ -98,7 +102,7 @@ const Form: FunctionComponent<Props> = ({
         organizer: currentToast?.organizer,
         scribe: currentToast?.scribe,
         notifySlack: false,
-        notificationMessage: defaultSlackNotificationMessage,
+        slackMessage: defaultSlackNotificationMessage,
       }}
       validate={(values: FormValues) => {
         const errors: FormErrors = {};
@@ -120,92 +124,62 @@ const Form: FunctionComponent<Props> = ({
          * validate those fields because they're not displayed.
          * Only while creating a TOAST.
          */
-        errors.notificationMessage =
-          !isToast(currentToast) && !slackNotificationFieldsAreValid(values);
+        if (!currentToast && !validateSlackNotificationField(values)) {
+          errors.slackMessage = true;
+        }
 
         return errors;
       }}
       onSubmit={async (values): Promise<void> => {
-        const request = http();
-
-        let toastCreated = false;
-        let updatedToast: Toast;
-
-        if (!isToast(currentToast)) {
-          /**
-           * Create a TOAST.
-           */
-          const endpoint = values.notifySlack
-            ? getAPIEndpointWithSlackNotification(
-                APIPaths.TOASTS,
-                getFormattedSlackNotification(
-                  values.notificationMessage,
-                  values.dueDate
-                )
-              )
-            : APIPaths.TOASTS;
-
-          updatedToast = await request(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              date: values.dueDate,
+        if (!currentToast) {
+          return firebase
+            .functions()
+            .httpsCallable(CloudFunctionName.CREATE_TOAST)({
+              date: values.dueDate.getTime(),
               organizerId: values.organizer!.id,
               scribeId: values.scribe!.id,
-            }),
-          });
-
-          toastCreated = true;
-
-          if (auth.profile) {
-            notifications.send(auth.profile, NotificationType.CREATE_TOAST, {
-              dueDate: values.dueDate.toString(),
+              slackMessage: values.notifySlack
+                ? getFormattedSlackNotification(
+                    values.slackMessage,
+                    values.dueDate
+                  )
+                : null,
+            })
+            .then(() => {
+              closeModal(true);
             });
-          }
         } else {
-          /**
-           * Edit current TOAST.
-           */
-
-          updatedToast = await request(APIPaths.TOAST_CURRENT, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              date: values.dueDate,
+          return firebase
+            .database()
+            .ref(DatabaseRefPaths.CURRENT_TOAST)
+            .update({
+              date: values.dueDate.getTime(),
               organizerId: values.organizer!.id,
               scribeId: values.scribe!.id,
-            }),
-          });
-
-          // @ts-ignore
-          notifications.send(auth.profile, NotificationType.EDIT_TOAST_INFOS);
+              modifiedDate: firebase.database.ServerValue.TIMESTAMP,
+            })
+            .then(() => closeModal());
         }
-
-        closeModal(toastCreated);
       }}
     >
       {({ values, setFieldValue, isSubmitting, isValid }) => {
         return (
           <FormikForm>
-            <C.Stack spacing={8}>
-              <C.Box>
+            <Stack spacing={8}>
+              <Box>
                 <Field name="dueDate">
                   {({ field, meta }: FieldProps) => (
-                    <C.FormControl
+                    <FormControl
                       isRequired
                       isInvalid={meta.touched && !!meta.error}
                     >
-                      <C.FormLabel htmlFor="dueDate">Due Date</C.FormLabel>
-                      <C.Box position="relative">
+                      <FormLabel htmlFor="dueDate">Due Date</FormLabel>
+                      <Box position="relative">
                         {/* datePickerCSS : needs to be of type react-day-picker/ClassNames instead of CSSModuleClasses.
                         @ts-ignore */}
                         <DayPickerInput
                           {...field}
-                          onDayChange={(date) => setFieldValue('dueDate', date)}
+                          onDayChange={(date) => setFieldValue("dueDate", date)}
                           formatDate={getFormattedTOASTDateWithRemainingDays}
                           classNames={datePickerCSS}
                           component={DateInput}
@@ -220,116 +194,111 @@ const Form: FunctionComponent<Props> = ({
                             captionElement: DatePickerCaption,
                           }}
                         />
-                      </C.Box>
-                    </C.FormControl>
+                      </Box>
+                    </FormControl>
                   )}
                 </Field>
-              </C.Box>
+              </Box>
 
-              <C.Stack spacing={5} direction="row">
-                <C.Box flex={1}>
+              <Stack spacing={5} direction="row">
+                <Box flex={1}>
                   <Field name="organizer">
                     {({ field, meta }: FieldProps) => {
                       const isInvalid = meta.touched && !!meta.error;
 
                       return (
-                        <C.FormControl isRequired isInvalid={isInvalid}>
-                          <C.FormLabel htmlFor={field.name}>
-                            Organizer
-                          </C.FormLabel>
+                        <FormControl isRequired isInvalid={isInvalid}>
+                          <FormLabel htmlFor={field.name}>Organizer</FormLabel>
                           <SelectUserInput
                             {...field}
-                            isDisabled={!users}
-                            options={users}
+                            isDisabled={!firebaseData.users.length}
+                            options={firebaseData.users}
                             isInvalid={isInvalid}
-                            name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(profile: User | null) => {
-                              if (profile) {
-                                setFieldValue(field.name, profile);
+                            onChange={(user: User | null) => {
+                              if (user) {
+                                setFieldValue(field.name, user);
                               }
                             }}
                           />
-                        </C.FormControl>
+                        </FormControl>
                       );
                     }}
                   </Field>
-                </C.Box>
+                </Box>
 
-                <C.Box flex={1}>
+                <Box flex={1}>
                   <Field name="scribe">
                     {({ field, meta }: FieldProps) => {
                       const isInvalid = meta.touched && !!meta.error;
 
                       return (
-                        <C.FormControl isRequired isInvalid={isInvalid}>
-                          <C.FormLabel htmlFor={field.name}>Scribe</C.FormLabel>
+                        <FormControl isRequired isInvalid={isInvalid}>
+                          <FormLabel htmlFor={field.name}>Scribe</FormLabel>
                           <SelectUserInput
                             {...field}
                             isInvalid={isInvalid}
-                            isDisabled={!users}
-                            options={users}
+                            isDisabled={!firebaseData.users.length}
+                            options={firebaseData.users}
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(profile: User | null) => {
-                              if (profile) {
-                                setFieldValue(field.name, profile);
+                            onChange={(user: User | null) => {
+                              if (user) {
+                                setFieldValue(field.name, user);
                               }
                             }}
                           />
-                        </C.FormControl>
+                        </FormControl>
                       );
                     }}
                   </Field>
-                </C.Box>
-              </C.Stack>
+                </Box>
+              </Stack>
 
-              {!isToast(currentToast) && (
-                <C.Box>
+              {!currentToast && (
+                <Box>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
-                      <C.Checkbox mb={2} defaultIsChecked={false} {...field}>
+                      <Checkbox mb={2} defaultIsChecked={false} {...field}>
                         Also notify #bordeaux Slack channel:
-                      </C.Checkbox>
+                      </Checkbox>
                     )}
                   </Field>
 
-                  <Field name="notificationMessage">
+                  <Field name="slackMessage">
                     {({ field, meta }: FieldProps) => (
-                      <C.FormControl>
-                        <C.Textarea
+                      <FormControl>
+                        <Textarea
                           {...field}
                           height="150px"
                           isRequired={values.notifySlack}
                           isDisabled={!values.notifySlack}
                           isInvalid={meta.touched && !!meta.error}
                           value={getFormattedSlackNotification(
-                            values.notificationMessage,
+                            values.slackMessage,
                             values.dueDate
                           )}
                         />
-                        <C.FormHelperText id="notificationMessage">
+                        <FormHelperText id="slackMessage">
                           You can use Slack formatting message.
-                        </C.FormHelperText>
-                      </C.FormControl>
+                        </FormHelperText>
+                      </FormControl>
                     )}
                   </Field>
-                </C.Box>
+                </Box>
               )}
 
-              <C.ModalFooter justifyContent="center">
-                <C.Button
-                  isDisabled={!users || !isValid}
-                  overflow="hidden"
+              <ModalFooter justifyContent="center">
+                <Button
                   type="submit"
+                  isDisabled={!isValid}
+                  overflow="hidden"
                   colorScheme="blue"
                   isLoading={isSubmitting}
                   loadingText={
-                    !isToast(currentToast)
-                      ? 'Initializing TOAST...'
-                      : 'Editing infos...'
+                    !currentToast ? "Creating TOAST..." : "Saving..."
                   }
                   mx={2}
                 >
@@ -341,12 +310,12 @@ const Form: FunctionComponent<Props> = ({
                     height={50}
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
-                  <C.Text as="span" pl={35}>
-                    {isToast(currentToast) && 'Edit'}
-                    {!isToast(currentToast) && "Let's go !"}
-                  </C.Text>
-                </C.Button>
-                <C.Button
+                  <Text as="span" pl={35}>
+                    {currentToast && "Save modifications"}
+                    {!currentToast && "Let's go !"}
+                  </Text>
+                </Button>
+                <Button
                   ref={cancelButtonRef}
                   isDisabled={isSubmitting}
                   onClick={() => closeModal(false)}
@@ -364,12 +333,12 @@ const Form: FunctionComponent<Props> = ({
                     height={35}
                     src="https://media.giphy.com/media/4a6NdCWK5QQLWBJpsH/giphy.webp"
                   />
-                  <C.Text as="span" pl={35}>
+                  <Text as="span" pl={35}>
                     Cancel
-                  </C.Text>
-                </C.Button>
-              </C.ModalFooter>
-            </C.Stack>
+                  </Text>
+                </Button>
+              </ModalFooter>
+            </Stack>
           </FormikForm>
         );
       }}

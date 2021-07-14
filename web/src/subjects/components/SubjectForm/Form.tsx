@@ -1,9 +1,38 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
-import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from '@chakra-ui/icons';
-import { observer } from 'mobx-react-lite';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-regular-svg-icons';
+import firebase from "firebase/app";
+import React, { FunctionComponent, useMemo } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerFooter,
+  Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  InputRightAddon,
+  SimpleGrid,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+  Stack,
+  Text,
+  Textarea,
+  useTheme,
+} from "@chakra-ui/react";
+import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
+import { observer } from "mobx-react-lite";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-regular-svg-icons";
 import {
   Field,
   FieldArray,
@@ -11,30 +40,22 @@ import {
   Form as FormikForm,
   Formik,
   FormikProps,
-} from 'formik';
-import Select from 'react-select';
+} from "formik";
+import Select from "react-select";
 
-import {
-  Subject,
-  SubjectLanguage,
-  SubjectStatus,
-  Toast,
-  ToastStatus,
-  User,
-} from '@shared';
+import { Subject, User } from "@shared/models";
+import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
+import { FirestoreCollection } from "@shared/firebase";
 
-import http from '@web/core/httpClient';
-import NotificationType from '@web/notifications/types/NotificationType';
-import useStores from '@web/core/hooks/useStores';
-import { APIPaths, pageColors, urlRegex } from '@web/core/constants';
-import { getTOASTRemainingDays } from '@web/core/helpers/timing';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import SelectUserInput from '@web/core/components/form/SelectUserInput';
-import isToast from '@web/core/helpers/isToast';
-import subjectIsInVotingSession from '@web/core/helpers/subjectIsInVotingSession';
-import SubjectStatusBadge from '@web/subjects/components/list/item/SubjectStatusBadge';
-import StatusField from './StatusField';
+import { firebaseData } from "@web/core/firebase/data";
+import { pageColors } from "@web/core/constants";
+import { getTOASTRemainingDays } from "@web/core/helpers/timing";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import SelectUserInput from "@web/core/components/form/SelectUserInput";
+import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
+import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
+import StatusField from "./StatusField";
 
 interface LanguageValue {
   label: string;
@@ -62,73 +83,65 @@ interface FormValues {
 
 interface Props {
   subject?: Subject;
-  allUsers: User[];
-  revalidateSubjects(): Promise<boolean>;
   closeForm(): void;
 }
 
 const coverPlaceholder =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM8XQ8AAhsBTLgo62UAAAAASUVORK5CYII=';
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mM8XQ8AAhsBTLgo62UAAAAASUVORK5CYII=";
 
 const languageOptions: LanguageValue[] = [
   {
-    label: 'Français',
+    label: "Français",
     value: SubjectLanguage.FR,
   },
   {
-    label: 'English',
+    label: "English",
     value: SubjectLanguage.EN,
   },
 ];
 
-const Form: FunctionComponent<Props> = ({
-  subject,
-  allUsers,
-  closeForm,
-  revalidateSubjects,
-}) => {
-  const {
-    auth,
-    notifications,
-    currentToastSession: { toast },
-  } = useStores();
-
-  const theme = C.useTheme();
+const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
+  const theme = useTheme();
+  const { currentToast, users, connectedUser } = firebaseData;
 
   const isCreatingSubject = !subject;
 
   const warnAboutNewSubjectDuringVotingSession = useMemo(() => {
     return (
-      isCreatingSubject &&
-      isToast(toast) &&
-      toast.status === ToastStatus.OPEN_FOR_VOTE
+      isCreatingSubject && currentToast?.status === ToastStatus.OPEN_FOR_VOTE
     );
-  }, [isCreatingSubject, toast, subject]);
+  }, [isCreatingSubject, currentToast]);
 
-  const alertAboutStatusChange = useMemo(() => {
+  const alertAboutStatusChangeDuringVotingSession = useMemo(() => {
     return (
       !isCreatingSubject &&
-      isToast(toast) &&
-      subjectIsInVotingSession(toast.status, subject!.status)
+      !!currentToast &&
+      subjectIsInVotingSession(currentToast.status, subject!.status)
     );
-  }, [isCreatingSubject, toast, subject]);
+  }, [isCreatingSubject, currentToast, subject]);
 
   return (
     <Formik
       validateOnMount={true}
       initialValues={{
-        title: isCreatingSubject ? '' : subject!.title,
-        description: isCreatingSubject ? '' : subject!.description,
+        title: isCreatingSubject ? "" : subject!.title,
+        description: isCreatingSubject ? "" : subject!.description,
         language: isCreatingSubject
           ? languageOptions[0]
           : languageOptions.find(
               (option) => option.value === subject!.language
             )!,
         duration: isCreatingSubject ? 30 : subject!.duration,
-        speakers: isCreatingSubject ? [] : subject!.speakers,
-        cover: isCreatingSubject ? '' : subject!.cover || '',
-        comment: isCreatingSubject ? '' : subject!.comment || '',
-        status: isCreatingSubject ? SubjectStatus.AVAILABLE : subject!.status,
+        speakers: isCreatingSubject
+          ? [users.find((user) => user.id === connectedUser?.uid)!]
+          : subject!.speakers,
+        cover: isCreatingSubject ? "" : subject!.cover || "",
+        comment: isCreatingSubject ? "" : subject!.comment || "",
+        status: warnAboutNewSubjectDuringVotingSession
+          ? SubjectStatus.UNAVAILABLE
+          : isCreatingSubject
+          ? SubjectStatus.AVAILABLE
+          : subject!.status,
       }}
       validate={(values: FormValues) => {
         const errors: FormErrors = {};
@@ -145,13 +158,19 @@ const Form: FunctionComponent<Props> = ({
           errors.description = true;
         }
 
-        if (values.cover && !urlRegex.test(values.cover)) {
-          errors.cover = true;
+        if (values.cover) {
+          try {
+            new URL(values.cover);
+          } catch (error) {
+            if (error instanceof TypeError) {
+              errors.cover = true;
+            }
+          }
         }
 
         return errors;
       }}
-      onSubmit={async (values: FormValues) => {
+      onSubmit={(values: FormValues) => {
         /**
          * When adding a Field for a new speaker, its default value is `null`.
          * If the form is submitted without selecting a user in the select input,
@@ -160,54 +179,51 @@ const Form: FunctionComponent<Props> = ({
          */
         const speakers = values.speakers.filter(Boolean);
 
-        const input = {
+        let input = {
           title: values.title,
-          speakers: speakers.map((speaker) => speaker.id),
+          speakersIds: speakers.map((speaker) => speaker.id),
           description: values.description,
           duration: values.duration,
           language: values.language.value,
           comment: values.comment,
           cover: values.cover,
           status: values.status,
+          createdDate: isCreatingSubject
+            ? firebase.firestore.FieldValue.serverTimestamp()
+            : subject?.createdDate,
+          createdByUserId: isCreatingSubject
+            ? firebaseData.connectedUser?.uid
+            : subject?.createdByUser.id,
+          lastModifiedDate: firebase.firestore.FieldValue.serverTimestamp(),
+          lastModifiedByUserId: firebaseData.connectedUser?.uid,
         };
 
-        const request = http();
-
         if (isCreatingSubject) {
-          await request(APIPaths.SUBJECTS, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(input),
-          });
-
-          // @ts-ignore
-          notifications.send(auth.profile, NotificationType.ADD_SUBJECT, {
-            subjectTitle: values.title,
-          });
+          return firebase
+            .firestore()
+            .collection(FirestoreCollection.SUBJECTS)
+            .add(input)
+            .then(() => closeForm())
+            .catch((error) => {
+              console.error(
+                "Couldn't create subject because of Firebase error :",
+                error
+              );
+            });
         } else {
-          await request(APIPaths.SUBJECT.replace(':id', subject!.id), {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(input),
-          });
-
-          notifications.send(
-            // @ts-ignore
-            auth.profile,
-            NotificationType.EDIT_SUBJECT_CONTENT,
-            {
-              subjectTitle: subject!.title,
-            }
-          );
+          return firebase
+            .firestore()
+            .collection(FirestoreCollection.SUBJECTS)
+            .doc(subject?.id)
+            .set(input)
+            .then(() => closeForm())
+            .catch((error) => {
+              console.error(
+                "Couldn't update subject because of Firebase error :",
+                error
+              );
+            });
         }
-
-        await revalidateSubjects();
-
-        closeForm();
       }}
     >
       {({
@@ -215,14 +231,13 @@ const Form: FunctionComponent<Props> = ({
         setFieldValue,
         isSubmitting,
         isValid,
-        validateForm,
       }: FormikProps<FormValues>) => {
         return (
           <FormikForm>
-            <C.DrawerHeader>
-              <C.Flex wrap="nowrap" align="start">
-                <C.Flex align="center" justify="center" mx="auto">
-                  <C.Text textAlign="center" wordBreak="break-word">
+            <DrawerHeader>
+              <Flex wrap="nowrap" align="start">
+                <Flex align="center" justify="center" mx="auto">
+                  <Text textAlign="center" wordBreak="break-word">
                     <HighlightedText
                       d="inline-block"
                       bgColor={pageColors.subjects}
@@ -231,106 +246,104 @@ const Form: FunctionComponent<Props> = ({
                       {isCreatingSubject
                         ? values.title.length
                           ? `Creating new subject: "${values.title}"`
-                          : 'Creating a new subject'
+                          : "Creating a new subject"
                         : `Editing subject: "${subject!.title}"`}
                     </HighlightedText>
-                  </C.Text>
+                  </Text>
                   <Image
                     transform="translateY(-3px)"
                     width={141}
                     height={65}
                     src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
                   />
-                </C.Flex>
-                <C.DrawerCloseButton padding={2} />
-              </C.Flex>
-            </C.DrawerHeader>
+                </Flex>
+                <DrawerCloseButton padding={2} />
+              </Flex>
+            </DrawerHeader>
 
-            <C.DrawerBody>
-              <C.Box mb={5}>
+            <DrawerBody>
+              <Box mb={5}>
                 {warnAboutNewSubjectDuringVotingSession && (
-                  <C.Alert status="warning" variant="left-accent">
-                    <C.AlertIcon />
-                    <C.Box flex="1">
-                      <C.AlertTitle fontSize="lg">
+                  <Alert status="warning" variant="left-accent">
+                    <AlertIcon />
+                    <Box flex="1">
+                      <AlertTitle fontSize="lg">
                         You're about to create a new subject: that's great! But
                         be advised...
-                      </C.AlertTitle>
-                      <C.AlertDescription>
+                      </AlertTitle>
+                      <AlertDescription>
                         A voting session for the next TOAST coming&nbsp;
-                        {getTOASTRemainingDays(new Date((toast as Toast).date))}
+                        {getTOASTRemainingDays(new Date(currentToast!.date))}
                         &nbsp;is currently opened. If you submit this subject
                         with the&nbsp;
                         <SubjectStatusBadge status={SubjectStatus.AVAILABLE} />
                         &nbsp;status, it will be automatically added to it.
-                      </C.AlertDescription>
-                    </C.Box>
-                  </C.Alert>
+                      </AlertDescription>
+                    </Box>
+                  </Alert>
                 )}
-                {alertAboutStatusChange && (
-                  <C.Alert status="error" variant="left-accent">
-                    <C.AlertIcon />
-                    <C.Box flex="1">
-                      <C.AlertTitle fontSize="lg">Watch out!</C.AlertTitle>
-                      <C.AlertDescription>
-                        <C.Text>
+                {alertAboutStatusChangeDuringVotingSession && (
+                  <Alert status="error" variant="left-accent">
+                    <AlertIcon />
+                    <Box flex="1">
+                      <AlertTitle fontSize="lg">Watch out!</AlertTitle>
+                      <AlertDescription>
+                        <Text>
                           This subject is currently in the voting session for
                           the next TOAST!
-                        </C.Text>
-                        <C.Text>
+                        </Text>
+                        <Text>
                           Changing its status to something else than&nbsp;
                           <SubjectStatusBadge status={subject!.status} />
                           &nbsp;will make it lose all its votes!
-                        </C.Text>
-                      </C.AlertDescription>
-                    </C.Box>
-                  </C.Alert>
+                        </Text>
+                      </AlertDescription>
+                    </Box>
+                  </Alert>
                 )}
-              </C.Box>
+              </Box>
 
-              <C.Stack spacing={8}>
-                <C.Box>
+              <Stack spacing={8}>
+                <Box>
                   <Field name="title">
                     {({ field, meta }: FieldProps) => (
-                      <C.FormControl
+                      <FormControl
                         isRequired
                         isInvalid={meta.touched && !!meta.error}
                       >
-                        <C.FormLabel htmlFor={field.name}>Title</C.FormLabel>
-                        <C.Input id={field.name} {...field} />
-                      </C.FormControl>
+                        <FormLabel htmlFor={field.name}>Title</FormLabel>
+                        <Input id={field.name} {...field} />
+                      </FormControl>
                     )}
                   </Field>
-                </C.Box>
-                <C.Box>
+                </Box>
+                <Box>
                   <Field name="description">
                     {({ field, meta }: FieldProps) => (
-                      <C.FormControl
+                      <FormControl
                         isRequired
                         isInvalid={meta.touched && !!meta.error}
                       >
-                        <C.FormLabel htmlFor={field.name}>
-                          Description
-                        </C.FormLabel>
-                        <C.Textarea id={field.name} {...field} />
-                        <C.FormHelperText id={field.name}>
+                        <FormLabel htmlFor={field.name}>Description</FormLabel>
+                        <Textarea id={field.name} {...field} />
+                        <FormHelperText id={field.name}>
                           Few words about your subject.
-                        </C.FormHelperText>
-                      </C.FormControl>
+                        </FormHelperText>
+                      </FormControl>
                     )}
                   </Field>
-                </C.Box>
-                <C.Stack direction="row" spacing={5}>
-                  <C.Box flex={1}>
+                </Box>
+                <Stack direction="row" spacing={5}>
+                  <Box flex={1}>
                     <Field name="language">
                       {({ field, meta }: FieldProps) => (
-                        <C.FormControl
+                        <FormControl
                           isRequired
                           isInvalid={meta.touched && !!meta.error}
                         >
-                          <C.FormLabel htmlFor={field.name}>
+                          <FormLabel htmlFor={field.name}>
                             Spoken language
-                          </C.FormLabel>
+                          </FormLabel>
                           <Select
                             {...field}
                             id={field.name}
@@ -341,69 +354,67 @@ const Form: FunctionComponent<Props> = ({
                             placeholder="Bryan is in the kitchen"
                             options={languageOptions}
                             onChange={(language) =>
-                              setFieldValue('language', language)
+                              setFieldValue(field.name, language)
                             }
                           />
-                        </C.FormControl>
+                        </FormControl>
                       )}
                     </Field>
-                  </C.Box>
-                  <C.Box flex={1}>
+                  </Box>
+                  <Box flex={1}>
                     <Field name="duration">
                       {({ field, meta }: FieldProps) => (
-                        <C.FormControl
+                        <FormControl
                           isRequired
                           isInvalid={meta.touched && !!meta.error}
                         >
-                          <C.FormLabel htmlFor={field.name}>
+                          <FormLabel htmlFor={field.name}>
                             Duration : {field.value} min
-                          </C.FormLabel>
-                          <C.Slider
+                          </FormLabel>
+                          <Slider
                             {...field}
                             name={field.name}
                             min={5}
                             max={120}
                             step={5}
                             p={0}
-                            height={theme.space['10']}
+                            height={theme.space["10"]}
                             d="block"
                             size="lg"
                             onChange={(value) => {
                               if (value !== field.value) {
-                                setFieldValue('duration', value);
+                                setFieldValue(field.name, value);
                               }
                             }}
                           >
-                            <C.SliderTrack>
-                              <C.SliderFilledTrack />
-                            </C.SliderTrack>
+                            <SliderTrack>
+                              <SliderFilledTrack />
+                            </SliderTrack>
 
-                            <C.SliderThumb id={field.name}>
+                            <SliderThumb id={field.name}>
                               <TimeIcon />
-                            </C.SliderThumb>
-                          </C.Slider>
-                        </C.FormControl>
+                            </SliderThumb>
+                          </Slider>
+                        </FormControl>
                       )}
                     </Field>
-                  </C.Box>
-                </C.Stack>
-                <C.Box>
+                  </Box>
+                </Stack>
+                <Box>
                   <FieldArray
                     name="speakers"
                     render={(arrayHelpers) => (
-                      <C.FormControl isRequired>
-                        <C.FormLabel htmlFor="speakers.0">
-                          Speaker(s)
-                        </C.FormLabel>
-                        <C.SimpleGrid columns={2} spacing={4}>
+                      <FormControl isRequired>
+                        <FormLabel htmlFor="speakers.0">Speaker(s)</FormLabel>
+                        <SimpleGrid columns={2} spacing={4}>
                           {values.speakers.map((speaker, speakerIndex) => (
-                            <C.Stack
+                            <Stack
                               key={`speakers.${speakerIndex}`}
                               align="center"
                               spacing={1}
                               direction="row"
                             >
-                              <C.Box flex={1}>
+                              <Box flex={1}>
                                 <Field name={`speakers.${speakerIndex}`}>
                                   {({ field }: FieldProps) => {
                                     return (
@@ -411,7 +422,7 @@ const Form: FunctionComponent<Props> = ({
                                         {...field}
                                         placeholder="You?"
                                         isInvalid={false}
-                                        options={allUsers.filter(
+                                        options={users.filter(
                                           (user) =>
                                             !values.speakers.find(
                                               (selectedUser) =>
@@ -432,10 +443,10 @@ const Form: FunctionComponent<Props> = ({
                                     );
                                   }}
                                 </Field>
-                              </C.Box>
+                              </Box>
 
                               {values.speakers.length > 1 && (
-                                <C.Button
+                                <Button
                                   colorScheme="red"
                                   isDisabled={
                                     speakerIndex === 0 &&
@@ -446,44 +457,45 @@ const Form: FunctionComponent<Props> = ({
                                   }
                                 >
                                   -
-                                </C.Button>
+                                </Button>
                               )}
-                            </C.Stack>
+                            </Stack>
                           ))}
-                          <C.Button
+                          <Button
                             rightIcon={<AddIcon />}
                             isDisabled={!values.speakers.every(Boolean)}
                             onClick={() => arrayHelpers.push(null)}
                           >
                             Add a speaker
-                          </C.Button>
-                        </C.SimpleGrid>
-                      </C.FormControl>
+                          </Button>
+                        </SimpleGrid>
+                      </FormControl>
                     )}
                   />
-                </C.Box>
-                <C.Box>
+                </Box>
+                <Box>
                   <Field
                     name="status"
                     component={StatusField}
-                    showHints={!alertAboutStatusChange}
+                    showHints={!alertAboutStatusChangeDuringVotingSession}
                   />
-                </C.Box>
-                <C.Box>
+                </Box>
+                <Box>
                   <Field name="cover">
-                    {({ field }: FieldProps<FormValues['cover']>) => {
-                      const urlIsValid = urlRegex.test(field.value);
+                    {({ field, meta }: FieldProps<FormValues["cover"]>) => {
+                      const urlIsValid = !meta.error;
 
                       return (
-                        <C.FormControl>
-                          <C.FormLabel htmlFor={field.name}>Cover</C.FormLabel>
-                          <C.Flex
+                        <FormControl>
+                          <FormLabel htmlFor={field.name}>Cover</FormLabel>
+                          <Flex
                             position="relative"
                             align="center"
                             justify="center"
                             height="170px"
-                            marginLeft={`-${theme.space['6']}`}
-                            marginRight={`-${theme.space['6']}`}
+                            marginLeft={`-${theme.space["6"]}`}
+                            marginRight={`-${theme.space["6"]}`}
+                            backgroundColor={theme.colors.gray["300"]}
                             backgroundImage={`url(${
                               urlIsValid ? field.value : coverPlaceholder
                             })`}
@@ -491,58 +503,56 @@ const Form: FunctionComponent<Props> = ({
                             backgroundPosition="center center"
                             backgroundSize="cover"
                           >
-                            <C.InputGroup width="70%" mx="auto">
-                              <C.InputLeftAddon>
+                            <InputGroup width="70%" mx="auto">
+                              <InputLeftAddon>
                                 <FontAwesomeIcon icon={faImage} size="lg" />
-                              </C.InputLeftAddon>
-                              <C.Input
+                              </InputLeftAddon>
+                              <Input
                                 {...field}
                                 id={field.name}
                                 borderRadius="0"
                                 placeholder="Image URL"
                                 bg="white"
                               />
-                              {urlIsValid && (
-                                <C.InputRightAddon>
+                              {field.value && urlIsValid && (
+                                <InputRightAddon>
                                   <CheckIcon color="green.500" />
-                                </C.InputRightAddon>
+                                </InputRightAddon>
                               )}
 
                               {field.value && !urlIsValid && (
-                                <C.InputRightAddon>
+                                <InputRightAddon>
                                   <WarningIcon color="red.500" />
-                                </C.InputRightAddon>
+                                </InputRightAddon>
                               )}
-                            </C.InputGroup>
-                          </C.Flex>
-                        </C.FormControl>
+                            </InputGroup>
+                          </Flex>
+                        </FormControl>
                       );
                     }}
                   </Field>
-                </C.Box>
+                </Box>
 
-                <C.Box>
+                <Box>
                   <Field name="comment">
                     {({ field }: FieldProps) => (
-                      <C.FormControl>
-                        <C.FormLabel htmlFor={field.name}>
-                          Side notes
-                        </C.FormLabel>
-                        <C.Input id={field.name} {...field} />
-                        <C.FormHelperText id={field.name}>
+                      <FormControl>
+                        <FormLabel htmlFor={field.name}>Side notes</FormLabel>
+                        <Input id={field.name} {...field} />
+                        <FormHelperText id={field.name}>
                           Use this field to elaborate on your subject, or simply
                           explain why your talk may not be available yet.
-                        </C.FormHelperText>
-                      </C.FormControl>
+                        </FormHelperText>
+                      </FormControl>
                     )}
                   </Field>
-                </C.Box>
-              </C.Stack>
-            </C.DrawerBody>
+                </Box>
+              </Stack>
+            </DrawerBody>
 
-            <C.DrawerFooter>
-              <C.Stack align="center" spacing={3} direction="row">
-                <C.Button
+            <DrawerFooter>
+              <Stack align="center" spacing={3} direction="row">
+                <Button
                   overflow="hidden"
                   type="submit"
                   colorScheme="blue"
@@ -550,8 +560,8 @@ const Form: FunctionComponent<Props> = ({
                   isDisabled={!isValid}
                   loadingText={
                     isCreatingSubject
-                      ? 'Creating subject...'
-                      : 'Editing subject...'
+                      ? "Creating subject..."
+                      : "Editing subject..."
                   }
                   mx={2}
                 >
@@ -563,12 +573,12 @@ const Form: FunctionComponent<Props> = ({
                     height={50}
                     src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
                   />
-                  <C.Text as="span" pl={35}>
-                    {isCreatingSubject && 'Add your subject'}
-                    {!isCreatingSubject && 'Edit subject'}
-                  </C.Text>
-                </C.Button>
-                <C.Button
+                  <Text as="span" pl={35}>
+                    {isCreatingSubject && "Add your subject"}
+                    {!isCreatingSubject && "Edit subject"}
+                  </Text>
+                </Button>
+                <Button
                   isDisabled={isSubmitting}
                   onClick={() => closeForm()}
                   overflow="hidden"
@@ -578,9 +588,9 @@ const Form: FunctionComponent<Props> = ({
                   mx={2}
                 >
                   Cancel
-                </C.Button>
-              </C.Stack>
-            </C.DrawerFooter>
+                </Button>
+              </Stack>
+            </DrawerFooter>
           </FormikForm>
         );
       }}

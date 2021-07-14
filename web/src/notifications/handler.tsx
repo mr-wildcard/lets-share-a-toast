@@ -1,26 +1,25 @@
-import React, { ReactElement } from 'react';
-import { UseToastOptions } from '@chakra-ui/react';
+import React, { ReactElement } from "react";
+import { UseToastOptions } from "@chakra-ui/react";
 
-import { APIPaths } from '@web/core/constants';
-import NotificationSubjectAdded from '@web/notifications/types/NotificationSubjectAdded';
-import NotificationSubjectEdited from '@web/notifications/types/NotificationSubjectEdited';
-import NotificationSubjectRemoved from '@web/notifications/types/NotificationSubjectRemoved';
-import NotificationSubjectEditedStatus from '@web/notifications/types/NotificationSubjectEditedStatus';
-import NotificationTOASTCreated from '@web/notifications/types/NotificationTOASTCreated';
-import NotificationTOASTStatusChanged from '@web/notifications/types/NotificationTOASTStatusChanged';
-import Notification from '@web/notifications/types/Notification';
-import Toaster from '@web/notifications/types/Toaster';
-import SubjectAdded from './components/messages/SubjectAdded';
-import SubjectEdited from './components/messages/SubjectEdited';
-import SubjectStatusEdited from './components/messages/SubjectStatusEdited';
-import SubjectRemoved from './components/messages/SubjectRemoved';
-import TOASTCreated from './components/messages/TOASTCreated';
-import TOASTInfosChanged from './components/messages/TOASTInfosChanged';
-import TOASTStatusChanged from './components/messages/TOASTStatusChanged';
+import NotificationSubjectAdded from "@web/notifications/types/NotificationSubjectAdded";
+import NotificationSubjectEdited from "@web/notifications/types/NotificationSubjectEdited";
+import NotificationSubjectRemoved from "@web/notifications/types/NotificationSubjectRemoved";
+import NotificationSubjectEditedStatus from "@web/notifications/types/NotificationSubjectEditedStatus";
+import NotificationTOASTCreated from "@web/notifications/types/NotificationTOASTCreated";
+import NotificationTOASTStatusChanged from "@web/notifications/types/NotificationTOASTStatusChanged";
+import Notification from "@web/notifications/types/Notification";
+import Toaster from "@web/notifications/types/Toaster";
+import SubjectAdded from "./components/messages/SubjectAdded";
+import SubjectEdited from "./components/messages/SubjectEdited";
+import SubjectStatusEdited from "./components/messages/SubjectStatusEdited";
+import SubjectRemoved from "./components/messages/SubjectRemoved";
+import TOASTCreated from "./components/messages/TOASTCreated";
+import TOASTInfosChanged from "./components/messages/TOASTInfosChanged";
+import TOASTStatusChanged from "./components/messages/TOASTStatusChanged";
 
 const getToasterConfig = (Component: ReactElement): UseToastOptions => ({
   duration: 5000,
-  position: 'bottom-left',
+  position: "bottom-left",
   render: function Notification() {
     return Component;
   },
@@ -38,9 +37,9 @@ export default function toasterHandler(toaster: Toaster) {
     try {
       toaster(notificationOptions);
     } catch (error) {
-      console.error('An error occured while trying to display a notification.');
+      console.error("An error occured while trying to display a notification.");
       console.error(error);
-      console.error('Data received from socket :', data);
+      console.error("Data received from socket :", data);
     }
   };
 

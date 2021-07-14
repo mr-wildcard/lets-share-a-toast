@@ -1,8 +1,11 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import React, { FunctionComponent } from "react";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 
-import Image from '@web/core/components/Image';
+import { votingSessionHasAtLeastOneVote } from "@shared/utils";
+
+import Image from "@web/core/components/Image";
+import { firebaseData } from "@web/core/firebase/data";
 
 interface Props {
   isSuccess: boolean;
@@ -10,17 +13,28 @@ interface Props {
 }
 
 const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+  const { votingSession } = firebaseData;
+
+  const notEnoughVotes =
+    !votingSession || !votingSessionHasAtLeastOneVote(votingSession);
+
   return (
     <>
       {!isSuccess && (
-        <C.Button
+        <Button
           onClick={onClick}
+          disabled={notEnoughVotes}
           variant="outline"
           position="relative"
           bg="white"
           size="lg"
           colorScheme="blue"
           fontWeight="bold"
+          title={
+            notEnoughVotes
+              ? "Nobody voted for any subject yet."
+              : "Close voting session."
+          }
         >
           <Image
             src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
@@ -32,14 +46,14 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
             transform="scaleX(-1) rotate(5deg)"
           />
 
-          <C.Text fontWeight="bold" pr="50px">
+          <Text fontWeight="bold" pr="50px">
             Close votes
-          </C.Text>
-        </C.Button>
+          </Text>
+        </Button>
       )}
 
       {isSuccess && (
-        <C.Flex
+        <Flex
           h="100%"
           align="center"
           fontWeight="bold"
@@ -50,10 +64,10 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
         >
           Votes closed
           <CheckCircleIcon ml={3} color="white" boxSize="24px" />
-        </C.Flex>
+        </Flex>
       )}
     </>
   );
 };
 
-export default React.memo(CloseVotes);
+export default CloseVotes;

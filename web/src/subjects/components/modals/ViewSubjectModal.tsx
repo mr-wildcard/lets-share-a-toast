@@ -1,12 +1,27 @@
-import React, { FunctionComponent, useMemo, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { useSpring, animated, interpolate, config } from '@react-spring/web';
-import dayjs from 'dayjs';
+import React, { FunctionComponent, useMemo, useState } from "react";
+import {
+  Box,
+  Divider,
+  Heading,
+  Img,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { useSpring, animated, interpolate, config } from "@react-spring/web";
+import dayjs from "dayjs";
 
-import { Subject } from '@shared';
+import { Subject } from "@shared/models";
 
-import SubjectSpeakers from '@web/subjects/components/list/item/SubjectSpeakers';
-import SubjectInfoBadges from '@web/subjects/components/modals/SubjectInfoBadges';
+import SubjectSpeakers from "@web/subjects/components/list/item/SubjectSpeakers";
+import SubjectInfoBadges from "@web/subjects/components/modals/SubjectInfoBadges";
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props {
   subject: Subject;
@@ -46,9 +61,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
   subject,
   closeModal,
 }) => {
-  const hasCover = subject.cover !== null;
-
-  const [coverLoaded, setCoverLoaded] = useState(!hasCover);
+  const [coverLoaded, setCoverLoaded] = useState(!subject.cover);
 
   const [
     [fromPath1, fromPath2],
@@ -90,15 +103,15 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
   });
 
   return (
-    <C.Modal isOpen={true} onClose={closeModal} isCentered size="xl">
-      <C.ModalOverlay>
-        <C.ModalContent
+    <Modal isOpen={true} onClose={closeModal} isCentered size="xl">
+      <ModalOverlay>
+        <ModalContent
           maxHeight="90vh"
           margin={0}
           bg="transparent"
           boxShadow="none"
         >
-          <C.Box
+          <Box
             as={animated.div}
             style={{
               // @ts-ignore
@@ -120,17 +133,17 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
             maxHeight="100%"
             overflowY="auto"
           >
-            <C.ModalHeader p={0}>
-              {hasCover && (
-                <C.Box
+            <ModalHeader p={0}>
+              {subject.cover && (
+                <Box
                   backgroundColor="gray.200"
                   position="relative"
                   transition="height 500ms"
                   overflow="hidden"
-                  style={{ height: coverLoaded ? '250px' : '150px' }}
+                  style={{ height: coverLoaded ? "250px" : "150px" }}
                 >
                   {!coverLoaded && (
-                    <C.Spinner
+                    <Spinner
                       position="absolute"
                       left="50%"
                       top="50%"
@@ -138,11 +151,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                     />
                   )}
 
-                  {/*
-                   * Had to use native img as `onLoad` was fired twice
-                   * with Chakra's Image component.
-                   * */}
-                  <C.Img
+                  <Img
                     src={subject.cover}
                     transition="opacity 500ms"
                     style={{
@@ -156,86 +165,79 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                     objectFit="cover"
                     objectPosition="center"
                   />
-                </C.Box>
+                </Box>
               )}
 
-              <C.Stack p={4} pr={0} mr="50px" spacing={3}>
-                {hasCover && (
-                  <C.Box>
+              <Stack p={4} pr={0} mr="50px" spacing={3}>
+                {subject.cover && (
+                  <Box>
                     <SubjectInfoBadges subject={subject} />
-                  </C.Box>
+                  </Box>
                 )}
 
-                <C.Heading as="h3" fontSize="3xl" wordBreak="break-word">
+                <Heading as="h3" fontSize="3xl" wordBreak="break-word">
                   {subject.title}
-                </C.Heading>
+                </Heading>
 
-                <C.Box fontSize="md" fontWeight="normal">
+                <Box fontSize="md" fontWeight="normal">
                   <SubjectSpeakers speakers={subject.speakers} />
-                </C.Box>
+                </Box>
 
-                {!hasCover && (
-                  <C.Box>
+                {!subject.cover && (
+                  <Box>
                     <SubjectInfoBadges subject={subject} />
-                  </C.Box>
+                  </Box>
                 )}
-              </C.Stack>
-            </C.ModalHeader>
+              </Stack>
+            </ModalHeader>
 
-            <C.Divider m={0} />
+            <Divider m={0} />
 
-            <C.ModalCloseButton
+            <ModalCloseButton
               d="flex"
               bg="rgba(255, 255, 255, 0.7)"
               _hover={{
-                bg: 'white',
+                bg: "white",
               }}
               p={2}
-              top={hasCover ? '30px' : '20px'}
+              top={subject.cover ? "30px" : "20px"}
               borderRadius={4}
             />
 
-            <C.ModalBody p={4}>
-              <C.Text mb={8} fontSize="lg">
+            <ModalBody p={4}>
+              <Text mb={8} fontSize="lg">
                 {subject.description}
-              </C.Text>
+              </Text>
 
               {subject.comment && (
-                <C.Text fontStyle="italic" fontSize="sm">
-                  <C.Text as="span" fontWeight="bold">
+                <Text fontStyle="italic" fontSize="sm">
+                  <Text as="span" fontWeight="bold">
                     Side notes:&nbsp;
-                  </C.Text>
+                  </Text>
                   {subject.comment}
-                </C.Text>
+                </Text>
               )}
-            </C.ModalBody>
+            </ModalBody>
 
-            <C.Divider />
+            <Divider />
 
-            <C.Box pt={4} pb={10} px={4}>
-              <C.Text fontStyle="italic" fontSize="sm">
-                <C.Text as="span" fontWeight="bold">
-                  Created by
-                </C.Text>
-                &nbsp;{subject.createdBy} {dayjs(subject.createdDate).fromNow()}
-                .
-              </C.Text>
+            <Box pt={4} pb={10} px={4}>
+              <Text fontStyle="italic" fontSize="sm">
+                Created by&nbsp;{getUserFullname(subject.createdByUser)}.
+              </Text>
 
               {subject.createdDate !== subject.lastModifiedDate && (
-                <C.Text fontStyle="italic" fontSize="sm">
-                  <C.Text as="span" fontWeight="bold">
-                    Edited by
-                  </C.Text>
-                  &nbsp;{subject.lastModifiedBy}&nbsp;
-                  {dayjs(subject.lastModifiedDate).fromNow()}.
-                </C.Text>
+                <Text fontStyle="italic" fontSize="sm">
+                  Edited by&nbsp;{getUserFullname(subject.lastModifiedByUser)}
+                  &nbsp;{dayjs(subject.lastModifiedDate).fromNow()}.
+                </Text>
               )}
-            </C.Box>
-          </C.Box>
-        </C.ModalContent>
-      </C.ModalOverlay>
-    </C.Modal>
+            </Box>
+          </Box>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 };
 
-export default React.memo(ViewSubjectModal);
+export default ViewSubjectModal;

@@ -1,17 +1,17 @@
-import React from 'react';
-import * as C from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Box, Button, Text } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
-import { Pathnames } from '@web/core/constants';
-import Image from '@web/core/components/Image';
+import { Pathnames } from "@web/core/constants";
+import Image from "@web/core/components/Image";
 
 const NoTOAST = () => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={10}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={10}>
         No scheduled TOAST yet.
-      </C.Text>
-      <C.Button
+      </Text>
+      <Button
         as={Link}
         to={Pathnames.SUBJECTS}
         variant="outline"
@@ -32,8 +32,8 @@ const NoTOAST = () => {
           top={0}
           src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
         />
-      </C.Button>
-    </C.Box>
+      </Button>
+    </Box>
   );
 };
 

@@ -1,43 +1,42 @@
 version: '3.8'
 
 services:
-  frontend:
+  web:
     image: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "yarn && yarn dev --port ${FRONTEND_PORT}"
+    command: /bin/sh -c "yarn --frozen-lockfile && yarn dev --port ${FRONTEND_PORT} --host"
     volumes:
       - ./:/code:delegated
     working_dir: /code/web
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
-      - PORT=${FRONTEND_PORT}
-      - VITE_API_URL=http://$LOCAL_HOSTNAME:$API_PORT
       - VITE_LOCAL_HOSTNAME=${LOCAL_HOSTNAME}
       - VITE_FIREBASE_EMULATOR_AUTH_HOST=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_AUTH_PORT
-      - VITE_FIREBASE_EMULATOR_DATABASE_HOST=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_DATABASE_PORT
+      - VITE_FIREBASE_EMULATOR_DATABASE_PORT=${FIREBASE_EMULATOR_DATABASE_PORT}
+      - VITE_FIREBASE_EMULATOR_FUNCTIONS_PORT=${FIREBASE_EMULATOR_FUNCTIONS_PORT}
       - VITE_FIREBASE_EMULATOR_FIRESTORE_PORT=${FIREBASE_EMULATOR_FIRESTORE_PORT}
       - VITE_FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - VITE_FIREBASE_API_KEY=${FIREBASE_API_KEY}
       - VITE_FIREBASE_AUTH_DOMAIN=${FIREBASE_AUTH_DOMAIN}
       - VITE_FIREBASE_APP_ID=${FIREBASE_APP_ID}
+      - VITE_FIREBASE_DATABASE_URL=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_DATABASE_PORT/?ns=$FIREBASE_PROJECT_ID
 
   firebase:
-    build:
-      context: ./etc/local/firebase
-      dockerfile: Dockerfile
-      args:
-        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
+    image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
     volumes:
       - ./:/code:delegated
-      - firestore-data:/home/firestore-data:delegated
+      - firestore-data:/home/firebase/firestore-data
     working_dir: /code/firebase
-    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firestore-data --export-on-exit --debug"
+    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firebase/firestore-data --export-on-exit"
     ports:
       - ${FIREBASE_EMULATOR_UI_PORT}:${FIREBASE_EMULATOR_UI_PORT}
       - ${FIREBASE_EMULATOR_FIRESTORE_PORT}:${FIREBASE_EMULATOR_FIRESTORE_PORT}
       - ${FIREBASE_EMULATOR_DATABASE_PORT}:${FIREBASE_EMULATOR_DATABASE_PORT}
       - ${FIREBASE_EMULATOR_AUTH_PORT}:${FIREBASE_EMULATOR_AUTH_PORT}
-      - ${FIREBASE_EMULATOR_HUB}:${FIREBASE_EMULATOR_HUB}
+      - ${FIREBASE_EMULATOR_FUNCTIONS_PORT}:${FIREBASE_EMULATOR_FUNCTIONS_PORT}
+      - ${FIREBASE_EMULATOR_HOSTING_PORT}:${FIREBASE_EMULATOR_HOSTING_PORT}
+      - ${FIREBASE_EMULATOR_LOGS_PORT}:${FIREBASE_EMULATOR_LOGS_PORT}
+      - ${FIREBASE_EMULATOR_HUB_PORT}:${FIREBASE_EMULATOR_HUB_PORT}
     environment:
       - FIREBASE_PROJECT_ID
       - FIREBASE_TOKEN
@@ -47,7 +46,7 @@ services:
     volumes:
       - ./:/code:delegated
     working_dir: /code/firebase/functions
-    command: /bin/sh -c "yarn serve"
+    command: /bin/sh -c "yarn --frozen-lockfile && yarn serve"
 
 volumes:
   firestore-data:

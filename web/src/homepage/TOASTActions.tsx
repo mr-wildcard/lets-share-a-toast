@@ -1,61 +1,62 @@
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
-import * as C from '@chakra-ui/react';
+import { observer } from "mobx-react-lite";
+import React, { useCallback, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Image,
+} from "@chakra-ui/react";
 import {
   CloseIcon,
   SettingsIcon,
   EditIcon,
   DeleteIcon,
-} from '@chakra-ui/icons';
-import { animated } from '@react-spring/web';
+} from "@chakra-ui/icons";
+import { animated } from "@react-spring/web";
 
-import { CurrentToast } from '@shared';
+import { firebaseData } from "@web/core/firebase/data";
+import { spacing } from "@web/core/constants";
+import useActionsModalStates from "./hooks/useActionsModalStates";
+import useActionsButtonStates from "./hooks/useActionsButtonStates";
+import useActionsAnimations from "./hooks/useActionsAnimations";
+import OpenVotesModal from "./modals/OpenVotes";
+import TOASTInfosModal from "./modals/TOASTInfos";
+import CancelTOASTModal from "./modals/CancelTOAST";
+import CloseVotesModal from "./modals/CloseVotes";
+import MarkTOASTAsReadyModal from "./modals/MarkTOASTAsReady";
+import { DeadHeatSubjectsModal } from "./modals/DeadHeatSubjects";
+import EndTOASTModal from "./modals/EndTOAST";
+import InitiateTOAST from "./actions/InitiateTOAST";
+import OpenVotes from "./actions/OpenVotes";
+import CloseVotes from "./actions/CloseVotes";
+import MarkTOASTAsReady from "./actions/MarkTOASTAsReady";
+import DeadHeatSubjects from "./actions/DeadHeatSubjects";
+import EndTOAST from "./actions/EndTOAST";
 
-import { spacing } from '@web/core/constants';
-import isToast from '@web/core/helpers/isToast';
-import Image from '@web/core/components/Image';
-import useStores from '@web/core/hooks/useStores';
-import useActionsModalStates from './hooks/useActionsModalStates';
-import useActionsButtonStates from './hooks/useActionsButtonStates';
-import useActionsAnimations from './hooks/useActionsAnimations';
-import OpenVotesModal from './modals/OpenVotes';
-import TOASTInfosModal from './modals/TOASTInfos';
-import CancelTOASTModal from './modals/CancelTOAST';
-import CloseVotesModal from './modals/CloseVotes';
-import MarkTOASTAsReadyModal from './modals/MarkTOASTAsReady';
-import { DeadHeatSubjectsModal } from './modals/DeadHeatSubjects';
-import EndTOASTModal from './modals/EndTOAST';
-import InitiateTOAST from './actions/InitiateTOAST';
-import OpenVotes from './actions/OpenVotes';
-import CloseVotes from './actions/CloseVotes';
-import MarkTOASTAsReady from './actions/MarkTOASTAsReady';
-import DeadHeatSubjects from './actions/DeadHeatSubjects';
-import EndTOAST from './actions/EndTOAST';
-
-const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : '30px');
+const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
 
 const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px ${
   spacing.stylizedGap
 }px`;
 
-interface Props {
-  currentToast: CurrentToast;
-}
+const TOASTActions = () => {
+  const { currentToast, votingSession } = firebaseData;
 
-const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
   const modalsStates = useActionsModalStates();
-  const buttonsStates = useActionsButtonStates(currentToast);
+  const buttonsStates = useActionsButtonStates(currentToast!);
   const animations = useActionsAnimations();
 
-  const closeTOASTFormModal = useCallback(
-    (toastCreated: boolean) => {
-      modalsStates.toast.onClose();
+  const closeTOASTFormModal = useCallback((toastCreated: boolean) => {
+    modalsStates.toast.onClose();
 
-      if (toastCreated) {
-        animations.toastCreation.display(true);
-      }
-    },
-    [modalsStates.toast, animations.toastCreation]
-  );
+    if (toastCreated) {
+      animations.toastCreation.display(true);
+    }
+  }, []);
 
   const [bgClipPath1, bgClipPath2] = animations.background.finalClipPaths;
 
@@ -66,20 +67,20 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
   }, []);
 
   return (
-    <C.Box position="relative">
-      <C.Button
+    <Box position="relative">
+      <Button
         variant="link"
         position="absolute"
         color="black"
         left={`${spacing.stylizedGap}px`}
         bottom={`${spacing.stylizedGap}px`}
         m={0}
-        textDecoration={animations.background.opened ? 'none' : 'underline'}
+        textDecoration={animations.background.opened ? "none" : "underline"}
         fontSize="lg"
         transition={
           animations.background.opened
-            ? 'all 450ms cubic-bezier(0.34, 1.56, 0.64, 1)'
-            : 'all 250ms ease-out'
+            ? "all 450ms cubic-bezier(0.34, 1.56, 0.64, 1)"
+            : "all 250ms ease-out"
         }
         style={{
           transform: animations.background.opened
@@ -93,9 +94,9 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
           animations.background.opened ? <CloseIcon /> : <SettingsIcon />
         }
       >
-        {animations.background.opened && 'Close'}
+        {animations.background.opened && "Close"}
         {!animations.background.opened && (
-          <C.Box position="relative">
+          <Box position="relative">
             Manage TOAST
             {buttonsStates.deadHeatSubjects.display && (
               <Image
@@ -106,10 +107,10 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                 src="https://media.giphy.com/media/2yxItMecS1FwrhNitr/giphy.gif"
               />
             )}
-          </C.Box>
+          </Box>
         )}
-      </C.Button>
-      <C.Box
+      </Button>
+      <Box
         as={animated.div}
         p={padding}
         position="relative"
@@ -122,7 +123,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                * to let the menu displays correctly.
                */
               return path1 === bgClipPath1 && path2 === bgClipPath2
-                ? 'none'
+                ? "none"
                 : `polygon(0% ${path1}%, 100% ${path2}%, 100% 100%, 0% 100%)`;
             }
           ),
@@ -131,7 +132,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
         {animations.toastCreation.animation(
           (style, item) =>
             item && (
-              <C.Image
+              <Image
                 as={animated.img}
                 src="https://media.giphy.com/media/l0IyaxKjZqenpMIQ8/giphy.webp"
                 position="absolute"
@@ -147,7 +148,7 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
             )
         )}
 
-        <C.Box
+        <Box
           as={animated.div}
           position="absolute"
           bg="white"
@@ -164,108 +165,115 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
           }}
         />
 
-        <C.Flex justify="space-between" position="relative">
-          <C.Flex>
-            <C.Box>
+        <Flex justify="space-between" position="relative">
+          <Flex>
+            <Box>
               <InitiateTOAST
                 onClick={modalsStates.toast.onOpen}
                 isSuccess={buttonsStates.initiateTOAST.isSuccess}
               />
-            </C.Box>
+            </Box>
 
-            {isToast(currentToast) && (
+            {!!currentToast && (
               <>
-                <C.Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
-                  <OpenVotes
-                    isSuccess={buttonsStates.openVotes.isSuccess}
-                    onClick={modalsStates.openVotes.onOpen}
-                  />
-                </C.Box>
+                {buttonsStates.openVotes.display && (
+                  <Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
+                    <OpenVotes
+                      isSuccess={buttonsStates.openVotes.isSuccess}
+                      onClick={modalsStates.openVotes.onOpen}
+                    />
+                  </Box>
+                )}
 
                 {buttonsStates.closeVotes.display && (
-                  <C.Box
+                  <Box
                     ml={getActionSpacing(buttonsStates.closeVotes.isSuccess)}
                   >
                     <CloseVotes
                       isSuccess={buttonsStates.closeVotes.isSuccess}
                       onClick={modalsStates.closeVotes.onOpen}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
                 {buttonsStates.deadHeatSubjects.display && (
-                  <C.Box ml="30px">
+                  <Box ml="30px">
                     <DeadHeatSubjects
                       onClick={modalsStates.deadHeatSubjects.onOpen}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
                 {buttonsStates.markTOASTAsReady.display && (
-                  <C.Box ml="30px">
+                  <Box ml="30px">
                     <MarkTOASTAsReady
                       onClick={modalsStates.markTOASTAsReady.onOpen}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
                 {buttonsStates.endTOAST.display && (
-                  <C.Box ml="30px">
+                  <Box ml="30px">
                     <EndTOAST
                       currentToast={currentToast}
                       onClick={modalsStates.endTOAST.onOpen}
                     />
-                  </C.Box>
+                  </Box>
                 )}
 
-                <CancelTOASTModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.cancelTOAST.isOpen}
-                  closeModal={modalsStates.cancelTOAST.onClose}
-                />
+                {modalsStates.openVotes.isOpen && (
+                  <OpenVotesModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.openVotes.onClose}
+                  />
+                )}
 
-                <OpenVotesModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.openVotes.isOpen}
-                  closeModal={modalsStates.openVotes.onClose}
-                />
+                {modalsStates.closeVotes.isOpen && (
+                  <CloseVotesModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.closeVotes.onClose}
+                  />
+                )}
 
-                <CloseVotesModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.closeVotes.isOpen}
-                  closeModal={modalsStates.closeVotes.onClose}
-                />
+                {modalsStates.deadHeatSubjects.isOpen && (
+                  <DeadHeatSubjectsModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.deadHeatSubjects.onClose}
+                  />
+                )}
 
-                <MarkTOASTAsReadyModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.markTOASTAsReady.isOpen}
-                  closeModal={modalsStates.markTOASTAsReady.onClose}
-                />
+                {modalsStates.markTOASTAsReady.isOpen && (
+                  <MarkTOASTAsReadyModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.markTOASTAsReady.onClose}
+                  />
+                )}
 
-                <DeadHeatSubjectsModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.deadHeatSubjects.isOpen}
-                  closeModal={modalsStates.deadHeatSubjects.onClose}
-                />
+                {modalsStates.endTOAST.isOpen && (
+                  <EndTOASTModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.endTOAST.onClose}
+                  />
+                )}
 
-                <EndTOASTModal
-                  currentToast={currentToast}
-                  isOpen={modalsStates.endTOAST.isOpen}
-                  closeModal={modalsStates.endTOAST.onClose}
-                />
+                {modalsStates.cancelTOAST.isOpen && (
+                  <CancelTOASTModal
+                    currentToast={currentToast}
+                    closeModal={modalsStates.cancelTOAST.onClose}
+                  />
+                )}
               </>
             )}
 
             <TOASTInfosModal
-              currentToast={currentToast}
               isOpen={modalsStates.toast.isOpen}
               closeModal={closeTOASTFormModal}
             />
-          </C.Flex>
+          </Flex>
 
-          {isToast(currentToast) && (
-            <C.Menu>
-              <C.MenuButton
+          {!!currentToast && (
+            <Menu>
+              <MenuButton
                 textDecoration="underline"
                 position="relative"
                 size="lg"
@@ -274,30 +282,27 @@ const TOASTActions: FunctionComponent<Props> = ({ currentToast }) => {
                 variant="link"
               >
                 More actions
-              </C.MenuButton>
-              <C.MenuList>
-                <C.MenuItem
-                  onClick={modalsStates.toast.onOpen}
-                  fontWeight="bold"
-                >
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={modalsStates.toast.onOpen} fontWeight="bold">
                   <EditIcon mr={3} />
                   Edit TOAST
-                </C.MenuItem>
-                <C.MenuItem
+                </MenuItem>
+                <MenuItem
                   onClick={modalsStates.cancelTOAST.onOpen}
                   fontWeight="bold"
                   color="red.500"
                 >
                   <DeleteIcon mr={3} />
                   Cancel TOAST
-                </C.MenuItem>
-              </C.MenuList>
-            </C.Menu>
+                </MenuItem>
+              </MenuList>
+            </Menu>
           )}
-        </C.Flex>
-      </C.Box>
-    </C.Box>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 
-export default TOASTActions;
+export default observer(TOASTActions);

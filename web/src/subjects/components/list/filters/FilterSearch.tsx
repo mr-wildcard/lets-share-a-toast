@@ -4,11 +4,11 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
+} from "react";
+import { Input, Text } from "@chakra-ui/react";
 
-import css from './FilterSearch.module.css';
-import HighlightedText from '@web/core/components/HighlightedText';
+import css from "./FilterSearch.module.css";
+import HighlightedText from "@web/core/components/HighlightedText";
 
 interface Props {
   onSearchChanged(search: string): void;
@@ -34,7 +34,7 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
   }, [text.current]);
 
   return (
-    <C.Text
+    <Text
       d="inline-block"
       style={{
         width: `${textWidth}px`,
@@ -42,7 +42,7 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
     >
       {focus ? (
         <HighlightedText bgColor="white" d="inline-block" mx={2}>
-          <C.Input
+          <Input
             ref={input}
             d="inline-block"
             textAlign="center"
@@ -61,7 +61,7 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
           />
         </HighlightedText>
       ) : (
-        <C.Text
+        <Text
           as="span"
           // TS expects a ref of `p` element as Text component returns a paragraph by default.
           // @ts-ignore
@@ -70,9 +70,9 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
           onClick={() => setFocus(true)}
         >
           absolutely everything
-        </C.Text>
+        </Text>
       )}
-    </C.Text>
+    </Text>
   );
 };
 

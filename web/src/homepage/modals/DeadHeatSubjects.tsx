@@ -1,118 +1,95 @@
-import React, { FunctionComponent, useEffect, useMemo, useRef } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { useMemo, useRef } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Box,
+  Button,
+  Divider,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
+import firebase from "firebase/app";
 
-import { Field, FieldProps, Form, Formik, FormikProps } from 'formik';
-import { mutate } from 'swr';
+import { Toast, Subject } from "@shared/models";
+import { CloudFunctionName } from "@shared/firebase";
 
-import { ToastStatus, Toast, Subject } from '@shared';
-
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import NotificationType from '@web/notifications/types/NotificationType';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import useStores from '@web/core/hooks/useStores';
+import { pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface FormErrors {
-  selectedSubjectsIds?: boolean;
+  selectedSubjectIds?: boolean;
 }
 
 interface FormValues {
-  selectedSubjectsIds: string[];
+  selectedSubjectIds: string[];
 }
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-export function DeadHeatSubjectsModal({
-  currentToast,
-  isOpen,
-  closeModal,
-}: Props) {
+export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
-
-  const { notifications, auth } = useStores();
 
   /**
    * Sort selected subjects by their total amout of votes.
    */
   const sortedSelectedSubjects: Subject[] = useMemo(() => {
-    return currentToast.selectedSubjects
-      .slice()
-      .sort((selectedSubject1, selectedSubject2) => {
+    return currentToast.selectedSubjects!.sort(
+      (selectedSubject1, selectedSubject2) => {
         return (
-          currentToast.votes[selectedSubject2.id] -
-          currentToast.votes[selectedSubject1.id]
+          currentToast.votes![selectedSubject2.id] -
+          currentToast.votes![selectedSubject1.id]
         );
-      });
+      }
+    );
   }, [currentToast]);
 
   return (
-    <C.Modal
+    <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
-      size="lg"
+      size="xl"
     >
-      <C.ModalOverlay>
+      <ModalOverlay>
         <Formik
           validateOnMount={true}
           initialValues={{
-            selectedSubjectsIds: [],
+            selectedSubjectIds: [],
           }}
           validate={(values: FormValues): FormErrors => {
             const errors: FormErrors = {};
 
             if (
-              values.selectedSubjectsIds.length <
+              values.selectedSubjectIds.length <
               currentToast.maxSelectableSubjects
             ) {
-              errors.selectedSubjectsIds = true;
+              errors.selectedSubjectIds = true;
             }
 
             return errors;
           }}
-          onSubmit={async (values: FormValues): Promise<void> => {
-            const request = http();
-
-            console.log('Dead heat subjects', { values });
-
-            await request(APIPaths.TOAST_CURRENT_SELECTED_SUBJECT, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                selectedSubjectsIds: values.selectedSubjectsIds,
-              }),
-            });
-
-            await request(APIPaths.TOAST_CURRENT_STATUS, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                status: ToastStatus.WAITING_FOR_TOAST,
-              }),
-            });
-
-            notifications.send(
-              // @ts-ignore
-              auth.profile,
-              NotificationType.EDIT_TOAST_STATUS,
-              {
-                status: ToastStatus.WAITING_FOR_TOAST,
-              }
-            );
-
-            closeModal();
+          onSubmit={async (values: FormValues) => {
+            return firebase
+              .functions()
+              .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
+                selectedSubjectIds: values.selectedSubjectIds,
+              })
+              .then(closeModal);
           }}
         >
           {({
@@ -123,13 +100,13 @@ export function DeadHeatSubjectsModal({
           }: FormikProps<FormValues>) => {
             const remainingSubjectsToSelect =
               currentToast.maxSelectableSubjects -
-              values.selectedSubjectsIds.length;
+              values.selectedSubjectIds.length;
 
             return (
               <Form>
-                <C.ModalContent borderRadius="3px">
-                  <C.ModalHeader textAlign="center">
-                    <C.Text position="relative">
+                <ModalContent borderRadius="3px">
+                  <ModalHeader textAlign="center">
+                    <Text position="relative">
                       <HighlightedText bgColor={pageColors.homepage}>
                         Almost there...
                       </HighlightedText>
@@ -141,43 +118,45 @@ export function DeadHeatSubjectsModal({
                         bottom="-44px"
                         src="https://media.giphy.com/media/XcMbKY8KIkXMJTLdse/giphy.gif"
                       />
-                    </C.Text>
-                  </C.ModalHeader>
-                  <C.ModalBody p={0}>
-                    <C.Box my={5} px={5}>
-                      <C.Alert status="warning" variant="left-accent">
-                        <C.Box flex={1}>
-                          <C.AlertTitle>What&apos;s happening ?</C.AlertTitle>
-                          <C.AlertDescription>
+                    </Text>
+                  </ModalHeader>
+                  <ModalBody p={0}>
+                    <Box my={5} px={5}>
+                      <Alert status="warning" variant="left-accent">
+                        <Box flex={1}>
+                          <AlertTitle>What&apos;s happening ?</AlertTitle>
+                          <AlertDescription>
                             The following subjects ended up with the same amout
                             of votes. You need to chose a total of&nbsp;
-                            <C.Text as="span" fontWeight="bold">
+                            <Text as="span" fontWeight="bold">
                               {currentToast.maxSelectableSubjects}
-                            </C.Text>
+                            </Text>
                             &nbsp;subjects in order to proceed.
-                          </C.AlertDescription>
-                        </C.Box>
-                      </C.Alert>
-                    </C.Box>
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                    </Box>
 
-                    <C.Divider />
+                    <Divider />
 
-                    <C.Box mt={5}>
-                      <Field name="selectedSubjectsIds">
+                    <Box mt={5}>
+                      <Field name="selectedSubjectIds">
                         {({ field, form }: FieldProps) => (
-                          <C.Stack
+                          <Stack
                             spacing={3}
                             px={5}
                             maxHeight="40vh"
                             overflowY="auto"
                           >
                             {sortedSelectedSubjects.map((subject) => {
-                              const subjectIsSelected = values.selectedSubjectsIds.includes(
+                              const subjectIsSelected = values.selectedSubjectIds.includes(
                                 subject.id
                               );
 
                               return (
-                                <C.Box
+                                <Box
+                                  as={Button}
+                                  type="button"
                                   key={`subject-${subject.id}`}
                                   p={3}
                                   borderRadius="md"
@@ -185,13 +164,12 @@ export function DeadHeatSubjectsModal({
                                   borderStyle="solid"
                                   borderColor="gray.200"
                                   color={
-                                    subjectIsSelected ? 'white' : 'gray.600'
+                                    subjectIsSelected ? "white" : "gray.600"
                                   }
                                   backgroundColor={
-                                    subjectIsSelected ? 'green.500' : 'white'
+                                    subjectIsSelected ? "green.500" : "white"
                                   }
-                                  boxShadow={subjectIsSelected ? 'none' : 'sm'}
-                                  cursor="pointer"
+                                  boxShadow={subjectIsSelected ? "none" : "sm"}
                                   onClick={() => {
                                     if (subjectIsSelected) {
                                       /**
@@ -199,14 +177,14 @@ export function DeadHeatSubjectsModal({
                                        */
                                       form.setFieldValue(
                                         field.name,
-                                        values.selectedSubjectsIds.filter(
+                                        values.selectedSubjectIds.filter(
                                           (selectedSubjectId) =>
                                             selectedSubjectId !== subject.id
                                         )
                                       );
                                     } else {
                                       if (
-                                        values.selectedSubjectsIds.length ===
+                                        values.selectedSubjectIds.length ===
                                         currentToast.maxSelectableSubjects
                                       ) {
                                         /**
@@ -217,7 +195,7 @@ export function DeadHeatSubjectsModal({
                                         const [
                                           ,
                                           ...restOfSelectedSubjectIds
-                                        ] = values.selectedSubjectsIds;
+                                        ] = values.selectedSubjectIds;
 
                                         form.setFieldValue(
                                           field.name,
@@ -231,7 +209,7 @@ export function DeadHeatSubjectsModal({
                                          */
                                         form.setFieldValue(
                                           field.name,
-                                          values.selectedSubjectsIds.concat(
+                                          values.selectedSubjectIds.concat(
                                             subject.id
                                           )
                                         );
@@ -239,29 +217,29 @@ export function DeadHeatSubjectsModal({
                                     }
                                   }}
                                 >
-                                  <C.Text fontSize="xl" fontWeight="bold">
+                                  <Text fontSize="xl" fontWeight="bold">
                                     {subject.title}
-                                  </C.Text>
+                                  </Text>
 
-                                  <C.Text>
+                                  <Text>
                                     By:&nbsp;
                                     {subject.speakers
                                       .map(getUserFullname)
-                                      .join(', ')}
-                                  </C.Text>
-                                  <C.Text textAlign="right">
-                                    Votes: {currentToast.votes[subject.id]}
-                                  </C.Text>
-                                </C.Box>
+                                      .join(", ")}
+                                  </Text>
+                                  <Text textAlign="right">
+                                    Votes: {currentToast.votes![subject.id]}
+                                  </Text>
+                                </Box>
                               );
                             })}
-                          </C.Stack>
+                          </Stack>
                         )}
                       </Field>
-                    </C.Box>
-                  </C.ModalBody>
-                  <C.ModalFooter justifyContent="center">
-                    <C.Button
+                    </Box>
+                  </ModalBody>
+                  <ModalFooter justifyContent="center">
+                    <Button
                       isDisabled={!isValid}
                       type="submit"
                       colorScheme="blue"
@@ -270,12 +248,12 @@ export function DeadHeatSubjectsModal({
                     >
                       {!isValid &&
                         `Select ${remainingSubjectsToSelect} more subject${
-                          remainingSubjectsToSelect > 1 ? 's' : ''
+                          remainingSubjectsToSelect > 1 ? "s" : ""
                         }`}
 
-                      {isValid && 'Save selected subjects'}
-                    </C.Button>
-                    <C.Button
+                      {isValid && "Save selected subjects"}
+                    </Button>
+                    <Button
                       ref={cancelBtn}
                       isDisabled={isSubmitting}
                       onClick={closeModal}
@@ -285,14 +263,14 @@ export function DeadHeatSubjectsModal({
                       mx={2}
                     >
                       Do nothing
-                    </C.Button>
-                  </C.ModalFooter>
-                </C.ModalContent>
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
               </Form>
             );
           }}
         </Formik>
-      </C.ModalOverlay>
-    </C.Modal>
+      </ModalOverlay>
+    </Modal>
   );
 }

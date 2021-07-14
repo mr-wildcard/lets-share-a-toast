@@ -1,19 +1,20 @@
-import { SubjectStatus } from '../enums/SubjectStatus';
-import { SubjectLanguage } from '../enums/SubjectLanguage';
-import { User } from './User';
+import { FirestoreSubject } from "@shared/firebase";
+import { User } from "@shared/models/User";
 
-export interface Subject {
+type SubjectWithoutFirebaseProperties = Omit<
+  FirestoreSubject,
+  | "speakersIds"
+  | "createdDate"
+  | "lastModifiedDate"
+  | "createdByUserId"
+  | "lastModifiedByUserId"
+>;
+
+export interface Subject extends SubjectWithoutFirebaseProperties {
   id: string;
-  title: string;
-  description: string;
   speakers: User[];
-  status: SubjectStatus;
-  duration: number;
-  language: SubjectLanguage;
-  createdBy: string;
-  createdDate: string;
-  lastModifiedBy: string;
-  lastModifiedDate: string;
-  cover?: string;
-  comment?: string;
+  createdDate: Date;
+  createdByUser: User;
+  lastModifiedDate: Date;
+  lastModifiedByUser: User;
 }

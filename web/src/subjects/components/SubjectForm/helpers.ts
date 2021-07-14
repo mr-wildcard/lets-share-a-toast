@@ -1,6 +1,6 @@
-import { FieldInputProps } from 'formik/dist/types';
+import { FieldInputProps } from "formik/dist/types";
 
-import { SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
 
 export const getStatusButtonStyleProps = (
   formField: FieldInputProps<SubjectStatus>
@@ -10,16 +10,16 @@ export const getStatusButtonStyleProps = (
   return {
     value: statusValue,
     mb: 0,
-    bg: 'transparent',
-    transition: 'color 200ms ease 200ms',
+    bg: "transparent",
+    transition: "color 200ms ease 200ms",
     style: {
-      color: isChecked ? 'white' : 'black',
+      color: isChecked ? "white" : "black",
     },
     _hover: {
-      bg: 'transparent',
+      bg: "transparent",
     },
     _focus: {
-      bg: 'transparent',
+      bg: "transparent",
     },
   };
 };

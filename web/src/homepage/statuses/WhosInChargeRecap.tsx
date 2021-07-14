@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import { Text } from "@chakra-ui/react";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import getUserFullname from '@web/core/helpers/getUserFullname';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import { getFormattedTOASTDateWithRemainingDays } from '@web/core/helpers/timing';
+import getUserFullname from "@web/core/helpers/getUserFullname";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
 
 interface Props {
   toast: Toast;
@@ -17,7 +17,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
   const scribeFullname = getUserFullname(toast.scribe);
 
   return (
-    <C.Text fontSize="lg">
+    <Text fontSize="lg">
       Due date:&nbsp;
       <HighlightedText bgColor="orange.300">
         {getFormattedTOASTDateWithRemainingDays(new Date(toast.date))}
@@ -27,7 +27,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
       <HighlightedText mx={3} bgColor="orange.300">
         <Image
           d="inline-block"
-          src={toast.organizer.picture}
+          src={toast.organizer?.photoURL!}
           width={24}
           height={24}
           alt={organizerFullname}
@@ -41,7 +41,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
       <HighlightedText mx={3} bgColor="orange.300">
         <Image
           d="inline-block"
-          src={toast.scribe.picture}
+          src={toast.scribe?.photoURL!}
           width={24}
           height={24}
           alt={scribeFullname}
@@ -51,8 +51,8 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
         {scribeFullname}
       </HighlightedText>
       as the scribe.
-    </C.Text>
+    </Text>
   );
 };
 
-export default React.memo(WhosInChargeRecap);
+export default WhosInChargeRecap;

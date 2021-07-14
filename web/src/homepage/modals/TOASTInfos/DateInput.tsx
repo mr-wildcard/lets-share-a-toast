@@ -1,18 +1,18 @@
-import React from 'react';
-import * as C from '@chakra-ui/react';
-import { CalendarIcon } from '@chakra-ui/icons';
+import React from "react";
+import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { CalendarIcon } from "@chakra-ui/icons";
 
 class DateInput extends React.PureComponent {
-  static displayName = 'DateInput';
+  static displayName = "DateInput";
 
   public render() {
     return (
-      <C.InputGroup>
-        <C.InputLeftElement>
+      <InputGroup>
+        <InputLeftElement>
           <CalendarIcon color="gray.300" />
-        </C.InputLeftElement>
-        <C.Input cursor="pointer" isReadOnly id="dueDate" {...this.props} />;
-      </C.InputGroup>
+        </InputLeftElement>
+        <Input cursor="pointer" isReadOnly id="dueDate" {...this.props} />;
+      </InputGroup>
     );
   }
 }

@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import * as C from "@chakra-ui/react";
 
-import { SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
 
-import NotificationSubjectEditedStatus from '@web/notifications/types/NotificationSubjectEditedStatus';
-import NotificationWrapper from '../NotificationWrapper';
+import NotificationSubjectEditedStatus from "@web/notifications/types/NotificationSubjectEditedStatus";
+import NotificationWrapper from "../NotificationWrapper";
 
 const SubjectStatusEdited: FunctionComponent<NotificationSubjectEditedStatus> = (
   data

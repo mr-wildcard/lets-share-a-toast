@@ -1,0 +1,6 @@
+{
+  "slack": {
+    "ekibot_url": "https://ekino-ekibot.herokuapp.com/hubot/notifier/toast",
+    "notification_channel": "ekino@EkibotPlayground"
+  }
+}

@@ -1,9 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import { Button, Text } from "@chakra-ui/react";
 
-import { ToastStatus, Toast } from '@shared';
+import { Toast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 interface Props {
   currentToast: Toast;
@@ -14,7 +15,7 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, onClick }) => {
   const isDisabled = currentToast.status !== ToastStatus.WAITING_FOR_TOAST;
 
   return (
-    <C.Button
+    <Button
       onClick={onClick}
       isDisabled={isDisabled}
       variant="outline"
@@ -32,10 +33,10 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, onClick }) => {
         src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
       />
 
-      <C.Text fontWeight="bold" pl={45}>
+      <Text fontWeight="bold" pl={45}>
         End TOAST
-      </C.Text>
-    </C.Button>
+      </Text>
+    </Button>
   );
 };
 

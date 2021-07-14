@@ -1,54 +1,54 @@
-import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import { observer } from "mobx-react-lite";
+import React, { FunctionComponent } from "react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
-import { Toast } from '@shared';
+import { Toast } from "@shared/models";
 
-import { getTOASTElapsedTimeSinceCreation } from '@web/core/helpers/timing';
-import WhosInChargeRecap from './WhosInChargeRecap';
-import ProposeSubjectForNextTOASTButton from './ProposeSubjectForNextTOASTButton';
-import SelectedSubjectsList from './SelectedSubjectsList';
-import FloralSeparator from './FloralSeparator';
+import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
+import WhosInChargeRecap from "./WhosInChargeRecap";
+import ProposeSubjectForNextTOASTButton from "./ProposeSubjectForNextTOASTButton";
+import SelectedSubjectsList from "./SelectedSubjectsList";
+import FloralSeparator from "./FloralSeparator";
 
 interface Props {
   toast: Toast;
 }
 
-const WaitingForTOAST: FunctionComponent<Props> = observer(({ toast }) => {
+const WaitingForTOAST: FunctionComponent<Props> = ({ toast }) => {
   return (
-    <C.Box fontWeight="bold" color="gray.800" textAlign="center">
-      <C.Text fontSize="4xl" mt={0} mb={5}>
+    <Box fontWeight="bold" color="gray.800" textAlign="center">
+      <Text fontSize="4xl" mt={0} mb={5}>
         TOAST is coming&nbsp;
         {getTOASTElapsedTimeSinceCreation(new Date(toast.date))} !
-      </C.Text>
+      </Text>
 
-      <C.Box my={5}>
+      <Box my={5}>
         <WhosInChargeRecap toast={toast} />
-      </C.Box>
+      </Box>
 
-      <C.Flex my={5} justify="center">
+      <Flex my={5} justify="center">
         <FloralSeparator />
-      </C.Flex>
+      </Flex>
 
-      <C.Text fontSize="lg" mb={3}>
+      <Text fontSize="lg" mb={3}>
         We&apos;ll have the pleasure to attend to the following talks:
-      </C.Text>
+      </Text>
 
-      <C.Flex align="center" direction="column">
-        <SelectedSubjectsList currentToast={toast} />
-      </C.Flex>
+      <Flex align="center" direction="column">
+        <SelectedSubjectsList selectedSubjects={toast.selectedSubjects!} />
+      </Flex>
 
-      <C.Flex my={5} justify="center">
+      <Flex my={5} justify="center">
         <FloralSeparator />
-      </C.Flex>
+      </Flex>
 
-      <C.Text mb={3} fontSize="lg">
+      <Text mb={3} fontSize="lg">
         In the meantime, you can still...
-      </C.Text>
+      </Text>
 
       <ProposeSubjectForNextTOASTButton />
-    </C.Box>
+    </Box>
   );
-});
+};
 
-export default WaitingForTOAST;
+export default observer(WaitingForTOAST);

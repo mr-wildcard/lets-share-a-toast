@@ -1,49 +1,53 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { CurrentToast, ToastStatus } from '@shared';
+import { CurrentToast } from "@shared/models";
+import { ToastStatus } from "@shared/enums";
 
-import toastStatusUtils from '@web/core/helpers/toastStatusUtils';
-import isToast from '@web/core/helpers/isToast';
-import toastHasDeadheatSubjects from '@web/core/helpers/toastHasDeadheatSubjects';
+import toastStatusUtils from "@web/core/helpers/toastStatusUtils";
+import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
 
 const useActionsButtonStates = (currentToast: CurrentToast) => {
   return useMemo(() => {
+    const isToast = !!currentToast;
+
     return {
       initiateTOAST: {
-        isSuccess: isToast(currentToast),
+        isSuccess: isToast,
       },
       openVotes: {
+        display:
+          !!currentToast &&
+          currentToast.status === ToastStatus.OPEN_TO_CONTRIBUTION,
         isSuccess:
-          isToast(currentToast) &&
+          !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_TO_CONTRIBUTION
           ),
       },
       closeVotes: {
         display:
-          isToast(currentToast) &&
+          !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_TO_CONTRIBUTION
           ),
         isSuccess:
-          isToast(currentToast) &&
+          !!currentToast &&
           toastStatusUtils(currentToast.status).isAfter(
             ToastStatus.OPEN_FOR_VOTE
           ),
       },
       deadHeatSubjects: {
-        display:
-          isToast(currentToast) && toastHasDeadheatSubjects(currentToast),
+        display: !!currentToast && toastHasDeadheatSubjects(currentToast),
       },
       markTOASTAsReady: {
         display:
-          isToast(currentToast) &&
+          !!currentToast &&
           currentToast.status === ToastStatus.VOTE_CLOSED &&
           !toastHasDeadheatSubjects(currentToast),
       },
       endTOAST: {
         display:
-          isToast(currentToast) &&
+          !!currentToast &&
           currentToast.status === ToastStatus.WAITING_FOR_TOAST,
       },
     };

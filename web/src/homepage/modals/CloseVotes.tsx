@@ -1,31 +1,34 @@
-import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
-import * as C from '@chakra-ui/react';
-import { mutate } from 'swr';
+import firebase from "firebase/app";
+import React, { FunctionComponent, useCallback, useRef, useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Box,
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+} from "@chakra-ui/react";
 
-import { ToastStatus, Toast } from '@shared';
+import { Toast } from "@shared/models";
+import { CloudFunctionName } from "@shared/firebase";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import useStores from '@web/core/hooks/useStores';
-import Image from '@web/core/components/Image';
-import { getTOASTElapsedTimeSinceCreation } from '@web/core/helpers/timing';
-import toastHasDeadheatSubjects from '@web/core/helpers/toastHasDeadheatSubjects';
-import NotificationType from '@web/notifications/types/NotificationType';
+import { pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-const CloseVotes: FunctionComponent<Props> = ({
-  currentToast,
-  isOpen,
-  closeModal,
-}) => {
-  const { auth, notifications } = useStores();
-
+const CloseVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const [closingVotes, setClosingVotes] = useState(false);
@@ -33,45 +36,31 @@ const CloseVotes: FunctionComponent<Props> = ({
   const closeVotingToast = useCallback(async (): Promise<void> => {
     setClosingVotes(true);
 
-    const request = http();
-
     try {
-      const updatedToast: Toast = await request(APIPaths.TOAST_CURRENT_STATUS, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          status: ToastStatus.VOTE_CLOSED,
-        }),
-      });
-
-      // @ts-ignore
-      notifications.send(auth.profile, NotificationType.EDIT_TOAST_STATUS, {
-        status: ToastStatus.VOTE_CLOSED,
-      });
-
-      closeModal();
+      await firebase
+        .functions()
+        .httpsCallable(CloudFunctionName.CLOSE_VOTES)()
+        .then(closeModal);
     } catch (error) {
-      console.error('An error occured while closing votes', { error });
+      console.error("Couldn't close the TOAST", { error });
 
       setClosingVotes(false);
     }
-  }, [auth.profile, closeModal, currentToast.id, notifications]);
+  }, []);
 
   return (
-    <C.Modal
+    <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
       size="lg"
     >
-      <C.ModalOverlay>
-        <C.ModalContent borderRadius="3px">
-          <C.ModalHeader textAlign="center">
-            <C.Text position="relative">
+      <ModalOverlay>
+        <ModalContent borderRadius="3px">
+          <ModalHeader textAlign="center">
+            <Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
                 Close voting session
               </HighlightedText>
@@ -83,35 +72,35 @@ const CloseVotes: FunctionComponent<Props> = ({
                 bottom="-20px"
                 src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
               />
-            </C.Text>
-          </C.ModalHeader>
+            </Text>
+          </ModalHeader>
 
-          <C.ModalBody>
-            <C.Box my={5}>
-              <C.Alert status="info" variant="left-accent">
-                <C.Box flex={1}>
-                  <C.AlertTitle>
+          <ModalBody>
+            <Box my={5}>
+              <Alert status="info" variant="left-accent">
+                <Box flex={1}>
+                  <AlertTitle>
                     TOAST has been created&nbsp;
-                    <C.Text as="span" textDecoration="underline">
+                    <Text as="span" textDecoration="underline">
                       {getTOASTElapsedTimeSinceCreation(
                         new Date(currentToast.createdDate)
                       )}
-                    </C.Text>
+                    </Text>
                     .
-                  </C.AlertTitle>
-                  <C.AlertDescription>
+                  </AlertTitle>
+                  <AlertDescription>
                     Be sure that people had enough time to vote.
-                  </C.AlertDescription>
-                </C.Box>
-              </C.Alert>
+                  </AlertDescription>
+                </Box>
+              </Alert>
 
-              <C.Box fontSize="lg" my={10} textAlign="center">
-                <C.Text>Are you sure you want to proceed ?</C.Text>
-              </C.Box>
-            </C.Box>
-          </C.ModalBody>
-          <C.ModalFooter justifyContent="center">
-            <C.Button
+              <Box fontSize="lg" my={10} textAlign="center">
+                <Text>Are you sure you want to proceed ?</Text>
+              </Box>
+            </Box>
+          </ModalBody>
+          <ModalFooter justifyContent="center">
+            <Button
               colorScheme="blue"
               onClick={closeVotingToast}
               isDisabled={closingVotes}
@@ -120,8 +109,8 @@ const CloseVotes: FunctionComponent<Props> = ({
               mx={2}
             >
               Close votes!
-            </C.Button>
-            <C.Button
+            </Button>
+            <Button
               ref={cancelBtn}
               isDisabled={closingVotes}
               onClick={closeModal}
@@ -131,11 +120,11 @@ const CloseVotes: FunctionComponent<Props> = ({
               mx={2}
             >
               Cancel
-            </C.Button>
-          </C.ModalFooter>
-        </C.ModalContent>
-      </C.ModalOverlay>
-    </C.Modal>
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

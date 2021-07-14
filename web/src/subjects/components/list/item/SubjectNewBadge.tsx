@@ -1,11 +1,11 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import { Badge } from "@chakra-ui/react";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 const SubjectNewBadge: FunctionComponent = () => {
   return (
-    <C.Badge variant="outline" colorScheme="red" position="relative" pl="30px">
+    <Badge variant="outline" colorScheme="red" position="relative" pl="30px">
       <Image
         position="absolute"
         src="https://media.giphy.com/media/KZXnlnHy0Bx33ecYcJ/giphy.gif"
@@ -15,7 +15,7 @@ const SubjectNewBadge: FunctionComponent = () => {
         left="-6px"
       />
       New !
-    </C.Badge>
+    </Badge>
   );
 };
 

@@ -1,9 +1,17 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import React, { FunctionComponent } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  HStack,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 interface Props {
   creatingSubject: boolean;
@@ -15,7 +23,8 @@ const SubjectAddButton: FunctionComponent<Props> = ({
   onClick,
 }) => {
   return (
-    <C.Button
+    <Button
+      d="block"
       position="relative"
       variant="outline"
       colorScheme="gray"
@@ -24,11 +33,12 @@ const SubjectAddButton: FunctionComponent<Props> = ({
       isDisabled={creatingSubject}
       w="100%"
       h="auto"
-      p={5}
+      p={0}
       fontWeight="bold"
       fontSize="lg"
       textTransform="uppercase"
       bg="white"
+      overflow={creatingSubject ? "visible" : " hidden"}
     >
       {creatingSubject && (
         <Image
@@ -40,18 +50,39 @@ const SubjectAddButton: FunctionComponent<Props> = ({
         />
       )}
 
-      <C.Flex
-        as={C.Text}
-        align="center"
-        m={0}
-        visibility={creatingSubject ? 'hidden' : 'visible'}
-      >
-        <C.Text as="span" pr={3}>
-          <FontAwesomeIcon icon={faPlus} size="2x" />
-        </C.Text>
-        <C.Text as="span">Add your subject</C.Text>
-      </C.Flex>
-    </C.Button>
+      {!creatingSubject && (
+        <>
+          <Stack borderRadius="3px" h="100%" spacing={4} p={5}>
+            <SkeletonText noOfLines={1} skeletonHeight="25px" />
+            <HStack mb={10}>
+              <SkeletonCircle size="28px" />
+              <SkeletonText flex={1} noOfLines={1} skeletonHeight="25px" />
+            </HStack>
+            <Box />
+            <Divider mb={3} />
+          </Stack>
+
+          <Flex
+            position="absolute"
+            top={0}
+            left={0}
+            w="100%"
+            h="100%"
+            align="center"
+            justify="center"
+            bgGradient="linear(rgba(255, 255, 255, 0.7), white 80%)"
+            borderRadius="3px"
+          >
+            <Image
+              src="https://media.giphy.com/media/ZBfx0z9cMmmziSyhQl/giphy.gif"
+              width={133}
+              height={70}
+            />
+            <Text>Add your subject</Text>
+          </Flex>
+        </>
+      )}
+    </Button>
   );
 };
 

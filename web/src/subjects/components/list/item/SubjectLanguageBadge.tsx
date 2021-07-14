@@ -1,16 +1,16 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import { Badge } from "@chakra-ui/react";
 
-import { SubjectLanguage } from '@shared';
+import { SubjectLanguage } from "@shared/enums";
 
 const languageFlags = {
-  [SubjectLanguage.FR]: '🥖',
-  [SubjectLanguage.EN]: '🇬🇧',
+  [SubjectLanguage.FR]: "🥖",
+  [SubjectLanguage.EN]: "🇬🇧",
 };
 
 const languageLabels = {
-  [SubjectLanguage.FR]: 'Français',
-  [SubjectLanguage.EN]: 'English',
+  [SubjectLanguage.FR]: "Français",
+  [SubjectLanguage.EN]: "English",
 };
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 
 const SubjectLanguageBadge: FunctionComponent<Props> = ({ language }) => {
   return (
-    <C.Badge
+    <Badge
       d="flex"
       alignItems="center"
       variant="outline"
@@ -27,7 +27,7 @@ const SubjectLanguageBadge: FunctionComponent<Props> = ({ language }) => {
       fontWeight="bold"
     >
       {languageFlags[language]} {languageLabels[language]}
-    </C.Badge>
+    </Badge>
   );
 };
 

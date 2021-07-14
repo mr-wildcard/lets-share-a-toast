@@ -1,23 +1,23 @@
-import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import { useSpring, animated } from '@react-spring/web';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { useSpring, animated } from "@react-spring/web";
+import { Button, Text } from "@chakra-ui/react";
 
-import { SubjectStatus } from '@shared';
+import { SubjectStatus } from "@shared/enums";
 
-import { StatusFilterValue } from '@web/subjects/types';
+import { StatusFilterValue } from "@web/subjects/types";
 
 const sortedStatusValues: StatusFilterValue[] = [
-  'all',
+  "all",
   SubjectStatus.AVAILABLE,
   SubjectStatus.UNAVAILABLE,
   SubjectStatus.DONE,
 ];
 
 const sortedStatusLabels: { [value in StatusFilterValue]: string } = {
-  all: 'all subjects',
-  [SubjectStatus.AVAILABLE]: 'all available subjects',
-  [SubjectStatus.UNAVAILABLE]: 'all unavailable subjects',
-  [SubjectStatus.DONE]: 'all given talks',
+  all: "all subjects",
+  [SubjectStatus.AVAILABLE]: "all available subjects",
+  [SubjectStatus.UNAVAILABLE]: "all unavailable subjects",
+  [SubjectStatus.DONE]: "all given talks",
 };
 
 interface Props {
@@ -52,7 +52,7 @@ const FilterSubjectStatus: FunctionComponent<Props> = ({ onStatusChanged }) => {
   });
 
   return (
-    <C.Button
+    <Button
       onClick={() => {
         if (statusIndex + 1 >= sortedStatusValues.length) {
           setStatusIndex(0);
@@ -65,14 +65,14 @@ const FilterSubjectStatus: FunctionComponent<Props> = ({ onStatusChanged }) => {
       textDecoration="underline"
       variant="link"
     >
-      <C.Text
+      <Text
         as={animated.span}
         // @ts-ignore
         style={flash}
       >
         {currentStatusLabel}
-      </C.Text>
-    </C.Button>
+      </Text>
+    </Button>
   );
 };
 

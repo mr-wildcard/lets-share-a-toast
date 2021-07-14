@@ -1,21 +1,23 @@
-import { ToastStatus } from '../enums/ToastStatus';
-import { Subject } from './Subject';
-import { User } from './User';
-import { SubjectsTotalVotes } from './FirebaseVotingSessionDocument';
+import { DatabaseToast } from "@shared/firebase";
 
-export interface Toast {
-  id: string;
-  date: string;
-  number: number;
+import { Subject } from "@shared/models/Subject";
+import { User } from "@shared/models/User";
+
+type TOASTWithoutFirebaseProperties = Omit<
+  DatabaseToast,
+  | "organizerId"
+  | "scribeId"
+  | "date"
+  | "createdDate"
+  | "modifiedDate"
+  | "selectedSubjectIds"
+>;
+
+export interface Toast extends TOASTWithoutFirebaseProperties {
+  date: Date;
+  createdDate: Date;
+  modifiedDate: Date;
   organizer: User;
   scribe: User;
-  status: ToastStatus;
-  subjects: Subject[];
-  selectedSubjects: Subject[];
-  maxSelectableSubjects: number;
-  votes: SubjectsTotalVotes;
-  createdBy: string;
-  createdDate: string;
-  lastModifiedBy: string;
-  lastModifiedDate: string;
+  selectedSubjects?: Subject[];
 }

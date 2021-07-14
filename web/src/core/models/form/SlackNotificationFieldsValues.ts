@@ -1,6 +1,4 @@
-interface SlackNotificationFieldsValues {
+export interface SlackNotificationFieldsValues {
   notifySlack: boolean;
-  notificationMessage: string;
+  slackMessage: string;
 }
-
-export default SlackNotificationFieldsValues;

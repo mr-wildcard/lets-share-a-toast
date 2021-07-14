@@ -1,22 +1,29 @@
-import React, {
-  ChangeEvent,
-  FunctionComponent,
-  useCallback,
-  useRef,
-  useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
-import { Form, Formik, Field, FormikProps, FieldProps } from 'formik';
+import firebase from "firebase/app";
+import React, { FunctionComponent, useRef, useState } from "react";
+import {
+  Alert,
+  AlertDescription,
+  AlertDialogBody,
+  AlertDialogFooter,
+  Box,
+  Button,
+  Divider,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
-import { ToastStatus, Toast, SubjectStatus } from '@shared';
+import { Toast } from "@shared/models";
+import { CloudFunctionName } from "@shared/firebase";
 
-import http from '@web/core/httpClient';
-import { APIPaths, pageColors } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import NotificationType from '@web/notifications/types/NotificationType';
-import useStores from '@web/core/hooks/useStores';
-import getUserFullname from '@web/core/helpers/getUserFullname';
+import { pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -27,35 +34,22 @@ interface FormValues {
 }
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
-const EndTOAST: FunctionComponent<Props> = ({
-  currentToast,
-  isOpen,
-  closeModal,
-}) => {
-  const { auth, notifications } = useStores();
-
-  const [endingTOAST, setEndingTOAST] = useState(false);
-
+const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const endTOAST = useCallback(async (): Promise<void> => {
-    setEndingTOAST(true);
-  }, [closeModal, currentToast.id, notifications, auth.profile]);
-
   return (
-    <C.AlertDialog
+    <Modal
       isCentered
-      isOpen={isOpen}
-      leastDestructiveRef={cancelBtn}
+      isOpen={true}
+      initialFocusRef={cancelBtn}
       onClose={closeModal}
-      size="lg"
+      size="xl"
     >
-      <C.AlertDialogOverlay>
+      <ModalOverlay>
         <Formik
           validateOnMount={true}
           initialValues={{
@@ -71,63 +65,23 @@ const EndTOAST: FunctionComponent<Props> = ({
             return errors;
           }}
           onSubmit={async (values: FormValues): Promise<void> => {
-            const getRequest = () => http();
-
-            try {
-              const updateTOASTUpdateRequest = getRequest();
-
-              await updateTOASTUpdateRequest(APIPaths.TOAST_CURRENT_STATUS, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  status: ToastStatus.CLOSED,
-                }),
-              });
-
-              await Promise.all(
-                values.givenSubjectsIds.map((givenSubjectsId) => {
-                  const changeSubjectRequest = getRequest();
-
-                  return changeSubjectRequest(
-                    APIPaths.SUBJECT_STATUS.replace(':id', givenSubjectsId),
-                    {
-                      method: 'PUT',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        status: SubjectStatus.DONE,
-                      }),
-                    }
-                  );
-                })
-              );
-
-              notifications.send(
-                // @ts-ignore
-                auth.profile,
-                NotificationType.EDIT_TOAST_STATUS,
-                {
-                  status: ToastStatus.CLOSED,
-                }
-              );
-
-              closeModal();
-            } catch (error) {
-              console.log('An error occured while ending TOAST', { error });
-
-              setEndingTOAST(false);
-            }
+            return firebase
+              .functions()
+              .httpsCallable(CloudFunctionName.END_TOAST)()
+              .then(closeModal);
           }}
         >
-          {({ values, isValid, errors }: FormikProps<FormValues>) => {
+          {({
+            values,
+            isValid,
+            isSubmitting,
+            errors,
+          }: FormikProps<FormValues>) => {
             return (
               <Form>
-                <C.AlertDialogContent borderRadius="3px">
-                  <C.AlertDialogHeader textAlign="center">
-                    <C.Text position="relative" pr={5}>
+                <ModalContent borderRadius="3px">
+                  <ModalHeader textAlign="center">
+                    <Text position="relative" pr={5}>
                       <HighlightedText bgColor={pageColors.homepage}>
                         End current TOAST
                       </HighlightedText>
@@ -139,28 +93,32 @@ const EndTOAST: FunctionComponent<Props> = ({
                         height={120}
                         src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
                       />
-                    </C.Text>
-                  </C.AlertDialogHeader>
-                  <C.AlertDialogBody fontSize="lg">
-                    <C.Box mb={5}>
-                      <C.Alert status="info" variant="left-accent">
-                        <C.Box flex={1}>
-                          <C.AlertDescription>
+                    </Text>
+                  </ModalHeader>
+                  <AlertDialogBody fontSize="lg">
+                    <Box mb={5}>
+                      <Alert status="info" variant="left-accent">
+                        <Box flex={1}>
+                          <AlertDescription>
                             In order to end the TOAST, you need to specify which
                             subject(s) has been given. (at least one subject).
                             <br />
                             If no subject has been given, you might want to
                             cancel the TOAST instead.
-                          </C.AlertDescription>
-                        </C.Box>
-                      </C.Alert>
-                    </C.Box>
+                          </AlertDescription>
+                        </Box>
+                      </Alert>
+                    </Box>
 
-                    <C.Divider my={5} />
+                    <Divider my={5} />
 
-                    <C.Stack my={10} spacing={5}>
-                      {currentToast.selectedSubjects.map(
+                    <Stack my={10} spacing={5}>
+                      {currentToast.selectedSubjects!.map(
                         (selectedSubject, index) => {
+                          const subjectIsSelected = values.givenSubjectsIds.includes(
+                            selectedSubject.id
+                          );
+
                           return (
                             <Field
                               key={`${selectedSubject.id}-${index}`}
@@ -170,15 +128,26 @@ const EndTOAST: FunctionComponent<Props> = ({
                                 field,
                                 form,
                               }: FieldProps<
-                                FormValues['givenSubjectsIds'],
+                                FormValues["givenSubjectsIds"],
                                 FormValues
                               >) => (
-                                <C.Checkbox
-                                  alignItems="start"
-                                  size="lg"
-                                  onChange={(
-                                    event: ChangeEvent<HTMLInputElement>
-                                  ) => {
+                                <Box
+                                  as="button"
+                                  type="button"
+                                  key={`subject-${selectedSubject.id}`}
+                                  p={3}
+                                  borderRadius="md"
+                                  borderWidth="1px"
+                                  borderStyle="solid"
+                                  borderColor="gray.200"
+                                  color={
+                                    subjectIsSelected ? "white" : "gray.600"
+                                  }
+                                  backgroundColor={
+                                    subjectIsSelected ? "green.500" : "white"
+                                  }
+                                  boxShadow={subjectIsSelected ? "none" : "sm"}
+                                  onClick={() => {
                                     if (
                                       values.givenSubjectsIds.includes(
                                         selectedSubject.id
@@ -198,57 +167,54 @@ const EndTOAST: FunctionComponent<Props> = ({
                                       );
                                     }
                                   }}
-                                  isChecked={values.givenSubjectsIds.includes(
-                                    selectedSubject.id
-                                  )}
                                 >
-                                  <C.Text
+                                  <Text
                                     as="span"
                                     fontWeight="bold"
                                     fontStyle="italic"
                                   >
                                     "{selectedSubject.title}"
-                                  </C.Text>
+                                  </Text>
                                   &nbsp;by&nbsp;
                                   {selectedSubject.speakers
                                     .map(getUserFullname)
-                                    .join(', ')}
-                                </C.Checkbox>
+                                    .join(", ")}
+                                </Box>
                               )}
                             </Field>
                           );
                         }
                       )}
-                    </C.Stack>
-                  </C.AlertDialogBody>
-                  <C.AlertDialogFooter justifyContent="center">
-                    <C.Stack spacing={3} direction="row">
-                      <C.Button
+                    </Stack>
+                  </AlertDialogBody>
+                  <AlertDialogFooter justifyContent="center">
+                    <Stack spacing={3} direction="row">
+                      <Button
                         type="submit"
-                        isLoading={endingTOAST}
-                        isDisabled={endingTOAST || !isValid}
+                        isLoading={isSubmitting}
+                        isDisabled={isSubmitting || !isValid}
                         loadingText="Ending TOAST..."
                         colorScheme="green"
                       >
                         I do want to end the TOAST
-                      </C.Button>
-                      <C.Button
+                      </Button>
+                      <Button
                         position="relative"
                         overflow="hidden"
                         ref={cancelBtn}
                         onClick={closeModal}
                       >
                         Do nothing
-                      </C.Button>
-                    </C.Stack>
-                  </C.AlertDialogFooter>
-                </C.AlertDialogContent>
+                      </Button>
+                    </Stack>
+                  </AlertDialogFooter>
+                </ModalContent>
               </Form>
             );
           }}
         </Formik>
-      </C.AlertDialogOverlay>
-    </C.AlertDialog>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

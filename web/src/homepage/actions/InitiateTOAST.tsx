@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import React, { FunctionComponent } from "react";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 interface Props {
   isSuccess: boolean;
@@ -11,7 +11,7 @@ interface Props {
 
 const InitiateTOAST: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
   return !isSuccess ? (
-    <C.Button
+    <Button
       onClick={onClick}
       variant="outline"
       position="relative"
@@ -20,9 +20,9 @@ const InitiateTOAST: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
       fontSize="xl"
       colorScheme="blue"
     >
-      <C.Text fontWeight="bold" pr="50px">
+      <Text fontWeight="bold" pr="50px">
         Start a TOAST!
-      </C.Text>
+      </Text>
       <Image
         position="absolute"
         width={60}
@@ -30,9 +30,9 @@ const InitiateTOAST: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
         right="5px"
         src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
       />
-    </C.Button>
+    </Button>
   ) : (
-    <C.Flex
+    <Flex
       h="100%"
       align="center"
       fontWeight="bold"
@@ -43,7 +43,7 @@ const InitiateTOAST: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
     >
       TOAST Initiated
       <CheckCircleIcon ml={3} color="white" boxSize="24px" />
-    </C.Flex>
+    </Flex>
   );
 };
 

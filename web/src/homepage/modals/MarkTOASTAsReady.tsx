@@ -1,55 +1,60 @@
-import React, { FunctionComponent, useRef } from 'react';
-import * as C from '@chakra-ui/react';
-import { Field, FieldProps, Form, Formik } from 'formik';
-import { mutate } from 'swr';
+import firebase from "firebase/app";
+import React, { FunctionComponent, useRef } from "react";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
+import { Field, FieldProps, Form, Formik } from "formik";
 
-import { Toast, ToastStatus } from '@shared';
+import { Toast } from "@shared/models";
+import { CloudFunctionName } from "@shared/firebase";
 
-import { APIPaths, pageColors } from '@web/core/constants';
-import HighlightedText from '@web/core/components/HighlightedText';
-import Image from '@web/core/components/Image';
-import { getTOASTIsReadySlackMessage } from '@web/homepage/helpers';
-import http from '@web/core/httpClient';
-import NotificationType from '@web/notifications/types/NotificationType';
-import useStores from '@web/core/hooks/useStores';
-import slackNotificationFieldsAreValid from '@web/core/helpers/form/validateSlackNotificationFields';
-import SlackNotificationFieldsValues from '@web/core/models/form/SlackNotificationFieldsValues';
-import getAPIEndpointWithSlackNotification from '@web/core/helpers/getAPIEndpointWithSlackNotification';
+import { pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import { getTOASTIsReadySlackMessage } from "@web/homepage/helpers";
+import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
 
 interface FormErrors {
-  notificationMessage?: boolean;
+  slackMessage?: boolean;
 }
 
 type FormValues = SlackNotificationFieldsValues;
 
 interface Props {
-  isOpen: boolean;
   currentToast: Toast;
   closeModal(): void;
 }
 
 const MarkTOASTAsReady: FunctionComponent<Props> = ({
   currentToast,
-  isOpen,
   closeModal,
 }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const { notifications, auth } = useStores();
-
   return (
-    <C.Modal
+    <Modal
       isCentered
       onClose={closeModal}
-      isOpen={isOpen}
+      isOpen={true}
       initialFocusRef={cancelBtn}
       closeOnEsc={true}
       size="lg"
     >
-      <C.ModalOverlay>
-        <C.ModalContent borderRadius="3px">
-          <C.ModalHeader textAlign="center">
-            <C.Text position="relative">
+      <ModalOverlay>
+        <ModalContent borderRadius="3px">
+          <ModalHeader textAlign="center">
+            <Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
                 Mark TOAST as ready
               </HighlightedText>
@@ -61,84 +66,61 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                 bottom="-20px"
                 src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif"
               />
-            </C.Text>
-          </C.ModalHeader>
+            </Text>
+          </ModalHeader>
 
           <Formik
             initialValues={{
               notifySlack: false,
-              notificationMessage: getTOASTIsReadySlackMessage(currentToast),
+              slackMessage: getTOASTIsReadySlackMessage(currentToast),
             }}
             validate={(values: FormValues) => {
               const errors: FormErrors = {};
 
-              if (!slackNotificationFieldsAreValid(values)) {
-                errors.notificationMessage = true;
+              if (!validateSlackNotificationField(values)) {
+                errors.slackMessage = true;
               }
 
               return errors;
             }}
-            onSubmit={async (values) => {
-              const endpoint = values.notifySlack
-                ? getAPIEndpointWithSlackNotification(
-                    APIPaths.TOAST_CURRENT_STATUS,
-                    values.notificationMessage
-                  )
-                : APIPaths.TOAST_CURRENT_STATUS;
-
-              const request = http();
-
-              const updatedToast: Toast = await request(endpoint, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  status: ToastStatus.WAITING_FOR_TOAST,
-                }),
-              });
-
-              notifications.send(
-                // @ts-ignore
-                auth.profile,
-                NotificationType.EDIT_TOAST_STATUS,
-                {
-                  status: ToastStatus.WAITING_FOR_TOAST,
-                }
-              );
-
-              closeModal();
+            onSubmit={(values: FormValues) => {
+              return firebase
+                .functions()
+                .httpsCallable(CloudFunctionName.TOAST_READY)({
+                  slackMessage: values.notifySlack ? values.slackMessage : null,
+                })
+                .then(closeModal);
             }}
           >
             {({ values, isSubmitting, isValid }) => (
               <Form>
-                <C.ModalBody>
+                <ModalBody>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
-                      <C.Checkbox mb={2} defaultIsChecked={false} {...field}>
+                      <Checkbox mb={2} defaultIsChecked={false} {...field}>
                         Also notify #bordeaux Slack channel:
-                      </C.Checkbox>
+                      </Checkbox>
                     )}
                   </Field>
 
-                  <Field name="notificationMessage">
+                  <Field name="slackMessage">
                     {({ field, meta }: FieldProps) => (
-                      <C.FormControl>
-                        <C.Textarea
+                      <FormControl>
+                        <Textarea
                           {...field}
                           height="150px"
                           isRequired={values.notifySlack}
                           isDisabled={!values.notifySlack}
                           isInvalid={meta.touched && !!meta.error}
-                          value={values.notificationMessage}
+                          value={values.slackMessage}
                         />
-                      </C.FormControl>
+                      </FormControl>
                     )}
                   </Field>
-                </C.ModalBody>
+                </ModalBody>
 
-                <C.ModalFooter justifyContent="center">
-                  <C.Button
+                <ModalFooter justifyContent="center">
+                  <Button
                     isDisabled={!isValid}
                     type="submit"
                     colorScheme="blue"
@@ -147,8 +129,8 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                     mx={2}
                   >
                     GO!
-                  </C.Button>
-                  <C.Button
+                  </Button>
+                  <Button
                     ref={cancelBtn}
                     isDisabled={isSubmitting}
                     onClick={closeModal}
@@ -158,14 +140,14 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                     mx={2}
                   >
                     Cancel
-                  </C.Button>
-                </C.ModalFooter>
+                  </Button>
+                </ModalFooter>
               </Form>
             )}
           </Formik>
-        </C.ModalContent>
-      </C.ModalOverlay>
-    </C.Modal>
+        </ModalContent>
+      </ModalOverlay>
+    </Modal>
   );
 };
 

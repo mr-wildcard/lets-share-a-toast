@@ -1,7 +1,7 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent } from "react";
+import { Button, Text } from "@chakra-ui/react";
 
-import Image from '@web/core/components/Image';
+import Image from "@web/core/components/Image";
 
 interface Props {
   onClick: () => void;
@@ -9,7 +9,7 @@ interface Props {
 
 const MarkTOASTAsReady: FunctionComponent<Props> = ({ onClick }) => {
   return (
-    <C.Button
+    <Button
       onClick={onClick}
       variant="outline"
       position="relative"
@@ -27,10 +27,10 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({ onClick }) => {
         src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.gif"
       />
 
-      <C.Text fontWeight="bold" pr="50px">
+      <Text fontWeight="bold" pr="50px">
         Mark TOAST as ready!
-      </C.Text>
-    </C.Button>
+      </Text>
+    </Button>
   );
 };
 

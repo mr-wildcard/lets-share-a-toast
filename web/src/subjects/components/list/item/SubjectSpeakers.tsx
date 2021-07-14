@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FunctionComponent, useMemo } from "react";
+import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react";
 
-import { User } from '@shared';
+import { User } from "@shared/models";
 
-import getUserFullname from '@web/core/helpers/getUserFullname';
+import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props {
   speakers: User[];
@@ -11,32 +11,32 @@ interface Props {
 
 const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
   const namesList = useMemo(() => {
-    return speakers.map(getUserFullname).join(', ');
+    return speakers.map(getUserFullname).join(", ");
   }, [speakers]);
 
   const highNumberOfSpeakers = speakers.length > 2;
 
   return (
-    <C.Flex
-      direction={highNumberOfSpeakers ? 'column' : 'row'}
-      align={highNumberOfSpeakers ? 'start' : 'center'}
+    <Flex
+      direction={highNumberOfSpeakers ? "column" : "row"}
+      align={highNumberOfSpeakers ? "start" : "center"}
     >
-      <C.AvatarGroup size="sm">
+      <AvatarGroup size="sm">
         {speakers.map((speaker, index) => {
           const fullname = getUserFullname(speaker);
 
           return (
-            <C.Avatar
+            <Avatar
               key={`speaker-${index}-${speaker.id}`}
-              src={speaker.picture}
+              src={speaker.photoURL || undefined}
               name={fullname}
               title={fullname}
             />
           );
         })}
-      </C.AvatarGroup>
-      <C.Text fontStyle="italic">{namesList}</C.Text>
-    </C.Flex>
+      </AvatarGroup>
+      <Text fontStyle="italic">{namesList}</Text>
+    </Flex>
   );
 };
 

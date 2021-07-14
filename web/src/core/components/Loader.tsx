@@ -4,26 +4,22 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import * as C from '@chakra-ui/react';
-import { animated, config, useTransition } from '@react-spring/web';
-import { init } from '@web/core/firebase';
-
-import ImageComponent from '@web/core/components/Image';
+} from "react";
+import { animated, config, useTransition } from "@react-spring/web";
 
 const defaultTransitions = {
   from: {
-    transform: 'scale(0.5) skewX(30deg) rotate(-85deg)',
+    transform: "scale(0.5) skewX(30deg) rotate(-85deg)",
     opacity: 0,
     config: config.wobbly,
   },
   enter: {
-    transform: 'scale(1) skewX(0deg) rotate(0deg)',
+    transform: "scale(1) skewX(0deg) rotate(0deg)",
     opacity: 1,
     config: config.wobbly,
   },
   leave: {
-    transform: 'scale(0.5) skewX(0) rotate(180deg)',
+    transform: "scale(0.5) skewX(0) rotate(180deg)",
     opacity: 0,
     config: {
       duration: 100,
@@ -33,11 +29,11 @@ const defaultTransitions = {
 
 const ALL_GIFS = [
   {
-    src: 'https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp',
+    src: "https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp",
   },
-  { src: 'https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp' },
+  { src: "https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp" },
   {
-    src: 'https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.webp',
+    src: "https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.webp",
   },
 ];
 
@@ -137,15 +133,21 @@ const Loader = () => {
   });
 
   return (
-    <C.Flex
-      align="center"
-      justify="center"
-      h="400px"
-      w="400px"
-      position="relative"
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "400px",
+        height: "300px",
+        position: "relative",
+      }}
     >
-      <ImageComponent
-        position="absolute"
+      <img
+        style={{
+          position: "absolute",
+        }}
+        alt="Background loader animation"
         src="https://media.giphy.com/media/j2AqKHK9rq217Ag8EX/giphy.gif"
         width={248}
         height={264}
@@ -154,28 +156,21 @@ const Loader = () => {
       {loaders((styles, item) => {
         return (
           ALL_GIFS[item] && (
-            <C.Box
-              as={animated.img}
+            <animated.img
               alt="Loading..."
               src={ALL_GIFS[item].src}
-              position="absolute"
-              transformOrigin="center center"
-              maxWidth="190px"
-              height="auto"
-              // @ts-ignore
-              style={styles}
+              style={{
+                ...styles,
+                position: "absolute",
+                transformOrigin: "center center",
+                maxWidth: "190px",
+                height: "auto",
+              }}
             />
           )
         );
       })}
-      <C.Button
-        onClick={() => {
-          init().signin();
-        }}
-      >
-        Login
-      </C.Button>
-    </C.Flex>
+    </div>
   );
 };
 

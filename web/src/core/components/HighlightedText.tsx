@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useMemo } from 'react';
-import * as C from '@chakra-ui/react';
-import { useSpring, animated } from '@react-spring/web';
+import React, { FunctionComponent, useMemo } from "react";
+import { BoxProps, Text } from "@chakra-ui/react";
+import { useSpring, animated } from "@react-spring/web";
 
-interface Props extends C.BoxProps {
+interface Props extends BoxProps {
   bgColor: string;
   animDelay?: number;
 }
@@ -27,8 +27,8 @@ const HighlightedText: FunctionComponent<Props> = ({
   });
 
   return (
-    <C.Text as="span" position="relative" {...boxProps}>
-      <C.Text
+    <Text as="span" position="relative" {...boxProps}>
+      <Text
         as={animated.span}
         backgroundColor={bgColor}
         position="absolute"
@@ -50,10 +50,10 @@ const HighlightedText: FunctionComponent<Props> = ({
           ),
         }}
       />
-      <C.Text position="relative" as="span">
+      <Text position="relative" as="span">
         {children}
-      </C.Text>
-    </C.Text>
+      </Text>
+    </Text>
   );
 };
 
