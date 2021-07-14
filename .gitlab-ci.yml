@@ -1,0 +1,127 @@
+stages:
+  - test
+  - deploy
+
+test:web:
+  stage: test
+  image: node:14-alpine
+  tags: [ docker, ekino, france ]
+  only:
+    refs:
+      - master
+    changes:
+      - web/**/*
+  before_script:
+    - cd web
+    - yarn --frozen-lockfile
+  script:
+    - NODE_ENV=production yarn build
+  cache:
+    key:
+      files:
+        - web/yarn.lock
+    paths:
+      - web/node_modules
+  artifacts:
+    paths:
+      - firebase/dist
+  variables:
+    VITE_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+    VITE_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
+    VITE_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
+    VITE_FIREBASE_APP_ID: ${FIREBASE_APP_ID}
+    VITE_FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL}
+
+test:functions:
+  stage: test
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  tags: [ docker, ekino, france ]
+  only:
+    refs:
+      - master
+    changes:
+      - firebase/functions/**/*
+  before_script:
+    - cd firebase/functions
+    - yarn --frozen-lockfile
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - firebase/functions/lib
+  cache:
+    key:
+      files:
+        - firebase/functions/yarn.lock
+    paths:
+      - firebase/functions/node_modules
+
+preview:web:
+  stage: deploy
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  tags: [ docker, ekino, france ]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_MERGE_REQUEST_LABELS =~ /-FIREBASE PREVIEW$/'
+      changes:
+        - web/**/*
+  cache:
+    key:
+      files:
+        - web/yarn.lock
+    paths:
+      - web/node_modules
+  before_script:
+    - cd web
+    - yarn --frozen-lockfile
+  script:
+    - yarn build
+    - cd ../firebase
+    - firebase hosting:channel:deploy $CI_COMMIT_REF_NAME
+  variables:
+    VITE_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+    VITE_FIREBASE_API_KEY: ${FIREBASE_API_KEY}
+    VITE_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
+    VITE_FIREBASE_APP_ID: ${FIREBASE_APP_ID}
+    VITE_FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL}
+
+deploy:web:
+  tags: [ docker, ekino, france ]
+  stage: deploy
+  only:
+    refs:
+      - master
+    changes:
+      - web/**/*
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  needs:
+    - job: test:web
+      artifacts: true
+  before_script:
+    - cd firebase
+  script:
+    - firebase deploy --only hosting
+
+deploy:functions:
+  tags: [ docker, ekino, france ]
+  stage: deploy
+  only:
+    refs:
+      - master
+    changes:
+      - firebase/functions/**/*
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  needs:
+    - job: test:functions
+      artifacts: true
+  before_script:
+    - cd firebase
+    - yarn --frozen-lockfile
+  script:
+    - firebase deploy --only functions
+  cache:
+    key:
+      files:
+        - firebase/functions/yarn.lock
+    paths:
+      - firebase/functions/node_modules
