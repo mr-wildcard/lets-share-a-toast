@@ -28,7 +28,7 @@ export default function getConfig({ command }: ConfigEnv) {
     build: {
       outDir: resolve(__dirname, "..", "firebase", "dist"),
     },
-    plugins: [visualizer({ open: true })],
+    plugins: [visualizer()],
     resolve: {
       alias: aliases,
     },
