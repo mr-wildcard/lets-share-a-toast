@@ -61,8 +61,8 @@ preview:web:
   image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
   tags: [ docker, ekino, france ]
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_MERGE_REQUEST_LABELS =~ /-FIREBASE PREVIEW$/'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
+    - if:
       changes:
         - web/**/*
   cache:
