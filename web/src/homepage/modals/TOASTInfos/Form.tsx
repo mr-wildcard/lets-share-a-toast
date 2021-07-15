@@ -12,8 +12,8 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react";
-import { Field, FieldProps, Formik, Form as FormikForm } from "formik";
-import DayPickerInput from "react-day-picker/DayPickerInput";
+import { Field, FieldProps, Formik, Form } from "formik";
+import DayPicker from "react-day-picker/DayPickerInput";
 import dayjs from "dayjs";
 
 import { CurrentToast, User } from "@shared/models";
@@ -31,6 +31,13 @@ import DateInput from "./DateInput";
 import DatePickerNavBar from "./DatePickerNavBar";
 import DatePickerCaption from "./DatePickerCaption";
 import datePickerCSS from "./DatePicker.module.css";
+
+/**
+ * Related issue : https://github.com/gpbl/react-day-picker/issues/1194
+ * DayPickerInput is working fine in dev mode, but was broken after production build.
+ */
+// @ts-ignore
+const DayPickerInput = DayPicker.__esModule ? DayPicker.default : DayPicker;
 
 interface Props {
   currentToast: CurrentToast;
@@ -56,7 +63,7 @@ const today = new Date();
 const defaultSlackNotificationMessage = `@here {{PROFILE}} scheduled a new 🍞 TOAST 🍞 for {{DATE}} ! 🎉
 ✍️ It’s time to add / remove / update your subject(s) {{URL}}`;
 
-const Form: FunctionComponent<Props> = ({
+const TOASTForm: FunctionComponent<Props> = ({
   currentToast,
   cancelButtonRef,
   closeModal,
@@ -164,7 +171,7 @@ const Form: FunctionComponent<Props> = ({
     >
       {({ values, setFieldValue, isSubmitting, isValid }) => {
         return (
-          <FormikForm>
+          <Form>
             <Stack spacing={8}>
               <Box>
                 <Field name="dueDate">
@@ -179,7 +186,9 @@ const Form: FunctionComponent<Props> = ({
                         @ts-ignore */}
                         <DayPickerInput
                           {...field}
-                          onDayChange={(date) => setFieldValue("dueDate", date)}
+                          onDayChange={(date: Date) =>
+                            setFieldValue(field.name, date)
+                          }
                           formatDate={getFormattedTOASTDateWithRemainingDays}
                           classNames={datePickerCSS}
                           component={DateInput}
@@ -187,7 +196,8 @@ const Form: FunctionComponent<Props> = ({
                           dayPickerProps={{
                             classNames: datePickerCSS,
                             firstDayOfWeek: 1,
-                            disabledDays: (date) => dayjs(date).isBefore(today),
+                            disabledDays: (date: Date) =>
+                              dayjs(date).isBefore(today),
                             fromMonth: new Date(),
                             selectedDays: values.dueDate,
                             navbarElement: DatePickerNavBar,
@@ -339,11 +349,11 @@ const Form: FunctionComponent<Props> = ({
                 </Button>
               </ModalFooter>
             </Stack>
-          </FormikForm>
+          </Form>
         );
       }}
     </Formik>
   );
 };
 
-export default Form;
+export default TOASTForm;
