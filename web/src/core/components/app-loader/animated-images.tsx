@@ -37,7 +37,7 @@ const ALL_GIFS = [
   },
 ];
 
-const Loader = () => {
+export const AnimatedImages = () => {
   const componentIsMounted = useRef(true);
 
   const [shownIndex, setShownIndex] = useState(-1);
@@ -173,5 +173,3 @@ const Loader = () => {
     </div>
   );
 };
-
-export default Loader;

@@ -8,7 +8,7 @@ import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { animated, config, to, useSpring } from "@react-spring/web";
 
-import Loader from "@web/core/components/Loader";
+import { AnimatedImages } from "./animated-images";
 
 enum BackgroundAnimationState {
   INITIAL,
@@ -109,7 +109,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
               ),
             }}
           >
-            <Loader />
+            <AnimatedImages />
           </animated.div>
         </div>
       )}

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { configure, toJS, when } from "mobx";
 
-import AppLoader from "@web/core/components/AppLoader";
+import AppLoader from "@web/core/components/app-loader";
 
 configure({
   enforceActions: "never",
