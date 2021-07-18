@@ -60,6 +60,9 @@ const TOASTActions = () => {
 
   const [bgClipPath1, bgClipPath2] = animations.background.finalClipPaths;
 
+  const backgroundOpenAnimationFinished =
+    animations.background.opened && animations.background.animationFinished;
+
   useEffect(() => {
     if (buttonsStates.deadHeatSubjects.display) {
       animations.background.open(true);
@@ -122,7 +125,7 @@ const TOASTActions = () => {
                * Disable `clip-path` at the end of the animation
                * to let the menu displays correctly.
                */
-              return path1 === bgClipPath1 && path2 === bgClipPath2
+              return backgroundOpenAnimationFinished
                 ? "none"
                 : `polygon(0% ${path1}%, 100% ${path2}%, 100% 100%, 0% 100%)`;
             }
