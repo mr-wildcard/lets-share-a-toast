@@ -4,7 +4,7 @@ import { Avatar, AvatarBadge, Box, Flex, Stack, Text } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router";
 import { ToastStatus } from "@shared/enums";
 
-import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
+import { header, pageColors, Pathnames } from "@web/core/constants";
 import { firebaseData } from "@web/core/firebase/data";
 import Image from "@web/core/components/Image";
 import Logo from "./Logo";

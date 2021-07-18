@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: ${NODE_DOCKER_IMAGE}
+    image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
     command: /bin/sh -c "yarn --frozen-lockfile && yarn dev --port ${FRONTEND_PORT} --host"
     volumes:
       - ./:/code:delegated
@@ -22,7 +22,7 @@ services:
       - VITE_FIREBASE_DATABASE_URL=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_DATABASE_PORT/?ns=$FIREBASE_PROJECT_ID
 
   firebase:
-    image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+    image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
     volumes:
       - ./:/code:delegated
       - firestore-data:/home/firebase/firestore-data
@@ -42,7 +42,7 @@ services:
       - FIREBASE_TOKEN
 
   functions:
-    image: ${NODE_DOCKER_IMAGE}
+    image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
     volumes:
       - ./:/code:delegated
     working_dir: /code/firebase/functions

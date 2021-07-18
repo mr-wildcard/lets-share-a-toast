@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import Header from "./header/Header";
 import customTheme from "./core/theme";
-import { spacing } from "@web/core/constants";
-import { PageSkeleton } from "@web/core/components/PageSkeleton";
-import Header from "@web/header/Header";
+import { spacing } from "./core/constants";
+import { PageSkeleton } from "./core/components/PageSkeleton";
 
 const Home = React.lazy(() => import("./homepage"));
 const Subjects = React.lazy(() => import("./subjects"));

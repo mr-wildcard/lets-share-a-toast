@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
-import { config, useTransition, useSpring } from '@react-spring/web';
+import { useEffect, useMemo, useState } from "react";
+import { config, useTransition, useSpring } from "@react-spring/web";
 
 const useActionsAnimations = () => {
   const [backgroundOpened, openBackground] = useState(false);
   const [toastCelebration, setTOASTCelebration] = useState(false);
+  const [backgoundAnimationFinished, setBackgoundAnimationFinished] =
+    useState(true);
 
   const toastCelebrationAnimation = useTransition(toastCelebration, {
     from: {
@@ -19,8 +21,8 @@ const useActionsAnimations = () => {
 
   const [buttonOpenActionsCSSTransforms, backgroundClipPaths] = useMemo(() => {
     return Math.random() > 0.5
-      ? ['rotate(0.5deg) translateY(-85px)', [0, 15]]
-      : ['rotate(-0.5deg) translateY(-75px)', [15, 0]];
+      ? ["rotate(0.5deg) translateY(-85px)", [0, 15]]
+      : ["rotate(-0.5deg) translateY(-75px)", [15, 0]];
     // I want a new value each time `backgroundOpened` change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backgroundOpened]);
@@ -28,6 +30,12 @@ const useActionsAnimations = () => {
   const backgroundAnimation = useSpring({
     config: config.stiff,
     clipPath: !backgroundOpened ? [100, 100] : backgroundClipPaths,
+    onStart() {
+      setBackgoundAnimationFinished(false);
+    },
+    onRest() {
+      setBackgoundAnimationFinished(true);
+    },
   });
 
   useEffect(() => {
@@ -55,6 +63,7 @@ const useActionsAnimations = () => {
       opened: backgroundOpened,
       open: openBackground,
       animation: backgroundAnimation,
+      animationFinished: backgoundAnimationFinished,
       finalClipPaths: backgroundClipPaths,
       buttonOpenActionsCSSTransforms,
     },
