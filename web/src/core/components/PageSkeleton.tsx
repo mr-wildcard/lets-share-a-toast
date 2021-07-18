@@ -1,5 +1,5 @@
 import React from "react";
-import { Skeleton, Spinner } from "@chakra-ui/react";
+import { Skeleton } from "@chakra-ui/react";
 import { useLocation } from "react-router";
 
 import { pageColorsByPathname, Pathnames } from "@web/core/constants";

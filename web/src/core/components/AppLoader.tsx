@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
-import { animated, to, useTransition, config } from "@react-spring/web";
+import { animated, config, to, useSpring } from "@react-spring/web";
 
 import Loader from "@web/core/components/Loader";
 
@@ -17,10 +17,8 @@ enum BackgroundAnimationState {
 }
 
 const AppLoader: FunctionComponent = ({ children }) => {
-  const [
-    loaderAnimationState,
-    setLoaderAnimationState,
-  ] = useState<BackgroundAnimationState>(BackgroundAnimationState.INITIAL);
+  const [loaderAnimationState, setLoaderAnimationState] =
+    useState<BackgroundAnimationState>(BackgroundAnimationState.INITIAL);
 
   const [appReady, setAppReady] = useState(false);
 
@@ -62,22 +60,20 @@ const AppLoader: FunctionComponent = ({ children }) => {
     }
   }, [loaderAnimationState]);
 
-  const bgAnimations = useTransition(appReady, {
+  const { value: path1 } = useSpring({
     config: config.gentle,
-    from: {
-      clipPath: [100, 150, 100, 150],
-    },
-    enter: {
-      clipPath: [0, 0, 100, 150],
-      onRest() {
-        setLoaderAnimationState(BackgroundAnimationState.ENTERED);
-      },
-    },
-    leave: {
-      clipPath: [0, 0, 0, 0],
-    },
-    onDestroyed() {
-      setLoaderAnimationState(BackgroundAnimationState.LEFT);
+    delay: 150,
+    from: { value: 100 },
+    to: { value: 0 },
+  });
+
+  const { value: path2 } = useSpring({
+    config: config.gentle,
+    delay: 230,
+    from: { value: 100 },
+    to: { value: 0 },
+    onRest() {
+      setLoaderAnimationState(BackgroundAnimationState.ENTERED);
     },
   });
 
@@ -98,29 +94,23 @@ const AppLoader: FunctionComponent = ({ children }) => {
                 : "transparent",
           }}
         >
-          {bgAnimations(({ clipPath }, appIsLoaded) => {
-            return (
-              !appIsLoaded && (
-                <animated.div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "#f6e05e",
-                    clipPath: to(
-                      clipPath,
-                      (path1, path2, path3, path4) =>
-                        `polygon(${path1}% 0%, ${path3}% 0%, ${path4}% 100%, ${path2}% 100%)`
-                    ),
-                  }}
-                >
-                  <Loader />
-                </animated.div>
-              )
-            );
-          })}
+          <animated.div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#f6e05e",
+              clipPath: to(
+                [path1, path2],
+                (path1, path2) =>
+                  `polygon(${path1}% 0, 100% 0, 100% 100%, ${path2}% 100%)`
+              ),
+            }}
+          >
+            <Loader />
+          </animated.div>
         </div>
       )}
     </>
