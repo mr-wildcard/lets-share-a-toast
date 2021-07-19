@@ -62,7 +62,6 @@ preview:web:
   tags: [ docker, ekino, france ]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
-    - if:
       changes:
         - web/**/*
   cache:
