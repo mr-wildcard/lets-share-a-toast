@@ -34,7 +34,7 @@ test:web:
 
 test:functions:
   stage: test
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
   tags: [ docker, ekino, france ]
   only:
     refs:
@@ -58,7 +58,7 @@ test:functions:
 
 preview:web:
   stage: deploy
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
   tags: [ docker, ekino, france ]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
@@ -93,7 +93,7 @@ deploy:web:
       - master
     changes:
       - web/**/*
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
   needs:
     - job: test:web
       artifacts: true
@@ -110,7 +110,7 @@ deploy:functions:
       - master
     changes:
       - firebase/functions/**/*
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:firebase-tools
+  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
   needs:
     - job: test:functions
       artifacts: true
