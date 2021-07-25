@@ -5,27 +5,32 @@ stages:
 
 build:docker-image:
   stage: build
-  image: docker:19.03.12
+  image: ekino/ci-dind:2020.04.30
   services:
-    - docker:19.03.12-dind
+    - ekino/ci-dind:2020.04.30
+  tags: [ docker, ekino, france ]
   only:
     refs:
       - master
-    changes:
-      - etc/local/**/*
-  when: manual
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker build --pull -t $CONTAINER_TEST_IMAGE ./etc/local
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
+    #changes:
+    #  - etc/local/**/*
+  #when: manual
   variables:
     # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: "tcp://ekino__ci-dind:2375"
     CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:local-dev
+  before_script:
+    - docker login -u docker-image-builder -p $CI_ACCESS_TOKEN_DOCKER_IMAGE $CI_REGISTRY
+  script:
+    - docker build --pull
+        -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+        --build-arg NODE_DOCKER_IMAGE=node:14-alpine
+        ./etc/local
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
 
 test:web:
   stage: test

@@ -27,7 +27,7 @@ services:
       - ./:/code:delegated
       - firestore-data:/home/firebase/firestore-data
     working_dir: /code/firebase
-    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firebase/firestore-data --export-on-exit"
+    command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firebase/firestore-data --export-on-exit=/home/firebase/firestore-data"
     ports:
       - ${FIREBASE_EMULATOR_UI_PORT}:${FIREBASE_EMULATOR_UI_PORT}
       - ${FIREBASE_EMULATOR_FIRESTORE_PORT}:${FIREBASE_EMULATOR_FIRESTORE_PORT}
