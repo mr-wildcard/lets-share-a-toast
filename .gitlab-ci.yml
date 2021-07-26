@@ -12,9 +12,8 @@ build:docker-image:
   only:
     refs:
       - master
-    #changes:
-    #  - etc/local/**/*
-  #when: manual
+    changes:
+      - etc/local/**/*
   variables:
     # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
     DOCKER_TLS_CERTDIR: ""
