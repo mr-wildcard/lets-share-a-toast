@@ -63,7 +63,7 @@ test:web:
 
 test:functions:
   stage: test
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
+  image: $CI_REGISTRY_IMAGE:local-dev
   tags: [ docker, ekino, france ]
   only:
     refs:
@@ -87,7 +87,7 @@ test:functions:
 
 preview:web:
   stage: deploy
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
+  image: $CI_REGISTRY_IMAGE:local-dev
   tags: [ docker, ekino, france ]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
