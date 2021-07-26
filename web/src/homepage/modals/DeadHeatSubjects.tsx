@@ -5,7 +5,6 @@ import {
   AlertTitle,
   Box,
   Button,
-  Checkbox,
   Divider,
   Modal,
   ModalBody,
@@ -152,20 +151,6 @@ export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
                             {sortedSelectedSubjects.map((subject) => {
                               const subjectIsSelected =
                                 values.selectedSubjectIds.includes(subject.id);
-
-                              return (
-                                <Checkbox
-                                  alignItems="start"
-                                  value={subject.id}
-                                  isChecked={subjectIsSelected}
-                                >
-                                  The Firebase Emulators make it easier to fully
-                                  validate your app's behavior and verify your
-                                  Firebase Security Rules configurations. Use
-                                  the Firebase Emulators to run and automate
-                                  unit tests in a local environment.
-                                </Checkbox>
-                              );
 
                               return (
                                 <Box
