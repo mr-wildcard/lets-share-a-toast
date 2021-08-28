@@ -1,56 +1,35 @@
+variables:
+  DOCKER_IMAGE_NAME: local-dev
+  DOCKER_IMAGE_VERSION: 1.0.1
+  DOCKER_IMAGE: "${CI_REGISTRY_IMAGE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
+
 stages:
   - build
   - test
   - deploy
 
-build:docker-image:
-  stage: build
-  image: ekino/ci-dind:2020.04.30
-  services:
-    - ekino/ci-dind:2020.04.30
-  tags: [ docker, ekino, france ]
-  only:
-    refs:
-      - master
-    changes:
-      - etc/local/**/*
-  variables:
-    # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: "tcp://ekino__ci-dind:2375"
-    CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-    CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:local-dev
-  before_script:
-    - docker login -u docker-image-builder -p $CI_ACCESS_TOKEN_DOCKER_IMAGE $CI_REGISTRY
-  script:
-    - docker build --pull
-        -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-        --build-arg NODE_DOCKER_IMAGE=node:14-alpine
-        ./etc/local
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
+before_script:
+  - yarn --immutable
+
+cache:
+  key:
+    files:
+      - yarn.lock
+  paths:
+    - "**/node_modules"
+    - .yarn
 
 test:web:
   stage: test
-  image: node:14-alpine
+  image: $DOCKER_IMAGE
   tags: [ docker, ekino, france ]
   only:
     refs:
       - master
     changes:
       - web/**/*
-  before_script:
-    - cd web
-    - yarn --frozen-lockfile
   script:
     - NODE_ENV=production yarn build
-  cache:
-    key:
-      files:
-        - web/yarn.lock
-    paths:
-      - web/node_modules
   artifacts:
     paths:
       - firebase/dist
@@ -63,45 +42,27 @@ test:web:
 
 test:functions:
   stage: test
-  image: $CI_REGISTRY_IMAGE:local-dev
+  image: $DOCKER_IMAGE
   tags: [ docker, ekino, france ]
   only:
     refs:
       - master
     changes:
       - firebase/functions/**/*
-  before_script:
-    - cd firebase/functions
-    - yarn --frozen-lockfile
   script:
     - yarn build
   artifacts:
     paths:
       - firebase/functions/lib
-  cache:
-    key:
-      files:
-        - firebase/functions/yarn.lock
-    paths:
-      - firebase/functions/node_modules
 
 preview:web:
   stage: deploy
-  image: $CI_REGISTRY_IMAGE:local-dev
+  image: $DOCKER_IMAGE
   tags: [ docker, ekino, france ]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
       changes:
         - web/**/*
-  cache:
-    key:
-      files:
-        - web/yarn.lock
-    paths:
-      - web/node_modules
-  before_script:
-    - cd web
-    - yarn --frozen-lockfile
   script:
     - yarn build
     - cd ../firebase
@@ -114,14 +75,14 @@ preview:web:
     VITE_FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL}
 
 deploy:web:
-  tags: [ docker, ekino, france ]
   stage: deploy
+  image: $DOCKER_IMAGE
+  tags: [ docker, ekino, france ]
   only:
     refs:
       - master
     changes:
       - web/**/*
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
   needs:
     - job: test:web
       artifacts: true
@@ -131,25 +92,16 @@ deploy:web:
     - firebase deploy --only hosting
 
 deploy:functions:
-  tags: [ docker, ekino, france ]
   stage: deploy
+  image: $DOCKER_IMAGE
+  tags: [ docker, ekino, france ]
   only:
     refs:
-      - master
+    - master
     changes:
-      - firebase/functions/**/*
-  image: registry.ekino.com/julien.viala/letsshareatoast-v2:local-dev
+    - firebase/functions/**/*
   needs:
     - job: test:functions
       artifacts: true
-  before_script:
-    - cd firebase
-    - yarn --frozen-lockfile
   script:
     - firebase deploy --only functions
-  cache:
-    key:
-      files:
-        - firebase/functions/yarn.lock
-    paths:
-      - firebase/functions/node_modules

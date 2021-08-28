@@ -2,12 +2,8 @@ version: '3.8'
 
 services:
   web:
-    build:
-      context: ./etc/local
-      dockerfile: Dockerfile
-      args:
-        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
-    command: /bin/sh -c "yarn --frozen-lockfile && yarn dev --port ${FRONTEND_PORT} --host"
+    image: ${DOCKER_IMAGE}
+    command: /bin/sh -c "yarn && yarn dev --port ${FRONTEND_PORT} --host"
     volumes:
       - ./:/code:delegated
     working_dir: /code/web
@@ -26,11 +22,7 @@ services:
       - VITE_FIREBASE_DATABASE_URL=http://$LOCAL_HOSTNAME:$FIREBASE_EMULATOR_DATABASE_PORT/?ns=$FIREBASE_PROJECT_ID
 
   firebase:
-    build:
-      context: ./etc/local
-      dockerfile: Dockerfile
-      args:
-        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
+    image: ${DOCKER_IMAGE}
     volumes:
       - ./:/code:delegated
       - firestore-data:/home/firebase/firestore-data
@@ -50,15 +42,11 @@ services:
       - FIREBASE_TOKEN
 
   functions:
-    build:
-      context: ./etc/local
-      dockerfile: Dockerfile
-      args:
-        NODE_DOCKER_IMAGE: ${NODE_DOCKER_IMAGE}
+    image: ${DOCKER_IMAGE}
     volumes:
       - ./:/code:delegated
     working_dir: /code/firebase/functions
-    command: /bin/sh -c "yarn --frozen-lockfile && yarn serve"
+    command: /bin/sh -c "yarn && yarn serve"
 
 volumes:
   firestore-data:
