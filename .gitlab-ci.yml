@@ -107,4 +107,5 @@ deploy:functions:
     - job: test:functions
       artifacts: true
   script:
+    - cd firebase
     - firebase deploy --only functions
