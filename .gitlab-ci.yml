@@ -51,7 +51,7 @@ test:functions:
     changes:
       - firebase/functions/**/*
   script:
-    - yarn workspace firebase/functions build
+    - yarn workspace functions build
   artifacts:
     paths:
       - firebase/functions/lib
