@@ -1,12 +1,14 @@
+stages:
+  - build
+  - test
+  - deploy
+
 variables:
   DOCKER_IMAGE_NAME: local-dev
   DOCKER_IMAGE_VERSION: 1.0.1
   DOCKER_IMAGE: "${CI_REGISTRY_IMAGE}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
 
-stages:
-  - build
-  - test
-  - deploy
+image: $DOCKER_IMAGE
 
 before_script:
   - yarn --immutable
@@ -21,7 +23,6 @@ cache:
 
 test:web:
   stage: test
-  image: $DOCKER_IMAGE
   tags: [ docker, ekino, france ]
   only:
     refs:
@@ -29,7 +30,7 @@ test:web:
     changes:
       - web/**/*
   script:
-    - NODE_ENV=production yarn build
+    - NODE_ENV=production yarn workspace web build
   artifacts:
     paths:
       - firebase/dist
@@ -50,7 +51,7 @@ test:functions:
     changes:
       - firebase/functions/**/*
   script:
-    - yarn build
+    - yarn workspace firebase/functions build
   artifacts:
     paths:
       - firebase/functions/lib
@@ -63,9 +64,11 @@ preview:web:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
       changes:
         - web/**/*
+  needs:
+    - job: test:web
+      artifacts: true
   script:
-    - yarn build
-    - cd ../firebase
+    - cd firebase
     - firebase hosting:channel:deploy $CI_COMMIT_REF_NAME
   variables:
     VITE_FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
