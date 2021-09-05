@@ -198,7 +198,9 @@ const TOASTForm: FunctionComponent<Props> = ({
                             firstDayOfWeek: 1,
                             disabledDays: (date: Date) =>
                               dayjs(date).isBefore(today),
-                            fromMonth: new Date(),
+                            fromMonth: currentToast
+                              ? currentToast?.date
+                              : new Date(),
                             selectedDays: values.dueDate,
                             navbarElement: DatePickerNavBar,
                             captionElement: DatePickerCaption,
