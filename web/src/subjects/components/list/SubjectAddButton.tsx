@@ -76,7 +76,7 @@ const SubjectAddButton: FunctionComponent<Props> = ({
             <Image
               src="https://media.giphy.com/media/ZBfx0z9cMmmziSyhQl/giphy.gif"
               width={133}
-              height={70}
+              height={104}
             />
             <Text>Add your subject</Text>
           </Flex>

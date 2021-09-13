@@ -26,6 +26,8 @@ const Img: FunctionComponent<CustomImageProps> = ({
         ...style,
         opacity: imageLoaded ? 1 : 0,
         visibility: imageLoaded ? "visible" : "hidden",
+        width: `${width}px`,
+        height: `${height}px`,
       }}
       transition="opacity 1000ms ease-out"
       htmlWidth={`${width}px`}
