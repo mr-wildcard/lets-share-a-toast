@@ -5,7 +5,7 @@ import React, {
   useState,
 } from "react";
 import firebase from "firebase/app";
-import { Box, Button, SimpleGrid, Divider } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Divider, Text } from "@chakra-ui/react";
 
 import {
   DatabaseRefPaths,
@@ -16,13 +16,7 @@ import { SubjectStatus } from "@shared/enums";
 import { Toast } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
-
-function getSubjectTotalVotes(votedSubject: SubjectVote) {
-  const allVotes = Object.values(votedSubject);
-
-  return allVotes.reduce((totalVotes, votePerUser) => {
-    return totalVotes + votePerUser;
-  }, 0);
+import { unique } from "@shared/utils";
 
 interface Props {
   currentToast: Toast;
@@ -81,11 +75,9 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
    *
    *
    */
-  const [winners, setWinners] = useState([]);
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (votingSession?.votes) {
-  }, [votingSession]);
+  useEffect(() => {}, []);
 
   /**
    *
@@ -102,6 +94,8 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
         <Box>
           <SimpleGrid columns={3} spacing={4}>
             {allAvailableSubjects.map((subject) => {
+              const subjectTotalVotes = "?";
+
               return (
                 <Button
                   key={subject.id}
@@ -112,11 +106,13 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
                   disabled={!votingSession.peopleCanVote}
                   className="vote-button"
                 >
-                  {subject.title} (
-                  {votingSession.votes?.[subject.id]
-                    ? getSubjectTotalVotes(votingSession.votes[subject.id])
-                    : 0}
-                  )
+                  <Text as="span">
+                    <Text as="span">{subject.title}</Text>
+                    <Text my={3} d="block" as="span" fontStyle="italic">
+                      (votes:&nbsp;
+                      {subjectTotalVotes})
+                    </Text>
+                  </Text>
                 </Button>
               );
             })}
@@ -133,7 +129,7 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
             <Divider borderColor="black" orientation="vertical" h="100%" />
             <Box>
               <pre>
-                <code>{JSON.stringify(winners, null, 3)}</code>
+                <code>{JSON.stringify(selectedSubjects, null, 3)}</code>
               </pre>
             </Box>
           </SimpleGrid>
