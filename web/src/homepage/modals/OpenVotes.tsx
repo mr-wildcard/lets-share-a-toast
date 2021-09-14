@@ -18,6 +18,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
+import { observer } from "mobx-react-lite";
 
 import { Toast } from "@shared/models";
 import { SubjectStatus } from "@shared/enums";
@@ -47,6 +48,10 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const votingToastURL = getAppURL() + Pathnames.VOTING_SESSION;
+
+  const totalAvailableSubjects = firebaseData.subjects.filter(
+    (subject) => subject.status === SubjectStatus.AVAILABLE
+  ).length;
 
   return (
     <Modal
@@ -118,12 +123,7 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                             subject(s) before opening votes!
                             <br />
                             <Text as="span" fontWeight="bold">
-                              {
-                                firebaseData.subjects.filter(
-                                  (subject) =>
-                                    subject.status === SubjectStatus.AVAILABLE
-                                ).length
-                              }
+                              {totalAvailableSubjects}
                             </Text>
                             &nbsp;available subjects will be added to the voting
                             session.
@@ -191,4 +191,4 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   );
 };
 
-export default OpenVotes;
+export default observer(OpenVotes);
