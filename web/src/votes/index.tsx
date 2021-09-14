@@ -47,7 +47,9 @@ const Votes = () => {
             {loadingState === LoadingState.ERROR_UNKNOWN_ERROR &&
               "Une erreur inconnue s'est produite... 🤔"}
 
-            {loadingState === LoadingState.READY && <Subjects />}
+            {loadingState === LoadingState.READY && (
+              <Subjects currentToast={firebaseData.currentToast!} />
+            )}
           </>
         )}
       </Flex>

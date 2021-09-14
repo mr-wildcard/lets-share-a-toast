@@ -1,6 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import firebase from "firebase/app";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, SimpleGrid, Divider } from "@chakra-ui/react";
 
 import {
   DatabaseRefPaths,
@@ -8,6 +13,7 @@ import {
   SubjectVote,
 } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
+import { Toast } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
 
@@ -17,17 +23,18 @@ function getSubjectTotalVotes(votedSubject: SubjectVote) {
   return allVotes.reduce((totalVotes, votePerUser) => {
     return totalVotes + votePerUser;
   }, 0);
+
+interface Props {
+  currentToast: Toast;
 }
 
-export function Subjects() {
+const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
   const allAvailableSubjects = firebaseData.subjects.filter(
     (subject) => subject.status === SubjectStatus.AVAILABLE
   );
 
-  const [
-    votingSession,
-    setVotingSession,
-  ] = useState<null | DatabaseVotingSession>(null);
+  const [votingSession, setVotingSession] =
+    useState<null | DatabaseVotingSession>(null);
 
   useEffect(() => {
     const databaseVotingSessionRef = firebase
@@ -45,6 +52,13 @@ export function Subjects() {
       databaseVotingSessionRef.off("value", firebaseVotingSessionListener);
     };
   }, []);
+
+  const [winners, setWinners] = useState([]);
+
+  useEffect(() => {
+    if (votingSession !== null) {
+    }
+  }, [votingSession]);
 
   const vote = useCallback((subjectId) => {
     return firebase
@@ -70,25 +84,47 @@ export function Subjects() {
     <Box>
       {votingSession !== null && (
         <Box>
-          {allAvailableSubjects.map((subject) => {
-            return (
-              <Button
-                key={subject.id}
-                m={3}
-                onClick={() => vote(subject.id)}
-                disabled={!votingSession.peopleCanVote}
-                className="vote-button"
-              >
-                {subject.id} (
-                {votingSession.votes?.[subject.id]
-                  ? getSubjectTotalVotes(votingSession.votes[subject.id])
-                  : 0}
-                )
-              </Button>
-            );
-          })}
+          <SimpleGrid columns={3} spacing={4}>
+            {allAvailableSubjects.map((subject) => {
+              return (
+                <Button
+                  key={subject.id}
+                  m={3}
+                  h="full"
+                  whiteSpace="normal"
+                  onClick={() => vote(subject.id)}
+                  disabled={!votingSession.peopleCanVote}
+                  className="vote-button"
+                >
+                  {subject.title} (
+                  {votingSession.votes?.[subject.id]
+                    ? getSubjectTotalVotes(votingSession.votes[subject.id])
+                    : 0}
+                  )
+                </Button>
+              );
+            })}
+          </SimpleGrid>
+
+          <Divider my={10} borderColor="black" />
+
+          <SimpleGrid columns={3} gap={10}>
+            <Box>
+              <pre>
+                <code>{JSON.stringify(votingSession, null, 3)}</code>
+              </pre>
+            </Box>
+            <Divider borderColor="black" orientation="vertical" h="100%" />
+            <Box>
+              <pre>
+                <code>{JSON.stringify(winners, null, 3)}</code>
+              </pre>
+            </Box>
+          </SimpleGrid>
         </Box>
       )}
     </Box>
   );
-}
+};
+
+export { Subjects };
