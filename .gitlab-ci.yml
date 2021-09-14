@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE_VERSION: 1.0.2
+  DOCKER_IMAGE_VERSION: 1.0.3
   DOCKER_IMAGE: "${CI_REGISTRY_IMAGE}:${DOCKER_IMAGE_VERSION}"
 
 image: $DOCKER_IMAGE
@@ -22,7 +22,7 @@ cache:
 
 test:web:
   stage: test
-  tags: [ docker, ekino, france ]
+  tags: [docker, ekino, france]
   only:
     refs:
       - master
@@ -43,7 +43,7 @@ test:web:
 test:functions:
   stage: test
   image: $DOCKER_IMAGE
-  tags: [ docker, ekino, france ]
+  tags: [docker, ekino, france]
   only:
     refs:
       - master
@@ -58,7 +58,7 @@ test:functions:
 preview:web:
   stage: deploy
   image: $DOCKER_IMAGE
-  tags: [ docker, ekino, france ]
+  tags: [docker, ekino, france]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /^FIREBASE PREVIEW$/'
       changes:
@@ -79,7 +79,7 @@ preview:web:
 deploy:web:
   stage: deploy
   image: $DOCKER_IMAGE
-  tags: [ docker, ekino, france ]
+  tags: [docker, ekino, france]
   only:
     refs:
       - master
@@ -96,12 +96,12 @@ deploy:web:
 deploy:functions:
   stage: deploy
   image: $DOCKER_IMAGE
-  tags: [ docker, ekino, france ]
+  tags: [docker, ekino, france]
   only:
     refs:
-    - master
+      - master
     changes:
-    - firebase/functions/**/*
+      - firebase/functions/**/*
   needs:
     - job: test:functions
       artifacts: true

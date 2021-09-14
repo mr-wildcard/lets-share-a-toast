@@ -1,6 +1,8 @@
 FROM node:16-alpine
 
-COPY ./firebase/firestore-data /home/firebase/firestore-data
+ENV HOME=/home
+
+COPY ./firebase/firestore-data $HOME/firebase/firestore-data
 
 ENV FIREBASE_TOOLS_VERSION=9.17.0 \
     YARN_VERSION=3.0.2
@@ -16,4 +18,9 @@ RUN yarn set version berry && \
 
 RUN firebase setup:emulators:database && \
     firebase setup:emulators:firestore && \
-    firebase setup:emulators:ui
+    firebase setup:emulators:ui && \
+    chown -R node:node $HOME
+
+VOLUME $HOME/.cache
+
+USER node
