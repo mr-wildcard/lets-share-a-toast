@@ -31,14 +31,18 @@ async function startBot(botIndex, context) {
   }, 1000);
 }
 
-(async function () {
-  const browser = await puppeteer.launch();
-  const context = await browser.createIncognitoBrowserContext();
+try {
+  (async function () {
+    const browser = await puppeteer.launch();
+    const context = await browser.createIncognitoBrowserContext();
 
-  for (let botIndex = 1; botIndex <= 10; botIndex++) {
-    startBot(botIndex, context);
-  }
-})();
+    for (let botIndex = 1; botIndex <= 5; botIndex++) {
+      startBot(botIndex, context);
+    }
+  })();
+} catch (error) {
+  console.log({ error });
+}
 
 process.on("SIGTERM", () => {
   browser.close().then(() => {
