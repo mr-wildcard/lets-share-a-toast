@@ -53,13 +53,6 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
     };
   }, []);
 
-  const [winners, setWinners] = useState([]);
-
-  useEffect(() => {
-    if (votingSession !== null) {
-    }
-  }, [votingSession]);
-
   const vote = useCallback((subjectId) => {
     return firebase
       .database()
@@ -79,6 +72,29 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
         }
       });
   }, []);
+
+  /**
+   * --------------------------------------------------
+   *
+   *
+   *
+   *
+   *
+   */
+  const [winners, setWinners] = useState([]);
+
+  useEffect(() => {
+    if (votingSession?.votes) {
+  }, [votingSession]);
+
+  /**
+   *
+   *
+   *
+   *
+   *
+   * --------------------------------------------------
+   */
 
   return (
     <Box>
