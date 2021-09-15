@@ -16,7 +16,6 @@ import { SubjectStatus } from "@shared/enums";
 import { Toast } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
-import { unique } from "@shared/utils";
 
 interface Props {
   currentToast: Toast;

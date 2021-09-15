@@ -39,6 +39,10 @@ const SubjectAddButton: FunctionComponent<Props> = ({
       textTransform="uppercase"
       bg="white"
       overflow={creatingSubject ? "visible" : " hidden"}
+      _hover={{
+        transform: "translate(-3px, -3px)",
+        boxShadow: "3px 3px 0px 3px #000000",
+      }}
     >
       {creatingSubject && (
         <Image
