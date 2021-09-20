@@ -1,5 +1,4 @@
 import { ToastStatus } from "@shared/enums/ToastStatus";
-import { Subject } from "@shared/models";
 import { SubjectsTotalVotes } from "@shared/firebase";
 
 export interface DatabaseToast {
@@ -9,7 +8,6 @@ export interface DatabaseToast {
   status: ToastStatus;
   maxSelectableSubjects: number;
   selectedSubjectIds?: string[];
-  subjects?: string[];
   votes?: SubjectsTotalVotes;
   createdByUserId?: string;
   createdDate: number;

@@ -13,6 +13,6 @@ firebase
     firebaseData.votingSession = votingSession;
 
     if (import.meta.env.DEV || window._log_firebase) {
-      // console.log({ votingSession });
+      console.log({ votingSession });
     }
   });

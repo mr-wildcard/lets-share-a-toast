@@ -1,6 +1,4 @@
-import * as admin from "firebase-admin";
-
-admin.initializeApp();
+import "./init";
 
 export * from "./users";
 export * from "./toast";

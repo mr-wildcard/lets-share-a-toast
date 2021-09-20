@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { FunctionComponent, useMemo, useRef } from "react";
 import {
   Alert,
   AlertDescription,
@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
 import firebase from "firebase/app";
+import { observer } from "mobx-react-lite";
 
 import { Toast, Subject } from "@shared/models";
 import { CloudFunctionName } from "@shared/firebase";
@@ -25,6 +26,8 @@ import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import getUserFullname from "@web/core/helpers/getUserFullname";
+import { firebaseData } from "@web/core/firebase/data";
+import { getSubjectTotalVotes } from "@shared/utils";
 
 interface FormErrors {
   selectedSubjectIds?: boolean;
@@ -39,8 +42,13 @@ interface Props {
   closeModal(): void;
 }
 
-export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
+const DeadHeatSubjectsModal: FunctionComponent<Props> = ({
+  currentToast,
+  closeModal,
+}) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
+
+  const votingSession = firebaseData.votingSession!;
 
   /**
    * Sort selected subjects by their total amout of votes.
@@ -49,8 +57,8 @@ export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
     return currentToast.selectedSubjects!.sort(
       (selectedSubject1, selectedSubject2) => {
         return (
-          currentToast.votes![selectedSubject2.id] -
-          currentToast.votes![selectedSubject1.id]
+          getSubjectTotalVotes(votingSession.votes![selectedSubject2.id]) -
+          getSubjectTotalVotes(votingSession.votes![selectedSubject1.id])
         );
       }
     );
@@ -225,7 +233,10 @@ export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
                                       .join(", ")}
                                   </Text>
                                   <Text textAlign="right">
-                                    Votes: {currentToast.votes![subject.id]}
+                                    Votes:{" "}
+                                    {getSubjectTotalVotes(
+                                      votingSession.votes![subject.id]
+                                    )}
                                   </Text>
                                 </Box>
                               );
@@ -270,4 +281,6 @@ export function DeadHeatSubjectsModal({ currentToast, closeModal }: Props) {
       </ModalOverlay>
     </Modal>
   );
-}
+};
+
+export { DeadHeatSubjectsModal };

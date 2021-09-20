@@ -7,13 +7,10 @@ import React, {
 import firebase from "firebase/app";
 import { Box, Button, SimpleGrid, Divider, Text } from "@chakra-ui/react";
 
-import {
-  DatabaseRefPaths,
-  DatabaseVotingSession,
-  SubjectVote,
-} from "@shared/firebase";
+import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
 import { Toast } from "@shared/models";
+import { getSubjectTotalVotes } from "@shared/utils";
 
 import { firebaseData } from "@web/core/firebase/data";
 
@@ -66,34 +63,17 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
       });
   }, []);
 
-  /**
-   * --------------------------------------------------
-   *
-   *
-   *
-   *
-   *
-   */
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
-
-  useEffect(() => {}, []);
-
-  /**
-   *
-   *
-   *
-   *
-   *
-   * --------------------------------------------------
-   */
-
   return (
     <Box>
       {votingSession !== null && (
         <Box>
           <SimpleGrid columns={3} spacing={4}>
             {allAvailableSubjects.map((subject) => {
-              const subjectTotalVotes = "?";
+              const votedSubject = votingSession.votes?.[subject.id];
+
+              const subjectTotalVotes = votedSubject
+                ? getSubjectTotalVotes(votedSubject)
+                : 0;
 
               return (
                 <Button
@@ -123,12 +103,6 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
             <Box>
               <pre>
                 <code>{JSON.stringify(votingSession, null, 3)}</code>
-              </pre>
-            </Box>
-            <Divider borderColor="black" orientation="vertical" h="100%" />
-            <Box>
-              <pre>
-                <code>{JSON.stringify(selectedSubjects, null, 3)}</code>
               </pre>
             </Box>
           </SimpleGrid>

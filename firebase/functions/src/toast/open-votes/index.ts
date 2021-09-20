@@ -12,6 +12,7 @@ export const openVotes = functions.https.onCall(async (data, context) => {
    * realtime database.
    */
   const votingSession: DatabaseVotingSession = {
+    selectedSubjects: [],
     peopleCanVote: true,
     votes: {},
   };

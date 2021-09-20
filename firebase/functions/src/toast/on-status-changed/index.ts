@@ -33,7 +33,9 @@ export const onToastStatusUpdate = functions.database
       }
 
       default: {
-        return functions.logger.info("TOAST status changed to", newStatus);
+        functions.logger.info("TOAST status changed to", newStatus);
+
+        return Promise.resolve();
       }
     }
   });
