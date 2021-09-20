@@ -26,8 +26,8 @@ export const onVoteSubmitted = functions.database
 
         return admin
           .database()
-          .ref(DatabaseRefPaths.VOTING_SESSION)
-          .child("selectedSubjects")
+          .ref(DatabaseRefPaths.CURRENT_TOAST)
+          .child("selectedSubjectIds")
           .set(selectedSubjectIds);
       });
   });

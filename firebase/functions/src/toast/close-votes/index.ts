@@ -13,7 +13,7 @@ export const closeVotes = functions.https.onCall(async () => {
    */
   await admin
     .database()
-    .ref(DatabaseRefPaths.VOTING_SESSION)
+    .ref(DatabaseRefPaths.CURRENT_TOAST)
     .child("peopleCanVote")
     .set(false);
 
@@ -54,7 +54,7 @@ export const closeVotes = functions.https.onCall(async () => {
    */
   const updates = {
     status: ToastStatus.VOTE_CLOSED,
-    selectedSubjectIds: selectedSubjectIds,
+    selectedSubjectIds,
   };
 
   return admin.database().ref(DatabaseRefPaths.CURRENT_TOAST).update(updates);

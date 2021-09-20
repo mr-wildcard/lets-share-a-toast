@@ -22,8 +22,8 @@ firebase
       firebaseData.currentToast = {
         ...restOfCurrentTOASTProps,
         date: new Date(date),
-        createdDate: new Date(createdDate),
-        modifiedDate: new Date(modifiedDate),
+        createdDate: new Date(createdDate as string),
+        modifiedDate: new Date(modifiedDate as string),
         organizer: firebaseData.users.find(
           (user) => user.id === currentToast.organizerId
         )!,

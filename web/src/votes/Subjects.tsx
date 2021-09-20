@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import firebase from "firebase/app";
 import { Box, Button, SimpleGrid, Divider, Text } from "@chakra-ui/react";
+import { observer } from "mobx-react-lite";
 
 import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
@@ -18,7 +19,7 @@ interface Props {
   currentToast: Toast;
 }
 
-const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
+const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
   const allAvailableSubjects = firebaseData.subjects.filter(
     (subject) => subject.status === SubjectStatus.AVAILABLE
   );
@@ -65,51 +66,58 @@ const Subjects: FunctionComponent<Props> = ({ currentToast }) => {
 
   return (
     <Box>
-      {votingSession !== null && (
-        <Box>
-          <SimpleGrid columns={3} spacing={4}>
-            {allAvailableSubjects.map((subject) => {
-              const votedSubject = votingSession.votes?.[subject.id];
+      <Box>
+        <SimpleGrid columns={3} spacing={4}>
+          {allAvailableSubjects.map((subject) => {
+            const votedSubject = votingSession?.votes?.[subject.id];
 
-              const subjectTotalVotes = votedSubject
-                ? getSubjectTotalVotes(votedSubject)
-                : 0;
+            console.log(subject.title);
 
-              return (
-                <Button
-                  key={subject.id}
-                  m={3}
-                  h="full"
-                  whiteSpace="normal"
-                  onClick={() => vote(subject.id)}
-                  disabled={!votingSession.peopleCanVote}
-                  className="vote-button"
-                >
-                  <Text as="span">
-                    <Text as="span">{subject.title}</Text>
-                    <Text my={3} d="block" as="span" fontStyle="italic">
-                      (votes:&nbsp;
-                      {subjectTotalVotes})
-                    </Text>
+            const subjectTotalVotes = votedSubject
+              ? getSubjectTotalVotes(votedSubject)
+              : 0;
+
+            return (
+              <Button
+                key={subject.id}
+                m={3}
+                h="full"
+                whiteSpace="normal"
+                onClick={() => vote(subject.id)}
+                disabled={!currentToast.peopleCanVote}
+                className="vote-button"
+              >
+                <Text as="span">
+                  <Text as="span">{subject.title}</Text>
+                  <Text my={3} d="block" as="span" fontStyle="italic">
+                    (votes:&nbsp;
+                    {subjectTotalVotes})
                   </Text>
-                </Button>
-              );
-            })}
-          </SimpleGrid>
+                </Text>
+              </Button>
+            );
+          })}
+        </SimpleGrid>
 
-          <Divider my={10} borderColor="black" />
+        <Divider my={10} borderColor="black" />
 
-          <SimpleGrid columns={3} gap={10}>
-            <Box>
-              <pre>
-                <code>{JSON.stringify(votingSession, null, 3)}</code>
-              </pre>
-            </Box>
-          </SimpleGrid>
-        </Box>
-      )}
+        <SimpleGrid columns={3} gap={10}>
+          <Box>
+            <pre>
+              <code>{JSON.stringify(votingSession, null, 3)}</code>
+            </pre>
+          </Box>
+          <Box>
+            <ul>
+              {currentToast.selectedSubjects!.map((subject, index) => (
+                <li key={index}>{subject.title}</li>
+              ))}
+            </ul>
+          </Box>
+        </SimpleGrid>
+      </Box>
     </Box>
   );
-};
+});
 
 export { Subjects };

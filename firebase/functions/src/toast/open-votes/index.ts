@@ -12,8 +12,6 @@ export const openVotes = functions.https.onCall(async (data, context) => {
    * realtime database.
    */
   const votingSession: DatabaseVotingSession = {
-    selectedSubjects: [],
-    peopleCanVote: true,
     votes: {},
   };
 
@@ -25,6 +23,7 @@ export const openVotes = functions.https.onCall(async (data, context) => {
     .ref()
     .update({
       [`${DatabaseRefPaths.CURRENT_TOAST}/status`]: ToastStatus.OPEN_FOR_VOTE,
+      [`${DatabaseRefPaths.CURRENT_TOAST}/peopleCanVote`]: true,
       [DatabaseRefPaths.VOTING_SESSION]: votingSession,
     })
     .then((result) => {
