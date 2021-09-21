@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { FunctionComponent, useRef } from "react";
 import {
   AlertDialog,
   AlertDialogBody,
@@ -14,14 +14,18 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import { pageColors } from "@web/core/constants";
 import Image from "@web/core/components/Image";
 
-const PeopleCantVoteModal = () => {
+interface Props {
+  isOpen: boolean;
+}
+
+const PeopleCantVoteModal: FunctionComponent<Props> = ({ isOpen }) => {
   const { push } = useHistory();
 
   const cancelBtn = useRef() as React.MutableRefObject<HTMLAnchorElement>;
 
   return (
     <AlertDialog
-      isOpen={true}
+      isOpen={isOpen}
       blockScrollOnMount={true}
       trapFocus={true}
       isCentered={true}

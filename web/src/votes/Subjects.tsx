@@ -11,7 +11,7 @@ import { observer } from "mobx-react-lite";
 import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
 import { Toast } from "@shared/models";
-import { getSubjectTotalVotes } from "@shared/utils";
+import { getSelectedSubjectIds, getSubjectTotalVotes } from "@shared/utils";
 
 import { firebaseData } from "@web/core/firebase/data";
 
@@ -110,11 +110,16 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
             </pre>
           </Box>
           <Box>
-            <ul>
-              {currentToast.selectedSubjects!.map((subject, index) => (
-                <li key={index}>{subject.title}</li>
-              ))}
-            </ul>
+            {!!votingSession?.votes && (
+              <ul>
+                {getSelectedSubjectIds(
+                  votingSession.votes,
+                  currentToast.maxSelectableSubjects
+                ).map((subjectId) => {
+                  return <li key={subjectId}>{subjectId}</li>;
+                })}
+              </ul>
+            )}
           </Box>
         </SimpleGrid>
       </Box>

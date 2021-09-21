@@ -52,9 +52,9 @@ const Votes = () => {
               <>
                 <Subjects currentToast={firebaseData.currentToast!} />
 
-                {!firebaseData.currentToast!.peopleCanVote && (
-                  <PeopleCantVoteModal />
-                )}
+                <PeopleCantVoteModal
+                  isOpen={!firebaseData.currentToast!.peopleCanVote}
+                />
               </>
             )}
           </>
