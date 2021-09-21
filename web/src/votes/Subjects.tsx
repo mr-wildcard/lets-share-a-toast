@@ -45,7 +45,7 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
   }, []);
 
   const vote = useCallback((subjectId) => {
-    return firebase
+    firebase
       .database()
       .ref(DatabaseRefPaths.VOTING_SESSION)
       .child("votes")
@@ -71,8 +71,6 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
           {allAvailableSubjects.map((subject) => {
             const votedSubject = votingSession?.votes?.[subject.id];
 
-            console.log(subject.title);
-
             const subjectTotalVotes = votedSubject
               ? getSubjectTotalVotes(votedSubject)
               : 0;
@@ -83,7 +81,11 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
                 m={3}
                 h="full"
                 whiteSpace="normal"
-                onClick={() => vote(subject.id)}
+                onClick={() => {
+                  if (currentToast.peopleCanVote) {
+                    vote(subject.id);
+                  }
+                }}
                 disabled={!currentToast.peopleCanVote}
                 className="vote-button"
               >

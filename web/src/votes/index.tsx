@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { ToastStatus } from "@shared/enums";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { pageColors, spacing } from "@web/core/constants";
+import { ui } from "@web/core/stores/ui";
 import ColoredBackground from "@web/core/components/ColoredBackground";
 import { LoadingState } from "@web/votes/types";
 import { Subjects } from "@web/votes/Subjects";
-import { ui } from "@web/core/stores/ui";
+import { PeopleCantVoteModal } from "@web/votes/PeopleCantVoteModal";
 
 const Votes = () => {
   const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
@@ -48,7 +49,13 @@ const Votes = () => {
               "Une erreur inconnue s'est produite... 🤔"}
 
             {loadingState === LoadingState.READY && (
-              <Subjects currentToast={firebaseData.currentToast!} />
+              <>
+                <Subjects currentToast={firebaseData.currentToast!} />
+
+                {!firebaseData.currentToast!.peopleCanVote && (
+                  <PeopleCantVoteModal />
+                )}
+              </>
             )}
           </>
         )}

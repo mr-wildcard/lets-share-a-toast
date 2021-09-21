@@ -1,11 +1,9 @@
-import { observer } from "mobx-react-lite";
 import React, { FunctionComponent } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { Toast } from "@shared/models";
 
-import { firebaseData } from "@web/core/firebase/data";
 import Image from "@web/core/components/Image";
 import { Pathnames } from "@web/core/constants";
 import WhosInChargeRecap from "./WhosInChargeRecap";
@@ -16,8 +14,6 @@ interface Props {
 }
 
 const OpenForVotes: FunctionComponent<Props> = ({ toast }) => {
-  const votingSessionCreated = !!firebaseData.votingSession;
-
   return (
     <Box fontWeight="bold" color="gray.800" textAlign="center">
       <Text fontSize="4xl" mt={0} mb={5}>
@@ -33,7 +29,6 @@ const OpenForVotes: FunctionComponent<Props> = ({ toast }) => {
           as={Link}
           to={Pathnames.VOTING_SESSION}
           className={css.link}
-          disabled={!votingSessionCreated}
           position="relative"
           color="orange.500"
           cursor="pointer"
@@ -59,4 +54,4 @@ const OpenForVotes: FunctionComponent<Props> = ({ toast }) => {
   );
 };
 
-export default observer(OpenForVotes);
+export default OpenForVotes;
