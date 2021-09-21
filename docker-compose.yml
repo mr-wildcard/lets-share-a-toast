@@ -25,7 +25,6 @@ services:
     image: ${DOCKER_IMAGE}
     volumes:
       - ./:/code:delegated
-      - firestore-data:/home/firebase/firestore-data
     working_dir: /code/firebase
     command: /bin/sh -c "firebase emulators:start --project ${FIREBASE_PROJECT_ID} --import=/home/firebase/firestore-data --export-on-exit"
     ports:
@@ -47,6 +46,3 @@ services:
       - ./:/code:delegated
     working_dir: /code
     command: /bin/sh -c "yarn workspace functions serve"
-
-volumes:
-  firestore-data:

@@ -22,5 +22,6 @@ RUN firebase setup:emulators:database && \
     chown -R node:node $HOME
 
 VOLUME $HOME/.cache
+VOLUME $HOME/firebase
 
 USER node
