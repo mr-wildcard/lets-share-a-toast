@@ -2,6 +2,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import firebase from "firebase/app";
@@ -43,6 +44,21 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
       databaseVotingSessionRef.off("value", firebaseVotingSessionListener);
     };
   }, []);
+
+  const selectedSubjects = useMemo(() => {
+    if (!votingSession?.votes) {
+      return [];
+    }
+
+    const selectedSubjectIds = getSelectedSubjectIds(
+      votingSession.votes,
+      currentToast.maxSelectableSubjects
+    );
+
+    return selectedSubjectIds.map((subjectId) => {
+      return firebaseData.subjects.find((subject) => subject.id === subjectId)!;
+    });
+  }, [votingSession?.votes, currentToast.maxSelectableSubjects]);
 
   const vote = useCallback((subjectId) => {
     firebase
@@ -110,16 +126,11 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
             </pre>
           </Box>
           <Box>
-            {!!votingSession?.votes && (
-              <ul>
-                {getSelectedSubjectIds(
-                  votingSession.votes,
-                  currentToast.maxSelectableSubjects
-                ).map((subjectId) => {
-                  return <li key={subjectId}>{subjectId}</li>;
-                })}
-              </ul>
-            )}
+            <ul>
+              {selectedSubjects.map((subject) => {
+                return <li key={subject.id}>{subject.title}</li>;
+              })}
+            </ul>
           </Box>
         </SimpleGrid>
       </Box>
