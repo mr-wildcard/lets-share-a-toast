@@ -29,32 +29,77 @@ interface DictionaryOfSubjectPerTotalVotes {
   [totalVotes: number]: string[];
 }
 
-export function getSelectedSubjectIds(
-  subjectsVotes: SubjectsVotes,
-  maxSelectableSubjects: number
+export function getDictionaryOfSubjectPerTotalVotes(
+  subjectsVotes: SubjectsVotes
 ) {
   const allSubjectIds = Object.keys(subjectsVotes);
 
-  const allTotalVotes = [];
   const dictionaryOfSubjectPerTotalVotes: DictionaryOfSubjectPerTotalVotes = {};
 
   for (let i = 0; i < allSubjectIds.length; i++) {
     const subjectId = allSubjectIds[i];
     const subjectTotalVotes = getSubjectTotalVotes(subjectsVotes[subjectId]);
 
-    allTotalVotes.push(subjectTotalVotes);
-
-    if (!dictionaryOfSubjectPerTotalVotes[subjectTotalVotes]) {
-      dictionaryOfSubjectPerTotalVotes[subjectTotalVotes] = [];
-    }
-
+    dictionaryOfSubjectPerTotalVotes[subjectTotalVotes] ??= [];
     dictionaryOfSubjectPerTotalVotes[subjectTotalVotes].push(subjectId);
   }
 
-  const allUniqueTotalVotes = Array.from(new Set(allTotalVotes));
+  return dictionaryOfSubjectPerTotalVotes;
+}
 
+/**
+ * Return an array of numbers representing all unique total votes
+ * of all subjects from voting session.
+ */
+export function getAllUniqueTotalVotes(subjectsVotes: SubjectsVotes) {
+  const allSubjectIds = Object.keys(subjectsVotes);
+
+  /**
+   * Array holding all total votes of all subjects
+   */
+  const allUniqueTotalVotes: number[] = [];
+
+  for (let i = 0; i < allSubjectIds.length; i++) {
+    const subjectId = allSubjectIds[i];
+    const subjectTotalVotes = getSubjectTotalVotes(subjectsVotes[subjectId]);
+
+    if (!allUniqueTotalVotes.includes(subjectTotalVotes)) {
+      allUniqueTotalVotes.push(subjectTotalVotes);
+    }
+  }
+
+  return allUniqueTotalVotes;
+}
+
+export function getSelectedSubjectIds(
+  subjectsVotes: SubjectsVotes,
+  maxSelectableSubjects: number
+) {
+  /**
+   * For performance sake we will store in this object subjects paired to their total votes.
+   * Data structure is as follow:
+   * [key]: total votes
+   * [value]: array of subject ids having this total of votes.
+   *
+   * This object will allow later to easily find subjects having the given total votes.
+   */
+  const dictionaryOfSubjectPerTotalVotes =
+    getDictionaryOfSubjectPerTotalVotes(subjectsVotes);
+
+  /**
+   * Array holding all total votes of all subjects
+   */
+  const allUniqueTotalVotes = getAllUniqueTotalVotes(subjectsVotes);
+
+  /*
+   * Sort the array of total votes in descendant order.
+   */
   const descOrderedTotalVotes = allUniqueTotalVotes.sort().reverse();
 
+  /**
+   * Loop over all total votes then fill the final array of selected subjects
+   * until it reach the `maxSelectableSubjects` parameter.
+   */
   const selectedSubjects = [];
   for (let i = 0; i < descOrderedTotalVotes.length; i++) {
     const currentTotalVotes = descOrderedTotalVotes[i];

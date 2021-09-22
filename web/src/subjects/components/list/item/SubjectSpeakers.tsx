@@ -4,6 +4,7 @@ import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react";
 import { User } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
+import { getSubjectSpeakersAsText } from "@web/core/helpers/getSubjectSpeakersAsText";
 
 interface Props {
   speakers: User[];
@@ -11,7 +12,7 @@ interface Props {
 
 const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
   const namesList = useMemo(() => {
-    return speakers.map(getUserFullname).join(", ");
+    return getSubjectSpeakersAsText(speakers);
   }, [speakers]);
 
   const highNumberOfSpeakers = speakers.length > 2;

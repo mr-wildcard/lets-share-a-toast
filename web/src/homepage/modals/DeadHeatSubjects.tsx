@@ -6,6 +6,8 @@ import {
   Box,
   Button,
   Divider,
+  Flex,
+  Heading,
   Modal,
   ModalBody,
   ModalContent,
@@ -27,7 +29,14 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import getUserFullname from "@web/core/helpers/getUserFullname";
 import { firebaseData } from "@web/core/firebase/data";
-import { getSubjectTotalVotes } from "@shared/utils";
+import {
+  getAllUniqueTotalVotes,
+  getDictionaryOfSubjectPerTotalVotes,
+  getSubjectTotalVotes,
+} from "@shared/utils";
+import { CheckIcon } from "@chakra-ui/icons";
+import { getSubjectSpeakersAsText } from "@web/core/helpers/getSubjectSpeakersAsText";
+import { SelectableSubject } from "@web/homepage/modals/deadHeatSubjects/SelectableSubject";
 
 interface FormErrors {
   selectedSubjectIds?: boolean;
@@ -42,245 +51,274 @@ interface Props {
   closeModal(): void;
 }
 
-const DeadHeatSubjectsModal: FunctionComponent<Props> = ({
-  currentToast,
-  closeModal,
-}) => {
-  const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
+const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
+  ({ currentToast, closeModal }) => {
+    const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-  const votingSession = firebaseData.votingSession!;
+    const votes = firebaseData.votingSession!.votes!;
+    const selectedSubjects = currentToast.selectedSubjects!;
 
-  /**
-   * Sort selected subjects by their total amout of votes.
-   */
-  const sortedSelectedSubjects: Subject[] = useMemo(() => {
-    return currentToast.selectedSubjects!.sort(
-      (selectedSubject1, selectedSubject2) => {
-        return (
-          getSubjectTotalVotes(votingSession.votes![selectedSubject2.id]) -
-          getSubjectTotalVotes(votingSession.votes![selectedSubject1.id])
-        );
+    /**
+     * Find subjects which doesn't need to be settled as they are the only ones
+     * to get enough votes.
+     */
+    const alreadySettledSubjects = useMemo(() => {
+      let subjects: Subject[] = [];
+
+      const allUniqueTotalVotes = getAllUniqueTotalVotes(votes);
+      const subjectsByTotalVotes = getDictionaryOfSubjectPerTotalVotes(votes);
+
+      for (let i = 0; i < allUniqueTotalVotes.length; i++) {
+        const totalVotes = allUniqueTotalVotes[i];
+
+        if (subjectsByTotalVotes[totalVotes].length === 1) {
+          const [alreadySelectedSubjectId] = subjectsByTotalVotes[totalVotes];
+
+          const subject = selectedSubjects.find(
+            (selectedSubject) => selectedSubject.id === alreadySelectedSubjectId
+          );
+
+          subjects.push(subject!);
+        }
       }
-    );
-  }, [currentToast]);
 
-  return (
-    <Modal
-      isCentered
-      onClose={closeModal}
-      isOpen={true}
-      initialFocusRef={cancelBtn}
-      closeOnEsc={true}
-      size="xl"
-    >
-      <ModalOverlay>
-        <Formik
-          validateOnMount={true}
-          initialValues={{
-            selectedSubjectIds: [],
-          }}
-          validate={(values: FormValues): FormErrors => {
-            const errors: FormErrors = {};
+      return subjects;
+    }, [selectedSubjects, votes]);
 
-            if (
-              values.selectedSubjectIds.length <
-              currentToast.maxSelectableSubjects
-            ) {
-              errors.selectedSubjectIds = true;
-            }
+    const subjectsToSettle = useMemo(() => {
+      return selectedSubjects.filter(
+        ({ id }) =>
+          !alreadySettledSubjects.find(
+            (settledSubject) => settledSubject.id === id
+          )
+      );
+    }, [selectedSubjects, alreadySettledSubjects]);
 
-            return errors;
-          }}
-          onSubmit={async (values: FormValues) => {
-            return firebase
-              .functions()
-              .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
-                selectedSubjectIds: values.selectedSubjectIds,
-              })
-              .then(closeModal);
-          }}
-        >
-          {({
-            values,
-            isSubmitting,
-            isValid,
-            validateForm,
-          }: FormikProps<FormValues>) => {
-            const remainingSubjectsToSelect =
-              currentToast.maxSelectableSubjects -
-              values.selectedSubjectIds.length;
+    return (
+      <Modal
+        isCentered
+        onClose={closeModal}
+        isOpen={true}
+        initialFocusRef={cancelBtn}
+        closeOnEsc={true}
+        scrollBehavior="inside"
+        size="xl"
+      >
+        <ModalOverlay>
+          <Formik
+            validateOnMount={true}
+            initialValues={{
+              selectedSubjectIds: [],
+            }}
+            validate={(values: FormValues): FormErrors => {
+              const errors: FormErrors = {};
 
-            return (
-              <Form>
-                <ModalContent borderRadius="3px">
-                  <ModalHeader textAlign="center">
-                    <Text position="relative">
-                      <HighlightedText bgColor={pageColors.homepage}>
-                        Almost there...
-                      </HighlightedText>
-                      <Image
-                        position="absolute"
-                        width={147}
-                        height={110}
-                        right={0}
-                        bottom="-44px"
-                        src="https://media.giphy.com/media/XcMbKY8KIkXMJTLdse/giphy.gif"
-                      />
-                    </Text>
-                  </ModalHeader>
-                  <ModalBody p={0}>
-                    <Box my={5} px={5}>
-                      <Alert status="warning" variant="left-accent">
-                        <Box flex={1}>
-                          <AlertTitle>What&apos;s happening ?</AlertTitle>
-                          <AlertDescription>
-                            The following subjects ended up with the same amout
-                            of votes. You need to chose a total of&nbsp;
-                            <Text as="span" fontWeight="bold">
-                              {currentToast.maxSelectableSubjects}
-                            </Text>
-                            &nbsp;subjects in order to proceed.
-                          </AlertDescription>
-                        </Box>
-                      </Alert>
-                    </Box>
+              if (
+                alreadySettledSubjects.length +
+                  values.selectedSubjectIds.length <
+                currentToast.maxSelectableSubjects
+              ) {
+                errors.selectedSubjectIds = true;
+              }
 
-                    <Divider />
+              return errors;
+            }}
+            onSubmit={async (values: FormValues) => {
+              return firebase
+                .functions()
+                .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
+                  selectedSubjectIds: alreadySettledSubjects
+                    .map((subject) => subject.id)
+                    .concat(values.selectedSubjectIds),
+                })
+                .then(closeModal);
+            }}
+          >
+            {({
+              values,
+              isSubmitting,
+              isValid,
+              validateForm,
+            }: FormikProps<FormValues>) => {
+              const remainingSubjectsToSelect =
+                currentToast.maxSelectableSubjects -
+                (alreadySettledSubjects.length +
+                  values.selectedSubjectIds.length);
 
-                    <Box mt={5}>
-                      <Field name="selectedSubjectIds">
-                        {({ field, form }: FieldProps) => (
-                          <Stack
-                            spacing={3}
-                            px={5}
-                            maxHeight="40vh"
-                            overflowY="auto"
-                          >
-                            {sortedSelectedSubjects.map((subject) => {
-                              const subjectIsSelected =
-                                values.selectedSubjectIds.includes(subject.id);
+              return (
+                <Form>
+                  <ModalContent borderRadius="3px">
+                    <ModalHeader textAlign="center">
+                      <Text position="relative">
+                        <HighlightedText bgColor={pageColors.homepage}>
+                          Almost there...
+                        </HighlightedText>
+                        <Image
+                          position="absolute"
+                          width={147}
+                          height={110}
+                          right={0}
+                          bottom="-16px"
+                          src="https://media.giphy.com/media/XcMbKY8KIkXMJTLdse/giphy.gif"
+                        />
+                      </Text>
+                    </ModalHeader>
+                    <ModalBody p={0}>
+                      <Box mb={5} px={5}>
+                        <Alert status="warning" variant="left-accent">
+                          <Box flex={1}>
+                            <AlertTitle>What&apos;s happening ?</AlertTitle>
+                            <AlertDescription>
+                              The following subjects ended up with the same
+                              amout of votes. You need to chose a total of&nbsp;
+                              <Text as="span" fontWeight="bold">
+                                {currentToast.maxSelectableSubjects}
+                              </Text>
+                              &nbsp;subjects in order to proceed.
+                            </AlertDescription>
+                          </Box>
+                        </Alert>
+                      </Box>
 
+                      <Divider />
+
+                      {alreadySettledSubjects.length > 0 && (
+                        <Box m={5}>
+                          <Heading as="h3" size="sm" mb={2}>
+                            The following{" "}
+                            {alreadySettledSubjects.length > 1
+                              ? "subjects are"
+                              : "subject is"}{" "}
+                            already selected for the upcoming TOAST:
+                          </Heading>
+                          <Stack spacing={3}>
+                            {alreadySettledSubjects.map((subject) => {
                               return (
-                                <Box
-                                  as={Button}
-                                  type="button"
-                                  key={`subject-${subject.id}`}
-                                  p={3}
-                                  borderRadius="md"
-                                  borderWidth="1px"
-                                  borderStyle="solid"
-                                  borderColor="gray.200"
-                                  color={
-                                    subjectIsSelected ? "white" : "gray.600"
-                                  }
-                                  backgroundColor={
-                                    subjectIsSelected ? "green.500" : "white"
-                                  }
-                                  boxShadow={subjectIsSelected ? "none" : "sm"}
-                                  onClick={() => {
-                                    if (subjectIsSelected) {
-                                      /**
-                                       * Remove subject from selected subjects.
-                                       */
-                                      form.setFieldValue(
-                                        field.name,
-                                        values.selectedSubjectIds.filter(
-                                          (selectedSubjectId) =>
-                                            selectedSubjectId !== subject.id
-                                        )
-                                      );
-                                    } else {
-                                      if (
-                                        values.selectedSubjectIds.length ===
-                                        currentToast.maxSelectableSubjects
-                                      ) {
-                                        /**
-                                         * Unselect the oldest selected subject and
-                                         * mark this subject as selected.
-                                         * So that we never select more subjects than needed.
-                                         */
-                                        const [, ...restOfSelectedSubjectIds] =
-                                          values.selectedSubjectIds;
-
-                                        form.setFieldValue(
-                                          field.name,
-                                          restOfSelectedSubjectIds.concat(
-                                            subject.id
-                                          )
-                                        );
-                                      } else {
-                                        /**
-                                         * Add subject to selected subjects.
-                                         */
-                                        form.setFieldValue(
-                                          field.name,
-                                          values.selectedSubjectIds.concat(
-                                            subject.id
-                                          )
-                                        );
-                                      }
-                                    }
-                                  }}
-                                >
-                                  <Text fontSize="xl" fontWeight="bold">
-                                    {subject.title}
-                                  </Text>
-
-                                  <Text>
-                                    By:&nbsp;
-                                    {subject.speakers
-                                      .map(getUserFullname)
-                                      .join(", ")}
-                                  </Text>
-                                  <Text textAlign="right">
-                                    Votes:{" "}
-                                    {getSubjectTotalVotes(
-                                      votingSession.votes![subject.id]
-                                    )}
-                                  </Text>
-                                </Box>
+                                <SelectableSubject
+                                  key={subject.id}
+                                  subject={subject}
+                                  selected={true}
+                                  totalVotes={getSubjectTotalVotes(
+                                    votes[subject.id]
+                                  )}
+                                />
                               );
                             })}
                           </Stack>
-                        )}
-                      </Field>
-                    </Box>
-                  </ModalBody>
-                  <ModalFooter justifyContent="center">
-                    <Button
-                      isDisabled={!isValid}
-                      type="submit"
-                      colorScheme="blue"
-                      isLoading={isSubmitting}
-                      loadingText="Saving subjects..."
-                    >
-                      {!isValid &&
-                        `Select ${remainingSubjectsToSelect} more subject${
-                          remainingSubjectsToSelect > 1 ? "s" : ""
-                        }`}
 
-                      {isValid && "Save selected subjects"}
-                    </Button>
-                    <Button
-                      ref={cancelBtn}
-                      isDisabled={isSubmitting}
-                      onClick={closeModal}
-                      type="button"
-                      colorScheme="red"
-                      variant="outline"
-                      mx={2}
-                    >
-                      Do nothing
-                    </Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Form>
-            );
-          }}
-        </Formik>
-      </ModalOverlay>
-    </Modal>
-  );
-};
+                          <Divider mt={5} />
+                        </Box>
+                      )}
+
+                      <Box mt={5}>
+                        <Field name="selectedSubjectIds">
+                          {({ field, form }: FieldProps) => (
+                            <Stack spacing={3} px={5}>
+                              {subjectsToSettle.map((subject) => {
+                                const subjectIsSelected =
+                                  values.selectedSubjectIds.includes(
+                                    subject.id
+                                  );
+
+                                return (
+                                  <SelectableSubject
+                                    key={subject.id}
+                                    subject={subject}
+                                    selected={subjectIsSelected}
+                                    totalVotes={getSubjectTotalVotes(
+                                      votes[subject.id]
+                                    )}
+                                    onClick={() => {
+                                      if (subjectIsSelected) {
+                                        /**
+                                         * Remove subject from selected subjects.
+                                         */
+                                        form.setFieldValue(
+                                          field.name,
+                                          values.selectedSubjectIds.filter(
+                                            (selectedSubjectId) =>
+                                              selectedSubjectId !== subject.id
+                                          )
+                                        );
+                                      } else {
+                                        if (
+                                          alreadySettledSubjects.length +
+                                            values.selectedSubjectIds.length ===
+                                          currentToast.maxSelectableSubjects
+                                        ) {
+                                          /**
+                                           * Unselect the oldest selected subject and
+                                           * mark this subject as selected.
+                                           * So that we never select more subjects than needed.
+                                           */
+                                          const [
+                                            ,
+                                            ...restOfSelectedSubjectIds
+                                          ] = values.selectedSubjectIds;
+
+                                          form.setFieldValue(
+                                            field.name,
+                                            restOfSelectedSubjectIds.concat(
+                                              subject.id
+                                            )
+                                          );
+                                        } else {
+                                          /**
+                                           * Add subject to selected subjects.
+                                           */
+                                          form.setFieldValue(
+                                            field.name,
+                                            values.selectedSubjectIds.concat(
+                                              subject.id
+                                            )
+                                          );
+                                        }
+                                      }
+                                    }}
+                                  />
+                                );
+                              })}
+                            </Stack>
+                          )}
+                        </Field>
+                      </Box>
+                    </ModalBody>
+                    <ModalFooter justifyContent="center">
+                      <Button
+                        isDisabled={!isValid}
+                        type="submit"
+                        colorScheme="blue"
+                        isLoading={isSubmitting}
+                        loadingText="Saving subjects..."
+                      >
+                        {!isValid &&
+                          `Select ${remainingSubjectsToSelect} more subject${
+                            remainingSubjectsToSelect > 1 ? "s" : ""
+                          }`}
+
+                        {isValid && "Save selected subjects"}
+                      </Button>
+                      <Button
+                        ref={cancelBtn}
+                        isDisabled={isSubmitting}
+                        onClick={closeModal}
+                        type="button"
+                        colorScheme="red"
+                        variant="outline"
+                        mx={2}
+                      >
+                        Do nothing
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Form>
+              );
+            }}
+          </Formik>
+        </ModalOverlay>
+      </Modal>
+    );
+  }
+);
 
 export { DeadHeatSubjectsModal };
