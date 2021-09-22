@@ -41,12 +41,6 @@ const WaitingForTOAST: FunctionComponent<Props> = ({ toast }) => {
       <Flex my={5} justify="center">
         <FloralSeparator />
       </Flex>
-
-      <Text mb={3} fontSize="lg">
-        In the meantime, you can still...
-      </Text>
-
-      <ProposeSubjectForNextTOASTButton />
     </Box>
   );
 };

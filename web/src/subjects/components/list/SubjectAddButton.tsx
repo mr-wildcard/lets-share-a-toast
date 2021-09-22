@@ -40,8 +40,8 @@ const SubjectAddButton: FunctionComponent<Props> = ({
       bg="white"
       overflow={creatingSubject ? "visible" : " hidden"}
       _hover={{
-        transform: "translate(-3px, -3px)",
-        boxShadow: "3px 3px 0px 3px #000000",
+        transform: "translate(-5px, -5px)",
+        boxShadow: "5px 5px 0px 1px #000000",
       }}
     >
       {creatingSubject && (

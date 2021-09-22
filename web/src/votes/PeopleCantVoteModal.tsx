@@ -68,7 +68,7 @@ const PeopleCantVoteModal: FunctionComponent<Props> = ({ isOpen }) => {
                 height={60}
                 src="https://media.giphy.com/media/cP6REpq2OvhLajI0RY/giphy.gif"
               />
-              <Text as="span">Bring me back homepage</Text>
+              <Text as="span">Bring me back to homepage</Text>
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
