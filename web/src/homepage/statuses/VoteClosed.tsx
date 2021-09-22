@@ -42,12 +42,6 @@ const VotesClosed: FunctionComponent<Props> = ({ toast }) => {
           </Text>
         </Box>
       )}
-
-      {!toastHasDeadheatSubjects(toast) && (
-        <Box mt={5}>
-          <ProposeSubjectForNextTOASTButton />
-        </Box>
-      )}
     </Box>
   );
 };

@@ -95,12 +95,12 @@ const TOASTStatus = () => {
                 <OpenForVotes toast={currentToast!} />
               )}
 
-              {currentToast!.status === ToastStatus.WAITING_FOR_TOAST && (
-                <WaitingForTOAST toast={currentToast!} />
-              )}
-
               {currentToast!.status === ToastStatus.VOTE_CLOSED && (
                 <VoteClosed toast={currentToast!} />
+              )}
+
+              {currentToast!.status === ToastStatus.WAITING_FOR_TOAST && (
+                <WaitingForTOAST toast={currentToast!} />
               )}
             </>
           )}
