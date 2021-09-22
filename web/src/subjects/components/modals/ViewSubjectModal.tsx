@@ -14,7 +14,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useSpring, animated, interpolate, config } from "@react-spring/web";
 import dayjs from "dayjs";
 
 import { Subject } from "@shared/models";
@@ -28,82 +27,20 @@ interface Props {
   closeModal(): void;
 }
 
-/**
- *     | min
- *     |
- *     |           <-
- *     |             |
- *     |             | Return random values between min/center and center/max.
- *     | <- center   | Randomly choose if it first pick up a value from min/center
- *     |             | or center/max.
- *     |             |
- *     |           <-
- *     |
- *     | max
- *
- * @param min
- * @param max
- * @returns [number, number]
- */
-const getRandomEdgePositions = (min: number, max: number): number[] => {
-  const distance = Math.abs(max - min);
-  const center = distance / 2;
-
-  const pairOfEdges =
-    Math.random() > 0.5
-      ? [min + Math.random() * center, min + center + Math.random() * center]
-      : [min + center + Math.random() * center, min + Math.random() * center];
-
-  return pairOfEdges.map(Math.round);
-};
-
 const ViewSubjectModal: FunctionComponent<Props> = ({
   subject,
   closeModal,
 }) => {
   const [coverLoaded, setCoverLoaded] = useState(!subject.cover);
 
-  const [
-    [fromPath1, fromPath2],
-    [fromPath3, fromPath4],
-    [fromPath5, fromPath6],
-    [fromPath7, fromPath8],
-  ] = useMemo(() => {
-    return [
-      [Math.round(Math.random() * 30), Math.round(Math.random() * 30)],
-      [Math.round(70 + Math.random() * 10), Math.round(Math.random() * 30)],
-      [
-        Math.round(70 + Math.random() * 30),
-        Math.round(70 + Math.random() * 30),
-      ],
-      [Math.round(Math.random() * 30), Math.round(70 + Math.random() * 10)],
-    ];
-  }, []);
-
-  const [[toPath1, toPath2], [toPath3, toPath4]] = useMemo(() => {
-    return [getRandomEdgePositions(0, 5), getRandomEdgePositions(95, 100)];
-  }, []);
-
-  const { opacity, edge1, edge2, edge3, edge4 } = useSpring({
-    config: config.stiff,
-    from: {
-      opacity: 0,
-      edge1: [fromPath1, fromPath2],
-      edge2: [fromPath3, fromPath4],
-      edge3: [fromPath5, fromPath6],
-      edge4: [fromPath7, fromPath8],
-    },
-    to: {
-      opacity: 1,
-      edge1: [0, toPath1],
-      edge2: [100, toPath2],
-      edge3: [100, toPath3],
-      edge4: [0, toPath4],
-    },
-  });
-
   return (
-    <Modal isOpen={true} onClose={closeModal} isCentered size="xl">
+    <Modal
+      isOpen={true}
+      onClose={closeModal}
+      isCentered={true}
+      motionPreset="slideInBottom"
+      size="xl"
+    >
       <ModalOverlay>
         <ModalContent
           maxHeight="90vh"
@@ -111,28 +48,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
           bg="transparent"
           boxShadow="none"
         >
-          <Box
-            as={animated.div}
-            style={{
-              // @ts-ignore
-              opacity,
-              // @ts-ignore
-              clipPath: interpolate(
-                [edge1, edge2, edge3, edge4],
-                (
-                  [path1, path2],
-                  [path3, path4],
-                  [path5, path6],
-                  [path7, path8]
-                ) =>
-                  `polygon(${path1}% ${path2}%, ${path3}% ${path4}%, ${path5}% ${path6}%, ${path7}% ${path8}%)`
-              ),
-            }}
-            bg="white"
-            position="relative"
-            maxHeight="100%"
-            overflowY="auto"
-          >
+          <Box bg="white" position="relative" maxHeight="100%" overflowY="auto">
             <ModalHeader p={0}>
               {subject.cover && (
                 <Box
