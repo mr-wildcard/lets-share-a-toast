@@ -1,17 +1,21 @@
 import firebase from "firebase/app";
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 
 import { CurrentToast, Subject, User } from "@shared/models";
 import { DatabaseVotingSession } from "@shared/firebase";
 
 interface State extends Record<string, any> {
   connectedUser?: firebase.User | null;
+  connectedUserLoaded: boolean;
   currentToast?: CurrentToast;
+  currentToastLoaded: boolean;
   votingSession?: DatabaseVotingSession | null;
+  votingSessionLoaded: boolean;
   users: User[];
   usersLoaded: boolean;
   subjects: Subject[];
   subjectsLoaded: boolean;
+  appLoadingPercentage: number;
 }
 
 const state: State = {
@@ -22,9 +26,29 @@ const state: State = {
   usersLoaded: false,
   subjects: [],
   subjectsLoaded: false,
+  get connectedUserLoaded() {
+    return this.connectedUser !== undefined;
+  },
+  get currentToastLoaded() {
+    return this.currentToast !== undefined;
+  },
+  get votingSessionLoaded() {
+    return this.votingSession !== undefined;
+  },
+  get appLoadingPercentage() {
+    const data = [
+      this.currentToastLoaded,
+      this.connectedUserLoaded,
+      this.votingSessionLoaded,
+      this.subjectsLoaded,
+      this.usersLoaded,
+    ];
+
+    return (data.filter(Boolean).length * 100) / data.length;
+  },
 };
 
-export const firebaseData = makeObservable(state, {
+export const firebaseData = makeObservable<State>(state, {
   connectedUser: observable,
   currentToast: observable,
   votingSession: observable,
@@ -32,4 +56,8 @@ export const firebaseData = makeObservable(state, {
   usersLoaded: observable,
   subjects: observable,
   subjectsLoaded: observable,
+  connectedUserLoaded: computed,
+  currentToastLoaded: computed,
+  votingSessionLoaded: computed,
+  appLoadingPercentage: computed,
 });

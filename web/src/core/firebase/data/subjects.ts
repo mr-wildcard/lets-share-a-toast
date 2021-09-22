@@ -11,7 +11,7 @@ firebase
       /**
        * As we use FieldValue.serverTimestamp() for subjects `lastModifiedDate`,
        * the value of this field is returned as `null` in a first snapshot,
-       * then, once resolved on backend side, returned as its true value in a second snapshot.
+       * then, once resolved on backend side, returned with the correct value in a second snapshot.
        * Therefore we need to wait for the snapshot to finish its pending writes.
        * https://github.com/firebase/firebase-js-sdk/issues/1929#issuecomment-506982593
        */

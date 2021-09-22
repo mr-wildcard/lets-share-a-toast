@@ -2,24 +2,25 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
-import { animated, config, to, useSpring } from "@react-spring/web";
+import { animated, useSpring } from "@react-spring/web";
 
 import { AnimatedImages } from "./animated-images";
+import { firebaseData } from "@web/core/firebase/data";
 
-enum BackgroundAnimationState {
-  INITIAL,
-  ENTERED,
-  LEFT,
+function getRandomBackgroundPositionForLoadingProgress(progression: number) {
+  if (progression === 100 || progression === 0) {
+    return progression;
+  }
+
+  return Math.ceil(Math.max(0, progression + Math.random() * 50));
 }
 
 const AppLoader: FunctionComponent = ({ children }) => {
-  const [loaderAnimationState, setLoaderAnimationState] =
-    useState<BackgroundAnimationState>(BackgroundAnimationState.INITIAL);
-
   const [appReady, setAppReady] = useState(false);
 
   const loadFirebaseData = useCallback(async () => {
@@ -53,66 +54,72 @@ const AppLoader: FunctionComponent = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (loaderAnimationState === BackgroundAnimationState.ENTERED) {
-      import("@web/core/firebase").then(loadFirebaseData).catch((error) => {
-        console.error("An error occured while loading Firebase", { error });
-      });
-    }
-  }, [loaderAnimationState]);
+    import("@web/core/firebase").then(loadFirebaseData).catch((error) => {
+      console.error("An error occured while loading Firebase", { error });
+    });
+  }, []);
 
-  const { value: path1 } = useSpring({
-    config: config.gentle,
-    delay: 150,
-    from: { value: 100 },
-    to: { value: 0 },
-  });
-
-  const { value: path2 } = useSpring({
-    config: config.gentle,
-    delay: 230,
-    from: { value: 100 },
-    to: { value: 0 },
-    onRest() {
-      setLoaderAnimationState(BackgroundAnimationState.ENTERED);
+  const { progression } = useSpring({
+    config: {
+      clamp: true,
     },
+    progression: firebaseData.appLoadingPercentage,
   });
+
+  const { path1, path2 } = useMemo(() => {
+    return {
+      path1:
+        100 -
+        getRandomBackgroundPositionForLoadingProgress(
+          firebaseData.appLoadingPercentage
+        ),
+      path2:
+        100 -
+        getRandomBackgroundPositionForLoadingProgress(
+          firebaseData.appLoadingPercentage
+        ),
+    };
+  }, [firebaseData.appLoadingPercentage]);
 
   return (
     <>
-      {loaderAnimationState !== BackgroundAnimationState.LEFT && (
+      <div
+        style={{
+          position: "fixed",
+          inset: "0px",
+          zIndex: 9,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
         <div
           style={{
-            position: "fixed",
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            zIndex: 9,
-            backgroundColor:
-              loaderAnimationState === BackgroundAnimationState.INITIAL
-                ? "white"
-                : "transparent",
+            position: "absolute",
+            inset: "0px",
+            backgroundColor: "#f6e05e",
+            clipPath: `polygon(${path1}% 0, 100% 0, 100% 100%, ${path2}% 100%)`,
+            transition: "clip-path 500ms",
+          }}
+        />
+
+        <animated.span
+          style={{
+            position: "absolute",
+            bottom: "2rem",
+            left: "2rem",
+            color: "rgba(0, 0, 0, 0.5)",
+            fontWeight: "bold",
+            fontSize: "120px",
+            fontFamily: "Quicksand, sans-serif",
           }}
         >
-          <animated.div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              height: "100%",
-              backgroundColor: "#f6e05e",
-              clipPath: to(
-                [path1, path2],
-                (path1, path2) =>
-                  `polygon(${path1}% 0, 100% 0, 100% 100%, ${path2}% 100%)`
-              ),
-            }}
-          >
-            <AnimatedImages />
-          </animated.div>
-        </div>
-      )}
+          {progression.to((value) => `${Math.ceil(value)}%`)}
+        </animated.span>
+
+        <AnimatedImages />
+      </div>
     </>
   );
 };
