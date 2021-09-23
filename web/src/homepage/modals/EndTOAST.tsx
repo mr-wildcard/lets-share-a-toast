@@ -1,5 +1,4 @@
-import firebase from "firebase/app";
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, useRef } from "react";
 import {
   Alert,
   AlertDescription,
@@ -18,12 +17,12 @@ import {
 import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
 import { Toast } from "@shared/models";
-import { CloudFunctionName } from "@shared/firebase";
 
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import getUserFullname from "@web/core/helpers/getUserFullname";
+import { getCloudFunctionEndTOAST } from "@web/core/firebase/helpers";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -65,10 +64,9 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
             return errors;
           }}
           onSubmit={async (values: FormValues): Promise<void> => {
-            return firebase
-              .functions()
-              .httpsCallable(CloudFunctionName.END_TOAST)()
-              .then(closeModal);
+            const endToast = getCloudFunctionEndTOAST();
+
+            return endToast().then(closeModal);
           }}
         >
           {({
@@ -115,9 +113,10 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                     <Stack my={10} spacing={5}>
                       {currentToast.selectedSubjects!.map(
                         (selectedSubject, index) => {
-                          const subjectIsSelected = values.givenSubjectsIds.includes(
-                            selectedSubject.id
-                          );
+                          const subjectIsSelected =
+                            values.givenSubjectsIds.includes(
+                              selectedSubject.id
+                            );
 
                           return (
                             <Field

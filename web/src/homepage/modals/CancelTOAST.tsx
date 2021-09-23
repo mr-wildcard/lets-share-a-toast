@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { getDatabase, ref, set } from "firebase/database";
 import React, { FunctionComponent, useCallback, useRef, useState } from "react";
 import {
   AlertDialog,
@@ -36,13 +36,12 @@ const CancelTOAST: FunctionComponent<Props> = ({
     setCancelling(true);
 
     try {
-      await firebase
-        .database()
-        .ref(DatabaseRefPaths.CURRENT_TOAST)
-        .set(null)
-        .then(() => {
-          closeModal();
-        });
+      const database = getDatabase();
+      const currentToastRef = ref(database, DatabaseRefPaths.CURRENT_TOAST);
+
+      await set(currentToastRef, null);
+
+      closeModal();
     } catch (error) {
       console.error("An error occured while canceling TOAST", { error });
 

@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import React, {
   FunctionComponent,
   ReactElement,
@@ -24,10 +24,10 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { observer } from "mobx-react-lite";
 
 import { SubjectStatus } from "@shared/enums";
-import { FirestoreCollection } from "@shared/firebase";
 import { Subject } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
+import { getFirestoreSubjectDoc } from "@web/core/firebase/helpers";
 import Image from "@web/core/components/Image";
 import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectModal";
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
@@ -62,15 +62,13 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     async (status: SubjectStatus) => {
       setLoading(true);
 
-      await firebase
-        .firestore()
-        .collection(FirestoreCollection.SUBJECTS)
-        .doc(subject.id)
-        .update({
-          status,
-          lastModifiedDate: firebase.firestore.FieldValue.serverTimestamp(),
-          lastModifiedByUserId: connectedUser?.uid,
-        });
+      const subjectDoc = getFirestoreSubjectDoc(subject.id);
+
+      await updateDoc(subjectDoc, {
+        status,
+        lastModifiedDate: serverTimestamp(),
+        lastModifiedByUserId: connectedUser?.uid,
+      });
 
       setLoading(false);
     },
@@ -85,11 +83,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
 
       if (userConfirmedDeletion) {
         try {
-          await firebase
-            .firestore()
-            .collection(FirestoreCollection.SUBJECTS)
-            .doc(subject.id)
-            .delete();
+          const subjectDoc = getFirestoreSubjectDoc(subject.id);
+
+          await deleteDoc(subjectDoc);
         } catch (error) {
           setLoading(false);
 

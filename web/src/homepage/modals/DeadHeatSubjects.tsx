@@ -18,25 +18,21 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik, FormikProps } from "formik";
-import firebase from "firebase/app";
 import { observer } from "mobx-react-lite";
 
 import { Toast, Subject } from "@shared/models";
-import { CloudFunctionName } from "@shared/firebase";
-
-import { pageColors } from "@web/core/constants";
-import HighlightedText from "@web/core/components/HighlightedText";
-import Image from "@web/core/components/Image";
-import getUserFullname from "@web/core/helpers/getUserFullname";
-import { firebaseData } from "@web/core/firebase/data";
 import {
   getAllUniqueTotalVotes,
   getDictionaryOfSubjectPerTotalVotes,
   getSubjectTotalVotes,
 } from "@shared/utils";
-import { CheckIcon } from "@chakra-ui/icons";
-import { getSubjectSpeakersAsText } from "@web/core/helpers/getSubjectSpeakersAsText";
-import { SelectableSubject } from "@web/homepage/modals/deadHeatSubjects/SelectableSubject";
+
+import { pageColors } from "@web/core/constants";
+import HighlightedText from "@web/core/components/HighlightedText";
+import Image from "@web/core/components/Image";
+import { firebaseData } from "@web/core/firebase/data";
+import { SelectableSubject } from "./deadHeatSubjects/SelectableSubject";
+import { getCloudFunctionResolveDeadHeatSubjects } from "@web/core/firebase/helpers";
 
 interface FormErrors {
   selectedSubjectIds?: boolean;
@@ -124,14 +120,14 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
               return errors;
             }}
             onSubmit={async (values: FormValues) => {
-              return firebase
-                .functions()
-                .httpsCallable(CloudFunctionName.RESOLVE_DEADHEAT_SUBJECTS)({
-                  selectedSubjectIds: alreadySettledSubjects
-                    .map((subject) => subject.id)
-                    .concat(values.selectedSubjectIds),
-                })
-                .then(closeModal);
+              const resolveDeadheatSubjects =
+                getCloudFunctionResolveDeadHeatSubjects();
+
+              return resolveDeadheatSubjects({
+                selectedSubjectIds: alreadySettledSubjects
+                  .map((subject) => subject.id)
+                  .concat(values.selectedSubjectIds),
+              }).then(closeModal);
             }}
           >
             {({

@@ -1,18 +1,16 @@
-import firebase from "firebase/app";
+import { onValue } from "firebase/database";
 
-import { DatabaseRefPaths } from "@shared/firebase";
-
+import { getFirebaseVotingSessionRef } from "../helpers";
 import { firebaseData } from "./";
 
-firebase
-  .database()
-  .ref(DatabaseRefPaths.VOTING_SESSION)
-  .on("value", (snapshot) => {
-    const votingSession = snapshot.val();
+const votingSessionRef = getFirebaseVotingSessionRef();
 
-    firebaseData.votingSession = votingSession;
+onValue(votingSessionRef, (snapshot) => {
+  const votingSession = snapshot.val();
 
-    if (import.meta.env.DEV || window._log_firebase) {
-      console.log({ votingSession });
-    }
-  });
+  firebaseData.votingSession = votingSession;
+
+  if (import.meta.env.DEV || window._log_firebase) {
+    console.log({ votingSession });
+  }
+});

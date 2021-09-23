@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import firebase from "firebase/app";
+import { getDatabase, ref, onValue, runTransaction } from "firebase/database";
 import { Box, Button, SimpleGrid, Divider, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
@@ -15,6 +15,7 @@ import { Toast } from "@shared/models";
 import { getSelectedSubjectIds, getSubjectTotalVotes } from "@shared/utils";
 
 import { firebaseData } from "@web/core/firebase/data";
+import { getFirebaseVotingSessionRef } from "@web/core/firebase/helpers";
 
 interface Props {
   currentToast: Toast;
@@ -29,19 +30,17 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
     useState<null | DatabaseVotingSession>(null);
 
   useEffect(() => {
-    const databaseVotingSessionRef = firebase
-      .database()
-      .ref(DatabaseRefPaths.VOTING_SESSION);
+    const votingSessionRef = getFirebaseVotingSessionRef();
 
-    const firebaseVotingSessionListener = databaseVotingSessionRef.on(
-      "value",
+    const firebaseVotingSessionListener = onValue(
+      votingSessionRef,
       (snapshot) => {
         setVotingSession(snapshot.val() as DatabaseVotingSession);
       }
     );
 
     return () => {
-      databaseVotingSessionRef.off("value", firebaseVotingSessionListener);
+      firebaseVotingSessionListener();
     };
   }, []);
 
@@ -61,13 +60,17 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
   }, [votingSession?.votes, currentToast.maxSelectableSubjects]);
 
   const vote = useCallback((subjectId) => {
-    firebase
-      .database()
-      .ref(DatabaseRefPaths.VOTING_SESSION)
-      .child("votes")
-      .child(subjectId)
-      .child(firebaseData.connectedUser!.uid)
-      .transaction((userTotalVotes: null | number) => {
+    const database = getDatabase();
+    const userSubjectVoteRef = ref(
+      database,
+      `${DatabaseRefPaths.VOTING_SESSION}/votes/${subjectId}/${
+        firebaseData.connectedUser!.uid
+      }`
+    );
+
+    return runTransaction(
+      userSubjectVoteRef,
+      (userTotalVotes: null | number) => {
         if (userTotalVotes) {
           if (userTotalVotes >= 3) {
             return null;
@@ -77,7 +80,8 @@ const Subjects: FunctionComponent<Props> = observer(({ currentToast }) => {
         } else {
           return 1;
         }
-      });
+      }
+    );
   }, []);
 
   return (

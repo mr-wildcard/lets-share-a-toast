@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import React, { FunctionComponent, useRef } from "react";
 import {
   Button,
@@ -16,14 +15,14 @@ import {
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
-import { CloudFunctionName } from "@shared/firebase";
 
+import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
+import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
+import { getCloudFunctionSetTOASTReady } from "@web/core/firebase/helpers";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getTOASTIsReadySlackMessage } from "@web/homepage/helpers";
-import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
-import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
 
 interface FormErrors {
   slackMessage?: boolean;
@@ -84,12 +83,11 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
               return errors;
             }}
             onSubmit={(values: FormValues) => {
-              return firebase
-                .functions()
-                .httpsCallable(CloudFunctionName.TOAST_READY)({
-                  slackMessage: values.notifySlack ? values.slackMessage : null,
-                })
-                .then(closeModal);
+              const setTOASTReady = getCloudFunctionSetTOASTReady();
+
+              return setTOASTReady({
+                slackMessage: values.notifySlack ? values.slackMessage : null,
+              }).then(closeModal);
             }}
           >
             {({ values, isSubmitting, isValid }) => (

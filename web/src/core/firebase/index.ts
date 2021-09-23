@@ -1,15 +1,19 @@
 import { when } from "mobx";
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
-import "firebase/database";
-import "firebase/functions";
+import { initializeApp, getApps } from "firebase/app";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  User as FirebaseUser,
+} from "firebase/auth";
 
-import { useFirebaseEmulators } from "./emulators";
+import { initFirebaseEmulators } from "./emulators";
 import { firebaseData } from "./data";
 
-if (!firebase.apps.length) {
-  firebase.initializeApp({
+if (!getApps().length) {
+  initializeApp({
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -18,11 +22,13 @@ if (!firebase.apps.length) {
   });
 
   if (import.meta.env.DEV) {
-    useFirebaseEmulators();
+    initFirebaseEmulators();
   }
 }
 
-function onAuthChanged(user: firebase.User | null) {
+const auth = getAuth();
+
+onAuthStateChanged(auth, (user: FirebaseUser | null) => {
   firebaseData.connectedUser = user;
 
   if (user) {
@@ -48,9 +54,7 @@ function onAuthChanged(user: firebase.User | null) {
         });
       });
   }
-}
-
-firebase.auth().onAuthStateChanged(onAuthChanged);
+});
 
 export const signin = () => {
   if (import.meta.env.DEV) {
@@ -60,17 +64,9 @@ export const signin = () => {
       const userEmail = urlQueryParams.get("userEmail");
       const userPassword = urlQueryParams.get("userPassword");
 
-      return firebase
-        .auth()
-        .signInWithEmailAndPassword(userEmail!, userPassword!);
+      return signInWithEmailAndPassword(auth, userEmail!, userPassword!);
     }
   }
 
-  return firebase
-    .auth()
-    .signInWithPopup(new firebase.auth.GoogleAuthProvider());
-};
-
-export const signout = (): Promise<void> => {
-  return firebase.auth().signOut();
+  return signInWithPopup(auth, new GoogleAuthProvider());
 };

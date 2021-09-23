@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { update, serverTimestamp } from "firebase/database";
 import React, { FunctionComponent, Ref, useCallback, useMemo } from "react";
 import {
   Box,
@@ -17,7 +17,6 @@ import DayPicker from "react-day-picker/DayPickerInput";
 import dayjs from "dayjs";
 
 import { CurrentToast, User } from "@shared/models";
-import { DatabaseRefPaths, CloudFunctionName } from "@shared/firebase";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { Pathnames } from "@web/core/constants";
@@ -31,6 +30,10 @@ import DateInput from "./DateInput";
 import DatePickerNavBar from "./DatePickerNavBar";
 import DatePickerCaption from "./DatePickerCaption";
 import datePickerCSS from "./DatePicker.module.css";
+import {
+  getCloudFunctionCreateTOAST,
+  getFirebaseCurrentToastRef,
+} from "@web/core/firebase/helpers";
 
 /**
  * Related issue : https://github.com/gpbl/react-day-picker/issues/1194
@@ -139,33 +142,30 @@ const TOASTForm: FunctionComponent<Props> = ({
       }}
       onSubmit={async (values): Promise<void> => {
         if (!currentToast) {
-          return firebase
-            .functions()
-            .httpsCallable(CloudFunctionName.CREATE_TOAST)({
-              date: values.dueDate.getTime(),
-              organizerId: values.organizer!.id,
-              scribeId: values.scribe!.id,
-              slackMessage: values.notifySlack
-                ? getFormattedSlackNotification(
-                    values.slackMessage,
-                    values.dueDate
-                  )
-                : null,
-            })
-            .then(() => {
-              closeModal(true);
-            });
+          const createToastCloudFunction = getCloudFunctionCreateTOAST();
+
+          return createToastCloudFunction({
+            date: values.dueDate.getTime(),
+            organizerId: values.organizer!.id,
+            scribeId: values.scribe!.id,
+            slackMessage: values.notifySlack
+              ? getFormattedSlackNotification(
+                  values.slackMessage,
+                  values.dueDate
+                )
+              : null,
+          }).then(() => {
+            closeModal(true);
+          });
         } else {
-          return firebase
-            .database()
-            .ref(DatabaseRefPaths.CURRENT_TOAST)
-            .update({
-              date: values.dueDate.getTime(),
-              organizerId: values.organizer!.id,
-              scribeId: values.scribe!.id,
-              modifiedDate: firebase.database.ServerValue.TIMESTAMP,
-            })
-            .then(() => closeModal());
+          const currentToastRef = getFirebaseCurrentToastRef();
+
+          return update(currentToastRef, {
+            date: values.dueDate.getTime(),
+            organizerId: values.organizer!.id,
+            scribeId: values.scribe!.id,
+            modifiedDate: serverTimestamp(),
+          }).then(() => closeModal());
         }
       }}
     >

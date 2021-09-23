@@ -1,4 +1,10 @@
-import firebase from "firebase/app";
+import {
+  addDoc,
+  setDoc,
+  collection,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 import React, { FunctionComponent, useMemo } from "react";
 import {
   Alert,
@@ -56,6 +62,7 @@ import SelectUserInput from "@web/core/components/form/SelectUserInput";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
 import StatusField from "./StatusField";
+import { getFirestoreSubjectDoc } from "@web/core/firebase/helpers";
 
 interface LanguageValue {
   label: string;
@@ -189,20 +196,23 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
           cover: values.cover,
           status: values.status,
           createdDate: isCreatingSubject
-            ? firebase.firestore.FieldValue.serverTimestamp()
+            ? serverTimestamp()
             : subject?.createdDate,
           createdByUserId: isCreatingSubject
             ? firebaseData.connectedUser?.uid
             : subject?.createdByUser.id,
-          lastModifiedDate: firebase.firestore.FieldValue.serverTimestamp(),
+          lastModifiedDate: serverTimestamp(),
           lastModifiedByUserId: firebaseData.connectedUser?.uid,
         };
 
         if (isCreatingSubject) {
-          return firebase
-            .firestore()
-            .collection(FirestoreCollection.SUBJECTS)
-            .add(input)
+          const firestore = getFirestore();
+          const subjectsCollection = collection(
+            firestore,
+            FirestoreCollection.SUBJECTS
+          );
+
+          return addDoc(subjectsCollection, input)
             .then(() => closeForm())
             .catch((error) => {
               console.error(
@@ -211,11 +221,9 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
               );
             });
         } else {
-          return firebase
-            .firestore()
-            .collection(FirestoreCollection.SUBJECTS)
-            .doc(subject?.id)
-            .set(input)
+          const subjectDoc = getFirestoreSubjectDoc(subject!.id);
+
+          return setDoc(subjectDoc, input)
             .then(() => closeForm())
             .catch((error) => {
               console.error(

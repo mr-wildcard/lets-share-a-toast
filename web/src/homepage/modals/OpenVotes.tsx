@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import React, { FunctionComponent, useRef } from "react";
 import {
   Alert,
@@ -32,6 +31,7 @@ import getAppURL from "@web/core/helpers/getAppURL";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 import { SlackNotificationFieldsValues } from "@web/core/models/form/SlackNotificationFieldsValues";
 import { validateSlackNotificationField } from "@web/core/helpers/form/validateSlackNotificationFields";
+import { getCloudFunctionOpenVotes } from "@web/core/firebase/helpers";
 
 interface FormErrors {
   slackMessage?: boolean;
@@ -95,14 +95,11 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                 return errors;
               }}
               onSubmit={async (values): Promise<void> => {
-                await firebase
-                  .functions()
-                  .httpsCallable(CloudFunctionName.OPEN_VOTES)({
-                    slackMessage: values.notifySlack
-                      ? values.slackMessage
-                      : null,
-                  })
-                  .then(closeModal);
+                const openVotes = getCloudFunctionOpenVotes();
+
+                await openVotes({
+                  slackMessage: values.notifySlack ? values.slackMessage : null,
+                }).then(closeModal);
               }}
             >
               {({ values, isSubmitting, isValid }) => (

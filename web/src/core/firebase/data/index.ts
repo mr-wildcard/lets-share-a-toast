@@ -1,11 +1,11 @@
-import firebase from "firebase/app";
+import { User as FirebaseUser } from "firebase/auth";
 import { computed, makeObservable, observable } from "mobx";
 
 import { CurrentToast, Subject, User } from "@shared/models";
 import { DatabaseVotingSession } from "@shared/firebase";
 
 interface State extends Record<string, any> {
-  connectedUser?: firebase.User | null;
+  connectedUser?: FirebaseUser | null;
   connectedUserLoaded: boolean;
   currentToast?: CurrentToast;
   currentToastLoaded: boolean;
