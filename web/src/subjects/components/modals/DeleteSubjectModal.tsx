@@ -23,15 +23,18 @@ import { pageColors } from "@web/core/constants";
 interface Props {
   subject: Subject;
   alertAboutVotingSession: boolean;
+  alertAboutSubjectBeingSelectedForNextTOAST: boolean;
   closeModal(deleteConfirmation: boolean): void;
 }
 
-const CancelTOAST: FunctionComponent<Props> = ({
+const DeleteSubjectModal: FunctionComponent<Props> = ({
   subject,
   alertAboutVotingSession,
+  alertAboutSubjectBeingSelectedForNextTOAST,
   closeModal,
 }) => {
-  const cancelTOASTCancellationBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
+  const cancelTOASTCancellationBtn =
+    useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   return (
     <AlertDialog
@@ -61,10 +64,19 @@ const CancelTOAST: FunctionComponent<Props> = ({
           <AlertDialogBody fontSize="lg" py={10}>
             {alertAboutVotingSession && (
               <Box mb={5}>
-                <Alert status="error" variant="left-accent">
+                <Alert status="warning" variant="left-accent">
                   <AlertIcon />
                   This awesome subject is currently in the voting session for
                   the next TOAST!
+                </Alert>
+              </Box>
+            )}
+
+            {alertAboutSubjectBeingSelectedForNextTOAST && (
+              <Box mb={5}>
+                <Alert status="warning" variant="left-accent">
+                  <AlertIcon />
+                  This subject has been selected for the next scheduled TOAST!
                 </Alert>
               </Box>
             )}
@@ -83,7 +95,7 @@ const CancelTOAST: FunctionComponent<Props> = ({
                 ref={cancelTOASTCancellationBtn}
                 onClick={() => closeModal(false)}
               >
-                Cancel
+                Do nothing
               </Button>
             </Stack>
           </AlertDialogFooter>
@@ -93,4 +105,4 @@ const CancelTOAST: FunctionComponent<Props> = ({
   );
 };
 
-export default CancelTOAST;
+export default DeleteSubjectModal;

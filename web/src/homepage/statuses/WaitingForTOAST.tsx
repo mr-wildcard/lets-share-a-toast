@@ -26,20 +26,13 @@ const WaitingForTOAST: FunctionComponent<Props> = ({ toast }) => {
         <WhosInChargeRecap toast={toast} />
       </Box>
 
-      <Flex my={5} justify="center">
-        <FloralSeparator />
-      </Flex>
-
       <Text fontSize="lg" mb={3}>
-        We&apos;ll have the pleasure to attend to the following talks:
+        We&apos;ll have the pleasure to attend to the following talk
+        {toast.selectedSubjects!.length > 1 ? "s" : ""}:
       </Text>
 
       <Flex align="center" direction="column">
         <SelectedSubjectsList selectedSubjects={toast.selectedSubjects!} />
-      </Flex>
-
-      <Flex my={5} justify="center">
-        <FloralSeparator />
       </Flex>
     </Box>
   );

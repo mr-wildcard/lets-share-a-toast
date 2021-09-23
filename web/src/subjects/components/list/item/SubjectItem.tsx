@@ -1,4 +1,4 @@
-import { updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import { deleteDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import React, {
   FunctionComponent,
   ReactElement,
@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenu, ContextMenuTrigger, MenuItem } from "react-contextmenu";
 import { observer } from "mobx-react-lite";
 
 import { SubjectStatus } from "@shared/enums";
@@ -33,6 +33,7 @@ import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectMod
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
 import { isSubjectNew } from "@web/subjects/helpers";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
+import { subjectIsSelectedForNextTOAST } from "@web/core/helpers/subjectIsSelectedForNextTOAST";
 import SubjectStatusBadge from "./SubjectStatusBadge";
 import SubjectSpeakers from "./SubjectSpeakers";
 import SubjectNewBadge from "./SubjectNewBadge";
@@ -50,6 +51,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
   const subjectIsInCurrentTOASTVotingSession =
     !!currentToast &&
     subjectIsInVotingSession(currentToast.status, subject.status);
+
+  const subjectHasBeenSelectedForNextTOAST =
+    !!currentToast && subjectIsSelectedForNextTOAST(currentToast, subject.id);
 
   const theme = useTheme();
   const viewModal = useDisclosure();
@@ -79,21 +83,21 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     async (userConfirmedDeletion: boolean) => {
       deleteModal.onClose();
 
-      setLoading(true);
-
       if (userConfirmedDeletion) {
+        setLoading(true);
+
         try {
           const subjectDoc = getFirestoreSubjectDoc(subject.id);
 
           await deleteDoc(subjectDoc);
         } catch (error) {
-          setLoading(false);
-
           console.error(
             `An error occured while deleting the subject ${subject.id}:`,
             error
           );
         }
+
+        setLoading(false);
       }
     },
     [subject.id]
@@ -324,6 +328,9 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
       {deleteModal.isOpen && (
         <DeleteSubjectModal
           alertAboutVotingSession={subjectIsInCurrentTOASTVotingSession}
+          alertAboutSubjectBeingSelectedForNextTOAST={
+            subjectHasBeenSelectedForNextTOAST
+          }
           subject={subject}
           closeModal={onCloseDeleteSubjectModal}
         />
