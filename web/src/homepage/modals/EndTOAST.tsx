@@ -85,8 +85,9 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                       </HighlightedText>
                       <Image
                         position="absolute"
-                        right={0}
-                        bottom="-5px"
+                        right="-10px"
+                        bottom="-34px"
+                        zIndex={1}
                         width={120}
                         height={120}
                         src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
