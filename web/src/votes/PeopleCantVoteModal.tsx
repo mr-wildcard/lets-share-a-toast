@@ -6,6 +6,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  Box,
   Button,
   Text,
 } from "@chakra-ui/react";
@@ -13,6 +14,7 @@ import { Link, useHistory } from "react-router-dom";
 import HighlightedText from "@web/core/components/HighlightedText";
 import { pageColors } from "@web/core/constants";
 import Image from "@web/core/components/Image";
+import css from "./PeopleCantVoteModal.module.css";
 
 interface Props {
   isOpen: boolean;
@@ -38,19 +40,25 @@ const PeopleCantVoteModal: FunctionComponent<Props> = ({ isOpen }) => {
     >
       <AlertDialogOverlay>
         <AlertDialogContent>
+          <Box
+            position="absolute"
+            w="full"
+            h="100px"
+            bottom="calc(100% - 17px)"
+            className={css.happyToast}
+          >
+            <Image
+              position="absolute"
+              width={100}
+              height={100}
+              src="https://media.giphy.com/media/OGbmHMUlApcIHRl6zd/giphy.gif"
+            />
+          </Box>
           <AlertDialogHeader textAlign="center">
             <Text position="relative">
               <HighlightedText bgColor={pageColors.votingSession}>
                 Voting session is over!
               </HighlightedText>
-              <Image
-                position="absolute"
-                right="-20px"
-                bottom="-10px"
-                width={100}
-                height={100}
-                src="https://media.giphy.com/media/OGbmHMUlApcIHRl6zd/giphy.gif"
-              />
             </Text>
           </AlertDialogHeader>
 
