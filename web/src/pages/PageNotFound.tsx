@@ -40,7 +40,9 @@ const PageNotFound = () => {
       />
 
       <Heading as="h2" fontSize="2xl" fontWeight="bold" color="white" mt={3}>
-        <HighlightedText bgColor="black">Page not found</HighlightedText>
+        <HighlightedText bgColor="black">
+          {Math.random() > 0.5 ? "u lost?" : "are you monkey testing me??"}
+        </HighlightedText>
       </Heading>
     </ColoredBackground>
   );
