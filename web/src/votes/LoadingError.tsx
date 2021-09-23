@@ -1,18 +1,18 @@
 import React, { FunctionComponent } from "react";
 
-import { LoadingState } from "./types";
+import { PageDisplayState } from "./types";
 
 interface Props {
-  error: LoadingState;
+  error: PageDisplayState;
 }
 
 const LoadingError: FunctionComponent<Props> = ({ error }) => {
   return (
     <>
-      {error === LoadingState.ERROR_NO_SESSION && "La session n'existe pas!"}
-      {error === LoadingState.ERROR_WRONG_SESSION_STATUS &&
+      {error === PageDisplayState.ERROR_NO_TOAST && "La session n'existe pas!"}
+      {error === PageDisplayState.ERROR_WRONG_TOAST_STATUS &&
         "Ce n'est pas le moment de voter!"}
-      {error === LoadingState.ERROR_UNKNOWN_ERROR &&
+      {error === PageDisplayState.ERROR_UNKNOWN_ERROR &&
         "Une erreur inconnue s'est produite... 🤔"}
     </>
   );

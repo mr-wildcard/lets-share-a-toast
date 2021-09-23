@@ -1,6 +1,5 @@
-export enum LoadingState {
-  READY,
-  ERROR_NO_SESSION,
-  ERROR_WRONG_SESSION_STATUS,
-  ERROR_UNKNOWN_ERROR,
+export enum PageDisplayState {
+  TIME_TO_VOTE,
+  ERROR_NO_TOAST,
+  ERROR_WRONG_TOAST_STATUS,
 }

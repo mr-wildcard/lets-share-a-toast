@@ -1,19 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { ToastStatus } from "@shared/enums";
 
 import { firebaseData } from "@web/core/firebase/data";
-import { pageColors, spacing } from "@web/core/constants";
+import { pageColors } from "@web/core/constants";
 import { ui } from "@web/core/stores/ui";
 import ColoredBackground from "@web/core/components/ColoredBackground";
-import { LoadingState } from "@web/votes/types";
-import { Subjects } from "@web/votes/Subjects";
+import { PageDisplayState } from "@web/votes/types";
+import { SubjectsList } from "@web/votes/SubjectsList";
 import { PeopleCantVoteModal } from "@web/votes/PeopleCantVoteModal";
 
+function getInitialPageState(): PageDisplayState {
+  if (!!firebaseData.currentToast) {
+    if (firebaseData.currentToast.status === ToastStatus.OPEN_FOR_VOTE) {
+      return PageDisplayState.TIME_TO_VOTE;
+    } else {
+      return PageDisplayState.ERROR_WRONG_TOAST_STATUS;
+    }
+  } else {
+    return PageDisplayState.ERROR_NO_TOAST;
+  }
+}
+
 const Votes = () => {
-  const [loadingState, setLoadingState] = useState<null | LoadingState>(null);
+  const [pageLoadingState, setPageLoadingState] = useState<PageDisplayState>(
+    getInitialPageState()
+  );
 
   useEffect(() => {
     window.document.title = "Votes | Let's share a TOAST";
@@ -21,43 +35,28 @@ const Votes = () => {
     ui.currentPageBgColor = pageColors.votingSession;
   }, []);
 
-  useEffect(() => {
-    if (!!firebaseData.currentToast) {
-      if (firebaseData.currentToast.status === ToastStatus.OPEN_FOR_VOTE) {
-        setLoadingState(LoadingState.READY);
-      } else {
-        setLoadingState(LoadingState.ERROR_WRONG_SESSION_STATUS);
-      }
-    } else {
-      setLoadingState(LoadingState.ERROR_NO_SESSION);
-    }
-  }, []);
-
   return (
     <ColoredBackground flex={1}>
-      <Flex direction="column" p={`${spacing.stylizedGap}px`}>
-        {loadingState === null && "Chargement en cours..."}
-        {loadingState !== null && (
-          <>
-            {loadingState === LoadingState.ERROR_NO_SESSION &&
-              "La session n'existe pas!"}
+      <Flex direction="column">
+        {pageLoadingState === PageDisplayState.ERROR_NO_TOAST &&
+          "La session n'existe pas!"}
 
-            {loadingState === LoadingState.ERROR_WRONG_SESSION_STATUS &&
-              "Ce n'est pas le moment de voter!"}
+        {pageLoadingState === PageDisplayState.ERROR_WRONG_TOAST_STATUS &&
+          "Ce n'est pas le moment de voter!"}
 
-            {loadingState === LoadingState.ERROR_UNKNOWN_ERROR &&
-              "Une erreur inconnue s'est produite... 🤔"}
+        {pageLoadingState === PageDisplayState.TIME_TO_VOTE && (
+          <Flex direction="column">
+            <Box flex={1}>
+              <SubjectsList
+                votingSession={firebaseData.votingSession!}
+                currentToast={firebaseData.currentToast!}
+              />
+            </Box>
 
-            {loadingState === LoadingState.READY && (
-              <>
-                <Subjects currentToast={firebaseData.currentToast!} />
-
-                <PeopleCantVoteModal
-                  isOpen={!firebaseData.currentToast!.peopleCanVote}
-                />
-              </>
-            )}
-          </>
+            <PeopleCantVoteModal
+              isOpen={!firebaseData.currentToast!.peopleCanVote}
+            />
+          </Flex>
         )}
       </Flex>
     </ColoredBackground>
