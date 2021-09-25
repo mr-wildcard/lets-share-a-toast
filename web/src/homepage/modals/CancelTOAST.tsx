@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
-import { DatabaseRefPaths } from "@shared/firebase";
 
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
@@ -36,10 +35,9 @@ const CancelTOAST: FunctionComponent<Props> = ({
     setCancelling(true);
 
     try {
-      const database = getDatabase();
-      const currentToastRef = ref(database, DatabaseRefPaths.CURRENT_TOAST);
+      const databaseRef = ref(getDatabase());
 
-      await set(currentToastRef, null);
+      await set(databaseRef, null);
 
       closeModal();
     } catch (error) {

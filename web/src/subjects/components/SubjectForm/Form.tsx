@@ -1,9 +1,9 @@
 import {
   addDoc,
-  setDoc,
   collection,
   getFirestore,
   serverTimestamp,
+  setDoc,
 } from "firebase/firestore";
 import React, { FunctionComponent, useMemo } from "react";
 import {
@@ -15,8 +15,8 @@ import {
   Button,
   DrawerBody,
   DrawerCloseButton,
-  DrawerHeader,
   DrawerFooter,
+  DrawerHeader,
   Flex,
   FormControl,
   FormHelperText,
@@ -129,9 +129,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
   }, [isCreatingSubject, currentToast, subject]);
 
   const subjectHasBeenSelectedForNextTOAST =
-    !isCreatingSubject &&
-    !!currentToast &&
-    subjectIsSelectedForNextTOAST(currentToast, subject!.id);
+    !isCreatingSubject && subjectIsSelectedForNextTOAST(subject!.status);
 
   return (
     <Formik

@@ -15,6 +15,17 @@ const SubjectStatusBadge: FunctionComponent<Props> = ({ status }) => (
       </Badge>
     )}
 
+    {status === SubjectStatus.SELECTED_FOR_NEXT_TOAST && (
+      <Badge
+        variant="solid"
+        fontStyle="italic"
+        colorScheme="blue"
+        title="Selected for the next TOAST"
+      >
+        Selected for the next TOAST !
+      </Badge>
+    )}
+
     {status === SubjectStatus.UNAVAILABLE && (
       <Badge variant="solid" colorScheme="red">
         Unavailable

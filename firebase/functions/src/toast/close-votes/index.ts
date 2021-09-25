@@ -3,7 +3,8 @@ import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths } from "@shared/firebase";
 import { getSelectedSubjectIds } from "@shared/utils";
-import { ToastStatus } from "@shared/enums";
+import { SubjectStatus, ToastStatus } from "@shared/enums";
+import { changeMultipleSubjectsStatusAtOnce } from "@firebase-functions/helpers/changeMultipleSubjectsStatusAtOnce";
 
 export const closeVotes = functions.https.onCall(async () => {
   functions.logger.info("Close voting session.");
@@ -52,10 +53,21 @@ export const closeVotes = functions.https.onCall(async () => {
   /**
    * Update current TOAST with selected subjects.
    */
-  const updates = {
-    status: ToastStatus.VOTE_CLOSED,
-    selectedSubjectIds,
-  };
+  const updateCurrentTOAST = admin
+    .database()
+    .ref(DatabaseRefPaths.CURRENT_TOAST)
+    .update({
+      status: ToastStatus.VOTE_CLOSED,
+      selectedSubjectIds,
+    });
 
-  return admin.database().ref(DatabaseRefPaths.CURRENT_TOAST).update(updates);
+  /**
+   * Change statuses of all selected subjects to {SubjectStatus.SELECTED_FOR_NEXT_TOAST}
+   */
+  const subjectsStatusChanges = changeMultipleSubjectsStatusAtOnce(
+    selectedSubjectIds,
+    SubjectStatus.SELECTED_FOR_NEXT_TOAST
+  );
+
+  return Promise.all([updateCurrentTOAST, subjectsStatusChanges.commit()]);
 });

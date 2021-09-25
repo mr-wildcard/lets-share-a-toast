@@ -13,12 +13,28 @@ function removeSubjectFromVotingSession(subjectId: string) {
     .set(null);
 }
 
+function removeSubjectFromCurrentTOASTSelectedSubjects(subjectId: string) {
+  return admin
+    .database()
+    .ref(DatabaseRefPaths.CURRENT_TOAST)
+    .child("selectedSubjectIds")
+    .transaction((selectedSubjectIds: string[]) => {
+      if (selectedSubjectIds.includes(subjectId)) {
+        return selectedSubjectIds.filter(
+          (subjectIds) => subjectIds !== subjectId
+        );
+      }
+
+      return selectedSubjectIds;
+    });
+}
+
 /**
  * Watch all changes from all subjects then remove a subject
  * from voting session if its status changed
  * to a status other than AVAILABLE.
  */
-export const syncSubjectsWithVotes = functions.firestore
+export const syncSubjects = functions.firestore
   .document(`${FirestoreCollection.SUBJECTS}/{subjectId}`)
   .onWrite((change, context) => {
     /**
@@ -38,6 +54,10 @@ export const syncSubjectsWithVotes = functions.firestore
 
       if (subjectStatus === SubjectStatus.AVAILABLE) {
         return removeSubjectFromVotingSession(context.params.subjectId);
+      } else if (subjectStatus === SubjectStatus.SELECTED_FOR_NEXT_TOAST) {
+        return removeSubjectFromCurrentTOASTSelectedSubjects(
+          context.params.subjectId
+        );
       }
     }
 

@@ -13,7 +13,11 @@ const sortedStatusValues: StatusFilterValue[] = [
   SubjectStatus.DONE,
 ];
 
-const sortedStatusLabels: { [value in StatusFilterValue]: string } = {
+type SortedStatusLabels = {
+  [value in StatusFilterValue]: string;
+};
+
+const sortedStatusLabels: SortedStatusLabels = {
   all: "all subjects",
   [SubjectStatus.AVAILABLE]: "all available subjects",
   [SubjectStatus.UNAVAILABLE]: "all unavailable subjects",

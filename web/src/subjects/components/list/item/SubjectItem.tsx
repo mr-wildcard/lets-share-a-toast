@@ -52,7 +52,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     subjectIsInVotingSession(currentToast.status, subject.status);
 
   const subjectHasBeenSelectedForNextTOAST =
-    !!currentToast && subjectIsSelectedForNextTOAST(currentToast, subject.id);
+    !!currentToast && subjectIsSelectedForNextTOAST(subject.status);
 
   const allowDeletion = !subjectHasBeenSelectedForNextTOAST;
 
@@ -221,16 +221,16 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             <Divider mt="30px" mb={3} borderColor="gray.300" />
 
             <Flex align="center">
+              <SubjectStatusBadge status={subject.status} />
+
               {subjectIsNew && subject.status !== SubjectStatus.DONE && (
                 <>
-                  <SubjectNewBadge />
                   <Box as="span" px={2}>
                     &bull;
                   </Box>
+                  <SubjectNewBadge />
                 </>
               )}
-
-              <SubjectStatusBadge status={subject.status} />
 
               <Box ml="auto" className={css.actions} opacity={0}>
                 <ButtonGroup isAttached variant="outline" size="sm">

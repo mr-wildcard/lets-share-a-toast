@@ -15,7 +15,7 @@ onValue(currentToastRef, (snapshot) => {
       date,
       createdDate,
       modifiedDate,
-      selectedSubjectIds,
+      selectedSubjectIds = [],
       ...restOfCurrentTOASTProps
     } = currentToast;
 

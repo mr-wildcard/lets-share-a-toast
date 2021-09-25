@@ -4,6 +4,7 @@
     "typeRoots": ["./node_modules/@types"],
     "baseUrl": ".",
     "paths": {
+      "@firebase-functions/*": ["./firebase/functions/src/*"],
       "@shared/*": ["./shared/*"],
       "@web/*": ["./web/src/*"]
     }
