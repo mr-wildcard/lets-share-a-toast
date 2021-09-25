@@ -63,6 +63,7 @@ import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession
 import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
 import StatusField from "./StatusField";
 import { getFirestoreSubjectDoc } from "@web/core/firebase/helpers";
+import { subjectIsSelectedForNextTOAST } from "@web/core/helpers/subjectIsSelectedForNextTOAST";
 
 interface LanguageValue {
   label: string;
@@ -126,6 +127,11 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
       subjectIsInVotingSession(currentToast.status, subject!.status)
     );
   }, [isCreatingSubject, currentToast, subject]);
+
+  const subjectHasBeenSelectedForNextTOAST =
+    !isCreatingSubject &&
+    !!currentToast &&
+    subjectIsSelectedForNextTOAST(currentToast, subject!.id);
 
   return (
     <Formik
@@ -481,13 +487,17 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                     )}
                   />
                 </Box>
-                <Box>
-                  <Field
-                    name="status"
-                    component={StatusField}
-                    showHints={!alertAboutStatusChangeDuringVotingSession}
-                  />
-                </Box>
+
+                {!subjectHasBeenSelectedForNextTOAST && (
+                  <Box>
+                    <Field
+                      name="status"
+                      component={StatusField}
+                      showHints={!alertAboutStatusChangeDuringVotingSession}
+                    />
+                  </Box>
+                )}
+
                 <Box>
                   <Field name="cover">
                     {({ field, meta }: FieldProps<FormValues["cover"]>) => {

@@ -5,7 +5,6 @@ import {
   DrawerOverlay,
   Flex,
   Spinner,
-  useTheme,
 } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
@@ -27,8 +26,6 @@ const SubjectForm: FunctionComponent<Props> = ({
   closeForm,
   isOpen,
 }) => {
-  const theme = useTheme();
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -45,7 +42,7 @@ const SubjectForm: FunctionComponent<Props> = ({
                 <Spinner
                   thickness="4px"
                   speed="0.65s"
-                  emptyColor={theme.colors.gray["800"]}
+                  emptyColor="gray.800"
                   color={pageColors.subjects}
                   size="xl"
                 />

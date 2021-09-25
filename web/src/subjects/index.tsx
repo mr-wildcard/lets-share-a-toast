@@ -32,7 +32,7 @@ const Subjects = () => {
   }, []);
 
   const filteredSubjects = useMemo<Subject[]>(() => {
-    let finalSubjects = toJS(subjects);
+    let finalSubjects = subjects;
 
     if (statusFilter !== "all") {
       finalSubjects = finalSubjects.filter(
