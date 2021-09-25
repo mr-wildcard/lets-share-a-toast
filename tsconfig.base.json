@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "typeRoots": ["./node_modules/@types"],
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["./shared/*"],

@@ -52,7 +52,7 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
     const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
     const votes = firebaseData.votingSession!.votes!;
-    const selectedSubjects = currentToast.selectedSubjects!;
+    const selectedSubjects = currentToast.selectedSubjects;
 
     /**
      * Find subjects which doesn't need to be settled as they are the only ones

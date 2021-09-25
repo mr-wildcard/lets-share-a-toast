@@ -19,5 +19,5 @@ export interface Toast extends TOASTWithoutFirebaseProperties {
   modifiedDate: Date;
   organizer: User;
   scribe: User;
-  selectedSubjects?: Subject[];
+  selectedSubjects: Subject[];
 }

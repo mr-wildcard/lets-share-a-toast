@@ -1,16 +1,11 @@
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  Timestamp,
-} from "firebase/firestore";
+import { onSnapshot, Timestamp } from "firebase/firestore";
 
-import { FirestoreCollection, FirestoreSubject } from "@shared/firebase";
+import { FirestoreSubject } from "@shared/firebase";
 
+import { getFirestoreSubjectCollection } from "../helpers";
 import { firebaseData } from "./";
 
-const firestore = getFirestore();
-const subjectsCollection = collection(firestore, FirestoreCollection.SUBJECTS);
+const subjectsCollection = getFirestoreSubjectCollection();
 
 onSnapshot(subjectsCollection, (snapshot) => {
   if (snapshot.metadata.hasPendingWrites) {
@@ -22,12 +17,6 @@ onSnapshot(subjectsCollection, (snapshot) => {
      * https://github.com/firebase/firebase-js-sdk/issues/1929#issuecomment-506982593
      */
     return;
-  }
-
-  if (import.meta.env.DEV || window._log_firebase) {
-    console.log({
-      subjects: snapshot.docs.map((doc) => doc.data()),
-    });
   }
 
   firebaseData.subjects = snapshot.docs.map((doc) => {
@@ -59,4 +48,10 @@ onSnapshot(subjectsCollection, (snapshot) => {
   });
 
   firebaseData.subjectsLoaded = true;
+
+  if (import.meta.env.DEV || window._log_firebase) {
+    console.log({
+      subjects: snapshot.docs.map((doc) => doc.data()),
+    });
+  }
 });

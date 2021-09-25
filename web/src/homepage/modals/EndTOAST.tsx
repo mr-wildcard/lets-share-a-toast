@@ -19,10 +19,10 @@ import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 import { Toast } from "@shared/models";
 
 import { pageColors } from "@web/core/constants";
+import { getSubjectSpeakersAsText } from "@web/core/helpers/getSubjectSpeakersAsText";
+import { getCloudFunctionEndTOAST } from "@web/core/firebase/helpers";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
-import getUserFullname from "@web/core/helpers/getUserFullname";
-import { getCloudFunctionEndTOAST } from "@web/core/firebase/helpers";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -100,7 +100,7 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                         <Box flex={1}>
                           <AlertDescription>
                             In order to end the TOAST, you need to specify which
-                            subject(s) has been given. (at least one subject).
+                            subject(s) has been given (at least one subject).
                             <br />
                             If no subject has been given, you might want to
                             cancel the TOAST instead.
@@ -112,7 +112,7 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                     <Divider my={5} />
 
                     <Stack my={10} spacing={5}>
-                      {currentToast.selectedSubjects!.map(
+                      {currentToast.selectedSubjects.map(
                         (selectedSubject, index) => {
                           const subjectIsSelected =
                             values.givenSubjectsIds.includes(
@@ -176,9 +176,9 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                                     "{selectedSubject.title}"
                                   </Text>
                                   &nbsp;by&nbsp;
-                                  {selectedSubject.speakers
-                                    .map(getUserFullname)
-                                    .join(", ")}
+                                  {getSubjectSpeakersAsText(
+                                    selectedSubject.speakers
+                                  )}
                                 </Box>
                               )}
                             </Field>

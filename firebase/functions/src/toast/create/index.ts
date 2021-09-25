@@ -15,6 +15,7 @@ export const createToast = functions.https.onCall((data, context) => {
     organizerId: data.organizerId,
     scribeId: data.scribeId,
     maxSelectableSubjects: data.maxSelectableSubjects || 2,
+    selectedSubjectIds: [],
     createdByUserId: context.auth?.uid,
     createdDate: admin.database.ServerValue.TIMESTAMP,
     modifiedDate: admin.database.ServerValue.TIMESTAMP,

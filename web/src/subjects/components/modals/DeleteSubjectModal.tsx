@@ -23,14 +23,12 @@ import { pageColors } from "@web/core/constants";
 interface Props {
   subject: Subject;
   alertAboutVotingSession: boolean;
-  alertAboutSubjectBeingSelectedForNextTOAST: boolean;
   closeModal(deleteConfirmation: boolean): void;
 }
 
 const DeleteSubjectModal: FunctionComponent<Props> = ({
   subject,
   alertAboutVotingSession,
-  alertAboutSubjectBeingSelectedForNextTOAST,
   closeModal,
 }) => {
   const cancelTOASTCancellationBtn =
@@ -63,23 +61,13 @@ const DeleteSubjectModal: FunctionComponent<Props> = ({
           </AlertDialogHeader>
           <AlertDialogBody fontSize="lg" py={10}>
             {alertAboutVotingSession && (
-              <Box mb={5}>
-                <Alert status="warning" variant="left-accent">
-                  <AlertIcon />
-                  This awesome subject is currently in the voting session for
-                  the next TOAST!
-                </Alert>
-              </Box>
+              <Alert mb={5} status="warning" variant="left-accent">
+                <AlertIcon />
+                This awesome subject is currently in the voting session for the
+                next TOAST!
+              </Alert>
             )}
 
-            {alertAboutSubjectBeingSelectedForNextTOAST && (
-              <Box mb={5}>
-                <Alert status="warning" variant="left-accent">
-                  <AlertIcon />
-                  This subject has been selected for the next scheduled TOAST!
-                </Alert>
-              </Box>
-            )}
             <Box textAlign="center">
               <Text>You&apos;re about to delete this subject:</Text>
               <Text fontWeight="bold">&quot;{subject.title}&quot;</Text>

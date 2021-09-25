@@ -37,7 +37,7 @@ const VotesClosed: FunctionComponent<Props> = ({ toast }) => {
           />
           <Text fontSize="lg">
             Voting session ended with more than {toast.maxSelectableSubjects}
-            &nbsp; subjects. <br />
+            &nbsp;subjects. <br />
             Go to TOAST management below to settle this.
           </Text>
         </Box>

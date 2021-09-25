@@ -19,7 +19,7 @@ import { ui } from "@web/core/stores/ui";
 const Subjects = () => {
   const formDrawerState = useDisclosure();
 
-  const { subjects, users } = firebaseData;
+  const { subjects, users, currentToast } = firebaseData;
 
   const [editedSubject, setEditedSubject] = useState<Subject>();
   const [statusFilter, setStatusFilter] = useState<StatusFilterValue>("all");

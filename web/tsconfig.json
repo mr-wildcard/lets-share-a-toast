@@ -5,7 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "typeRoots": ["../node_modules/@types", "./typings"],
+    "typeRoots": ["./node_modules/@types", "./typings"],
     "types": ["vite/client"],
     "allowJs": false,
     "skipLibCheck": true,

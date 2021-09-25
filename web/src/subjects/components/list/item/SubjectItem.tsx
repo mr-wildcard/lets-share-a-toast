@@ -16,7 +16,6 @@ import {
   Spinner,
   Text,
   useDisclosure,
-  useTheme,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
@@ -55,7 +54,8 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
   const subjectHasBeenSelectedForNextTOAST =
     !!currentToast && subjectIsSelectedForNextTOAST(currentToast, subject.id);
 
-  const theme = useTheme();
+  const allowDeletion = !subjectHasBeenSelectedForNextTOAST;
+
   const viewModal = useDisclosure();
   const deleteModal = useDisclosure();
 
@@ -104,12 +104,17 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
   );
 
   const contextMenuStatusOptions = useMemo(() => {
-    const switchToAvailableStatus = subject.status !== SubjectStatus.AVAILABLE;
+    const switchToAvailableStatus =
+      !subjectHasBeenSelectedForNextTOAST &&
+      subject.status !== SubjectStatus.AVAILABLE;
 
     const switchToUnavailbleStatus =
+      !subjectHasBeenSelectedForNextTOAST &&
       subject.status !== SubjectStatus.UNAVAILABLE;
 
-    const switchToDoneStatus = subject.status !== SubjectStatus.DONE;
+    const switchToDoneStatus =
+      !subjectHasBeenSelectedForNextTOAST &&
+      subject.status !== SubjectStatus.DONE;
 
     const statusOptions: ReactElement[] = [];
 
@@ -177,17 +182,15 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           boxShadow="sm"
           borderRadius={3}
           transition="transform 200ms ease"
-          style={{
+          sx={{
             transform: `scale(${contextualMenuOpened ? 0.98 : 1})`,
-            backgroundColor: contextualMenuOpened
-              ? theme.colors.gray["50"]
-              : theme.colors.white,
+            backgroundColor: contextualMenuOpened ? "gray.50" : "white",
           }}
         >
           <Box
             p={contextualMenuOpened ? "15px" : "20px"}
             borderWidth={contextualMenuOpened ? "5px" : 0}
-            borderColor={theme.colors.cyan["400"]}
+            borderColor="cyan.400"
             borderStyle="solid"
           >
             {subjectIsOld && (
@@ -215,7 +218,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
               <SubjectSpeakers speakers={subject.speakers} />
             </Box>
 
-            <Divider mt="30px" mb={3} borderColor={theme.colors.gray["300"]} />
+            <Divider mt="30px" mb={3} borderColor="gray.300" />
 
             <Flex align="center">
               {subjectIsNew && subject.status !== SubjectStatus.DONE && (
@@ -245,12 +248,15 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
                     title="Edit"
                     aria-label="Edit"
                   />
-                  <IconButton
-                    icon={<DeleteIcon />}
-                    onClick={deleteModal.onOpen}
-                    title="Delete"
-                    aria-label="Delete"
-                  />
+
+                  {allowDeletion && (
+                    <IconButton
+                      icon={<DeleteIcon />}
+                      onClick={deleteModal.onOpen}
+                      title="Delete"
+                      aria-label="Delete"
+                    />
+                  )}
                 </ButtonGroup>
               </Box>
             </Flex>
@@ -286,12 +292,10 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
         onHide={() => setContextualMenuOpened(false)}
       >
         {!subjectIsInCurrentTOASTVotingSession &&
-          contextMenuStatusOptions.length > 0 && (
-            <>
-              {contextMenuStatusOptions}
-              <Divider />
-            </>
-          )}
+          contextMenuStatusOptions.length > 0 &&
+          contextMenuStatusOptions}
+
+        {contextMenuStatusOptions.length > 0 && <Divider />}
 
         <MenuItem onClick={() => onEditSubject(subject)}>
           <Box
@@ -299,7 +303,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             alignItems="center"
             cursor="pointer"
             _hover={{
-              bg: theme.colors.gray["100"],
+              bg: "gray.100",
             }}
             p={2}
             px={3}
@@ -308,29 +312,29 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             <Text fontWeight="bold">Edit</Text>
           </Box>
         </MenuItem>
-        <MenuItem onClick={deleteModal.onOpen}>
-          <Box
-            d="flex"
-            alignItems="center"
-            cursor="pointer"
-            _hover={{
-              bg: theme.colors.gray["100"],
-            }}
-            p={2}
-            px={3}
-          >
-            <DeleteIcon mr={3} />
-            <Text fontWeight="bold">Delete</Text>
-          </Box>
-        </MenuItem>
+
+        {allowDeletion && (
+          <MenuItem onClick={deleteModal.onOpen}>
+            <Box
+              d="flex"
+              alignItems="center"
+              cursor="pointer"
+              _hover={{
+                bg: "gray.100",
+              }}
+              p={2}
+              px={3}
+            >
+              <DeleteIcon mr={3} />
+              <Text fontWeight="bold">Delete</Text>
+            </Box>
+          </MenuItem>
+        )}
       </Box>
 
       {deleteModal.isOpen && (
         <DeleteSubjectModal
           alertAboutVotingSession={subjectIsInCurrentTOASTVotingSession}
-          alertAboutSubjectBeingSelectedForNextTOAST={
-            subjectHasBeenSelectedForNextTOAST
-          }
           subject={subject}
           closeModal={onCloseDeleteSubjectModal}
         />

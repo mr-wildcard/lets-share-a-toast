@@ -6,9 +6,7 @@ import { Toast } from "@shared/models";
 
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 import WhosInChargeRecap from "./WhosInChargeRecap";
-import ProposeSubjectForNextTOASTButton from "./ProposeSubjectForNextTOASTButton";
 import SelectedSubjectsList from "./SelectedSubjectsList";
-import FloralSeparator from "./FloralSeparator";
 
 interface Props {
   toast: Toast;
@@ -28,11 +26,11 @@ const WaitingForTOAST: FunctionComponent<Props> = ({ toast }) => {
 
       <Text fontSize="lg" mb={3}>
         We&apos;ll have the pleasure to attend to the following talk
-        {toast.selectedSubjects!.length > 1 ? "s" : ""}:
+        {toast.selectedSubjects.length > 1 ? "s" : ""}:
       </Text>
 
       <Flex align="center" direction="column">
-        <SelectedSubjectsList selectedSubjects={toast.selectedSubjects!} />
+        <SelectedSubjectsList selectedSubjects={toast.selectedSubjects} />
       </Flex>
     </Box>
   );

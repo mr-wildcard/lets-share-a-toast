@@ -55,14 +55,14 @@ const WaitingForTOAST = React.lazy(
 const TOASTStatus = () => {
   const theme = useTheme();
 
-  const { currentToast } = firebaseData;
+  const currentToast = firebaseData.currentToast;
 
   const toastIsToday = useMemo(() => {
-    return !!currentToast && isTOASTToday(new Date(currentToast.date));
+    return !!currentToast && isTOASTToday(currentToast.date);
   }, [currentToast]);
 
   const toastDateHasPassed = useMemo(() => {
-    return !!currentToast && hasTOASTDatePassed(new Date(currentToast.date));
+    return !!currentToast && hasTOASTDatePassed(currentToast.date);
   }, [currentToast]);
 
   return (

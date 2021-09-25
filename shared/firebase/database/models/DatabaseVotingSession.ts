@@ -10,9 +10,11 @@ export interface SubjectsVotes {
   [subjectId: string]: SubjectVote;
 }
 
-export interface DatabaseVotingSession {
+export interface VotingSession {
   votes?: SubjectsVotes;
 }
+
+export type DatabaseVotingSession = null | VotingSession;
 
 /**
  * Used on frontend side to anonymize who voted for which subject.

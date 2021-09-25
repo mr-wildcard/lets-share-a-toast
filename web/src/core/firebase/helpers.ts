@@ -8,14 +8,15 @@ import {
   FirestoreCollection,
 } from "@shared/firebase";
 
+export function getFirestoreSubjectCollection(firestore = getFirestore()) {
+  return collection(firestore, FirestoreCollection.SUBJECTS);
+}
+
 export function getFirestoreSubjectDoc(
   subjectId: string,
   firestore = getFirestore()
 ) {
-  const subjectsCollection = collection(
-    firestore,
-    FirestoreCollection.SUBJECTS
-  );
+  const subjectsCollection = getFirestoreSubjectCollection();
 
   return doc(subjectsCollection, subjectId);
 }

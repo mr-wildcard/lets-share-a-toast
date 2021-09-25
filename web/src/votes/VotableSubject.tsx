@@ -26,10 +26,10 @@ const VotableSubject: FunctionComponent<Props> = ({
   const [voting, setVoting] = useState(false);
 
   const totalVotes = useMemo(() => {
-    const votedSubject = votingSession.votes?.[subject.id];
+    const votedSubject = votingSession?.votes?.[subject.id];
 
     return votedSubject ? getSubjectTotalVotes(votedSubject) : 0;
-  }, [votingSession.votes?.[subject.id]]);
+  }, [votingSession?.votes?.[subject.id]]);
 
   const vote = useCallback(async () => {
     if (!voting || currentToast.peopleCanVote) {
