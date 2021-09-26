@@ -7,8 +7,7 @@ import { Toast } from "@shared/models";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 import Image from "@web/core/components/Image";
 import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
-import ProposeSubjectForNextTOASTButton from "@web/homepage/statuses/ProposeSubjectForNextTOASTButton";
-import WhosInChargeRecap from "./WhosInChargeRecap";
+import WhosInChargeRecap from "web/src/homepage/statuses/components/WhosInChargeRecap";
 
 interface Props {
   toast: Toast;

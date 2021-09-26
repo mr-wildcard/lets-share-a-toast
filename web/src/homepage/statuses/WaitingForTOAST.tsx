@@ -5,8 +5,8 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { Toast } from "@shared/models";
 
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
-import WhosInChargeRecap from "./WhosInChargeRecap";
-import SelectedSubjectsList from "./SelectedSubjectsList";
+import WhosInChargeRecap from "./components/WhosInChargeRecap";
+import SelectedSubjectsList from "./components/SelectedSubjectsList";
 
 interface Props {
   toast: Toast;

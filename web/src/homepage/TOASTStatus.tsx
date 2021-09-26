@@ -15,14 +15,14 @@ const NoTOAST = React.lazy(
 const TOASTIsToday = React.lazy(
   () =>
     import(
-      "./statuses/TOASTIsToday" /* webpackChunkName: "status-toast-today" */
+      "./statuses/components/TOASTIsToday" /* webpackChunkName: "status-toast-today" */
     )
 );
 
 const TOASTDateHasPassed = React.lazy(
   () =>
     import(
-      "./statuses/TOASTDateHasPassed" /* webpackChunkName: "status-toast-date-passed" */
+      "./statuses/components/TOASTDateHasPassed" /* webpackChunkName: "status-toast-date-passed" */
     )
 );
 

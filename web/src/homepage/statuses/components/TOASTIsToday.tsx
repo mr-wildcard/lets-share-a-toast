@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Toast } from "@shared/models";
 
 import { Pathnames } from "@web/core/constants";
-import WhosInChargeRecap from "./WhosInChargeRecap";
+import WhosInChargeRecap from "@web/homepage/statuses/components/WhosInChargeRecap";
 
 interface Props {
   toast: Toast;
