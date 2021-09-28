@@ -4,7 +4,6 @@ import { Box, SimpleGrid } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
-import { SubjectStatus } from "@shared/enums";
 import { Toast } from "@shared/models";
 import { getSelectedSubjectIds } from "@shared/utils";
 
@@ -18,9 +17,7 @@ interface Props {
 
 const SubjectsList: FunctionComponent<Props> = observer(
   ({ currentToast, votingSession }) => {
-    const allAvailableSubjects = firebaseData.subjects.filter(
-      (subject) => subject.status === SubjectStatus.AVAILABLE
-    );
+    const allAvailableSubjects = firebaseData.availableSubjects;
 
     const selectedSubjects = useMemo(() => {
       if (!votingSession?.votes) {

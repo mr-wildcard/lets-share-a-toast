@@ -3,6 +3,7 @@ import { computed, makeObservable, observable } from "mobx";
 
 import { CurrentToast, Subject, User } from "@shared/models";
 import { DatabaseVotingSession } from "@shared/firebase";
+import { SubjectStatus } from "@shared/enums";
 
 interface State extends Record<string, any> {
   connectedUser?: FirebaseUser | null;
@@ -14,6 +15,7 @@ interface State extends Record<string, any> {
   users: User[];
   usersLoaded: boolean;
   subjects: Subject[];
+  availableSubjects: Subject[];
   subjectsLoaded: boolean;
   appLoadingPercentage: number;
 }
@@ -26,6 +28,11 @@ const state: State = {
   usersLoaded: false,
   subjects: [],
   subjectsLoaded: false,
+  get availableSubjects() {
+    return this.subjects.filter(
+      (subject) => subject.status === SubjectStatus.AVAILABLE
+    );
+  },
   get connectedUserLoaded() {
     return this.connectedUser !== undefined;
   },
@@ -56,6 +63,7 @@ export const firebaseData = makeObservable<State>(state, {
   usersLoaded: observable,
   subjects: observable,
   subjectsLoaded: observable,
+  availableSubjects: computed,
   connectedUserLoaded: computed,
   currentToastLoaded: computed,
   votingSessionLoaded: computed,

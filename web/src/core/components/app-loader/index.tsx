@@ -32,7 +32,7 @@ const AppLoader: FunctionComponent = ({ children }) => {
      * not `null` : user signed in.
      * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
      */
-    await when(() => typeof toJS(firebaseData.connectedUser) !== "undefined");
+    await when(() => firebaseData.connectedUserLoaded);
 
     /**
      * If user is signed out.

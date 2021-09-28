@@ -48,9 +48,7 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
 
   const votingToastURL = getAppURL() + Pathnames.VOTING_SESSION;
 
-  const totalAvailableSubjects = firebaseData.subjects.filter(
-    (subject) => subject.status === SubjectStatus.AVAILABLE
-  ).length;
+  const totalAvailableSubjects = firebaseData.availableSubjects.length;
 
   return (
     <Modal

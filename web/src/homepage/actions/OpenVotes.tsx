@@ -4,7 +4,6 @@ import { CheckCircleIcon } from "@chakra-ui/icons";
 
 import Image from "@web/core/components/Image";
 import { firebaseData } from "@web/core/firebase/data";
-import { SubjectStatus } from "@shared/enums";
 
 interface Props {
   isSuccess: boolean;
@@ -12,9 +11,7 @@ interface Props {
 }
 
 const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
-  const availableSubjects = firebaseData.subjects.filter(
-    (subject) => subject.status === SubjectStatus.AVAILABLE
-  );
+  const { availableSubjects } = firebaseData;
 
   const notEnoughAvailableSubjects = availableSubjects.length <= 1;
 
