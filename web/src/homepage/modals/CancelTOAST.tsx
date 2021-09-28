@@ -1,4 +1,3 @@
-import { getDatabase, ref, set } from "firebase/database";
 import React, { FunctionComponent, useCallback, useRef, useState } from "react";
 import {
   AlertDialog,
@@ -17,6 +16,7 @@ import { Toast } from "@shared/models";
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
+import { getCloudFunctionCancelTOAST } from "@web/core/firebase/helpers";
 
 interface Props {
   currentToast: Toast;
@@ -35,9 +35,9 @@ const CancelTOAST: FunctionComponent<Props> = ({
     setCancelling(true);
 
     try {
-      const databaseRef = ref(getDatabase());
+      const cancelToast = getCloudFunctionCancelTOAST();
 
-      await set(databaseRef, null);
+      await cancelToast();
 
       closeModal();
     } catch (error) {

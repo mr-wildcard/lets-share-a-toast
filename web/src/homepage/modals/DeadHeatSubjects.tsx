@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Divider,
-  Flex,
   Heading,
   Modal,
   ModalBody,

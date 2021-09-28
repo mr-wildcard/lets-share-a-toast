@@ -5,4 +5,5 @@ export enum CloudFunctionName {
   TOAST_READY = "markToastAsReady",
   RESOLVE_DEADHEAT_SUBJECTS = "resolveDeadheatSubjects",
   END_TOAST = "endToast",
+  CANCEL_TOAST = "cancelToast",
 }

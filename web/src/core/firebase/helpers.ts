@@ -54,3 +54,7 @@ export function getCloudFunctionResolveDeadHeatSubjects(
 export function getCloudFunctionCloseVotes(functions = getFunctions()) {
   return httpsCallable(functions, CloudFunctionName.CLOSE_VOTES);
 }
+
+export function getCloudFunctionCancelTOAST(functions = getFunctions()) {
+  return httpsCallable(functions, CloudFunctionName.CANCEL_TOAST);
+}

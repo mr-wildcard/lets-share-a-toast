@@ -1,41 +1,36 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths } from "@shared/firebase";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
 import { getTOASTStatusUtils } from "@shared/utils";
 import { Toast } from "@shared/models";
 
-import { cancelledWhileVoting } from "./cancelled-while-voting";
 import { cancelledAfterVotes } from "./cancelled-after-votes";
 
-export const onCurrentToastDeleted = functions.database
-  .ref(DatabaseRefPaths.CURRENT_TOAST)
-  .onDelete((change) => {
-    const beforeValue: Toast = change.val();
+export const cancelToast = functions.https.onCall(async () => {
+  functions.logger.info("Cancelling TOAST...");
 
-    const beforeStatusUtil = getTOASTStatusUtils(beforeValue.status);
+  const currentToastQuery = await admin
+    .database()
+    .ref(DatabaseRefPaths.CURRENT_TOAST)
+    .get();
 
-    if (beforeValue.status === ToastStatus.OPEN_FOR_VOTE) {
-      functions.logger.info("TOAST cancelled while votes where opened.");
+  const currentToast: Toast = currentToastQuery.val();
 
-      return cancelledWhileVoting()
-        .then(() => {
-          functions.logger.info("Voting session object successfully cleared.");
-        })
-        .catch((error) => {
-          functions.logger.error(error);
-        });
-    } else if (beforeStatusUtil.isAfter(ToastStatus.OPEN_FOR_VOTE)) {
-      return cancelledAfterVotes()
-        .then(() => {
-          functions.logger.info(
-            `Subjects that was previously in the voting session have their status set back to ${SubjectStatus.AVAILABLE}.`
-          );
-        })
-        .catch((error) => {
-          functions.logger.error(error);
-        });
-    } else {
-      return change;
-    }
+  const toastStatusUtil = getTOASTStatusUtils(currentToast.status);
+
+  const cancelActions: Promise<unknown>[] = [admin.database().ref().set(null)];
+
+  if (toastStatusUtil.isAfter(ToastStatus.OPEN_FOR_VOTE)) {
+    functions.logger.info(
+      `TOAST is about to be cancelled after votes have been closed. Selected subjects status need to be set back to ${SubjectStatus.AVAILABLE}`
+    );
+
+    cancelActions.push(cancelledAfterVotes());
+  }
+
+  return Promise.all(cancelActions).catch((error) => {
+    functions.logger.error("An error occured while canceling the TOAST", error);
   });
+});

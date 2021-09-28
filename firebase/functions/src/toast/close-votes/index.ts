@@ -1,9 +1,10 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-import { DatabaseRefPaths } from "@shared/firebase";
+import { DatabaseRefPaths, SubjectsVotes } from "@shared/firebase";
 import { getSelectedSubjectIds } from "@shared/utils";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
+
 import { changeMultipleSubjectsStatusAtOnce } from "@firebase-functions/helpers/changeMultipleSubjectsStatusAtOnce";
 
 export const closeVotes = functions.https.onCall(async () => {
@@ -22,10 +23,11 @@ export const closeVotes = functions.https.onCall(async () => {
    * Retrieve the total of subjects that will be
    * presented during the next TOAST.
    */
-  const maxSelectableSubjectsQuery = await admin
+  const maxSelectableSubjectsQuery = admin
     .database()
     .ref(DatabaseRefPaths.CURRENT_TOAST)
-    .child("maxSelectableSubjects");
+    .child("maxSelectableSubjects")
+    .get();
 
   /**
    * Retrieve voting session.
@@ -33,21 +35,25 @@ export const closeVotes = functions.https.onCall(async () => {
   const resultsQuery = await admin
     .database()
     .ref(DatabaseRefPaths.VOTING_SESSION)
-    .child("votes");
+    .child("votes")
+    .get();
 
   /**
    * Parallelize requests.
    */
-  const [votes, maxSelectableSubjects] = await Promise.all([
-    resultsQuery.get(),
-    maxSelectableSubjectsQuery.get(),
+  const [votesValue, maxSelectableSubjectsValue] = await Promise.all([
+    resultsQuery,
+    maxSelectableSubjectsQuery,
   ]);
+
+  const votes: SubjectsVotes = votesValue.val();
+  const maxSelectableSubjects: number = maxSelectableSubjectsValue.val();
 
   /**
    * Compute selected subject IDs only if some votes have been submitted.
    */
-  const selectedSubjectIds = votes.exists()
-    ? getSelectedSubjectIds(votes.val(), maxSelectableSubjects.val())
+  const selectedSubjectIds = votesValue.exists()
+    ? getSelectedSubjectIds(votes, maxSelectableSubjects)
     : [];
 
   /**
@@ -69,5 +75,10 @@ export const closeVotes = functions.https.onCall(async () => {
     SubjectStatus.SELECTED_FOR_NEXT_TOAST
   );
 
-  return Promise.all([updateCurrentTOAST, subjectsStatusChanges.commit()]);
+  return Promise.all([
+    updateCurrentTOAST,
+    subjectsStatusChanges.commit(),
+  ]).catch((error) => {
+    functions.logger.error("An error occured while closing votes", error);
+  });
 });
