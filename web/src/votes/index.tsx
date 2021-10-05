@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { ToastStatus } from "@shared/enums";
 import { CurrentToast } from "@shared/models";
+import { getTOASTStatusUtils } from "@shared/utils";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import { ui } from "@web/core/stores/ui";
 import ColoredBackground from "@web/core/components/ColoredBackground";
-import { SubjectsList } from "@web/votes/SubjectsList";
-import { PeopleCantVoteModal } from "@web/votes/PeopleCantVoteModal";
+import { PreventUserInteractionsModal } from "./components/modals/PreventUserInteractionsModal";
+import { SubjectsList } from "./SubjectsList";
 import { PageDisplayState } from "./types";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
@@ -42,14 +43,48 @@ const Votes = () => {
     setPageState(getPageState(currentToast));
   }, [currentToast]);
 
+  const toastStatusIsAfterVoteOpened = useMemo(() => {
+    return !!firebaseData.currentToast
+      ? getTOASTStatusUtils(firebaseData.currentToast!.status).isAfter(
+          ToastStatus.OPEN_FOR_VOTE
+        )
+      : false;
+  }, [firebaseData.currentToast]);
+
   return (
     <ColoredBackground flex={1}>
       <Flex direction="column">
-        {pageState === PageDisplayState.ERROR_NO_TOAST &&
-          "La session n'existe pas!"}
+        <PreventUserInteractionsModal
+          isOpen={pageState === PageDisplayState.ERROR_NO_TOAST}
+          title="Whoops"
+        >
+          No TOAST have been created yet.
+        </PreventUserInteractionsModal>
 
-        {pageState === PageDisplayState.ERROR_WRONG_TOAST_STATUS &&
-          "Ce n'est pas le moment de voter!"}
+        <PreventUserInteractionsModal
+          isOpen={pageState === PageDisplayState.ERROR_WRONG_TOAST_STATUS}
+          title="Whoops"
+        >
+          {toastStatusIsAfterVoteOpened ? (
+            <>
+              Thank you for your participation!
+              <br />
+              The voting session is now closed.
+            </>
+          ) : (
+            "It's not the time to vote, yet :)"
+          )}
+        </PreventUserInteractionsModal>
+
+        <PreventUserInteractionsModal
+          isOpen={
+            pageState === PageDisplayState.TIME_TO_VOTE &&
+            !firebaseData.currentToast?.peopleCanVote
+          }
+          title="Whoops"
+        >
+          Voting session has been paused.
+        </PreventUserInteractionsModal>
 
         {pageState === PageDisplayState.TIME_TO_VOTE && (
           <Flex direction="column">
@@ -59,10 +94,6 @@ const Votes = () => {
                 currentToast={firebaseData.currentToast!}
               />
             </Box>
-
-            <PeopleCantVoteModal
-              isOpen={!firebaseData.currentToast!.peopleCanVote}
-            />
           </Flex>
         )}
       </Flex>

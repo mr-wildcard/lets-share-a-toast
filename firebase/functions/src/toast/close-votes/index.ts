@@ -32,7 +32,7 @@ export const closeVotes = functions.https.onCall(async () => {
   /**
    * Retrieve voting session.
    */
-  const resultsQuery = await admin
+  const votesResultsQuery = await admin
     .database()
     .ref(DatabaseRefPaths.VOTING_SESSION)
     .child("votes")
@@ -41,18 +41,16 @@ export const closeVotes = functions.https.onCall(async () => {
   /**
    * Parallelize requests.
    */
-  const [votesValue, maxSelectableSubjectsValue] = await Promise.all([
-    resultsQuery,
-    maxSelectableSubjectsQuery,
-  ]);
+  const [votesResultsSnapshot, maxSelectableSubjectsSnapshot] =
+    await Promise.all([votesResultsQuery, maxSelectableSubjectsQuery]);
 
-  const votes: SubjectsVotes = votesValue.val();
-  const maxSelectableSubjects: number = maxSelectableSubjectsValue.val();
+  const votes: SubjectsVotes = votesResultsSnapshot.val();
+  const maxSelectableSubjects: number = maxSelectableSubjectsSnapshot.val();
 
   /**
    * Compute selected subject IDs only if some votes have been submitted.
    */
-  const selectedSubjectIds = votesValue.exists()
+  const selectedSubjectIds = votesResultsSnapshot.exists()
     ? getSelectedSubjectIds(votes, maxSelectableSubjects)
     : [];
 

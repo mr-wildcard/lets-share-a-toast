@@ -14,13 +14,18 @@ import { Link, useHistory } from "react-router-dom";
 import HighlightedText from "@web/core/components/HighlightedText";
 import { pageColors } from "@web/core/constants";
 import Image from "@web/core/components/Image";
-import css from "./PeopleCantVoteModal.module.css";
+import css from "./PreventUserInteractionsModal.module.css";
 
 interface Props {
+  title: string;
   isOpen: boolean;
 }
 
-const PeopleCantVoteModal: FunctionComponent<Props> = ({ isOpen }) => {
+const PreventUserInteractionsModal: FunctionComponent<Props> = ({
+  isOpen,
+  title,
+  children,
+}) => {
   const { push } = useHistory();
 
   const cancelBtn = useRef() as React.MutableRefObject<HTMLAnchorElement>;
@@ -57,15 +62,15 @@ const PeopleCantVoteModal: FunctionComponent<Props> = ({ isOpen }) => {
           <AlertDialogHeader textAlign="center">
             <Text position="relative">
               <HighlightedText bgColor={pageColors.votingSession}>
-                Voting session is over!
+                {title}
               </HighlightedText>
             </Text>
           </AlertDialogHeader>
 
-          <AlertDialogBody p={10} textAlign="center">
-            Thank you for your participation!
-            <br />
-            The voting session is now closed.
+          <AlertDialogBody>
+            <Box p={10} textAlign="center">
+              {children}
+            </Box>
           </AlertDialogBody>
 
           <AlertDialogFooter justifyContent="center">
@@ -85,4 +90,4 @@ const PeopleCantVoteModal: FunctionComponent<Props> = ({ isOpen }) => {
   );
 };
 
-export { PeopleCantVoteModal };
+export { PreventUserInteractionsModal };
