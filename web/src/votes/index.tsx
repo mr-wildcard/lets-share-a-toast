@@ -45,7 +45,7 @@ const Votes = () => {
 
   const toastStatusIsAfterVoteOpened = useMemo(() => {
     return !!firebaseData.currentToast
-      ? getTOASTStatusUtils(firebaseData.currentToast!.status).isAfter(
+      ? getTOASTStatusUtils(firebaseData.currentToast.status).isAfter(
           ToastStatus.OPEN_FOR_VOTE
         )
       : false;

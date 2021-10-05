@@ -139,7 +139,8 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
 
             <Box pt={4} pb={10} px={4}>
               <Text fontStyle="italic" fontSize="sm">
-                Created by&nbsp;{getUserFullname(subject.createdByUser)}.
+                Created by&nbsp;{getUserFullname(subject.createdByUser)}&nbsp;
+                {dayjs(subject.createdDate).fromNow()}.
               </Text>
 
               {subject.createdDate !== subject.lastModifiedDate && (
