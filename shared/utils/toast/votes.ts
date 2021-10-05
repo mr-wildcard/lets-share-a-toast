@@ -115,3 +115,26 @@ export function getSelectedSubjectIds(
 
   return selectedSubjects;
 }
+
+export function getUserTotalVotes(
+  userId: string,
+  subjectsVotes?: SubjectsVotes
+) {
+  if (!subjectsVotes) {
+    return 0;
+  }
+
+  let userTotalVotes = 0;
+
+  const votedSubject = Object.entries(subjectsVotes);
+
+  for (let i = 0; i < votedSubject.length; i++) {
+    const [subjectId, subjectVotes] = votedSubject[i];
+
+    if (userId in subjectVotes) {
+      userTotalVotes += subjectVotes[userId];
+    }
+  }
+
+  return userTotalVotes;
+}

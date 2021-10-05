@@ -10,7 +10,7 @@ interface State extends Record<string, any> {
   connectedUserLoaded: boolean;
   currentToast?: CurrentToast;
   currentToastLoaded: boolean;
-  votingSession?: DatabaseVotingSession | null;
+  votingSession?: DatabaseVotingSession;
   votingSessionLoaded: boolean;
   users: User[];
   usersLoaded: boolean;

@@ -23,5 +23,7 @@ export function cancelledAfterVotes() {
 
         return subjectsStatusUpdate.commit();
       }
+
+      return;
     });
 }

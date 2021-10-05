@@ -1,9 +1,9 @@
-type VoterTotalVotes = number;
+type UserTotalVotes = number;
 type SubjectTotalVotes = number;
 type SubjectID = string;
 
 export interface SubjectVote {
-  [voter: string]: VoterTotalVotes;
+  [userId: string]: UserTotalVotes;
 }
 
 export interface SubjectsVotes {

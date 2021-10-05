@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useMemo } from "react";
-import { getDatabase, ref, runTransaction } from "firebase/database";
+import { getDatabase, ref, runTransaction, set } from "firebase/database";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
@@ -9,6 +9,7 @@ import { getSelectedSubjectIds } from "@shared/utils";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { VotableSubject } from "@web/votes/VotableSubject";
+import { useClientSideVotingSession } from "@web/votes/stores/ClientSideVotingSession";
 
 interface Props {
   currentToast: Toast;
@@ -17,6 +18,9 @@ interface Props {
 
 const SubjectsList: FunctionComponent<Props> = observer(
   ({ currentToast, votingSession }) => {
+    const { currentUserRemainingVotes, currentUserTotalVotes } =
+      useClientSideVotingSession();
+
     const allAvailableSubjects = firebaseData.availableSubjects;
 
     const selectedSubjects = useMemo(() => {
@@ -36,33 +40,39 @@ const SubjectsList: FunctionComponent<Props> = observer(
       });
     }, [votingSession?.votes, currentToast.maxSelectableSubjects]);
 
-    const vote = useCallback((subjectId) => {
-      const database = getDatabase();
-      const userSubjectVoteRef = ref(
-        database,
-        `${DatabaseRefPaths.VOTING_SESSION}/votes/${subjectId}/${
-          firebaseData.connectedUser!.uid
-        }`
-      );
+    const vote = useCallback(
+      (subjectId) => {
+        const database = getDatabase();
+        const userSubjectVoteRef = ref(
+          database,
+          `${DatabaseRefPaths.VOTING_SESSION}/votes/${subjectId}/${
+            firebaseData.connectedUser!.uid
+          }`
+        );
 
-      return runTransaction(
-        userSubjectVoteRef,
-        (userTotalVotes: null | number) => {
-          if (userTotalVotes) {
-            if (userTotalVotes >= 3) {
-              return null;
-            } else {
-              return userTotalVotes + 1;
+        if (currentUserRemainingVotes === 0) {
+          return set(userSubjectVoteRef, null);
+        } else {
+          return runTransaction(
+            userSubjectVoteRef,
+            (userTotalVotes: null | number) => {
+              if (userTotalVotes) {
+                return userTotalVotes + 1;
+              } else {
+                return 1;
+              }
             }
-          } else {
-            return 1;
-          }
+          );
         }
-      );
-    }, []);
+      },
+      [currentUserRemainingVotes]
+    );
 
     return (
       <Box>
+        currentUserTotalVotes: {currentUserTotalVotes}
+        <br />
+        currentUserRemainingVotes: {currentUserRemainingVotes}
         <SimpleGrid columns={3} spacing={4}>
           {allAvailableSubjects.map((subject) => {
             return (

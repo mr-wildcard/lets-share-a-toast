@@ -6,6 +6,7 @@ export interface DatabaseToast {
   scribeId: string;
   status: ToastStatus;
   maxSelectableSubjects: number;
+  maxVotesPerUser: number;
   selectedSubjectIds: string[];
   createdByUserId?: string;
   createdDate: Object;

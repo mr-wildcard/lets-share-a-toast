@@ -13,6 +13,10 @@ import ColoredBackground from "@web/core/components/ColoredBackground";
 import { PreventUserInteractionsModal } from "./components/modals/PreventUserInteractionsModal";
 import { SubjectsList } from "./SubjectsList";
 import { PageDisplayState } from "./types";
+import {
+  ClientSideVotingSessionProvider,
+  ClientSideVotingSession,
+} from "./stores/ClientSideVotingSession";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
   if (!!currentToast) {
@@ -87,14 +91,24 @@ const Votes = () => {
         </PreventUserInteractionsModal>
 
         {pageState === PageDisplayState.TIME_TO_VOTE && (
-          <Flex direction="column">
-            <Box flex={1}>
-              <SubjectsList
-                votingSession={firebaseData.votingSession!}
-                currentToast={firebaseData.currentToast!}
-              />
-            </Box>
-          </Flex>
+          <ClientSideVotingSessionProvider
+            value={
+              new ClientSideVotingSession(
+                firebaseData.currentToast!,
+                firebaseData.votingSession!,
+                firebaseData.connectedUser!.uid
+              )
+            }
+          >
+            <Flex direction="column">
+              <Box flex={1}>
+                <SubjectsList
+                  votingSession={firebaseData.votingSession!}
+                  currentToast={firebaseData.currentToast!}
+                />
+              </Box>
+            </Flex>
+          </ClientSideVotingSessionProvider>
         )}
       </Flex>
     </ColoredBackground>
