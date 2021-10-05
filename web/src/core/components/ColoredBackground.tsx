@@ -6,16 +6,17 @@ import { ui } from "@web/core/stores/ui";
 
 const ColoredBackground: FunctionComponent<BoxProps> = ({
   children,
-  ...boxProps
+  ...restOfBoxProps
 }) => {
   return (
     <Box
+      as="main"
       style={{
         backgroundColor: ui.currentPageBgColor,
       }}
       borderRadius={3}
       transition="background-color 500ms ease"
-      {...boxProps}
+      {...restOfBoxProps}
     >
       {children}
     </Box>

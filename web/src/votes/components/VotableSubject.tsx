@@ -44,7 +44,7 @@ const VotableSubject: FunctionComponent<Props> = ({
   return (
     <Flex
       as="button"
-      key={subject.id}
+      w="full"
       borderRadius="8px"
       bgColor="gray.50"
       borderWidth="3px"
@@ -53,14 +53,18 @@ const VotableSubject: FunctionComponent<Props> = ({
       onClick={vote}
       disabled={!currentToast.peopleCanVote}
       className="vote-button"
+      textAlign="right"
+      pr={4}
     >
-      <Text as="span">
-        <Text as="span">{subject.title}</Text>
-        <Text my={3} d="block" as="span" fontStyle="italic">
-          (votes:&nbsp;
-          {totalVotes})
+      <Box transform="skewX(15deg)">
+        <Text as="span">
+          <Text as="span">{subject.title}</Text>
+          <Text my={3} d="block" as="span" fontStyle="italic">
+            (votes:&nbsp;
+            {totalVotes})
+          </Text>
         </Text>
-      </Text>
+      </Box>
     </Flex>
   );
 };

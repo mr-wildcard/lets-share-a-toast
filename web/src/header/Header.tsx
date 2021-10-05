@@ -4,7 +4,7 @@ import { Avatar, AvatarBadge, Box, Flex, Stack, Text } from "@chakra-ui/react";
 import { RouteComponentProps } from "react-router";
 import { ToastStatus } from "@shared/enums";
 
-import { header, pageColors, Pathnames } from "@web/core/constants";
+import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
 import { firebaseData } from "@web/core/firebase/data";
 import Image from "@web/core/components/Image";
 import Logo from "./Logo";
@@ -23,49 +23,55 @@ const Header: FunctionComponent<Props> = ({ location }) => {
   const votingPageIsOpened = pathname === Pathnames.VOTING_SESSION;
 
   return (
-    <Box height={`${header.height}px`} as="header">
+    <Box
+      height={`${header.height}px`}
+      as="header"
+      marginBottom={`${spacing.stylizedGap}px`}
+    >
       <Flex justify="space-between" align="center" h="100%">
         <Flex flex={1} align="center">
           <Box mr={20}>
             <Logo />
           </Box>
 
-          <LinkItem href={Pathnames.HOME} bgColor={pageColors.homepage}>
-            {toastHasBeenCreated ? "Current TOAST" : "Next TOAST"}
-          </LinkItem>
-          <Text as="span" mx={5}>
-            |
-          </Text>
-          <LinkItem href={Pathnames.SUBJECTS} bgColor={pageColors.subjects}>
-            Subjects
-          </LinkItem>
-          {votesAreOpened && (
-            <>
-              <Text as="span" mx={5}>
-                |
-              </Text>
-              <LinkItem
-                href={Pathnames.VOTING_SESSION}
-                bgColor={pageColors.votingSession}
-              >
-                <Text position="relative" pr={1}>
-                  Vote!
-                  {!votingPageIsOpened && (
-                    <Image
-                      position="absolute"
-                      top="-4px"
-                      left="100%"
-                      width={55}
-                      height={28}
-                      transform="scaleX(-1) rotate(17deg)"
-                      src="https://media.giphy.com/media/cIh8FgYXjPjanIaJqm/giphy.gif"
-                      title="now"
-                    />
-                  )}
+          <Flex as="nav" align="center">
+            <LinkItem href={Pathnames.HOME} bgColor={pageColors.homepage}>
+              {toastHasBeenCreated ? "Current TOAST" : "Next TOAST"}
+            </LinkItem>
+            <Text as="span" mx={5}>
+              |
+            </Text>
+            <LinkItem href={Pathnames.SUBJECTS} bgColor={pageColors.subjects}>
+              Subjects
+            </LinkItem>
+            {votesAreOpened && (
+              <>
+                <Text as="span" mx={5}>
+                  |
                 </Text>
-              </LinkItem>
-            </>
-          )}
+                <LinkItem
+                  href={Pathnames.VOTING_SESSION}
+                  bgColor={pageColors.votingSession}
+                >
+                  <Text position="relative" pr={1}>
+                    Vote!
+                    {!votingPageIsOpened && (
+                      <Image
+                        position="absolute"
+                        top="-4px"
+                        left="100%"
+                        width={55}
+                        height={28}
+                        transform="scaleX(-1) rotate(17deg)"
+                        src="https://media.giphy.com/media/cIh8FgYXjPjanIaJqm/giphy.gif"
+                        title="now"
+                      />
+                    )}
+                  </Text>
+                </LinkItem>
+              </>
+            )}
+          </Flex>
         </Flex>
 
         {firebaseData.connectedUser && (

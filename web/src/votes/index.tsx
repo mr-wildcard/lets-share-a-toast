@@ -56,61 +56,61 @@ const Votes = () => {
   }, [firebaseData.currentToast]);
 
   return (
-    <ColoredBackground flex={1}>
-      <Flex direction="column">
-        <PreventUserInteractionsModal
-          isOpen={pageState === PageDisplayState.ERROR_NO_TOAST}
-          title="Whoops"
-        >
-          No TOAST have been created yet.
-        </PreventUserInteractionsModal>
-
-        <PreventUserInteractionsModal
-          isOpen={pageState === PageDisplayState.ERROR_WRONG_TOAST_STATUS}
-          title="Whoops"
-        >
-          {toastStatusIsAfterVoteOpened ? (
-            <>
-              Thank you for your participation!
-              <br />
-              The voting session is now closed.
-            </>
-          ) : (
-            "It's not the time to vote, yet :)"
-          )}
-        </PreventUserInteractionsModal>
-
-        <PreventUserInteractionsModal
-          isOpen={
-            pageState === PageDisplayState.TIME_TO_VOTE &&
-            !firebaseData.currentToast?.peopleCanVote
+    <ColoredBackground d="flex" justifyContent="center" overflow="hidden">
+      {pageState === PageDisplayState.TIME_TO_VOTE && (
+        <ClientSideVotingSessionProvider
+          value={
+            new ClientSideVotingSession(
+              firebaseData.currentToast!,
+              firebaseData.votingSession!,
+              firebaseData.connectedUser!.uid
+            )
           }
-          title="Whoops"
         >
-          Voting session has been paused.
-        </PreventUserInteractionsModal>
+          <Box d="flex" justifyContent="center" transform="skewX(-15deg)">
+            <Box w="100vw" bgColor="red" />
+            <Box w="50vw" minW="500px" overflowY="auto">
+              <SubjectsList
+                votingSession={firebaseData.votingSession!}
+                currentToast={firebaseData.currentToast!}
+              />
+            </Box>
+            <Box w="100vw" bgColor="blue" />
+          </Box>
+        </ClientSideVotingSessionProvider>
+      )}
 
-        {pageState === PageDisplayState.TIME_TO_VOTE && (
-          <ClientSideVotingSessionProvider
-            value={
-              new ClientSideVotingSession(
-                firebaseData.currentToast!,
-                firebaseData.votingSession!,
-                firebaseData.connectedUser!.uid
-              )
-            }
-          >
-            <Flex direction="column">
-              <Box flex={1}>
-                <SubjectsList
-                  votingSession={firebaseData.votingSession!}
-                  currentToast={firebaseData.currentToast!}
-                />
-              </Box>
-            </Flex>
-          </ClientSideVotingSessionProvider>
+      <PreventUserInteractionsModal
+        isOpen={pageState === PageDisplayState.ERROR_NO_TOAST}
+        title="Whoops"
+      >
+        No TOAST have been created yet.
+      </PreventUserInteractionsModal>
+
+      <PreventUserInteractionsModal
+        isOpen={pageState === PageDisplayState.ERROR_WRONG_TOAST_STATUS}
+        title="Whoops"
+      >
+        {toastStatusIsAfterVoteOpened ? (
+          <>
+            Thank you for your participation!
+            <br />
+            The voting session is now closed.
+          </>
+        ) : (
+          "It's not the time to vote, yet :)"
         )}
-      </Flex>
+      </PreventUserInteractionsModal>
+
+      <PreventUserInteractionsModal
+        isOpen={
+          pageState === PageDisplayState.TIME_TO_VOTE &&
+          !firebaseData.currentToast?.peopleCanVote
+        }
+        title="Whoops"
+      >
+        Voting session has been paused.
+      </PreventUserInteractionsModal>
     </ColoredBackground>
   );
 };

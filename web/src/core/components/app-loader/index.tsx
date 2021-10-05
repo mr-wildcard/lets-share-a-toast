@@ -9,8 +9,8 @@ import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { animated, useSpring } from "@react-spring/web";
 
-import { AnimatedImages } from "./animated-images";
 import { firebaseData } from "@web/core/firebase/data";
+import { AnimatedImages } from "./animated-images";
 
 function getRandomBackgroundPositionForLoadingProgress(progression: number) {
   if (progression === 100 || progression === 0) {

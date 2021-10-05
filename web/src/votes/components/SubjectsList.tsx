@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback, useMemo } from "react";
 import { getDatabase, ref, runTransaction, set } from "firebase/database";
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, List, ListItem } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
@@ -62,24 +62,26 @@ const SubjectsList: FunctionComponent<Props> = observer(
     );
 
     return (
-      <Box>
-        currentUserTotalVotes: {currentUserTotalVotes}
-        <br />
-        currentUserRemainingVotes: {currentUserRemainingVotes}
-        <SimpleGrid columns={3} spacing={4}>
-          {allAvailableSubjects.map((subject) => {
-            return (
+      <List
+        my={10}
+        spacing={5}
+        d="flex"
+        flexDirection="column"
+        alignItems="end"
+      >
+        {allAvailableSubjects.map((subject) => {
+          return (
+            <ListItem key={subject.id}>
               <VotableSubject
-                key={subject.id}
                 subject={subject}
                 currentToast={currentToast}
                 votingSession={votingSession}
                 onVote={vote}
               />
-            );
-          })}
-        </SimpleGrid>
-      </Box>
+            </ListItem>
+          );
+        })}
+      </List>
     );
   }
 );

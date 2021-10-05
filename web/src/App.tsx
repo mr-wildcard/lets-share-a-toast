@@ -6,8 +6,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import Header from "./header/Header";
 import customTheme from "./core/theme";
-import { spacing } from "./core/constants";
+import { Pathnames, spacing } from "./core/constants";
 import { PageSkeleton } from "./core/components/PageSkeleton";
+import { Main } from "./Main";
 
 const Home = React.lazy(() => import("./homepage"));
 const Subjects = React.lazy(() => import("./subjects"));
@@ -30,27 +31,20 @@ export default function LetsShareATOAST() {
     <ChakraProvider theme={customTheme}>
       <CSSReset />
 
-      <Flex minH="100%" direction="column" p={`${spacing.stylizedGap}px`}>
-        <Router>
+      <Router>
+        <Main>
           <Route component={Header} />
 
-          <Flex
-            as="main"
-            direction="column"
-            flex={1}
-            marginTop={`${spacing.stylizedGap}px`}
-          >
-            <Suspense fallback={<PageSkeleton />}>
-              <Switch>
-                <Route exact path="/" component={Home} />
-                <Route path="/subjects" component={Subjects} />
-                <Route path="/vote" component={Votes} />
-                <Route component={PageNotFound} />
-              </Switch>
-            </Suspense>
-          </Flex>
-        </Router>
-      </Flex>
+          <Suspense fallback={<PageSkeleton />}>
+            <Switch>
+              <Route exact path={Pathnames.HOME} component={Home} />
+              <Route path={Pathnames.SUBJECTS} component={Subjects} />
+              <Route path={Pathnames.HOME} component={Votes} />
+              <Route component={PageNotFound} />
+            </Switch>
+          </Suspense>
+        </Main>
+      </Router>
     </ChakraProvider>
   );
 }
