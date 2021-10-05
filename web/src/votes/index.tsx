@@ -10,13 +10,13 @@ import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import { ui } from "@web/core/stores/ui";
 import ColoredBackground from "@web/core/components/ColoredBackground";
-import { PreventUserInteractionsModal } from "./components/modals/PreventUserInteractionsModal";
-import { SubjectsList } from "./SubjectsList";
-import { PageDisplayState } from "./types";
+import { PreventUserInteractionsModal } from "./components/PreventUserInteractionsModal";
+import { SubjectsList } from "./components/SubjectsList";
 import {
   ClientSideVotingSessionProvider,
   ClientSideVotingSession,
 } from "./stores/ClientSideVotingSession";
+import { PageDisplayState } from "./types";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
   if (!!currentToast) {

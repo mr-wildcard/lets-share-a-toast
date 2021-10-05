@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Link, useHistory } from "react-router-dom";
+
 import HighlightedText from "@web/core/components/HighlightedText";
 import { pageColors } from "@web/core/constants";
 import Image from "@web/core/components/Image";

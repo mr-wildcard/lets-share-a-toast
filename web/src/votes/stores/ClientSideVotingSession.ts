@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
-import { computed, isObservable, makeObservable } from "mobx";
+import { computed, makeObservable } from "mobx";
 
 import { Toast } from "@shared/models";
-import { getUserTotalVotes } from "@shared/utils";
+import { getSelectedSubjectIds, getUserTotalVotes } from "@shared/utils";
 import { DatabaseVotingSession } from "@shared/firebase";
+
+import { firebaseData } from "@web/core/firebase/data";
 
 const clientSideVotingSessionContext =
   createContext<null | ClientSideVotingSession>(null);
@@ -24,7 +26,19 @@ export class ClientSideVotingSession {
     makeObservable(this, {
       currentUserTotalVotes: computed,
       currentUserRemainingVotes: computed,
+      selectedSubjectIds: computed,
     });
+  }
+
+  get selectedSubjectIds() {
+    if (!this.votingSession?.votes) {
+      return [];
+    }
+
+    return getSelectedSubjectIds(
+      this.votingSession.votes,
+      this.toast.maxSelectableSubjects
+    );
   }
 
   get currentUserTotalVotes() {

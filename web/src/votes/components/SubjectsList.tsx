@@ -5,11 +5,10 @@ import { observer } from "mobx-react-lite";
 
 import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
 import { Toast } from "@shared/models";
-import { getSelectedSubjectIds } from "@shared/utils";
 
 import { firebaseData } from "@web/core/firebase/data";
-import { VotableSubject } from "@web/votes/VotableSubject";
 import { useClientSideVotingSession } from "@web/votes/stores/ClientSideVotingSession";
+import { VotableSubject } from "./VotableSubject";
 
 interface Props {
   currentToast: Toast;
@@ -18,27 +17,21 @@ interface Props {
 
 const SubjectsList: FunctionComponent<Props> = observer(
   ({ currentToast, votingSession }) => {
-    const { currentUserRemainingVotes, currentUserTotalVotes } =
-      useClientSideVotingSession();
+    const {
+      currentUserRemainingVotes,
+      currentUserTotalVotes,
+      selectedSubjectIds,
+    } = useClientSideVotingSession();
 
     const allAvailableSubjects = firebaseData.availableSubjects;
 
     const selectedSubjects = useMemo(() => {
-      if (!votingSession?.votes) {
-        return [];
-      }
-
-      const selectedSubjectIds = getSelectedSubjectIds(
-        votingSession.votes,
-        currentToast.maxSelectableSubjects
-      );
-
       return selectedSubjectIds.map((subjectId) => {
         return firebaseData.subjects.find(
           (subject) => subject.id === subjectId
         )!;
       });
-    }, [votingSession?.votes, currentToast.maxSelectableSubjects]);
+    }, [selectedSubjectIds]);
 
     const vote = useCallback(
       (subjectId) => {
