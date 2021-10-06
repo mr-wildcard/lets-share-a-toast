@@ -10,7 +10,12 @@ configure({
 
 const App = React.lazy(() => {
   return import("@web/core/firebase/data")
-    .then(({ firebaseData }) => when(() => firebaseData.currentToastLoaded))
+    .then(({ firebaseData }) =>
+      Promise.all([
+        when(() => firebaseData.currentToastLoaded),
+        when(() => firebaseData.votingSessionLoaded),
+      ])
+    )
     .then(() => import("./App"));
 });
 
