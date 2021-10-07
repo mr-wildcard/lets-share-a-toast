@@ -1,7 +1,6 @@
 import React, {
   FunctionComponent,
   useCallback,
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -9,6 +8,7 @@ import { toJS, when } from "mobx";
 import { observer } from "mobx-react-lite";
 import { animated, useSpring } from "@react-spring/web";
 
+import { signin } from "@web/core/firebase";
 import { firebaseData } from "@web/core/firebase/data";
 import { AnimatedImages } from "./animated-images";
 
@@ -24,8 +24,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
   const [appReady, setAppReady] = useState(false);
 
   const loadFirebaseData = useCallback(async () => {
-    const { firebaseData } = await import("@web/core/firebase/data");
-
     /**
      * Wait for Firebase to retrieve the current connected user.
      * `null` : user is signed out.
@@ -38,8 +36,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
      * If user is signed out.
      */
     if (firebaseData.connectedUser === null) {
-      const { signin } = await import("@web/core/firebase");
-
       try {
         await signin();
       } catch (error) {
@@ -51,12 +47,6 @@ const AppLoader: FunctionComponent = ({ children }) => {
        */
       await when(() => toJS(firebaseData.connectedUser) !== null);
     }
-  }, []);
-
-  useEffect(() => {
-    import("@web/core/firebase").then(loadFirebaseData).catch((error) => {
-      console.error("An error occured while loading Firebase", { error });
-    });
   }, []);
 
   const { progression } = useSpring({
