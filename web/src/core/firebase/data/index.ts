@@ -7,7 +7,8 @@ import { SubjectStatus } from "@shared/enums";
 
 interface State extends Record<string, any> {
   connectedUser?: FirebaseUser | null;
-  connectedUserLoaded: boolean;
+  currentUserLoaded: boolean;
+  currentLoadedLoggedIn: boolean;
   currentToast?: CurrentToast;
   currentToastLoaded: boolean;
   votingSession?: DatabaseVotingSession;
@@ -33,8 +34,11 @@ const state: State = {
       (subject) => subject.status === SubjectStatus.AVAILABLE
     );
   },
-  get connectedUserLoaded() {
+  get currentUserLoaded() {
     return this.connectedUser !== undefined;
+  },
+  get currentLoadedLoggedIn() {
+    return !!this.connectedUser;
   },
   get currentToastLoaded() {
     return this.currentToast !== undefined;
@@ -45,7 +49,8 @@ const state: State = {
   get appLoadingPercentage() {
     const data = [
       this.currentToastLoaded,
-      this.connectedUserLoaded,
+      this.currentUserLoaded,
+      this.currentLoadedLoggedIn,
       this.votingSessionLoaded,
       this.subjectsLoaded,
       this.usersLoaded,
@@ -64,7 +69,8 @@ export const firebaseData = makeObservable<State>(state, {
   subjects: observable,
   subjectsLoaded: observable,
   availableSubjects: computed,
-  connectedUserLoaded: computed,
+  currentUserLoaded: computed,
+  currentLoadedLoggedIn: computed,
   currentToastLoaded: computed,
   votingSessionLoaded: computed,
   appLoadingPercentage: computed,

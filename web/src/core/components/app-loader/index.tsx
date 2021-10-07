@@ -1,6 +1,7 @@
 import React, {
   FunctionComponent,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -23,30 +24,36 @@ function getRandomBackgroundPositionForLoadingProgress(progression: number) {
 const AppLoader: FunctionComponent = ({ children }) => {
   const [appReady, setAppReady] = useState(false);
 
-  const loadFirebaseData = useCallback(async () => {
-    /**
-     * Wait for Firebase to retrieve the current connected user.
-     * `null` : user is signed out.
-     * not `null` : user signed in.
-     * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
-     */
-    await when(() => firebaseData.connectedUserLoaded);
-
-    /**
-     * If user is signed out.
-     */
-    if (firebaseData.connectedUser === null) {
-      try {
-        await signin();
-      } catch (error) {
-        console.error("An error occured while signin to Firebase", error);
-      }
+  useEffect(() => {
+    async function loginToFirebase() {
+      /**
+       * Wait for Firebase to retrieve the current connected user.
+       * `null` : user is signed out.
+       * not `null` : user signed in.
+       * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
+       */
+      await when(() => firebaseData.currentUserLoaded);
 
       /**
-       * Wait for the `connectedUser` to be a plain object.
+       * If user is signed out.
        */
-      await when(() => toJS(firebaseData.connectedUser) !== null);
+      if (firebaseData.connectedUser === null) {
+        try {
+          await signin();
+        } catch (error) {
+          console.error("An error occured while signin to Firebase", error);
+        }
+
+        /**
+         * Wait for the `connectedUser` to be a plain object.
+         */
+        await when(() => toJS(firebaseData.connectedUser) !== null);
+      }
     }
+
+    loginToFirebase().catch((error) => {
+      console.error("An error occured while login in to Firebase", error);
+    });
   }, []);
 
   const { progression } = useSpring({
