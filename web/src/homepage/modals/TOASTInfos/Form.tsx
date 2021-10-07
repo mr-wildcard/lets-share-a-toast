@@ -256,7 +256,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                             name={field.name}
                             inputId={field.name}
                             value={field.value}
-                            onChange={(user: User | null) => {
+                            onChange={(user) => {
                               if (user) {
                                 setFieldValue(field.name, user);
                               }

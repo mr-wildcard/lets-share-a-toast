@@ -438,17 +438,16 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                                           (user) =>
                                             !values.speakers.find(
                                               (selectedUser) =>
-                                                selectedUser &&
-                                                selectedUser.id === user.id
+                                                selectedUser?.id === user.id
                                             )
                                         )}
                                         name={field.name}
                                         inputId={field.name}
                                         value={field.value}
-                                        onChange={(profile: User | null) =>
+                                        onChange={(user) =>
                                           setFieldValue(
                                             `speakers.${speakerIndex}`,
-                                            profile
+                                            user
                                           )
                                         }
                                       />
