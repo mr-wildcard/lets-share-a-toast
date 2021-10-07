@@ -10,4 +10,6 @@ build({
   bundle: true,
   watch: args.includes("--watch"),
   external: ["firebase-admin", "firebase-functions"],
-});
+}).then(() =>
+  console.log("[esbuild] Compilation for Firebase functions ready.")
+);
