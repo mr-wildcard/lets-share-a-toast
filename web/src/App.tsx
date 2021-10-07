@@ -1,12 +1,12 @@
 import React, { Suspense, useEffect } from "react";
-import { ChakraProvider, CSSReset, Flex, useTheme } from "@chakra-ui/react";
+import { ChakraProvider, CSSReset, useTheme } from "@chakra-ui/react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import Header from "./header/Header";
 import customTheme from "./core/theme";
-import { Pathnames, spacing } from "./core/constants";
+import { Pathnames } from "./core/constants";
 import { PageSkeleton } from "./core/components/PageSkeleton";
 import { Main } from "./Main";
 

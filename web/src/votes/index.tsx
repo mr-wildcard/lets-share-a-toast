@@ -56,7 +56,12 @@ const Votes = () => {
   }, [firebaseData.currentToast]);
 
   return (
-    <ColoredBackground d="flex" justifyContent="center" overflow="hidden">
+    <ColoredBackground
+      h="full"
+      d="flex"
+      justifyContent="center"
+      overflow="hidden"
+    >
       {pageState === PageDisplayState.TIME_TO_VOTE && (
         <ClientSideVotingSessionProvider
           value={
@@ -69,12 +74,18 @@ const Votes = () => {
         >
           <Box d="flex" justifyContent="center" transform="skewX(-15deg)">
             <Box w="100vw" bgColor="red" />
-            <Box w="50vw" minW="500px" overflowY="auto">
+            <Flex
+              align="center"
+              direction="row"
+              w="50vw"
+              minW="500px"
+              overflowY="auto"
+            >
               <SubjectsList
                 votingSession={firebaseData.votingSession!}
                 currentToast={firebaseData.currentToast!}
               />
-            </Box>
+            </Flex>
             <Box w="100vw" bgColor="blue" />
           </Box>
         </ClientSideVotingSessionProvider>

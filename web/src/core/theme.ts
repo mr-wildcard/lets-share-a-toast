@@ -1,6 +1,6 @@
-import { extendTheme } from "@chakra-ui/react"
+import { extendTheme } from "@chakra-ui/react";
 
-export const FONT_FAMILY_BODY = 'Quicksand, sans-serif';
+export const FONT_FAMILY_BODY = "Quicksand, sans-serif";
 
 export default extendTheme({
   fonts: {

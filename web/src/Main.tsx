@@ -15,7 +15,7 @@ const Main: FunctionComponent = ({ children }) => {
   };
 
   if (isVotingSessionPage) {
-    styleProps.maxH = "full";
+    styleProps.h = "full";
   } else {
     styleProps.minH = "full";
   }
