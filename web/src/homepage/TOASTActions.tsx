@@ -39,7 +39,7 @@ import EndTOAST from "./actions/EndTOAST";
 
 const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
 
-const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px ${
+const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px 0 ${
   spacing.stylizedGap
 }px`;
 
