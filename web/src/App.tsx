@@ -39,7 +39,7 @@ export default function LetsShareATOAST() {
             <Switch>
               <Route exact path={Pathnames.HOME} component={Home} />
               <Route path={Pathnames.SUBJECTS} component={Subjects} />
-              <Route path={Pathnames.HOME} component={Votes} />
+              <Route path={Pathnames.VOTING_SESSION} component={Votes} />
               <Route component={PageNotFound} />
             </Switch>
           </Suspense>
