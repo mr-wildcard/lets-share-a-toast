@@ -4,7 +4,7 @@ ENV HOME=/home
 
 COPY ./firebase/firestore-data $HOME/firebase/firestore-data
 
-ENV FIREBASE_TOOLS_VERSION=9.18.0 \
+ENV FIREBASE_TOOLS_VERSION=9.20.0 \
     YARN_VERSION=3.0.2
 
 RUN apk --upgrade --no-cache add openjdk11-jre python3 py3-pip
