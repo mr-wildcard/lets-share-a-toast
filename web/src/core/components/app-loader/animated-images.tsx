@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { animated, config, useTransition } from "@react-spring/web";
 
 const defaultTransitions = {
@@ -38,8 +32,6 @@ const ALL_GIFS = [
 ];
 
 export const AnimatedImages = () => {
-  const componentIsMounted = useRef(true);
-
   const [shownIndex, setShownIndex] = useState(-1);
   const [images, setImages] = useState<Map<string, boolean>>(new Map());
 
@@ -60,10 +52,6 @@ export const AnimatedImages = () => {
       setImages(images.set(src, false));
 
       image.onload = () => {
-        if (!componentIsMounted.current) {
-          return;
-        }
-
         setImages(images.set(src, true));
 
         /**
@@ -75,6 +63,10 @@ export const AnimatedImages = () => {
       };
 
       image.src = ALL_GIFS[gifIndex].src;
+
+      return () => {
+        image.onload = null;
+      };
     },
     [images]
   );
@@ -118,13 +110,6 @@ export const AnimatedImages = () => {
       }
     };
   }, [nextIndex, gotoImage, images.size]);
-
-  useEffect(
-    () => () => {
-      componentIsMounted.current = false;
-    },
-    []
-  );
 
   const loaders = useTransition(shownIndex, {
     from: defaultTransitions.from,
