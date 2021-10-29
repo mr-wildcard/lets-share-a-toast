@@ -10,13 +10,15 @@ import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import { ui } from "@web/core/stores/ui";
 import ColoredBackground from "@web/core/components/ColoredBackground";
-import { PreventUserInteractionsModal } from "./components/PreventUserInteractionsModal";
-import { SubjectsList } from "./components/SubjectsList";
 import {
   ClientSideVotingSessionProvider,
   ClientSideVotingSession,
 } from "./stores/ClientSideVotingSession";
+import { PreventUserInteractionsModal } from "./components/PreventUserInteractionsModal";
+import { SubjectsList } from "./components/SubjectsList";
+import { UserVotesLeft } from "./components/UserVotesLeft";
 import { PageDisplayState } from "./types";
+import styles from "./index.module.css";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
   if (!!currentToast) {
@@ -56,12 +58,7 @@ const Votes = () => {
   }, [firebaseData.currentToast]);
 
   return (
-    <ColoredBackground
-      h="full"
-      d="flex"
-      justifyContent="center"
-      overflow="hidden"
-    >
+    <ColoredBackground h="full" overflow="hidden">
       {pageState === PageDisplayState.TIME_TO_VOTE && (
         <ClientSideVotingSessionProvider
           value={
@@ -72,22 +69,28 @@ const Votes = () => {
             )
           }
         >
-          <Box d="flex" justifyContent="center" transform="skewX(-15deg)">
-            <Box w="100vw" bgColor="red" />
-            <Flex
-              align="center"
-              direction="row"
-              w="50vw"
-              minW="500px"
-              overflowY="auto"
-            >
-              <SubjectsList
-                votingSession={firebaseData.votingSession!}
-                currentToast={firebaseData.currentToast!}
-              />
-            </Flex>
-            <Box w="100vw" bgColor="blue" />
-          </Box>
+          <Flex direction="column" justify="center" h="100%">
+            <Box>
+              <UserVotesLeft />
+            </Box>
+            <Box flex={1} d="flex" h="full" w="full" overflowY="auto">
+              <Flex
+                as="section"
+                direction="row"
+                justify="end"
+                flex={1}
+                overflowY="auto"
+                className={styles.subjectListSection}
+              >
+                <Box flex={1} py={4} my="auto">
+                  <SubjectsList
+                    votingSession={firebaseData.votingSession!}
+                    currentToast={firebaseData.currentToast!}
+                  />
+                </Box>
+              </Flex>
+            </Box>
+          </Flex>
         </ClientSideVotingSessionProvider>
       )}
 
