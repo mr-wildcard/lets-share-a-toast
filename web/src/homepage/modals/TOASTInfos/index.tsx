@@ -38,6 +38,7 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
       closeOnEsc={true}
       size="lg"
       isCentered
+      scrollBehavior="inside"
     >
       <ModalOverlay>
         <ModalContent borderRadius="3px">
