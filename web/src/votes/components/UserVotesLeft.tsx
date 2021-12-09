@@ -7,7 +7,7 @@ import { Heading, Text } from "@chakra-ui/react";
 const UserVotesLeft = observer(() => {
   const { currentUserRemainingVotes } = useClientSideVotingSession();
 
-  return <Heading as="h2">{currentUserRemainingVotes}</Heading>;
+  return <Heading as="h2">Votes left: {currentUserRemainingVotes}</Heading>;
 });
 
 export { UserVotesLeft };

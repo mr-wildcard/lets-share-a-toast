@@ -1,0 +1,25 @@
+test:functions:
+  stage: test
+  tags: [ docker, ekino, france ]
+  only:
+    changes:
+      - firebase/functions/**/*
+  script:
+    - yarn workspace functions build
+  artifacts:
+    paths:
+      - firebase/functions/lib
+
+deploy:functions:
+  stage: deploy
+  tags: [ docker, ekino, france ]
+  only:
+    refs:
+      - master
+    changes:
+      - firebase/functions/**/*
+  needs:
+    - job: test:functions
+      artifacts: true
+  script:
+    - firebase deploy --only functions

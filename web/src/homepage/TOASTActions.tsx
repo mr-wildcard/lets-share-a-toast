@@ -9,6 +9,7 @@ import {
   MenuItem,
   MenuList,
   Image,
+  Portal,
 } from "@chakra-ui/react";
 import {
   CloseIcon,
@@ -78,14 +79,12 @@ const TOASTActions = () => {
         left={`${spacing.stylizedGap}px`}
         bottom={`${spacing.stylizedGap}px`}
         m={0}
-        textDecoration={animations.background.opened ? "none" : "underline"}
         fontSize="lg"
-        transition={
-          animations.background.opened
+        sx={{
+          textDecoration: animations.background.opened ? "none" : "underline",
+          transition: animations.background.opened
             ? "all 450ms cubic-bezier(0.34, 1.56, 0.64, 1)"
-            : "all 250ms ease-out"
-        }
-        style={{
+            : "all 250ms ease-out",
           transform: animations.background.opened
             ? animations.background.buttonOpenActionsCSSTransforms
             : undefined,
@@ -286,20 +285,25 @@ const TOASTActions = () => {
               >
                 More actions
               </MenuButton>
-              <MenuList>
-                <MenuItem onClick={modalsStates.toast.onOpen} fontWeight="bold">
-                  <EditIcon mr={3} />
-                  Edit TOAST
-                </MenuItem>
-                <MenuItem
-                  onClick={modalsStates.cancelTOAST.onOpen}
-                  fontWeight="bold"
-                  color="red.500"
-                >
-                  <DeleteIcon mr={3} />
-                  Cancel TOAST
-                </MenuItem>
-              </MenuList>
+              <Portal>
+                <MenuList>
+                  <MenuItem
+                    onClick={modalsStates.toast.onOpen}
+                    fontWeight="bold"
+                  >
+                    <EditIcon mr={3} />
+                    Edit TOAST
+                  </MenuItem>
+                  <MenuItem
+                    onClick={modalsStates.cancelTOAST.onOpen}
+                    fontWeight="bold"
+                    color="red.500"
+                  >
+                    <DeleteIcon mr={3} />
+                    Cancel TOAST
+                  </MenuItem>
+                </MenuList>
+              </Portal>
             </Menu>
           )}
         </Flex>

@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react";
 import { ChakraProvider, CSSReset, useTheme } from "@chakra-ui/react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -33,15 +33,15 @@ export default function LetsShareATOAST() {
 
       <Router>
         <Main>
-          <Route component={Header} />
+          <Header />
 
           <Suspense fallback={<PageSkeleton />}>
-            <Switch>
-              <Route exact path={Pathnames.HOME} component={Home} />
-              <Route path={Pathnames.SUBJECTS} component={Subjects} />
-              <Route path={Pathnames.VOTING_SESSION} component={Votes} />
-              <Route component={PageNotFound} />
-            </Switch>
+            <Routes>
+              <Route path={Pathnames.HOME} element={<Home />} />
+              <Route path={Pathnames.SUBJECTS} element={<Subjects />} />
+              <Route path={Pathnames.VOTING_SESSION} element={<Votes />} />
+              <Route element={<PageNotFound />} />
+            </Routes>
           </Suspense>
         </Main>
       </Router>

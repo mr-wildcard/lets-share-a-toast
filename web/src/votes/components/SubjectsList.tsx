@@ -62,10 +62,10 @@ const SubjectsList: FunctionComponent<Props> = observer(
     );
 
     return (
-      <List spacing={5} d="flex" flexDirection="column" alignItems="end">
+      <List spacing={5} d="flex" flexDirection="column" alignItems="center">
         {allAvailableSubjects.map((subject) => {
           return (
-            <ListItem key={subject.id} maxWidth="50%">
+            <ListItem key={subject.id}>
               <VotableSubject
                 subject={subject}
                 currentToast={currentToast}

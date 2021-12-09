@@ -18,7 +18,6 @@ import { PreventUserInteractionsModal } from "./components/PreventUserInteractio
 import { SubjectsList } from "./components/SubjectsList";
 import { UserVotesLeft } from "./components/UserVotesLeft";
 import { PageDisplayState } from "./types";
-import styles from "./index.module.css";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
   if (!!currentToast) {
@@ -69,28 +68,12 @@ const Votes = () => {
             )
           }
         >
-          <Flex direction="column" justify="center" h="100%">
-            <Box>
-              <UserVotesLeft />
-            </Box>
-            <Box flex={1} d="flex" h="full" w="full" overflowY="auto">
-              <Flex
-                as="section"
-                direction="row"
-                justify="end"
-                flex={1}
-                overflowY="auto"
-                className={styles.subjectListSection}
-              >
-                <Box flex={1} py={4} my="auto">
-                  <SubjectsList
-                    votingSession={firebaseData.votingSession!}
-                    currentToast={firebaseData.currentToast!}
-                  />
-                </Box>
-              </Flex>
-            </Box>
-          </Flex>
+          <UserVotesLeft />
+
+          <SubjectsList
+            votingSession={firebaseData.votingSession!}
+            currentToast={firebaseData.currentToast!}
+          />
         </ClientSideVotingSessionProvider>
       )}
 
