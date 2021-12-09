@@ -16,7 +16,7 @@ function removeSubjectFromVotingSession(subjectId: string) {
 }
 
 export const syncSubjectsAfterStatusChange = functions.firestore
-  .document(`${FirestoreCollection.SUBJECTS}/{subjectId}/status`)
+  .document(`${FirestoreCollection.SUBJECTS}/{subjectId}`)
   .onUpdate(async (change, context) => {
     const currentToast = await getCurrentTOAST();
     const previousSubjectStatus: SubjectStatus = change.before.get("status");

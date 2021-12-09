@@ -21,7 +21,7 @@ function removeSubjectFromCurrentTOASTSelectedSubjects(subjectId: string) {
 }
 
 export const syncDeletedSubjects = functions.firestore
-  .document(`${FirestoreCollection.SUBJECTS}/{subjectId}/status`)
+  .document(`${FirestoreCollection.SUBJECTS}/{subjectId}`)
   .onDelete(async (change, context) => {
     const subjectStatus: SubjectStatus = change.get("status");
 
