@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from "react";
 import { observer } from "mobx-react-lite";
 import { Avatar, AvatarBadge, Box, Flex, Stack, Text } from "@chakra-ui/react";
-import { RouteComponentProps } from "react-router";
+import { useLocation } from "react-router";
+
 import { ToastStatus } from "@shared/enums";
 
 import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
@@ -10,10 +11,8 @@ import Image from "@web/core/components/Image";
 import Logo from "./Logo";
 import LinkItem from "./LinkItem";
 
-type Props = RouteComponentProps;
-
-const Header: FunctionComponent<Props> = ({ location }) => {
-  const { pathname } = location;
+const Header: FunctionComponent = () => {
+  const { pathname } = useLocation();
 
   const toastHasBeenCreated = !!firebaseData.currentToast;
 

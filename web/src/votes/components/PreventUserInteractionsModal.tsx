@@ -10,7 +10,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import HighlightedText from "@web/core/components/HighlightedText";
 import { pageColors } from "@web/core/constants";
@@ -27,7 +27,7 @@ const PreventUserInteractionsModal: FunctionComponent<Props> = ({
   title,
   children,
 }) => {
-  const { push } = useHistory();
+  const push = useNavigate();
 
   const cancelBtn = useRef() as React.MutableRefObject<HTMLAnchorElement>;
 
@@ -75,7 +75,7 @@ const PreventUserInteractionsModal: FunctionComponent<Props> = ({
           </AlertDialogBody>
 
           <AlertDialogFooter justifyContent="center">
-            <Button as={Link} to="/" innerRef={cancelBtn}>
+            <Button as={Link} to="/" ref={cancelBtn}>
               <Image
                 transform="translate(-8px, -6px)"
                 width={60}
