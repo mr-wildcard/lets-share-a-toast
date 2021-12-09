@@ -39,14 +39,14 @@ const CloseVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
           <Image
             src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
             position="absolute"
-            width={80}
-            height={80}
-            top="-20px"
-            right="-5px"
+            width={73}
+            height={73}
+            top="-18px"
+            right="-11px"
             transform="scaleX(-1) rotate(5deg)"
           />
 
-          <Text fontWeight="bold" pr="50px">
+          <Text as="span" fontWeight="bold" pr="40px">
             Close votes
           </Text>
         </Button>
