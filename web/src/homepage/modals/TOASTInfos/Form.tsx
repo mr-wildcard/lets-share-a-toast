@@ -172,7 +172,7 @@ const TOASTForm: FunctionComponent<Props> = ({
       {({ values, setFieldValue, isSubmitting, isValid }) => {
         return (
           <Form>
-            <Stack spacing={8}>
+            <Stack spacing={6}>
               <Box>
                 <Field name="dueDate">
                   {({ field, meta }: FieldProps) => (
