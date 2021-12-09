@@ -1,8 +1,9 @@
 test-web:
   stage: test
   tags: [ docker, ekino, france ]
-  script:
-    - NODE_ENV=production yarn workspace web build
+  only:
+    changes:
+      - web/**/*
   artifacts:
     paths:
       - firebase/dist
@@ -12,6 +13,8 @@ test-web:
     VITE_FIREBASE_AUTH_DOMAIN: ${FIREBASE_AUTH_DOMAIN}
     VITE_FIREBASE_APP_ID: ${FIREBASE_APP_ID}
     VITE_FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL}
+  script:
+    - NODE_ENV=production yarn workspace web build
 
 #prepare-app-preview:
 #  stage: prepare
@@ -67,6 +70,8 @@ deploy-web:
   only:
     refs:
       - master
+    changes:
+      - web/**/*
   needs:
     - job: test-web
       artifacts: true
