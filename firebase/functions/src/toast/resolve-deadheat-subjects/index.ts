@@ -20,14 +20,14 @@ export const resolveDeadheatSubjects = functions.https.onCall(async (data) => {
    * But after resolving dead heat subjects votes, some ends up not being selected
    * for the next TOAST anymore.
    */
-  const subjectsWithSelectedForNextTOASTStatusQuery = await admin
+  const subjectsSelectedForNextTOASTQuery = await admin
     .firestore()
     .collection(FirestoreCollection.SUBJECTS)
     .where("status", "==", SubjectStatus.SELECTED_FOR_NEXT_TOAST)
     .get();
 
   const subjectsIDsWithStatusSelectedForNextTOAST =
-    subjectsWithSelectedForNextTOASTStatusQuery.docs.map((doc) => doc.id);
+    subjectsSelectedForNextTOASTQuery.docs.map((doc) => doc.id);
 
   const subjectIDsNotSelectedForNextTOAST =
     subjectsIDsWithStatusSelectedForNextTOAST.filter(

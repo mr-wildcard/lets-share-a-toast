@@ -23,9 +23,9 @@ export const syncSubjectsAfterStatusChange = functions.firestore
     const newSubjectStatus: SubjectStatus = change.after.get("status");
 
     if (
-      currentToast.status === ToastStatus.OPEN_FOR_VOTE &&
       previousSubjectStatus === SubjectStatus.AVAILABLE &&
-      newSubjectStatus !== SubjectStatus.AVAILABLE
+      newSubjectStatus !== SubjectStatus.AVAILABLE &&
+      currentToast.status === ToastStatus.OPEN_FOR_VOTE
     ) {
       return removeSubjectFromVotingSession(context.params.subjectId);
     }

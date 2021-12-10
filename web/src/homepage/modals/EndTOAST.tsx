@@ -66,7 +66,7 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
           onSubmit={async (values: FormValues): Promise<void> => {
             const endToast = getCloudFunctionEndTOAST();
 
-            return endToast().then(closeModal);
+            return endToast(values).then(closeModal);
           }}
         >
           {({
