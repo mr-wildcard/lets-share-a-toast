@@ -3,5 +3,6 @@
   "workspaces": [
     "web",
     "firebase/functions"
-  ]
+  ],
+  "packageManager": "yarn@3.1.1"
 }
