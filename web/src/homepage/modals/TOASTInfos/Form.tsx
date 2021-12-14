@@ -9,8 +9,16 @@ import {
   FormLabel,
   ModalFooter,
   Stack,
+  HStack,
   Text,
   Textarea,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Input,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form } from "formik";
 import DayPicker from "react-day-picker/DayPickerInput";
@@ -34,6 +42,7 @@ import {
   getCloudFunctionCreateTOAST,
   getFirebaseCurrentToastRef,
 } from "@web/core/firebase/helpers";
+import { InfoIcon } from "@chakra-ui/icons";
 
 /**
  * Related issue : https://github.com/gpbl/react-day-picker/issues/1194
@@ -57,6 +66,8 @@ interface FormErrors {
 
 interface FormValues extends SlackNotificationFieldsValues {
   dueDate: Date;
+  maxSelectableSubjects: number;
+  maxVotesPerUser: number;
   organizer?: User;
   scribe?: User;
 }
@@ -86,20 +97,20 @@ const TOASTForm: FunctionComponent<Props> = ({
 
   const dueDateValue = useMemo(() => {
     if (currentToast) {
-      return dayjs(currentToast.date).hour(14).toDate();
+      return currentToast.date;
     } else {
       const today = dayjs();
 
       /**
        * If we're already on friday.
        */
-      if (today.day() === 5) {
+      if (today.day() >= 5) {
         /**
          * Set date to next week's friday.
          */
-        return today.add(1, "week").hour(14).toDate();
+        return today.add(1, "week").hour(14).minute(0).second(0).toDate();
       } else {
-        return today.day(5).hour(14).toDate();
+        return today.day(5).hour(14).minute(0).second(0).toDate();
       }
     }
   }, [currentToast]);
@@ -109,6 +120,10 @@ const TOASTForm: FunctionComponent<Props> = ({
       validateOnMount={true}
       initialValues={{
         dueDate: dueDateValue,
+        maxSelectableSubjects: currentToast
+          ? currentToast.maxSelectableSubjects
+          : 2,
+        maxVotesPerUser: currentToast ? currentToast.maxVotesPerUser : 3,
         organizer: currentToast?.organizer,
         scribe: currentToast?.scribe,
         notifySlack: false,
@@ -146,6 +161,8 @@ const TOASTForm: FunctionComponent<Props> = ({
 
           return createToastCloudFunction({
             date: values.dueDate.getTime(),
+            maxSelectableSubjects: values.maxSelectableSubjects,
+            maxVotesPerUser: values.maxVotesPerUser,
             organizerId: values.organizer!.id,
             scribeId: values.scribe!.id,
             slackMessage: values.notifySlack
@@ -162,6 +179,8 @@ const TOASTForm: FunctionComponent<Props> = ({
 
           return update(currentToastRef, {
             date: values.dueDate.getTime(),
+            maxSelectableSubjects: values.maxSelectableSubjects,
+            maxVotesPerUser: values.maxVotesPerUser,
             organizerId: values.organizer!.id,
             scribeId: values.scribe!.id,
             modifiedDate: serverTimestamp(),
@@ -173,46 +192,129 @@ const TOASTForm: FunctionComponent<Props> = ({
         return (
           <Form>
             <Stack spacing={6}>
-              <Box>
-                <Field name="dueDate">
+              <Field name="dueDate">
+                {({ field, meta }: FieldProps) => (
+                  <FormControl
+                    isRequired
+                    isInvalid={meta.touched && !!meta.error}
+                  >
+                    <FormLabel htmlFor="dueDate">Day</FormLabel>
+                    <Box position="relative">
+                      {/* datePickerCSS : needs to be of type react-day-picker/ClassNames instead of CSSModuleClasses.
+                        @ts-ignore */}
+                      <DayPickerInput
+                        {...field}
+                        onDayChange={(date: Date) =>
+                          setFieldValue(field.name, date)
+                        }
+                        formatDate={getFormattedTOASTDateWithRemainingDays}
+                        classNames={datePickerCSS}
+                        component={DateInput}
+                        keepFocus={false}
+                        dayPickerProps={{
+                          classNames: datePickerCSS,
+                          firstDayOfWeek: 1,
+                          disabledDays: (date: Date) =>
+                            dayjs(date).isBefore(today),
+                          fromMonth: currentToast
+                            ? currentToast?.date
+                            : new Date(),
+                          selectedDays: values.dueDate,
+                          navbarElement: DatePickerNavBar,
+                          captionElement: DatePickerCaption,
+                        }}
+                      />
+                    </Box>
+                  </FormControl>
+                )}
+              </Field>
+
+              <HStack spacing={5}>
+                <FormControl w="auto">
+                  <FormLabel htmlFor="selectedHour">Hour</FormLabel>
+                  <Input
+                    id="selectedHour"
+                    type="time"
+                    min="08:00"
+                    max="20:00"
+                    value={dayjs(values.dueDate).format("HH:mm")}
+                    onChange={(e) => {
+                      const [hours, minutes] = e.target.value.split(":");
+
+                      const dueDate = dayjs(values.dueDate)
+                        .hour(Number(hours))
+                        .minute(Number(minutes));
+
+                      setFieldValue("dueDate", dueDate.toDate());
+                    }}
+                  />
+                </FormControl>
+                <Field name="maxSelectableSubjects">
                   {({ field, meta }: FieldProps) => (
                     <FormControl
                       isRequired
                       isInvalid={meta.touched && !!meta.error}
                     >
-                      <FormLabel htmlFor="dueDate">Due Date</FormLabel>
-                      <Box position="relative">
-                        {/* datePickerCSS : needs to be of type react-day-picker/ClassNames instead of CSSModuleClasses.
-                        @ts-ignore */}
-                        <DayPickerInput
-                          {...field}
-                          onDayChange={(date: Date) =>
-                            setFieldValue(field.name, date)
-                          }
-                          formatDate={getFormattedTOASTDateWithRemainingDays}
-                          classNames={datePickerCSS}
-                          component={DateInput}
-                          keepFocus={false}
-                          dayPickerProps={{
-                            classNames: datePickerCSS,
-                            firstDayOfWeek: 1,
-                            disabledDays: (date: Date) =>
-                              dayjs(date).isBefore(today),
-                            fromMonth: currentToast
-                              ? currentToast?.date
-                              : new Date(),
-                            selectedDays: values.dueDate,
-                            navbarElement: DatePickerNavBar,
-                            captionElement: DatePickerCaption,
-                          }}
-                        />
-                      </Box>
+                      <FormLabel
+                        htmlFor={field.name}
+                        d="flex"
+                        alignItems="center"
+                      >
+                        Max subjects&nbsp;
+                        <Tooltip
+                          label="Maximum number of subjects which can be presented during this TOAST"
+                          aria-label="Form field info"
+                        >
+                          <InfoIcon />
+                        </Tooltip>
+                      </FormLabel>
+                      <NumberInput
+                        {...field}
+                        onChange={(value) => {
+                          setFieldValue(field.name, value);
+                        }}
+                        id={field.name}
+                        min={1}
+                      >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
                     </FormControl>
                   )}
                 </Field>
-              </Box>
 
-              <Stack spacing={5} direction="row">
+                <Field name="maxVotesPerUser">
+                  {({ field, meta }: FieldProps) => (
+                    <FormControl
+                      isRequired
+                      isInvalid={meta.touched && !!meta.error}
+                    >
+                      <FormLabel htmlFor={field.name}>
+                        Total votes per user
+                      </FormLabel>
+                      <NumberInput
+                        {...field}
+                        onChange={(value) => {
+                          setFieldValue(field.name, value);
+                        }}
+                        id={field.name}
+                        min={1}
+                      >
+                        <NumberInputField />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
+                  )}
+                </Field>
+              </HStack>
+
+              <HStack spacing={5}>
                 <Box flex={1}>
                   <Field name="organizer">
                     {({ field, meta }: FieldProps) => {
@@ -267,7 +369,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                     }}
                   </Field>
                 </Box>
-              </Stack>
+              </HStack>
 
               {!currentToast && (
                 <Box>

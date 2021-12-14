@@ -33,10 +33,10 @@ const TOASTInfosForm: FunctionComponent<Props> = (props) => {
   return (
     <Modal
       onClose={() => props.closeModal(false)}
-      initialFocusRef={cancelButtonRef}
+      initialFocusRef={isCreatingToast ? undefined : cancelButtonRef}
       isOpen={props.isOpen}
       closeOnEsc={true}
-      size="lg"
+      size="xl"
       isCentered
       scrollBehavior="inside"
     >

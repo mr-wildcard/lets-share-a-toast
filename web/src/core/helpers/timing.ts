@@ -1,35 +1,26 @@
 import dayjs from "dayjs";
 
 export function getTOASTRemainingDays(toastDate: Date) {
-  // TODO: remove `.hour(14)` once API accept custom hour.
-  return dayjs(toastDate).hour(14).fromNow();
-}
-
-export function getFormattedTOASTDate(
-  toastDate: Date,
-  format = "dddd, MMMM DD YYYY"
-) {
-  // TODO: remove `.hour(14)` once API accept custom hour.
-  return dayjs(toastDate).hour(14).format(format);
+  return dayjs(toastDate).fromNow();
 }
 
 export function getTOASTElapsedTimeSinceCreation(creationDate: Date) {
-  // TODO: remove `.hour(14)` once API accept custom hour.
   return dayjs(creationDate).fromNow();
 }
 
 export function getFormattedTOASTDateWithRemainingDays(toastDate: Date) {
-  return `${getFormattedTOASTDate(
-    toastDate
-  )} (${getTOASTElapsedTimeSinceCreation(toastDate)})`;
+  const formattedTOASTDate = dayjs(toastDate).format(
+    "dddd, MMMM DD YYYY [at] HH:mm"
+  );
+  const formattedElapsedTime = getTOASTElapsedTimeSinceCreation(toastDate);
+
+  return `${formattedTOASTDate} (${formattedElapsedTime})`;
 }
 
 export function isTOASTToday(toastDate: Date) {
-  // TODO: remove `.hour(14)` once API accept custom hour.
-  return dayjs(toastDate).hour(14).isSame(new Date(), "day");
+  return dayjs(toastDate).isSame(new Date(), "day");
 }
 
 export function hasTOASTDatePassed(toastDate: Date) {
-  // TODO: remove `.hour(14)` once API accept custom hour.
-  return dayjs(toastDate).hour(14).isBefore(new Date(), "day");
+  return dayjs(toastDate).isBefore(new Date(), "day");
 }
