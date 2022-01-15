@@ -12,8 +12,8 @@ const App = React.lazy(() => {
   return import("@web/core/firebase/data")
     .then(({ firebaseData }) =>
       Promise.all([
-        when(() => firebaseData.currentToastLoaded),
-        when(() => firebaseData.votingSessionLoaded),
+        when(() => firebaseData.currentToastExists),
+        when(() => firebaseData.votingSessionExists),
       ])
     )
     .then(() => import("./App"));

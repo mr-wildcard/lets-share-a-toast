@@ -7,12 +7,12 @@ import { SubjectStatus } from "@shared/enums";
 
 interface State extends Record<string, any> {
   connectedUser?: FirebaseUser | null;
-  currentUserLoaded: boolean;
-  currentLoadedLoggedIn: boolean;
+  currentUserIsLoaded: boolean;
+  connectedUserExists: boolean;
   currentToast?: CurrentToast;
-  currentToastLoaded: boolean;
+  currentToastExists: boolean;
   votingSession?: DatabaseVotingSession;
-  votingSessionLoaded: boolean;
+  votingSessionExists: boolean;
   users: User[];
   usersLoaded: boolean;
   subjects: Subject[];
@@ -34,24 +34,24 @@ const state: State = {
       (subject) => subject.status === SubjectStatus.AVAILABLE
     );
   },
-  get currentUserLoaded() {
+  get currentUserIsLoaded() {
     return this.connectedUser !== undefined;
   },
-  get currentLoadedLoggedIn() {
+  get connectedUserExists() {
     return !!this.connectedUser;
   },
-  get currentToastLoaded() {
+  get currentToastExists() {
     return this.currentToast !== undefined;
   },
-  get votingSessionLoaded() {
+  get votingSessionExists() {
     return this.votingSession !== undefined;
   },
   get appLoadingPercentage() {
     const data = [
-      this.currentToastLoaded,
-      this.currentUserLoaded,
-      this.currentLoadedLoggedIn,
-      this.votingSessionLoaded,
+      this.currentToastExists,
+      this.currentUserIsLoaded,
+      this.connectedUserExists,
+      this.votingSessionExists,
       this.subjectsLoaded,
       this.usersLoaded,
     ];
@@ -69,9 +69,9 @@ export const firebaseData = makeObservable<State>(state, {
   subjects: observable,
   subjectsLoaded: observable,
   availableSubjects: computed,
-  currentUserLoaded: computed,
-  currentLoadedLoggedIn: computed,
-  currentToastLoaded: computed,
-  votingSessionLoaded: computed,
+  currentUserIsLoaded: computed,
+  connectedUserExists: computed,
+  currentToastExists: computed,
+  votingSessionExists: computed,
   appLoadingPercentage: computed,
 });

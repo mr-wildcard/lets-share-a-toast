@@ -13,7 +13,6 @@ const Component: FunctionComponent = () => {
 
   const votingSession = firebaseData.votingSession!;
   const currentToast = firebaseData.currentToast!;
-
   const allAvailableSubjects = firebaseData.availableSubjects;
 
   const selectedSubjects = useMemo(() => {
