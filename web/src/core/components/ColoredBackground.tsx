@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useRef, useState } from "react";
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, BoxProps, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { ui } from "@web/core/stores/ui";
@@ -37,10 +37,9 @@ export const ColoredBackground: FunctionComponent<BoxProps> = observer(
     const shapesColor = backgroundShapesColorByPageColor[ui.currentPageBgColor];
 
     return (
-      <Box
+      <Flex
         ref={rootElementRef}
         flex={1}
-        d="flex"
         position="relative"
         borderRadius={3}
         overflow="hidden"
@@ -60,7 +59,7 @@ export const ColoredBackground: FunctionComponent<BoxProps> = observer(
         )}
 
         {children}
-      </Box>
+      </Flex>
     );
   }
 );
