@@ -9,7 +9,7 @@ import { getTOASTStatusUtils } from "@shared/utils";
 import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import { ui } from "@web/core/stores/ui";
-import ColoredBackground from "@web/core/components/ColoredBackground";
+import { Page } from "@web/core/components/Page";
 import {
   ClientSideVotingSessionProvider,
   ClientSideVotingSession,
@@ -57,7 +57,7 @@ const Votes = () => {
   }, [firebaseData.currentToast]);
 
   return (
-    <ColoredBackground h="full" overflow="hidden">
+    <Page overflow="hidden">
       {pageState === PageDisplayState.TIME_TO_VOTE && (
         <ClientSideVotingSessionProvider
           value={
@@ -108,7 +108,7 @@ const Votes = () => {
       >
         Voting session has been paused.
       </PreventUserInteractionsModal>
-    </ColoredBackground>
+    </Page>
   );
 };
 

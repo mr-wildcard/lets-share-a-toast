@@ -1,26 +1,66 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { Box, BoxProps } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { ui } from "@web/core/stores/ui";
+import { AnimatedShapes } from "@web/core/components/AnimatedShapes";
+import { backgroundShapesColorByPageColor } from "@web/core/constants";
+import { useDebouncedCallback } from "@web/core/components/hooks/useDebouncedCallback";
 
-const ColoredBackground: FunctionComponent<BoxProps> = ({
-  children,
-  ...restOfBoxProps
-}) => {
-  return (
-    <Box
-      as="main"
-      style={{
-        backgroundColor: ui.currentPageBgColor,
-      }}
-      borderRadius={3}
-      transition="background-color 500ms ease"
-      {...restOfBoxProps}
-    >
-      {children}
-    </Box>
-  );
-};
+export const ColoredBackground: FunctionComponent<BoxProps> = observer(
+  ({ children }) => {
+    const rootElementRef = useRef() as React.MutableRefObject<HTMLDivElement>;
 
-export default observer(ColoredBackground);
+    const [size, setSize] = useState<number[]>([]);
+
+    const debouncedSetSize = useDebouncedCallback((width, height) => {
+      setSize([width, height]);
+    }, 500);
+
+    useEffect(() => {
+      const backgroundRO = new ResizeObserver((entries) => {
+        const [mutation] = entries;
+
+        const width = mutation.contentRect.width;
+        const height = mutation.contentRect.height;
+
+        debouncedSetSize(width, height);
+      });
+
+      backgroundRO.observe(rootElementRef.current);
+
+      return function dispose() {
+        backgroundRO.disconnect();
+      };
+    }, []);
+
+    const shapesColor = backgroundShapesColorByPageColor[ui.currentPageBgColor];
+
+    return (
+      <Box
+        ref={rootElementRef}
+        flex={1}
+        d="flex"
+        position="relative"
+        borderRadius={3}
+        overflow="hidden"
+        transition="background-color 500ms ease"
+        style={{
+          backgroundColor: ui.currentPageBgColor,
+        }}
+      >
+        {size.length === 2 && (
+          <Box position="absolute" inset="0" zIndex={0}>
+            <AnimatedShapes
+              width={size[0]}
+              height={size[1]}
+              color={shapesColor}
+            />
+          </Box>
+        )}
+
+        {children}
+      </Box>
+    );
+  }
+);

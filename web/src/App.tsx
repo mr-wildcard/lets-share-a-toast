@@ -8,6 +8,7 @@ import Header from "./header/Header";
 import customTheme from "./core/theme";
 import { Pathnames } from "./core/constants";
 import { PageSkeleton } from "./core/components/PageSkeleton";
+import { ColoredBackground } from "./core/components/ColoredBackground";
 import { Main } from "./Main";
 
 const Home = React.lazy(() => import("./homepage"));
@@ -35,14 +36,16 @@ export default function LetsShareATOAST() {
         <Main>
           <Header />
 
-          <Suspense fallback={<PageSkeleton />}>
-            <Routes>
-              <Route path={Pathnames.HOME} element={<Home />} />
-              <Route path={Pathnames.SUBJECTS} element={<Subjects />} />
-              <Route path={Pathnames.VOTING_SESSION} element={<Votes />} />
-              <Route element={<PageNotFound />} />
-            </Routes>
-          </Suspense>
+          <ColoredBackground>
+            <Suspense fallback={<PageSkeleton />}>
+              <Routes>
+                <Route path={Pathnames.HOME} element={<Home />} />
+                <Route path={Pathnames.SUBJECTS} element={<Subjects />} />
+                <Route path={Pathnames.VOTING_SESSION} element={<Votes />} />
+                <Route element={<PageNotFound />} />
+              </Routes>
+            </Suspense>
+          </ColoredBackground>
         </Main>
       </Router>
     </ChakraProvider>

@@ -4,8 +4,8 @@ import { Box, Flex } from "@chakra-ui/react";
 import { pageColors } from "@web/core/constants";
 import TOASTActions from "@web/homepage/TOASTActions";
 import TOASTStatus from "@web/homepage/TOASTStatus";
-import ColoredBackground from "@web/core/components/ColoredBackground";
 import { ui } from "@web/core/stores/ui";
+import { Page } from "@web/core/components/Page";
 
 const Home = () => {
   useEffect(() => {
@@ -15,7 +15,7 @@ const Home = () => {
   }, []);
 
   return (
-    <ColoredBackground flex={1} d="flex" flexDirection="column" p={0}>
+    <Page flex={1} d="flex" flexDirection="column" p={0}>
       <Flex flex={1} h="100%" direction="column">
         <Box m="auto">
           <TOASTStatus />
@@ -23,7 +23,7 @@ const Home = () => {
 
         <TOASTActions />
       </Flex>
-    </ColoredBackground>
+    </Page>
   );
 };
 

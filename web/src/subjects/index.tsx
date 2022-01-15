@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { toJS } from "mobx";
 import { Flex, useDisclosure } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
@@ -7,7 +6,7 @@ import { Subject } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { spacing, pageColors } from "@web/core/constants";
-import ColoredBackground from "@web/core/components/ColoredBackground";
+import { Page } from "@web/core/components/Page";
 import Image from "@web/core/components/Image";
 import { StatusFilterValue } from "@web/subjects/types";
 import SubjectForm from "@web/subjects/components/SubjectForm";
@@ -65,7 +64,7 @@ const Subjects = () => {
   );
 
   return (
-    <ColoredBackground flex={1}>
+    <Page flex={1}>
       <Flex
         flex={1}
         position="relative"
@@ -113,7 +112,7 @@ const Subjects = () => {
           />
         )}
       </Flex>
-    </ColoredBackground>
+    </Page>
   );
 };
 
