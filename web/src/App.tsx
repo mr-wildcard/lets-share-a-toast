@@ -42,7 +42,7 @@ export default function LetsShareATOAST() {
                 <Route path={Pathnames.HOME} element={<Home />} />
                 <Route path={Pathnames.SUBJECTS} element={<Subjects />} />
                 <Route path={Pathnames.VOTING_SESSION} element={<Votes />} />
-                <Route element={<PageNotFound />} />
+                <Route path="*" element={<PageNotFound />} />
               </Routes>
             </Suspense>
           </ColoredBackground>

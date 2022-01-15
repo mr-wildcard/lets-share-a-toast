@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Box, Flex, Heading, useTheme } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
-import ColoredBackground from "@web/core/components/ColoredBackground";
 import Image from "@web/core/components/Image";
 import HighlightedText from "@web/core/components/HighlightedText";
 import { ui } from "@web/core/stores/ui";
@@ -15,14 +14,12 @@ const PageNotFound = () => {
   }, []);
 
   return (
-    <ColoredBackground
-      d="flex"
+    <Flex
       flex={1}
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
       position="relative"
-      overflow="hidden"
     >
       <Image
         position="absolute"
@@ -44,7 +41,7 @@ const PageNotFound = () => {
           {Math.random() > 0.5 ? "u lost?" : "are you monkey testing me??"}
         </HighlightedText>
       </Heading>
-    </ColoredBackground>
+    </Flex>
   );
 };
 
