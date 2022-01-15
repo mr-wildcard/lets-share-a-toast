@@ -49,15 +49,15 @@ const Votes = () => {
   }, [currentToast]);
 
   const toastStatusIsAfterVoteOpened = useMemo(() => {
-    return !!firebaseData.currentToast
-      ? getTOASTStatusUtils(firebaseData.currentToast.status).isAfter(
+    return !!currentToast
+      ? getTOASTStatusUtils(currentToast.status).isAfter(
           ToastStatus.OPEN_FOR_VOTE
         )
       : false;
-  }, [firebaseData.currentToast]);
+  }, [currentToast]);
 
   return (
-    <Page overflow="hidden">
+    <Page>
       {pageState === PageDisplayState.TIME_TO_VOTE && (
         <ClientSideVotingSessionProvider
           value={
@@ -70,10 +70,7 @@ const Votes = () => {
         >
           <UserVotesLeft />
 
-          <SubjectsList
-            votingSession={firebaseData.votingSession!}
-            currentToast={firebaseData.currentToast!}
-          />
+          <SubjectsList />
         </ClientSideVotingSessionProvider>
       )}
 
@@ -95,7 +92,7 @@ const Votes = () => {
             The voting session is now closed.
           </>
         ) : (
-          "It's not the time to vote, yet :)"
+          "It's not the time to vote... yet :)"
         )}
       </PreventUserInteractionsModal>
 
