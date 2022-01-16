@@ -100,7 +100,7 @@ export const AnimatedImages = () => {
     if (!images.size) {
       gotoImage(nextIndex);
     } else {
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         gotoImage(nextIndex);
       }, 2000);
     }
