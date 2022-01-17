@@ -1,8 +1,8 @@
 import { SubjectStatus } from "@shared/enums";
 
-export type AllSubjectStatusesExceptSelected = Exclude<
+type SearchableSubjectStatuses = Exclude<
   SubjectStatus,
   SubjectStatus.SELECTED_FOR_NEXT_TOAST
 >;
 
-export type StatusFilterValue = "all" | AllSubjectStatusesExceptSelected;
+export type StatusFilterValue = "all" | SearchableSubjectStatuses;
