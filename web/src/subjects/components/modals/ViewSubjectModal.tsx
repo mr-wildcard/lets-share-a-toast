@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 
 import { Subject } from "@shared/models";
 
-import SubjectSpeakers from "@web/subjects/components/list/item/SubjectSpeakers";
+import SubjectSpeakers from "@web/subjects/components/item/SubjectSpeakers";
 import SubjectInfoBadges from "@web/subjects/components/modals/SubjectInfoBadges";
 import getUserFullname from "@web/core/helpers/getUserFullname";
 

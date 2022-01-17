@@ -8,12 +8,12 @@ import { firebaseData } from "@web/core/firebase/data";
 import { spacing, pageColors } from "@web/core/constants";
 import { Page } from "@web/core/components/Page";
 import Image from "@web/core/components/Image";
-import { StatusFilterValue } from "@web/subjects/types";
-import SubjectForm from "@web/subjects/components/SubjectForm";
-import SubjectsList from "@web/subjects/components/list/SubjectsList";
-import FilterSubjectStatus from "@web/subjects/components/list/filters/FilterSubjectStatus";
-import FilterSearch from "@web/subjects/components/list/filters/FilterSearch";
 import { ui } from "@web/core/stores/ui";
+import { StatusFilterValue } from "./types";
+import SubjectForm from "./components/SubjectForm";
+import SubjectsList from "./components/SubjectsList";
+import FilterSubjectStatus from "./components/filters/FilterSubjectStatus";
+import FilterSearch from "./components/filters/FilterSearch";
 
 const Subjects = () => {
   const formDrawerState = useDisclosure();

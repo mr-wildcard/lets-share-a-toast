@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Input, Text } from "@chakra-ui/react";
 
-import css from "./FilterSearch.module.css";
+import css from "web/src/subjects/components/filters/FilterSearch.module.css";
 import HighlightedText from "@web/core/components/HighlightedText";
 
 interface Props {

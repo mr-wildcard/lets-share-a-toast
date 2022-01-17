@@ -5,10 +5,10 @@ import { SubjectStatus } from "@shared/enums";
 import { Subject } from "@shared/models";
 
 import { isSubjectNew } from "@web/subjects/helpers";
-import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
-import SubjectLanguageBadge from "@web/subjects/components/list/item/SubjectLanguageBadge";
-import SubjectDurationBadge from "@web/subjects/components/list/item/SubjectDurationBadge";
-import SubjectNewBadge from "@web/subjects/components/list/item/SubjectNewBadge";
+import SubjectStatusBadge from "@web/subjects/components/item/SubjectStatusBadge";
+import SubjectLanguageBadge from "@web/subjects/components/item/SubjectLanguageBadge";
+import SubjectDurationBadge from "@web/subjects/components/item/SubjectDurationBadge";
+import SubjectNewBadge from "@web/subjects/components/item/SubjectNewBadge";
 
 interface Props {
   subject: Subject;

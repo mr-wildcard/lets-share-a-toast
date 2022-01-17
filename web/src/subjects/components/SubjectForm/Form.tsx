@@ -60,7 +60,7 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
-import SubjectStatusBadge from "@web/subjects/components/list/item/SubjectStatusBadge";
+import SubjectStatusBadge from "@web/subjects/components/item/SubjectStatusBadge";
 import StatusField from "./StatusField";
 import { getFirestoreSubjectDoc } from "@web/core/firebase/helpers";
 import { subjectIsSelectedForNextTOAST } from "@web/core/helpers/subjectIsSelectedForNextTOAST";
