@@ -30,7 +30,7 @@ import { getFirestoreSubjectDoc } from "@web/core/firebase/helpers";
 import Image from "@web/core/components/Image";
 import DeleteSubjectModal from "@web/subjects/components/modals/DeleteSubjectModal";
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
-import { isSubjectNew } from "@web/subjects/helpers";
+import { isSubjectNew, isSubjectPrettyOld } from "@web/subjects/helpers";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 import { subjectIsSelectedForNextTOAST } from "@web/core/helpers/subjectIsSelectedForNextTOAST";
 import SubjectStatusBadge from "./SubjectStatusBadge";
@@ -163,13 +163,10 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
     return statusOptions;
   }, [subject.status]);
 
-  const { subjectIsNew, subjectIsOld, oldSubjectImageAlt } = useMemo(() => {
-    const creationDate = dayjs(subject.createdDate);
-
+  const { subjectIsNew, subjectIsPrettyOld } = useMemo(() => {
     return {
       subjectIsNew: isSubjectNew(subject.createdDate),
-      subjectIsOld: creationDate.isBefore(dayjs().subtract(3, "month")),
-      oldSubjectImageAlt: `Subject has been submitted ${creationDate.fromNow()}`,
+      subjectIsPrettyOld: isSubjectPrettyOld(subject.createdDate),
     };
   }, [subject.createdDate.getTime()]);
 
@@ -193,9 +190,11 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             borderColor="cyan.400"
             borderStyle="solid"
           >
-            {subjectIsOld && (
+            {subjectIsPrettyOld && (
               <Image
-                alt={oldSubjectImageAlt}
+                alt={`Subject has been submitted ${dayjs(
+                  subject.createdDate
+                ).fromNow()}`}
                 src="https://media.giphy.com/media/1BGRBkRdQe995A3JxB/giphy.gif"
                 position="absolute"
                 width={60}
