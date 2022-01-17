@@ -36,8 +36,10 @@ $ ./etc/local/upgrade-dependencies.sh
    1. `.env` and `.env.dist` files : update `DOCKER_IMAGE_VERSION` value.
    2. `.gitlab-ci.yml` : update `DOCKER_IMAGE_VERSION` variable's value.
 4. Build the Docker image with the version you chose in the previous step: 
-   
-   ```docker build -t registry.ekino.com/ekino-bordeaux/toast/letsshareatoast:[VERSION] etc/local```
+   ```
+   docker build -t registry.ekino.com/ekino-bordeaux/toast/letsshareatoast:[VERSION] etc/local
+   ```
 5. Push the Docker image: 
-   
-   ```docker push registry.ekino.com/ekino-bordeaux/toast/letsshareatoast:[VERSION]```
+   ```
+   docker push registry.ekino.com/ekino-bordeaux/toast/letsshareatoast:[VERSION]
+   ```
