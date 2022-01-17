@@ -16,54 +16,6 @@ test-web:
   script:
     - NODE_ENV=production yarn workspace web build
 
-#prepare-app-preview:
-#  stage: prepare
-#  tags: [ docker, ekino, france ]
-#  rules:
-#    - if: '$CI_COMMIT_BRANCH =~ /^review\/*/'
-#      when: on_success
-#    - when: never
-#  script:
-#    - cd firebase
-#    - node $CI_PROJECT_DIR/etc/gitlab/prepare-app-preview.js $CI_COMMIT_REF_SLUG
-#  artifacts:
-#    reports:
-#      dotenv: build.env
-#
-#deploy-app-preview:
-#  stage: deploy
-#  tags: [ docker, ekino, france ]
-#  rules:
-#    - if: '$CI_COMMIT_BRANCH =~ /^review\/*/'
-#      allow_failure: true
-#    - when: never
-#  needs:
-#    - job: test-web
-#      artifacts: true
-#    - job: prepare-app-preview
-#      artifacts: true
-#  script:
-#    - cd firebase
-#    - firebase hosting:channel:deploy $CI_COMMIT_REF_SLUG
-#  environment:
-#    name: review/$CI_COMMIT_REF_NAME
-#    url: $REVIEW_APP_URL
-#    on_stop: delete-app-preview
-#
-#delete-app-preview:
-#  stage: deploy
-#  tags: [ docker, ekino, france ]
-#  rules:
-#    - if: '$CI_COMMIT_REF_NAME =~ /^review\/*/'
-#      when: manual
-#    - when: never
-#  script:
-#    - cd firebase
-#    - firebase hosting:channel:delete -f $CI_COMMIT_REF_SLUG
-#  environment:
-#    name: review/$CI_COMMIT_REF_NAME
-#    action: stop
-
 deploy-web:
   stage: deploy
   tags: [ docker, ekino, france ]
