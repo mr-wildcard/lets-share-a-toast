@@ -22,7 +22,7 @@ const Component: FunctionComponent = () => {
   }, [selectedSubjectIds]);
 
   return (
-    <List spacing={5} d="flex" flexDirection="column" alignItems="center">
+    <List d="flex" gap="2vw" alignItems="end">
       {allAvailableSubjects.map((subject) => {
         return (
           <ListItem key={subject.id}>

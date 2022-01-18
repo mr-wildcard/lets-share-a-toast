@@ -57,7 +57,7 @@ const Votes = () => {
   }, [currentToast]);
 
   return (
-    <Page>
+    <Page flex={1}>
       {pageState === PageDisplayState.TIME_TO_VOTE && (
         <ClientSideVotingSessionProvider
           value={
@@ -68,9 +68,15 @@ const Votes = () => {
             )
           }
         >
-          <UserVotesLeft />
-
-          <SubjectsList />
+          <Flex
+            py="30px"
+            w="full"
+            h="full"
+            alignItems="end"
+            justifyContent="center"
+          >
+            <SubjectsList />
+          </Flex>
         </ClientSideVotingSessionProvider>
       )}
 

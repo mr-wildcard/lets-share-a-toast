@@ -185,10 +185,12 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           }}
         >
           <Box
-            p={contextualMenuOpened ? "15px" : "20px"}
-            borderWidth={contextualMenuOpened ? "5px" : 0}
             borderColor="cyan.400"
             borderStyle="solid"
+            sx={{
+              padding: contextualMenuOpened ? "15px" : "20px",
+              borderWidth: contextualMenuOpened ? "5px" : 0,
+            }}
           >
             {subjectIsPrettyOld && (
               <Image

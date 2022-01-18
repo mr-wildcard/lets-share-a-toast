@@ -5,8 +5,6 @@ import { Toast } from "@shared/models";
 import { getSelectedSubjectIds, getUserTotalVotes } from "@shared/utils";
 import { DatabaseVotingSession } from "@shared/firebase";
 
-import { firebaseData } from "@web/core/firebase/data";
-
 const clientSideVotingSessionContext =
   createContext<null | ClientSideVotingSession>(null);
 
