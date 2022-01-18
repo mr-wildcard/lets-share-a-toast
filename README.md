@@ -16,6 +16,20 @@
 - Webapp URL: [http://localhost:5000/](http://localhost:5000/) (should show up with preloaded data)
 - Firebase emulator suite: [http://localhost:5004/](http://localhost:5004/)
 
+## Prefer working in a Docker container
+
+Basically, every commands should be run inside a container.
+
+Want to install a new dependency to `web` package ?
+1. `docker compose exec web sh`
+2. `yarn add my-dependency`
+3. or `docker compose exec web yarn add my-dependency`
+
+Want to run tsc on the project ?
+1. `docker compose exec web sh`
+2. `cd ..`
+3. `yarn tsc`
+
 ## Upgrade project dependencies
 
 If Docker Compose is `up` :
