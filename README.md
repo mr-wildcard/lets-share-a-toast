@@ -4,7 +4,7 @@
 
 1. Install **Docker**.
 2. Log in to **Gitlab registry** with `docker login registry.ekino.com` in order to pull Docker images.
-3. Get a **Firebase** CLI token. If you're a member of the Firebase project, you can create your own token with `firebase login:ci`.
+3. Get a **Firebase** CI token. If you're a member of the Firebase project, you can create your own token with `firebase login:ci`.
 4. Copy and paste the token as the value of the `FIREBASE_TOKEN` key in the `.env` file.
 5. This project uses [**Yarn >= 3**](https://yarnpkg.com/getting-started/install).
 
