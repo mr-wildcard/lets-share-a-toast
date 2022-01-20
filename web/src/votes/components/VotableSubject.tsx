@@ -74,7 +74,7 @@ const VotableSubject: FunctionComponent<Props> = observer(
             borderStyle="dashed"
             borderWidth="1px"
             style={{
-              borderColor: totalVotes > 0 ? "gray.300" : "gray.600",
+              borderColor: totalVotes > 0 ? gray300 : gray600,
             }}
           >
             {totalVotes === 0 && (

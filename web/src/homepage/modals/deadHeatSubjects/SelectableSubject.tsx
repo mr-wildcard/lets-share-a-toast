@@ -19,10 +19,11 @@ const SelectableSubject: FunctionComponent<Props> = ({
 
   onClick,
 }) => {
-  const [green500, gray50, gray300] = useToken("colors", [
-    "green.500",
+  const [gray50, gray100, gray300, green500] = useToken("colors", [
     "gray.50",
+    "gray.100",
     "gray.300",
+    "green.500",
   ]);
 
   return (
@@ -37,7 +38,7 @@ const SelectableSubject: FunctionComponent<Props> = ({
       borderWidth="3px"
       borderStyle="solid"
       _hover={{
-        bgColor: selected ? "green.500" : "gray.100",
+        bgColor: selected ? green500 : gray100,
       }}
       onClick={onClick}
       textAlign="left"

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import Select, { Props as SelectProps } from "react-select";
-import { Avatar, Stack, Text, useTheme } from "@chakra-ui/react";
+import { Avatar, Stack, Text, useToken } from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 
@@ -15,7 +15,8 @@ const SelectUserInput: FunctionComponent<Props> = ({
   isInvalid,
   ...props
 }) => {
-  const { space, colors } = useTheme();
+  const [red500, red600] = useToken("colors", ["red.500", "red.600"]);
+  const [space10] = useToken("space", [10]);
 
   return (
     <Select
@@ -45,12 +46,12 @@ const SelectUserInput: FunctionComponent<Props> = ({
            * Needed in subject form to have the same height
            * as the button '-' next to it.
            */
-          height: space["10"],
-          borderColor: isInvalid ? colors.red["600"] : baseStyles.borderColor,
+          height: space10,
+          borderColor: isInvalid ? red600 : baseStyles.borderColor,
         }),
         placeholder: (baseStyles) => ({
           ...baseStyles,
-          color: isInvalid ? colors.red["500"] : baseStyles.color,
+          color: isInvalid ? red500 : baseStyles.color,
         }),
       }}
     />

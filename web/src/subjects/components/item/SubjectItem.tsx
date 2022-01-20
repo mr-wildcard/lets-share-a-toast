@@ -16,6 +16,7 @@ import {
   Spinner,
   Text,
   useDisclosure,
+  useToken,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
@@ -45,6 +46,8 @@ interface Props {
 }
 
 const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
+  const [gray50] = useToken("colors", ["gray.50"]);
+
   const { users, currentToast, connectedUser } = firebaseData;
 
   const subjectIsInCurrentTOASTVotingSession =
@@ -181,7 +184,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           transition="transform 200ms ease"
           style={{
             transform: `scale(${contextualMenuOpened ? 0.98 : 1})`,
-            backgroundColor: contextualMenuOpened ? "gray.50" : "white",
+            backgroundColor: contextualMenuOpened ? gray50 : "white",
           }}
         >
           <Box
