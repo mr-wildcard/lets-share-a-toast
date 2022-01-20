@@ -42,7 +42,6 @@ export const ColoredBackground: FunctionComponent<BoxProps> = observer(
         flex={1}
         position="relative"
         borderRadius={3}
-        overflow="hidden"
         transition="background-color 500ms ease"
         style={{
           backgroundColor: ui.currentPageBgColor,

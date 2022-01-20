@@ -316,9 +316,8 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
 
         {allowDeletion && (
           <MenuItem onClick={deleteModal.onOpen}>
-            <Box
-              d="flex"
-              alignItems="center"
+            <Flex
+              align="center"
               cursor="pointer"
               _hover={{
                 bg: "gray.100",
@@ -328,7 +327,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
             >
               <DeleteIcon mr={3} />
               <Text fontWeight="bold">Delete</Text>
-            </Box>
+            </Flex>
           </MenuItem>
         )}
       </Box>

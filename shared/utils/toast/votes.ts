@@ -98,7 +98,7 @@ export function getSelectedSubjectIds(
 
   /**
    * Loop over all total votes then fill the final array of selected subjects
-   * until it reach the `maxSelectableSubjects` parameter.
+   * until it reaches the `maxSelectableSubjects` parameter.
    */
   const selectedSubjects = [];
   for (let i = 0; i < descOrderedTotalVotes.length; i++) {
