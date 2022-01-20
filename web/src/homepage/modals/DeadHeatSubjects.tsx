@@ -238,7 +238,7 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
                                       } else {
                                         if (
                                           alreadySettledSubjects.length +
-                                            values.selectedSubjectIds.length ===
+                                            values.selectedSubjectIds.length >=
                                           currentToast.maxSelectableSubjects
                                         ) {
                                           /**
