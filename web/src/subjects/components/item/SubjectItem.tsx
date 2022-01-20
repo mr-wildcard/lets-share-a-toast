@@ -179,7 +179,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           boxShadow="sm"
           borderRadius={3}
           transition="transform 200ms ease"
-          sx={{
+          style={{
             transform: `scale(${contextualMenuOpened ? 0.98 : 1})`,
             backgroundColor: contextualMenuOpened ? "gray.50" : "white",
           }}
@@ -187,7 +187,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           <Box
             borderColor="cyan.400"
             borderStyle="solid"
-            sx={{
+            style={{
               padding: contextualMenuOpened ? "15px" : "20px",
               borderWidth: contextualMenuOpened ? "5px" : 0,
             }}

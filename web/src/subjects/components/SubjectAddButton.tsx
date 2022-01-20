@@ -55,7 +55,7 @@ const SubjectAddButton: FunctionComponent<Props> = ({
         />
       )}
 
-      <Box sx={{ opacity: !creatingSubject ? 1 : 0 }}>
+      <Box style={{ opacity: !creatingSubject ? 1 : 0 }}>
         <Stack borderRadius="3px" h="100%" spacing={4} p={5}>
           <SkeletonText noOfLines={1} skeletonHeight="25px" />
           <HStack mb={10}>

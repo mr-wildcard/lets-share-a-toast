@@ -80,7 +80,7 @@ const TOASTActions = () => {
         bottom={`${spacing.stylizedGap}px`}
         m={0}
         fontSize="lg"
-        sx={{
+        style={{
           textDecoration: animations.background.opened ? "none" : "underline",
           transition: animations.background.opened
             ? "all 450ms cubic-bezier(0.34, 1.56, 0.64, 1)"
