@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useToken,
 } from "@chakra-ui/react";
 import { Form, Formik, Field, FormikProps, FieldProps } from "formik";
 
@@ -39,6 +40,10 @@ interface Props {
 
 const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
+
+  const [gray600, green500] = useToken("colors", ["gray.600", "green.500"]);
+
+  const [sm] = useToken("sizes", ["sm"]);
 
   return (
     <Modal
@@ -140,13 +145,15 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                                   borderWidth="1px"
                                   borderStyle="solid"
                                   borderColor="gray.200"
-                                  color={
-                                    subjectIsSelected ? "white" : "gray.600"
-                                  }
-                                  backgroundColor={
-                                    subjectIsSelected ? "green.500" : "white"
-                                  }
-                                  boxShadow={subjectIsSelected ? "none" : "sm"}
+                                  style={{
+                                    color: subjectIsSelected
+                                      ? "white"
+                                      : gray600,
+                                    backgroundColor: subjectIsSelected
+                                      ? green500
+                                      : "white",
+                                    boxShadow: subjectIsSelected ? "none" : sm,
+                                  }}
                                   onClick={() => {
                                     if (
                                       values.givenSubjectsIds.includes(

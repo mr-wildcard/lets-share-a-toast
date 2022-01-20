@@ -112,10 +112,10 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
             <ModalCloseButton
               d="flex"
               bg="rgba(255, 255, 255, 0.7)"
+              p={2}
               _hover={{
                 bg: "white",
               }}
-              p={2}
               top={subject.cover ? "30px" : "20px"}
               borderRadius={4}
             />

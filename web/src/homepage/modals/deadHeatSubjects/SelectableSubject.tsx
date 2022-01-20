@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, useToken } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
@@ -19,6 +19,12 @@ const SelectableSubject: FunctionComponent<Props> = ({
 
   onClick,
 }) => {
+  const [green500, gray50, gray300] = useToken("colors", [
+    "green.500",
+    "gray.50",
+    "gray.300",
+  ]);
+
   return (
     <Box
       p={4}
@@ -26,24 +32,26 @@ const SelectableSubject: FunctionComponent<Props> = ({
       type="button"
       position="relative"
       disabled={!onClick}
-      color={selected ? "white" : "black"}
       w="full"
       borderRadius="8px"
-      bgColor={selected ? "green.500" : "gray.50"}
       borderWidth="3px"
       borderStyle="solid"
-      borderColor={selected ? "transparent" : "gray.300"}
       _hover={{
         bgColor: selected ? "green.500" : "gray.100",
       }}
       onClick={onClick}
       textAlign="left"
+      style={{
+        color: selected ? "white" : "black",
+        backgroundColor: selected ? green500 : gray50,
+        borderColor: selected ? "transparent" : gray300,
+      }}
     >
       <Text fontWeight="bold" fontStyle="italic">
         &quot;{subject.title}&quot;
       </Text>
       <Text as="span" fontSize="sm">
-        Presented by:{" "}
+        Presented by:&nbsp;
         <Text as="span" fontWeight="bold">
           {getSubjectSpeakersAsText(subject.speakers)}
         </Text>

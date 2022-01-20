@@ -54,8 +54,8 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
     const selectedSubjects = currentToast.selectedSubjects;
 
     /**
-     * Find subjects which doesn't need to be settled as they are the only ones
-     * to get enough votes.
+     * Find subjects which doesn't need to be settled
+     * because they're the only ones to have this amount of votes
      */
     const alreadySettledSubjects = useMemo(() => {
       let subjects: Subject[] = [];
@@ -180,11 +180,11 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
                       {alreadySettledSubjects.length > 0 && (
                         <Box m={5}>
                           <Heading as="h3" size="sm" mb={2}>
-                            The following{" "}
+                            The following&nbsp;
                             {alreadySettledSubjects.length > 1
                               ? "subjects are"
-                              : "subject is"}{" "}
-                            already selected for the upcoming TOAST:
+                              : "subject is"}
+                            &nbsp; already selected for the upcoming TOAST:
                           </Heading>
                           <Stack spacing={3}>
                             {alreadySettledSubjects.map((subject) => {

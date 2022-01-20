@@ -14,6 +14,7 @@ import {
   Flex,
   Text,
   useDisclosure,
+  useToken,
 } from "@chakra-ui/react";
 import { ViewIcon } from "@chakra-ui/icons";
 import { observer } from "mobx-react-lite";
@@ -34,6 +35,8 @@ interface Props {
 
 const VotableSubject: FunctionComponent<Props> = observer(
   ({ subject, currentToast, votingSession, onVote }) => {
+    const [gray300, gray600] = useToken("colors", ["gray.300", "gray.600"]);
+
     const { userIdAvatarMapping } = useClientSideVotingSession();
 
     const [voting, setVoting] = useState(false);
@@ -70,8 +73,8 @@ const VotableSubject: FunctionComponent<Props> = observer(
             p={4}
             borderStyle="dashed"
             borderWidth="1px"
-            sx={{
-              borderColor: totalVotes > 0 ? "gray.600" : "gray.300",
+            style={{
+              borderColor: totalVotes > 0 ? "gray.300" : "gray.600",
             }}
           >
             {totalVotes === 0 && (

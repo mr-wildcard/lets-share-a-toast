@@ -33,7 +33,7 @@ import {
   Stack,
   Text,
   Textarea,
-  useTheme,
+  useToken,
 } from "@chakra-ui/react";
 import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
 import { observer } from "mobx-react-lite";
@@ -61,9 +61,9 @@ import Image from "@web/core/components/Image";
 import SelectUserInput from "@web/core/components/form/SelectUserInput";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 import SubjectStatusBadge from "@web/subjects/components/item/SubjectStatusBadge";
-import StatusField from "./StatusField";
 import { getFirestoreSubjectDoc } from "@web/core/firebase/helpers";
 import { subjectIsSelectedForNextTOAST } from "@web/core/helpers/subjectIsSelectedForNextTOAST";
+import StatusField from "./StatusField";
 
 interface LanguageValue {
   label: string;
@@ -109,7 +109,8 @@ const languageOptions: LanguageValue[] = [
 ];
 
 const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
-  const theme = useTheme();
+  const [space6, space10] = useToken("space", [6, 10]);
+
   const { currentToast, users, connectedUser } = firebaseData;
 
   const isCreatingSubject = !subject;
@@ -390,7 +391,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                             max={120}
                             step={5}
                             p={0}
-                            height={theme.space["10"]}
+                            height={space10}
                             d="block"
                             size="lg"
                             onChange={(value) => {
@@ -508,15 +509,17 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                             align="center"
                             justify="center"
                             height="170px"
-                            marginLeft={`-${theme.space["6"]}`}
-                            marginRight={`-${theme.space["6"]}`}
-                            backgroundColor={theme.colors.gray["300"]}
-                            backgroundImage={`url(${
-                              urlIsValid ? field.value : coverPlaceholder
-                            })`}
+                            marginLeft={`-${space6}`}
+                            marginRight={`-${space6}`}
+                            backgroundColor="gray.300"
                             backgroundRepeat="no-repeat"
                             backgroundPosition="center center"
                             backgroundSize="cover"
+                            style={{
+                              backgroundImage: `url(${
+                                urlIsValid ? field.value : coverPlaceholder
+                              })`,
+                            }}
                           >
                             <InputGroup width="70%" mx="auto">
                               <InputLeftAddon>
