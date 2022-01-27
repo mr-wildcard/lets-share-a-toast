@@ -1,124 +1,111 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { toJS, when } from "mobx";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
-import { animated, useSpring } from "@react-spring/web";
+import { animated, to, useSpring, useTransition } from "@react-spring/web";
 
-import { signin } from "@web/core/firebase";
 import { firebaseData } from "@web/core/firebase/data";
-import { AnimatedImages } from "./animated-images";
+import { negotiateLoginToFirebase } from "./helpers/negotiateLoginToFirebase";
+import { AnimatedImages } from "./components/AnimatedImages";
 
-function getRandomBackgroundPositionForLoadingProgress(progression: number) {
-  if (progression === 100 || progression === 0) {
-    return progression;
-  }
+const AppLoader: FunctionComponent = observer(({ children }) => {
+  const [backgroundAnimated, setBackgroundAnimated] = useState(false);
 
-  return Math.ceil(Math.max(0, progression + Math.random() * 50));
-}
-
-const AppLoader: FunctionComponent = ({ children }) => {
-  const [appReady, setAppReady] = useState(false);
+  const appReady = firebaseData.dataLoadingPercentage === 100;
 
   useEffect(() => {
-    async function loginToFirebase() {
-      /**
-       * Wait for Firebase to retrieve the current connected user.
-       * `null` : user is signed out.
-       * not `null` : user signed in.
-       * https://medium.com/firebase-developers/why-is-my-currentuser-null-in-firebase-auth-4701791f74f0
-       */
-      await when(() => firebaseData.currentUserIsLoaded);
-
-      /**
-       * If user is signed out.
-       */
-      if (firebaseData.connectedUser === null) {
-        try {
-          await signin();
-        } catch (error) {
-          console.error("An error occured while signin to Firebase", error);
-        }
-
-        /**
-         * Wait for the `connectedUser` to be a plain object.
-         */
-        await when(() => toJS(firebaseData.connectedUser) !== null);
-      }
+    if (backgroundAnimated) {
+      negotiateLoginToFirebase().catch((error) => {
+        console.error("An error occured while login in to Firebase", error);
+      });
     }
-
-    loginToFirebase().catch((error) => {
-      console.error("An error occured while login in to Firebase", error);
-    });
-  }, []);
+  }, [backgroundAnimated]);
 
   const { progression } = useSpring({
     config: {
       clamp: true,
     },
-    progression: firebaseData.appLoadingPercentage,
+    progression: firebaseData.dataLoadingPercentage,
   });
 
-  const { path1, path2 } = useMemo(() => {
-    return {
-      path1:
-        100 -
-        getRandomBackgroundPositionForLoadingProgress(
-          firebaseData.appLoadingPercentage
-        ),
-      path2:
-        100 -
-        getRandomBackgroundPositionForLoadingProgress(
-          firebaseData.appLoadingPercentage
-        ),
-    };
-  }, [firebaseData.appLoadingPercentage]);
+  const transitions = useTransition(!appReady, {
+    from: {
+      enterPath1: 100,
+      enterPath2: 100,
+      leavePath1: 100,
+      leavePath2: 100,
+    },
+    enter: {
+      enterPath1: 0,
+      enterPath2: 0,
+      leavePath1: 100,
+      leavePath2: 100,
+      onRest() {
+        setBackgroundAnimated(true);
+      },
+    },
+    leave: {
+      enterPath1: 0,
+      enterPath2: 0,
+      leavePath1: 0,
+      leavePath2: 0,
+    },
+  });
 
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          inset: "0px",
-          zIndex: 9,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: "0px",
-            backgroundColor: "#f6e05e",
-            clipPath: `polygon(${path1}% 0, 100% 0, 100% 100%, ${path2}% 100%)`,
-            transition: "clip-path 500ms",
-          }}
-        />
+      {transitions(
+        (paths, item) =>
+          item && (
+            <animated.div
+              style={{
+                position: "fixed",
+                inset: "0px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 9,
+                backgroundColor: "white",
+                clipPath: to(
+                  [paths.leavePath1, paths.leavePath2],
+                  (leavePath1, leavePath2) =>
+                    `polygon(0% 0%, ${leavePath1}% 0%, ${leavePath2}% 100%, 0% 100%)`
+                ),
+              }}
+            >
+              <animated.div
+                style={{
+                  position: "absolute",
+                  inset: "0px",
+                  backgroundColor: "#f6e05e",
+                  clipPath: to(
+                    [paths.enterPath1, paths.enterPath2],
+                    (enterPath1, enterPath2) =>
+                      `polygon(${enterPath1}% 0%, 100% 0%, 100% 100%, ${enterPath2}% 100%)`
+                  ),
+                }}
+              />
 
-        <animated.span
-          style={{
-            position: "absolute",
-            bottom: "2rem",
-            left: "2rem",
-            color: "rgba(0, 0, 0, 0.5)",
-            fontWeight: "bold",
-            fontSize: "120px",
-            fontFamily: "Quicksand, sans-serif",
-          }}
-        >
-          {progression.to((value) => `${Math.ceil(value)}%`)}
-        </animated.span>
+              <animated.span
+                style={{
+                  position: "absolute",
+                  bottom: "2rem",
+                  left: "2rem",
+                  color: "rgba(0, 0, 0, 0.5)",
+                  fontWeight: "bold",
+                  fontSize: "120px",
+                  fontFamily: "Quicksand, sans-serif",
+                }}
+              >
+                {progression.to((value) => `${Math.ceil(value)}%`)}
+              </animated.span>
 
-        <AnimatedImages />
-      </div>
+              <AnimatedImages />
+            </animated.div>
+          )
+      )}
+
+      {appReady && children}
     </>
   );
-};
+});
 
-export default observer(AppLoader);
+export { AppLoader };

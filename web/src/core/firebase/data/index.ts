@@ -18,7 +18,7 @@ interface State extends Record<string, any> {
   subjects: Subject[];
   availableSubjects: Subject[];
   subjectsLoaded: boolean;
-  appLoadingPercentage: number;
+  dataLoadingPercentage: number;
 }
 
 const state: State = {
@@ -46,10 +46,9 @@ const state: State = {
   get votingSessionExists() {
     return this.votingSession !== undefined;
   },
-  get appLoadingPercentage() {
+  get dataLoadingPercentage() {
     const data = [
       this.currentToastExists,
-      this.currentUserIsLoaded,
       this.connectedUserExists,
       this.votingSessionExists,
       this.subjectsLoaded,
@@ -73,5 +72,5 @@ export const firebaseData = makeObservable<State>(state, {
   connectedUserExists: computed,
   currentToastExists: computed,
   votingSessionExists: computed,
-  appLoadingPercentage: computed,
+  dataLoadingPercentage: computed,
 });

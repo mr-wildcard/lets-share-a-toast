@@ -42,7 +42,7 @@ const SelectUserInput: FunctionComponent<Props> = ({
           ...baseStyles,
 
           /**
-           * space['10'] = 2.5em following Chakra's theme value.
+           * space10 = 2.5em following Chakra's theme value.
            * Needed in subject form to have the same height
            * as the button '-' next to it.
            */

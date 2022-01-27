@@ -1,29 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { configure, when } from "mobx";
+import { configure } from "mobx";
 
-import AppLoader from "./core/components/app-loader";
+import { AppLoader } from "./core/components/app-loader";
+import App from "./App";
 
 configure({
   enforceActions: "never",
 });
 
-const App = React.lazy(() => {
-  return import("@web/core/firebase/data")
-    .then(({ firebaseData }) =>
-      Promise.all([
-        when(() => firebaseData.currentToastExists),
-        when(() => firebaseData.votingSessionExists),
-      ])
-    )
-    .then(() => import("./App"));
-});
-
 ReactDOM.render(
   <React.StrictMode>
-    <React.Suspense fallback={<AppLoader />}>
+    <AppLoader>
       <App />
-    </React.Suspense>
+    </AppLoader>
   </React.StrictMode>,
   document.getElementById("root")
 );

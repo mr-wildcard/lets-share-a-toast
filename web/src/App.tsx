@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from "react";
-import { ChakraProvider, CSSReset, useTheme } from "@chakra-ui/react";
+import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -19,8 +19,6 @@ const PageNotFound = React.lazy(() => import("./pages/PageNotFound"));
 dayjs.extend(relativeTime);
 
 export default function LetsShareATOAST() {
-  const theme = useTheme();
-
   useEffect(() => {
     console.log(
       "%cLet's share a 🍞 !",
