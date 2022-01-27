@@ -6,7 +6,7 @@ import { firebaseData } from "@web/core/firebase/data";
 import { useVote } from "../hooks/useVote";
 import { VotableSubject } from "./VotableSubject";
 
-const Component: FunctionComponent = () => {
+export const SubjectsList: FunctionComponent = observer(() => {
   const vote = useVote();
 
   const votingSession = firebaseData.votingSession!;
@@ -14,7 +14,7 @@ const Component: FunctionComponent = () => {
   const allAvailableSubjects = firebaseData.availableSubjects;
 
   return (
-    <HStack h="full" spacing="2vw">
+    <HStack spacing="2vw" alignItems="start">
       {allAvailableSubjects.map((subject) => {
         return (
           <VotableSubject
@@ -28,6 +28,4 @@ const Component: FunctionComponent = () => {
       })}
     </HStack>
   );
-};
-
-export const SubjectsList = React.memo(observer(Component));
+});

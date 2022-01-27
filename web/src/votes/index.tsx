@@ -16,8 +16,8 @@ import {
 } from "./stores/ClientSideVotingSession";
 import { PreventUserInteractionsModal } from "./components/PreventUserInteractionsModal";
 import { SubjectsList } from "./components/SubjectsList";
-import { UserVotesLeft } from "./components/UserVotesLeft";
 import { PageDisplayState } from "./types";
+import { SubjectVotes } from "@web/votes/components/SubjectVotes";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
   if (!!currentToast) {
@@ -57,32 +57,37 @@ const Votes = () => {
   }, [currentToast]);
 
   return (
-    <Page flex={1}>
+    <Page flex={1} maxW="full">
       {pageState === PageDisplayState.TIME_TO_VOTE && (
         <ClientSideVotingSessionProvider
-          value={
-            new ClientSideVotingSession(
-              firebaseData.currentToast!,
-              firebaseData.votingSession!,
-              firebaseData.connectedUser!.uid
-            )
-          }
+          value={new ClientSideVotingSession(currentToast!)}
         >
           <Flex
-            direction="column"
-            justify="center"
-            align="center"
-            py="30px"
-            w="full"
+            p="30px"
             h="full"
+            justify="center"
+            overflowX="auto"
+            style={{
+              overscrollBehaviorX: "contain",
+            }}
           >
-            <Box flex={1}>vote list</Box>
+            <Flex
+              direction="column"
+              justify="center"
+              align="center"
+              w="full"
+              h="full"
+            >
+              <Box flex={1}>
+                <SubjectVotes />
+              </Box>
 
-            <Divider borderColor="gray.800" />
+              <Divider borderColor="gray.800" />
 
-            <Box flex={1}>
-              <SubjectsList />
-            </Box>
+              <Box flex={1}>
+                <SubjectsList />
+              </Box>
+            </Flex>
           </Flex>
         </ClientSideVotingSessionProvider>
       )}

@@ -19,7 +19,7 @@ export const useVote = () => {
         }`
       );
 
-      if (currentUserRemainingVotes === 0) {
+      if (currentUserRemainingVotes <= 0) {
         return set(userSubjectVoteRef, null);
       } else {
         return runTransaction(

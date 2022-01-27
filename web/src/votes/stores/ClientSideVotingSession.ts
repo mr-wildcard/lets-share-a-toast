@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react";
 import { computed, makeObservable } from "mobx";
 
-import { Toast } from "@shared/models";
 import { getSelectedSubjectIds, getUserTotalVotes } from "@shared/utils";
-import { DatabaseVotingSession } from "@shared/firebase";
+import { Toast } from "@shared/models";
+
 import { firebaseData } from "@web/core/firebase/data";
 
 const clientSideVotingSessionContext =
@@ -17,11 +17,7 @@ export function useClientSideVotingSession() {
 }
 
 export class ClientSideVotingSession {
-  constructor(
-    private readonly toast: Toast,
-    private readonly votingSession: DatabaseVotingSession,
-    private readonly connectedUserId: string
-  ) {
+  constructor(private readonly toast: Toast) {
     makeObservable(this, {
       currentUserTotalVotes: computed,
       currentUserRemainingVotes: computed,
@@ -31,13 +27,21 @@ export class ClientSideVotingSession {
     });
   }
 
+  getUserTotalVotesForSubjectId(subjectId: string) {
+    return (
+      firebaseData.votingSession?.votes?.[subjectId]?.[
+        firebaseData.connectedUser!.uid
+      ] ?? 0
+    );
+  }
+
   get selectedSubjectIds() {
-    if (!this.votingSession?.votes) {
+    if (!firebaseData.votingSession?.votes) {
       return [];
     }
 
     return getSelectedSubjectIds(
-      this.votingSession.votes,
+      firebaseData.votingSession.votes,
       this.toast.maxSelectableSubjects
     );
   }
@@ -49,7 +53,10 @@ export class ClientSideVotingSession {
   }
 
   get currentUserTotalVotes() {
-    return getUserTotalVotes(this.connectedUserId, this.votingSession?.votes);
+    return getUserTotalVotes(
+      firebaseData.connectedUser!.uid,
+      firebaseData.votingSession?.votes
+    );
   }
 
   get currentUserRemainingVotes() {

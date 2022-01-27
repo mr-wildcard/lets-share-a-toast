@@ -11,7 +11,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Flex,
   Text,
   useDisclosure,
   useToken,
@@ -25,6 +24,7 @@ import { getSubjectTotalVotes } from "@shared/utils";
 
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
 import { useClientSideVotingSession } from "../stores/ClientSideVotingSession";
+import { ButtonSubjectVote } from "@web/votes/components/ButtonSubjectVote";
 
 interface Props {
   subject: Subject;
@@ -33,11 +33,12 @@ interface Props {
   onVote(subjectId: string): void;
 }
 
-const VotableSubject: FunctionComponent<Props> = observer(
+export const VotableSubject: FunctionComponent<Props> = observer(
   ({ subject, currentToast, votingSession, onVote }) => {
     const [gray300, gray600] = useToken("colors", ["gray.300", "gray.600"]);
 
-    const { userIdAvatarMapping } = useClientSideVotingSession();
+    const { userIdAvatarMapping, currentUserRemainingVotes } =
+      useClientSideVotingSession();
 
     const [voting, setVoting] = useState(false);
 
@@ -74,7 +75,7 @@ const VotableSubject: FunctionComponent<Props> = observer(
             borderStyle="dashed"
             borderWidth="1px"
             style={{
-              borderColor: totalVotes > 0 ? gray300 : gray600,
+              borderColor: totalVotes > 0 ? gray600 : gray300,
             }}
           >
             {totalVotes === 0 && (
@@ -84,7 +85,7 @@ const VotableSubject: FunctionComponent<Props> = observer(
                   position="absolute"
                   top="50%"
                   transform="translateY(-50%)"
-                  color="gray.400"
+                  color="gray.600"
                 >
                   No voters yet...
                 </Text>
@@ -121,19 +122,7 @@ const VotableSubject: FunctionComponent<Props> = observer(
           </Box>
         </Box>
 
-        <ButtonGroup size="lg" w="full" isAttached={true}>
-          <Button onClick={viewModal.onOpen} borderTopLeftRadius="0">
-            <ViewIcon />
-          </Button>
-          <Button
-            onClick={vote}
-            colorScheme="blue"
-            flex="auto"
-            borderTopRightRadius="0"
-          >
-            Vote!
-          </Button>
-        </ButtonGroup>
+        <ButtonSubjectVote vote={vote} voting={voting} subjectId={subject.id} />
 
         {viewModal.isOpen && (
           <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
@@ -142,5 +131,3 @@ const VotableSubject: FunctionComponent<Props> = observer(
     );
   }
 );
-
-export { VotableSubject };
