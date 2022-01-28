@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from "react";
-import { Box, Flex, useTheme } from "@chakra-ui/react";
+import { Flex, useTheme } from "@chakra-ui/react";
 import { MenuItem } from "react-contextmenu";
 
 interface Props {

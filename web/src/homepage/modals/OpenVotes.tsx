@@ -20,7 +20,6 @@ import { Field, FieldProps, Form, Formik } from "formik";
 import { observer } from "mobx-react-lite";
 
 import { Toast } from "@shared/models";
-import { SubjectStatus } from "@shared/enums";
 
 import { firebaseData } from "@web/core/firebase/data";
 import { pageColors, Pathnames } from "@web/core/constants";

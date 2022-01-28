@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useMemo } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import { observer } from "mobx-react-lite";
 import { Button, Text } from "@chakra-ui/react";
 
@@ -46,14 +46,14 @@ export const ButtonSubjectVote: FunctionComponent<Props> = observer(
       getUserTotalVotesForSubjectId(subjectId);
 
     const textContentState = useMemo<TextContentState>(() => {
-      if (userTotalVotesForThisSubject > 0) {
-        if (currentUserRemainingVotes === 0) {
+      if (currentUserRemainingVotes === 0) {
+        if (userTotalVotesForThisSubject > 0) {
           return TextContentState.REMOVE_VOTE;
         } else {
-          return TextContentState.VOTE;
+          return TextContentState.NO_ACTION;
         }
       } else {
-        return TextContentState.NO_ACTION;
+        return TextContentState.VOTE;
       }
     }, [currentUserRemainingVotes, userTotalVotesForThisSubject]);
 
@@ -84,7 +84,7 @@ export const ButtonSubjectVote: FunctionComponent<Props> = observer(
           {"Remote my vote" + (userTotalVotesForThisSubject > 1 ? "s" : "")}
         </TextContent>
         <TextContent show={textContentState === TextContentState.NO_ACTION}>
-          Not enough remaining vote...
+          No remaining vote...
         </TextContent>
       </Button>
     );

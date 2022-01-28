@@ -9,13 +9,10 @@ import {
   AvatarBadge,
   AvatarGroup,
   Box,
-  Button,
-  ButtonGroup,
   Text,
   useDisclosure,
   useToken,
 } from "@chakra-ui/react";
-import { ViewIcon } from "@chakra-ui/icons";
 import { observer } from "mobx-react-lite";
 
 import { Subject, Toast } from "@shared/models";

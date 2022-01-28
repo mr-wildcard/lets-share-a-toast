@@ -1,8 +1,7 @@
-import React, { FunctionComponent, Suspense } from "react";
-import { Flex, FlexProps } from "@chakra-ui/react";
-import { useLocation } from "react-router";
+import React, { FunctionComponent } from "react";
+import { Flex } from "@chakra-ui/react";
 
-import { Pathnames, spacing } from "@web/core/constants";
+import { spacing } from "@web/core/constants";
 
 export const Main: FunctionComponent = ({ children }) => {
   return (

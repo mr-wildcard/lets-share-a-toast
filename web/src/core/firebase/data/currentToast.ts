@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue } from "firebase/database";
+import { onValue } from "firebase/database";
 
 import { DatabaseCurrentTOAST } from "@shared/firebase";
 

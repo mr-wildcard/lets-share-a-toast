@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Flex, Heading, useTheme } from "@chakra-ui/react";
+import { Flex, Heading, useTheme } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import Image from "@web/core/components/Image";
