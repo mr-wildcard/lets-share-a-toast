@@ -1,21 +1,40 @@
 import React, { FunctionComponent } from "react";
-import { Box, HStack } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
+
 import { firebaseData } from "@web/core/firebase/data";
-import { VotableSubject } from "@web/votes/components/VotableSubject";
+import { votableSubjectWidth } from "../constants";
+import { useClientSideVotingSession } from "@web/votes/stores/ClientSideVotingSession";
 
-export const SubjectVotes: FunctionComponent = observer(() => {
-  const allAvailableSubjects = firebaseData.availableSubjects;
+interface Props {
+  subjectId: string;
+}
 
-  return (
-    <HStack spacing="2vw" h="full" alignItems="end">
-      {allAvailableSubjects.map((subject) => {
-        return (
-          <Box width="350px" h="50px" bg="blue">
-            test
-          </Box>
-        );
-      })}
-    </HStack>
-  );
-});
+export const SubjectVotes: FunctionComponent<Props> = observer(
+  ({ subjectId }) => {
+    const { getSubjectTotalVotes, totalOfAllVotes } =
+      useClientSideVotingSession();
+
+    const subjectTotalVotes = getSubjectTotalVotes(subjectId);
+
+    const verticalBarScaling =
+      subjectTotalVotes === 0
+        ? 0
+        : (100 * subjectTotalVotes) / totalOfAllVotes / 100;
+
+    return (
+      <Flex
+        position="relative"
+        align="end"
+        w={`${votableSubjectWidth}px`}
+        h="full"
+        transformOrigin="center bottom"
+        transition="transform 150ms cubic-bezier(0.87, 0, 0.13, 1)"
+        background="red"
+        style={{
+          transform: `scaleY(${verticalBarScaling})`,
+        }}
+      />
+    );
+  }
+);

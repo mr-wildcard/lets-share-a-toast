@@ -17,7 +17,8 @@ import {
 import { PreventUserInteractionsModal } from "./components/PreventUserInteractionsModal";
 import { SubjectsList } from "./components/SubjectsList";
 import { PageDisplayState } from "./types";
-import { SubjectVotes } from "@web/votes/components/SubjectVotes";
+import { VotesList } from "./components/VotesList";
+import { UserVotesLeft } from "@web/votes/components/UserVotesLeft";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
   if (!!currentToast) {
@@ -63,23 +64,27 @@ const Votes = () => {
           value={new ClientSideVotingSession(currentToast!)}
         >
           <Flex
-            p="30px"
             h="full"
-            justify="center"
             overflowX="auto"
+            direction="column"
             style={{
               overscrollBehaviorX: "contain",
             }}
           >
+            <Box m={4}>
+              <UserVotesLeft />
+            </Box>
+
             <Flex
               direction="column"
               justify="center"
               align="center"
-              w="full"
               h="full"
+              w="full"
+              p="30px"
             >
               <Box flex={1}>
-                <SubjectVotes />
+                <VotesList />
               </Box>
 
               <Divider borderColor="gray.800" />

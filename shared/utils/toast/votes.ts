@@ -5,17 +5,35 @@ import {
 } from "@shared/firebase";
 
 /**
+ * Get total of all votes given to all subjects
+ * @param subjectsVotes
+ */
+export function getTotalVotes(subjectsVotes: SubjectsVotes) {
+  const allSubjectIds = Object.keys(subjectsVotes);
+
+  let totalVotes = 0;
+  for (let i = 0; i < allSubjectIds.length; i++) {
+    const subjectId = allSubjectIds[i];
+    const subjectVotes = subjectsVotes[subjectId];
+
+    totalVotes += getSubjectTotalVotes(subjectVotes);
+  }
+
+  return totalVotes;
+}
+
+/**
  * Check if the voting session object has at least one vote
  * whatever the subject it is.
  */
 export function votingSessionHasAtLeastOneVote(
   votingSession: DatabaseVotingSession
 ) {
-  return Object.keys(votingSession?.votes ?? {}).length > 0;
+  return votingSession?.votes && Object.keys(votingSession?.votes).length > 0;
 }
 
-export function getSubjectTotalVotes(subject: SubjectVote) {
-  const allVotes = Object.values(subject);
+export function getSubjectTotalVotes(subjectVotes: SubjectVote) {
+  const allVotes = Object.values(subjectVotes);
 
   let totalVotes = 0;
   for (let vote in allVotes) {
@@ -38,7 +56,8 @@ export function getDictionaryOfSubjectPerTotalVotes(
 
   for (let i = 0; i < allSubjectIds.length; i++) {
     const subjectId = allSubjectIds[i];
-    const subjectTotalVotes = getSubjectTotalVotes(subjectsVotes[subjectId]);
+    const subjectVotes = subjectsVotes[subjectId];
+    const subjectTotalVotes = getSubjectTotalVotes(subjectVotes);
 
     dictionaryOfSubjectPerTotalVotes[subjectTotalVotes] ??= [];
     dictionaryOfSubjectPerTotalVotes[subjectTotalVotes].push(subjectId);

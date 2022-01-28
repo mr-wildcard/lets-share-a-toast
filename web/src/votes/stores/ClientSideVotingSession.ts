@@ -1,7 +1,12 @@
 import { createContext, useContext } from "react";
 import { computed, makeObservable } from "mobx";
 
-import { getSelectedSubjectIds, getUserTotalVotes } from "@shared/utils";
+import {
+  getSelectedSubjectIds,
+  getSubjectTotalVotes,
+  getTotalVotes,
+  getUserTotalVotes,
+} from "@shared/utils";
 import { Toast } from "@shared/models";
 
 import { firebaseData } from "@web/core/firebase/data";
@@ -23,6 +28,7 @@ export class ClientSideVotingSession {
       currentUserRemainingVotes: computed,
       selectedSubjectIds: computed,
       selectedSubjects: computed,
+      totalOfAllVotes: computed,
       userIdAvatarMapping: computed,
     });
   }
@@ -33,6 +39,24 @@ export class ClientSideVotingSession {
         firebaseData.connectedUser!.uid
       ] ?? 0
     );
+  }
+
+  getSubjectTotalVotes(subjectId: string) {
+    const subjectVotes = firebaseData.votingSession?.votes?.[subjectId];
+
+    if (!subjectVotes) {
+      return 0;
+    }
+
+    return getSubjectTotalVotes(subjectVotes);
+  }
+
+  get totalOfAllVotes() {
+    if (!firebaseData.votingSession?.votes) {
+      return 0;
+    }
+
+    return getTotalVotes(firebaseData.votingSession?.votes);
   }
 
   get selectedSubjectIds() {

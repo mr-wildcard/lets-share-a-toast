@@ -21,7 +21,8 @@ import { getSubjectTotalVotes } from "@shared/utils";
 
 import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
 import { useClientSideVotingSession } from "../stores/ClientSideVotingSession";
-import { ButtonSubjectVote } from "@web/votes/components/ButtonSubjectVote";
+import { ButtonSubjectVote } from "../components/ButtonSubjectVote";
+import { votableSubjectWidth } from "../constants";
 
 interface Props {
   subject: Subject;
@@ -58,9 +59,9 @@ export const VotableSubject: FunctionComponent<Props> = observer(
     }, [onVote, voting, currentToast.peopleCanVote]);
 
     return (
-      <Box w="350px" boxShadow="lg">
+      <Box w={`${votableSubjectWidth}px`} boxShadow="lg">
         <Box p={4} bg="white">
-          <Text fontWeight="bold" fontSize="2xl">
+          <Text fontWeight="bold" fontSize="lg">
             {subject.title}
           </Text>
         </Box>

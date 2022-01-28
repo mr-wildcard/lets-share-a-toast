@@ -69,6 +69,7 @@ export const ButtonSubjectVote: FunctionComponent<Props> = observer(
 
     return (
       <Button
+        className="vote-button"
         w="full"
         onClick={vote}
         disabled={isDisabled}

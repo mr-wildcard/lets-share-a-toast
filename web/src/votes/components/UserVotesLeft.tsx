@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 
 import { useClientSideVotingSession } from "../stores/ClientSideVotingSession";
-import { Heading } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 
 const UserVotesLeft = observer(() => {
   const { currentUserRemainingVotes } = useClientSideVotingSession();
@@ -10,9 +10,16 @@ const UserVotesLeft = observer(() => {
   const voteWord = currentUserRemainingVotes > 1 ? "votes" : "vote";
 
   return (
-    <Heading as="h2">
-      You have {currentUserRemainingVotes} {voteWord} left
-    </Heading>
+    <Text
+      d="inline-block"
+      bg="white"
+      fontSize="xl"
+      fontWeight="bold"
+      borderRadius="sm"
+      p={4}
+    >
+      You have {currentUserRemainingVotes} {voteWord} left.
+    </Text>
   );
 });
 
