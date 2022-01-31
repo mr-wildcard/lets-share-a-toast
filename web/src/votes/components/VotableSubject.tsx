@@ -9,6 +9,7 @@ import {
   AvatarBadge,
   AvatarGroup,
   Box,
+  Button,
   Text,
   useDisclosure,
   useToken,
@@ -61,9 +62,16 @@ export const VotableSubject: FunctionComponent<Props> = observer(
     return (
       <Box w={`${votableSubjectWidth}px`} boxShadow="lg">
         <Box p={4} bg="white">
-          <Text fontWeight="bold" fontSize="lg">
+          <Button
+            colorScheme="black"
+            variant="link"
+            fontWeight="bold"
+            fontSize="lg"
+            whiteSpace="normal"
+            onClick={viewModal.onOpen}
+          >
             {subject.title}
-          </Text>
+          </Button>
         </Box>
 
         <Box p={4} bg="white">
@@ -91,7 +99,7 @@ export const VotableSubject: FunctionComponent<Props> = observer(
             )}
 
             {totalVotes > 0 && (
-              <AvatarGroup spacing={0} gap="11px" flexWrap="wrap">
+              <AvatarGroup spacing={0} gap="20px" flexWrap="wrap">
                 {Object.entries(subjectVotes!).map(
                   ([userId, userTotalVotes]) => {
                     const userAvatarURL = userIdAvatarMapping.get(userId);

@@ -59,7 +59,7 @@ export const ButtonSubjectVote: FunctionComponent<Props> = observer(
 
     const bgColor =
       textContentState === TextContentState.VOTE
-        ? "green"
+        ? "teal"
         : textContentState === TextContentState.REMOVE_VOTE
         ? "red"
         : "blue";

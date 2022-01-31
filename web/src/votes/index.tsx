@@ -63,36 +63,38 @@ const Votes = () => {
         <ClientSideVotingSessionProvider
           value={new ClientSideVotingSession(currentToast!)}
         >
-          <Flex
-            h="full"
-            overflowX="auto"
-            direction="column"
-            style={{
-              overscrollBehaviorX: "contain",
-            }}
-          >
+          <Flex h="full" direction="column">
             <Box m={4}>
               <UserVotesLeft />
             </Box>
 
-            <Flex
-              direction="column"
-              justify="center"
-              align="center"
+            <Box
               h="full"
-              w="full"
-              p="30px"
+              maxW="full"
+              overflowX="auto"
+              style={{
+                overscrollBehaviorX: "contain",
+              }}
             >
-              <Box flex={1}>
-                <VotesList />
-              </Box>
+              <Flex
+                direction="column"
+                justify="center"
+                align="center"
+                h="full"
+                pt="30px"
+                px="30px"
+              >
+                <Box flex={1}>
+                  <VotesList />
+                </Box>
 
-              <Divider borderColor="gray.800" />
+                <Divider borderColor="gray.800" />
 
-              <Box flex={1}>
-                <SubjectsList />
-              </Box>
-            </Flex>
+                <Box flex={1}>
+                  <SubjectsList />
+                </Box>
+              </Flex>
+            </Box>
           </Flex>
         </ClientSideVotingSessionProvider>
       )}

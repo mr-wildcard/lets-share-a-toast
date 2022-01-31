@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from "react";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
-import { firebaseData } from "@web/core/firebase/data";
 import { votableSubjectWidth } from "../constants";
 import { useClientSideVotingSession } from "@web/votes/stores/ClientSideVotingSession";
 
@@ -19,22 +18,22 @@ export const SubjectVotes: FunctionComponent<Props> = observer(
 
     const verticalBarScaling =
       subjectTotalVotes === 0
-        ? 0
-        : (100 * subjectTotalVotes) / totalOfAllVotes / 100;
+        ? 100
+        : 100 - (subjectTotalVotes / totalOfAllVotes) * 100;
 
     return (
-      <Flex
-        position="relative"
-        align="end"
-        w={`${votableSubjectWidth}px`}
-        h="full"
-        transformOrigin="center bottom"
-        transition="transform 150ms cubic-bezier(0.87, 0, 0.13, 1)"
-        background="red"
-        style={{
-          transform: `scaleY(${verticalBarScaling})`,
-        }}
-      />
+      <Flex w={`${votableSubjectWidth}px`} h="full" overflowY="hidden">
+        <Box
+          w="full"
+          h="full"
+          transition="transform 300ms cubic-bezier(0.87, 0, 0.13, 1)"
+          background="teal.700"
+          borderTopRadius={4}
+          style={{
+            transform: `translateY(${verticalBarScaling}%)`,
+          }}
+        />
+      </Flex>
     );
   }
 );
