@@ -3,8 +3,8 @@ import { SimpleGrid } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
-import SubjectItem from "web/src/subjects/components/item/SubjectItem";
-import SubjectAddButton from "web/src/subjects/components/SubjectAddButton";
+import SubjectItem from "./item/SubjectItem";
+import SubjectAddButton from "./SubjectAddButton";
 
 interface Props {
   subjects: Subject[];

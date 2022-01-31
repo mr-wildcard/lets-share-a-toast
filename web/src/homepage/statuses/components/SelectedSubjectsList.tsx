@@ -11,7 +11,7 @@ import {
 import { Subject } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
-import FloralSeparator from "web/src/homepage/statuses/components/FloralSeparator";
+import FloralSeparator from "./FloralSeparator";
 
 interface Props {
   selectedSubjects: Subject[];

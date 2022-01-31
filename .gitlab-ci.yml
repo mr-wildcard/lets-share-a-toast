@@ -4,21 +4,21 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE_VERSION: 1.0.10
+  DOCKER_IMAGE_VERSION: 1.1.0
   DOCKER_IMAGE: "${CI_REGISTRY_IMAGE}:${DOCKER_IMAGE_VERSION}"
 
 image: $DOCKER_IMAGE
 
 before_script:
-  - yarn --immutable
+  - pnpm install
 
 cache:
   key:
     files:
-      - yarn.lock
+      - pnpm-lock.yaml
   paths:
     - "**/node_modules"
-    - .yarn
+    - .pnpm-store
 
 include:
   - local: '/web/.gitlab-ci.yml'

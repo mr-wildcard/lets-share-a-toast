@@ -6,38 +6,31 @@
 2. Log in to **Gitlab registry** with `docker login registry.ekino.com` in order to pull Docker images.
 3. Get a **Firebase** CI token. If you're a member of the Firebase project, you can create your own token with `firebase login:ci`.
 4. Copy and paste the token as the value of the `FIREBASE_TOKEN` key in the `.env` file.
-5. This project uses [**Yarn >= 3**](https://yarnpkg.com/getting-started/install).
+5. This project uses [PNPM](https://pnpm.io/).
 
 ## Installation
 
 1. `./etc/local/install.sh`
 2. `docker compose up --remove-orphans`
 
-- Webapp URL: [http://localhost:5000/](http://localhost:5000/) (should show up with preloaded data)
+- Webapp URL: [http://localhost:5000/](http://localhost:5000/)
 - Firebase emulator suite: [http://localhost:5004/](http://localhost:5004/)
 
-## Prefer working in a Docker container
+## Deploy
+
+Every commit on master is automatically deployed to production.
+
+## Working in a Docker container
 
 Basically, every commands should be run inside a container.
 
-Want to install a new dependency to `web` package ?
+For example, want to install a new dependency to `web` package ?
 1. `docker compose exec web sh`
-2. `yarn add my-dependency`
-3. or `docker compose exec web yarn add my-dependency`
-
-Want to run tsc on the project ?
-1. `docker compose exec web sh`
-2. `cd ..`
-3. `yarn tsc`
+2. `pnpm add my-dependency`
+3. or `docker compose exec web pnpm add my-dependency`
 
 ## Upgrade project dependencies
 
-If Docker Compose is `up` :
-```
-$ docker compose exec web yarn upgrade-interactive
-```
-
-If not:
 ```
 $ ./etc/local/upgrade-dependencies.sh
 ```

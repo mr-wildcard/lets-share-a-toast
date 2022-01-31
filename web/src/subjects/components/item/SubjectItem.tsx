@@ -34,11 +34,11 @@ import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
 import { isSubjectNew, isSubjectPrettyOld } from "@web/subjects/helpers";
 import subjectIsInVotingSession from "@web/core/helpers/subjectIsInVotingSession";
 import { subjectIsSelectedForNextTOAST } from "@web/core/helpers/subjectIsSelectedForNextTOAST";
-import SubjectStatusBadge from "web/src/subjects/components/item/SubjectStatusBadge";
-import SubjectSpeakers from "web/src/subjects/components/item/SubjectSpeakers";
-import SubjectNewBadge from "web/src/subjects/components/item/SubjectNewBadge";
-import css from "web/src/subjects/components/item/SubjectItem.module.css";
-import ContextMenuItem from "web/src/subjects/components/item/ContextMenuItem";
+import SubjectStatusBadge from "./SubjectStatusBadge";
+import SubjectSpeakers from "./SubjectSpeakers";
+import SubjectNewBadge from "./SubjectNewBadge";
+import ContextMenuItem from "./ContextMenuItem";
+import css from "./SubjectItem.module.css";
 
 interface Props {
   subject: Subject;

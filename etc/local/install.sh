@@ -2,4 +2,4 @@
 
 source .env
 
-docker run --rm -it -v `pwd`:/code -w /code "$DOCKER_IMAGE" yarn
+docker run --rm -it -v "$(pwd)":/code -w /code "$DOCKER_IMAGE" pnpm install

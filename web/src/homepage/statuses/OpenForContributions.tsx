@@ -6,7 +6,7 @@ import { Toast } from "@shared/models";
 
 import Image from "@web/core/components/Image";
 import { Pathnames } from "@web/core/constants";
-import WhosInChargeRecap from "web/src/homepage/statuses/components/WhosInChargeRecap";
+import WhosInChargeRecap from "./components/WhosInChargeRecap";
 
 interface Props {
   toast: Toast;

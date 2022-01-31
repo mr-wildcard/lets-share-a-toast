@@ -8,7 +8,8 @@ test:functions:
     paths:
       - firebase/functions/lib
   script:
-    - yarn workspace functions build
+    - cd firebase/functions
+    - pnpm build
 
 deploy:functions:
   stage: deploy

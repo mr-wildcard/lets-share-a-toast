@@ -14,7 +14,8 @@ test-web:
     VITE_FIREBASE_APP_ID: ${FIREBASE_APP_ID}
     VITE_FIREBASE_DATABASE_URL: ${FIREBASE_DATABASE_URL}
   script:
-    - NODE_ENV=production yarn workspace web build
+    - cd web
+    - NODE_ENV=production pnpm build
 
 deploy-web:
   stage: deploy

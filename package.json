@@ -1,10 +1,5 @@
 {
   "private": true,
-  "workspaces": [
-    "web",
-    "firebase/functions"
-  ],
-  "packageManager": "yarn@3.1.1",
   "resolutions": {
     "@emotion/react": "^11.7.1"
   }

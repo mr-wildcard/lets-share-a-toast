@@ -38,13 +38,8 @@ testem.log
 Thumbs.db
 .env
 
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*
+.pnpm-debug.log
+.pnpm-store
 
 web/dist
 web/stats.html

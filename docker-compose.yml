@@ -3,10 +3,10 @@ version: '3.8'
 services:
   web:
     image: ${DOCKER_IMAGE}
-    command: /bin/sh -c "yarn workspace web dev --port ${FRONTEND_PORT} --host"
+    command: /bin/sh -c "pnpm dev -- --port ${FRONTEND_PORT} --host"
     volumes:
       - ./:/code:delegated
-    working_dir: /code
+    working_dir: /code/web
     ports:
       - ${FRONTEND_PORT}:${FRONTEND_PORT}
     environment:
@@ -44,5 +44,5 @@ services:
     image: ${DOCKER_IMAGE}
     volumes:
       - ./:/code:delegated
-    working_dir: /code
-    command: /bin/sh -c "yarn workspace functions serve"
+    working_dir: /code/firebase/functions
+    command: /bin/sh -c "pnpm serve"
