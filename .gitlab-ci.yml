@@ -10,6 +10,7 @@ variables:
 image: $DOCKER_IMAGE
 
 before_script:
+  - pnpm config set store-dir .pnpm-store
   - pnpm install
 
 cache:
