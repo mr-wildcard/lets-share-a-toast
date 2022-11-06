@@ -1,5 +1,8 @@
 {
   "private": true,
+  "scripts": {
+    "dev": "firebase emulators:start --project=let-s-share-a-toast --config=firebase/firebase.json --import=firebase/firestore-data --export-on-exit"
+  },
   "resolutions": {
     "@emotion/react": "^11.7.1"
   }
