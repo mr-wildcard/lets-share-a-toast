@@ -6,7 +6,7 @@ build({
   entryPoints: ["src/index.ts"],
   platform: "node",
   target: ["node16"],
-  outfile: "lib/index.js",
+  outfile: "build/index.js",
   bundle: true,
   watch: args.includes("--watch"),
   external: ["firebase-admin", "firebase-functions"],

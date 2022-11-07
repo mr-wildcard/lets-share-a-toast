@@ -2,22 +2,18 @@
   "name": "functions",
   "private": true,
   "scripts": {
-    "build": "rimraf lib && node esbuild.config.js",
-    "dev": "rimraf lib && node esbuild.config.js --watch",
-    "shell": "npm run build && firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "build": "node esbuild.config.js",
+    "dev": "node esbuild.config.js --watch"
   },
   "engines": {
     "node": "16"
   },
-  "main": "lib/index.js",
   "dependencies": {
     "axios": "0.25.0",
     "firebase-admin": "11.2.0",
     "firebase-functions": "4.0.2"
   },
+  "main": "build/index.js",
   "devDependencies": {
     "esbuild": "0.14.14",
     "firebase-functions-test": "3.0.0",

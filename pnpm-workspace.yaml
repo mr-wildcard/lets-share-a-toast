@@ -1,3 +1,4 @@
 packages:
   - "web"
-  - "firebase/functions"
+  - "firebase"
+  - "functions"

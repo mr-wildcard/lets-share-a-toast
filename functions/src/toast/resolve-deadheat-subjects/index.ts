@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import { DatabaseRefPaths, FirestoreCollection } from "@shared/firebase";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
 
-import { changeMultipleSubjectsStatusAtOnce } from "@firebase-functions/helpers/changeMultipleSubjectsStatusAtOnce";
+import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
 export const resolveDeadheatSubjects = functions.https.onCall(async (data) => {
   const updateCurrentToast = admin

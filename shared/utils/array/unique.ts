@@ -1,3 +1,3 @@
-export function unique(value: any, index: number, self: any[]) {
+export function unique(value: unknown, index: number, self: unknown[]) {
   return self.indexOf(value) === index;
 }

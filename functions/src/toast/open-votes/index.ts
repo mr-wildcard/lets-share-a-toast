@@ -1,8 +1,10 @@
 import * as functions from "firebase-functions";
-import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
 import * as admin from "firebase-admin";
+
+import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
 import { ToastStatus } from "@shared/enums";
-import notifySlackChannel from "firebase/functions/src/slack/notify-channel";
+
+import notifySlackChannel from "../../slack/notify-channel";
 
 export const openVotes = functions.https.onCall(async (data, context) => {
   functions.logger.info("Open voting session.");

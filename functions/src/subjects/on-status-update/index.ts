@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import { DatabaseRefPaths, FirestoreCollection } from "@shared/firebase";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
 
-import { getCurrentTOAST } from "@firebase-functions/helpers/getCurrentTOAST";
+import { getCurrentTOAST } from "../../helpers/getCurrentTOAST";
 
 function removeSubjectFromVotingSession(subjectId: string) {
   return admin

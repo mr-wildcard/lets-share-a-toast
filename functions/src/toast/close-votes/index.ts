@@ -5,7 +5,7 @@ import { DatabaseRefPaths, SubjectsVotes } from "@shared/firebase";
 import { getSelectedSubjectIds } from "@shared/utils";
 import { SubjectStatus, ToastStatus } from "@shared/enums";
 
-import { changeMultipleSubjectsStatusAtOnce } from "@firebase-functions/helpers/changeMultipleSubjectsStatusAtOnce";
+import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
 export const closeVotes = functions.https.onCall(async () => {
   functions.logger.info("Close voting session.");

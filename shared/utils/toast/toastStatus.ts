@@ -1,4 +1,4 @@
-import { ToastStatus } from '../../enums/ToastStatus';
+import { ToastStatus } from "../../enums/ToastStatus";
 
 const ToastStatusesOrder: ToastStatus[] = [
   ToastStatus.OPEN_TO_CONTRIBUTION,
@@ -10,10 +10,13 @@ const ToastStatusesOrder: ToastStatus[] = [
 
 type NotCancelledTOASTStatus = Exclude<ToastStatus, ToastStatus.CANCELLED>;
 
-export const isTOASTOngoing = (toastStatus: ToastStatus) =>
-  toastStatus !== ToastStatus.CLOSED && toastStatus !== ToastStatus.CANCELLED;
+export function isTOASTOngoing(toastStatus: ToastStatus) {
+  return (
+    toastStatus !== ToastStatus.CLOSED && toastStatus !== ToastStatus.CANCELLED
+  );
+}
 
-export const getTOASTStatusUtils = function (toastStatus: ToastStatus) {
+export function getTOASTStatusUtils(toastStatus: ToastStatus) {
   const toastIsOngoing = isTOASTOngoing(toastStatus);
 
   return {
@@ -42,7 +45,7 @@ export const getTOASTStatusUtils = function (toastStatus: ToastStatus) {
         return true;
       } else if (status === toastStatus) {
         /**
-         * Setting toast status to the same status it has it allowed.
+         * Setting toast status to the same statu is allowed.
          */
         return true;
       } else {
@@ -55,30 +58,5 @@ export const getTOASTStatusUtils = function (toastStatus: ToastStatus) {
         return nextToastStatusIndex === currentToastStatusIndex + 1;
       }
     },
-    isThePreviousStatusOf(status: NotCancelledTOASTStatus) {
-      return status === this.getPreviousStatus();
-    },
-    getPreviousStatus() {
-      if (!toastIsOngoing) {
-        return toastStatus;
-      } else {
-        const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
-
-        if (currentToastStatusIndex === 0) {
-          return toastStatus;
-        } else {
-          return ToastStatusesOrder[currentToastStatusIndex - 1];
-        }
-      }
-    },
-    getNextAllowedStatus() {
-      if (!toastIsOngoing) {
-        return toastStatus;
-      } else {
-        const currentToastStatusIndex = ToastStatusesOrder.indexOf(toastStatus);
-
-        return ToastStatusesOrder[currentToastStatusIndex + 1];
-      }
-    },
   };
-};
+}

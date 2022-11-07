@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 import { FirestoreCollection } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
 
-import { changeMultipleSubjectsStatusAtOnce } from "@firebase-functions/helpers/changeMultipleSubjectsStatusAtOnce";
+import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
 export function cancelledAfterVotes() {
   return admin

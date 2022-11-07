@@ -1,16 +1,18 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "typeRoots": ["node_modules/@types", "./typings"],
     "module": "ESNext",
     "moduleResolution": "Node",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "outDir": "lib",
+    "outDir": "functions/lib",
     "sourceMap": true,
     "target": "ESNext",
     "isolatedModules": true
   },
   "compileOnSave": true,
-  "include": ["./src"]
+  "include": [
+    "./functions/src"
+  ]
 }

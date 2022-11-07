@@ -2,6 +2,8 @@ import * as functions from "firebase-functions";
 import axios from "axios";
 
 export default function notifySlackChannel(message: string) {
+  return console.warn("Call to Slack disabled.");
+
   const { slack } = functions.config();
 
   axios

@@ -4,7 +4,7 @@ import * as admin from "firebase-admin";
 import { DatabaseRefPaths } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
 
-import { changeMultipleSubjectsStatusAtOnce } from "@firebase-functions/helpers/changeMultipleSubjectsStatusAtOnce";
+import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
 export const endToast = functions.https.onCall(
   async ({ givenSubjectsIds }, context) => {

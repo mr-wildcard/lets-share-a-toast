@@ -1,0 +1,13 @@
+{
+  "name": "firebase",
+  "private": true,
+  "scripts": {
+    "dev": "firebase emulators:start --project=let-s-share-a-toast --import=firestore-data --export-on-exit",
+    "shell": "firebase functions:shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-tools": "^11.16.0"
+  }
+}
