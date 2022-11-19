@@ -133,7 +133,7 @@ const StatusField: FunctionComponent<Props> = ({
         position="relative"
         borderRadius={6}
         overflow="hidden"
-        d="inline-block"
+        display="inline-block"
       >
         <Box
           position="absolute"

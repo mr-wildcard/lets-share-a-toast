@@ -24,7 +24,7 @@ const SubjectAddButton: FunctionComponent<Props> = ({
 }) => {
   return (
     <Button
-      d="block"
+      display="block"
       position="relative"
       variant="outline"
       colorScheme="gray"

@@ -110,7 +110,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
             <Divider m={0} />
 
             <ModalCloseButton
-              d="flex"
+              display="flex"
               bg="rgba(255, 255, 255, 0.7)"
               p={2}
               _hover={{

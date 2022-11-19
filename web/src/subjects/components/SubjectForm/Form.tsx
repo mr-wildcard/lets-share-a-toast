@@ -252,7 +252,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                 <Flex align="center" justify="center" mx="auto">
                   <Text textAlign="center" wordBreak="break-word">
                     <HighlightedText
-                      d="inline-block"
+                      display="inline-block"
                       bgColor={pageColors.subjects}
                       animDelay={500}
                     >
@@ -392,7 +392,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
                             step={5}
                             p={0}
                             height={space10}
-                            d="block"
+                            display="block"
                             size="lg"
                             onChange={(value) => {
                               if (value !== field.value) {

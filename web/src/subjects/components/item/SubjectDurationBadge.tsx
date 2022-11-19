@@ -9,7 +9,7 @@ interface Props {
 const SubjectDurationBadge: FunctionComponent<Props> = ({ duration }) => {
   return (
     <Badge
-      d="flex"
+      display="flex"
       alignItems="center"
       variant="outline"
       colorScheme="blue"

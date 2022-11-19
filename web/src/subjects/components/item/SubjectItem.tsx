@@ -303,7 +303,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
 
         <MenuItem onClick={() => onEditSubject(subject)}>
           <Box
-            d="flex"
+            display="flex"
             alignItems="center"
             cursor="pointer"
             _hover={{

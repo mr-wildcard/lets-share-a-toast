@@ -11,7 +11,7 @@ const UserVotesLeft = observer(() => {
 
   return (
     <Text
-      d="inline-block"
+      display="inline-block"
       bg="white"
       fontSize="xl"
       fontWeight="bold"

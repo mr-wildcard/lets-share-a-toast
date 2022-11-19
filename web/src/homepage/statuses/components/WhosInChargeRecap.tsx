@@ -26,7 +26,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
       You can count on your host
       <HighlightedText mx={3} bgColor="orange.300">
         <Image
-          d="inline-block"
+          display="inline-block"
           src={toast.organizer?.photoURL!}
           width={24}
           height={24}
@@ -40,7 +40,7 @@ const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
       and
       <HighlightedText mx={3} bgColor="orange.300">
         <Image
-          d="inline-block"
+          display="inline-block"
           src={toast.scribe?.photoURL!}
           width={24}
           height={24}

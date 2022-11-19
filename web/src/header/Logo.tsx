@@ -16,7 +16,7 @@ const Content = () => (
     <Text
       as="span"
       className={css.toast}
-      d="inline-block"
+      display="inline-block"
       pl={2}
       pr={1}
       role="img"

@@ -35,7 +35,7 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
 
   return (
     <Text
-      d="inline-block"
+      display="inline-block"
       style={{
         width: `${textWidth}px`,
       }}
@@ -44,7 +44,7 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
         <HighlightedText bgColor="white" d="inline-block" mx={2}>
           <Input
             ref={input}
-            d="inline-block"
+            display="inline-block"
             textAlign="center"
             className={css.input}
             fontWeight="bold"

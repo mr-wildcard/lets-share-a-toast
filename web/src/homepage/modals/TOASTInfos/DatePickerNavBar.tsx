@@ -10,7 +10,7 @@ const DatePickerNavBar: FunctionComponent<NavbarElementProps> = ({
   onNextClick,
 }) => {
   return (
-    <ButtonGroup d="flex" isAttached size="md" spacing={0}>
+    <ButtonGroup display="flex" isAttached size="md" spacing={0}>
       <Button
         borderRadius={0}
         roundedTopLeft="3px"

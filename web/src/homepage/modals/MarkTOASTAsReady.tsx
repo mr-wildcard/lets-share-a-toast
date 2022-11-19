@@ -95,7 +95,7 @@ const MarkTOASTAsReady: FunctionComponent<Props> = ({
                 <ModalBody>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
-                      <Checkbox mb={2} defaultIsChecked={false} {...field}>
+                      <Checkbox mb={2} defaultChecked={false} {...field}>
                         Also notify #bordeaux Slack channel:
                       </Checkbox>
                     )}

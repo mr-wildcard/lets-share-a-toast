@@ -257,7 +257,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                     >
                       <FormLabel
                         htmlFor={field.name}
-                        d="flex"
+                        display="flex"
                         alignItems="center"
                       >
                         Max subjects&nbsp;
@@ -375,7 +375,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                 <Box>
                   <Field name="notifySlack">
                     {({ field }: FieldProps) => (
-                      <Checkbox mb={2} defaultIsChecked={false} {...field}>
+                      <Checkbox mb={2} defaultChecked={false} {...field}>
                         Also notify #bordeaux Slack channel:
                       </Checkbox>
                     )}

@@ -20,7 +20,7 @@ interface Props {
 const SubjectLanguageBadge: FunctionComponent<Props> = ({ language }) => {
   return (
     <Badge
-      d="flex"
+      display="flex"
       alignItems="center"
       variant="outline"
       colorScheme="blue"
