@@ -19,6 +19,8 @@ import {
 import { SubjectStatus } from "@shared/enums";
 
 import { getStatusButtonStyleProps } from "@web/subjects/components/SubjectForm/helpers";
+import { Subject } from "@shared/models";
+import SubjectStatusBadge from "@web/subjects/components/item/SubjectStatusBadge";
 
 interface StatusBackgroundStyles {
   x: number;
@@ -64,7 +66,12 @@ const StatusInfos = {
   ),
 };
 
-interface Props extends FieldProps<SubjectStatus> {
+type SubjectSelectableStatus =
+  | SubjectStatus.AVAILABLE
+  | SubjectStatus.UNAVAILABLE
+  | SubjectStatus.DONE;
+
+interface Props extends FieldProps<SubjectSelectableStatus> {
   showHints?: boolean;
 }
 
