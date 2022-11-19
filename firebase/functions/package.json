@@ -1,0 +1,7 @@
+{
+  "name": "firebase-functions",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "author": "",
+  "license": "ISC"
+}

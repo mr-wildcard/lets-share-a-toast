@@ -16,7 +16,8 @@
     ]
   },
   "functions": {
-    "source": "../functions"
+    "source": "functions",
+    "runtime": "nodejs16"
   },
   "emulators": {
     "firestore": {

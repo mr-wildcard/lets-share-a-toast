@@ -8,8 +8,7 @@ build({
   target: ["node16"],
   outfile: "build/index.js",
   bundle: true,
+  absWorkingDir: __dirname,
   watch: args.includes("--watch"),
   external: ["firebase-admin", "firebase-functions"],
-}).then(() =>
-  console.log("[esbuild] ✅ Compilation for Firebase functions ready.")
-);
+}).then(() => console.log("✅ Compilation for Firebase functions ready."));

@@ -1,9 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "dev": "pnpm run -r --parallel dev"
+    "dev:firebase": "cd firebase && concurrently pnpm:dev:*",
+    "dev": "concurrently pnpm:dev:*"
   },
-  "resolutions": {
-    "@emotion/react": "^11.7.1"
+  "devDependencies": {
+    "concurrently": "^7.5.0"
   }
 }

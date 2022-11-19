@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "strict": true,
-    "typeRoots": ["./node_modules/@types"],
+    "lib": ["ESNext"],
     "baseUrl": ".",
     "paths": {
-      "@firebase-functions/*": ["./firebase/functions/src/*"],
       "@shared/*": ["./shared/*"],
       "@web/*": ["./web/src/*"]
     }
