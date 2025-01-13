@@ -11,22 +11,16 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { Toast } from "@shared/models";
-
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getCloudFunctionCancelTOAST } from "@web/core/firebase/helpers";
 
 interface Props {
-  currentToast: Toast;
   closeModal(): void;
 }
 
-const CancelTOAST: FunctionComponent<Props> = ({
-  currentToast,
-  closeModal,
-}) => {
+const CancelTOAST: FunctionComponent<Props> = ({ closeModal }) => {
   const [cancelling, setCancelling] = useState(false);
 
   const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;

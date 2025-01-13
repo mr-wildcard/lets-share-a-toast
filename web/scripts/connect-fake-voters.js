@@ -1,5 +1,4 @@
 const puppeteer = require("puppeteer");
-const path = require("path");
 
 const getBotIndex = (index) => (index >= 10 ? "10" : "0" + index);
 
@@ -31,9 +30,12 @@ async function startBot(botIndex, context) {
   }, 1000);
 }
 
+let browser;
+
 try {
   (async function () {
-    const browser = await puppeteer.launch();
+    browser = await puppeteer.launch();
+
     const context = await browser.createIncognitoBrowserContext();
 
     for (let botIndex = 1; botIndex <= 5; botIndex++) {

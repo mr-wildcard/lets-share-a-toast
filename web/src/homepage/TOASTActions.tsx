@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import {
   Box,
   Button,
@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/icons";
 import { animated } from "@react-spring/web";
 
-import { firebaseData } from "@web/core/firebase/data";
 import { spacing } from "@web/core/constants";
 import useActionsModalStates from "./hooks/useActionsModalStates";
 import useActionsButtonStates from "./hooks/useActionsButtonStates";
@@ -37,6 +36,7 @@ import CloseVotes from "./actions/CloseVotes";
 import MarkTOASTAsReady from "./actions/MarkTOASTAsReady";
 import DeadHeatSubjects from "./actions/DeadHeatSubjects";
 import EndTOAST from "./actions/EndTOAST";
+import { CurrentToast } from "@shared/models";
 
 const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
 
@@ -44,11 +44,13 @@ const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px 0 ${
   spacing.stylizedGap
 }px`;
 
-const TOASTActions = () => {
-  const { currentToast, votingSession } = firebaseData;
+interface Props {
+  currentToast?: CurrentToast;
+}
 
+const TOASTActions: FC<Props> = ({ currentToast }) => {
   const modalsStates = useActionsModalStates();
-  const buttonsStates = useActionsButtonStates(currentToast!);
+  const buttonsStates = useActionsButtonStates(currentToast);
   const animations = useActionsAnimations();
 
   const closeTOASTFormModal = useCallback((toastCreated: boolean) => {
@@ -58,8 +60,6 @@ const TOASTActions = () => {
       animations.toastCreation.display(true);
     }
   }, []);
-
-  const [bgClipPath1, bgClipPath2] = animations.background.finalClipPaths;
 
   const backgroundOpenAnimationFinished =
     animations.background.opened && animations.background.animationFinished;
@@ -117,7 +117,7 @@ const TOASTActions = () => {
         p={padding}
         position="relative"
         style={{
-          // @ts-ignore
+          // @ts-expect-error I don't know tbh
           clipPath: animations.background.animation.clipPath.to(
             (path1, path2) => {
               /**
@@ -156,7 +156,7 @@ const TOASTActions = () => {
           bg="white"
           inset={0}
           style={{
-            // @ts-ignore
+            // @ts-expect-error I don't KNOW
             clipPath: animations.background.animation.clipPath.to(
               (path1, path2) =>
                 `polygon(0% ${path1}%, 100% ${path2}%, 100% 100%, 0% 100%)`
@@ -257,7 +257,6 @@ const TOASTActions = () => {
 
                 {modalsStates.cancelTOAST.isOpen && (
                   <CancelTOASTModal
-                    currentToast={currentToast}
                     closeModal={modalsStates.cancelTOAST.onClose}
                   />
                 )}
@@ -275,10 +274,8 @@ const TOASTActions = () => {
               <MenuButton
                 textDecoration="underline"
                 position="relative"
-                size="lg"
                 pt={0}
                 fontWeight="bold"
-                variant="link"
               >
                 More actions
               </MenuButton>

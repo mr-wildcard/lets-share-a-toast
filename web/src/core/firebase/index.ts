@@ -64,7 +64,9 @@ export const signin = () => {
       const userEmail = urlQueryParams.get("userEmail");
       const userPassword = urlQueryParams.get("userPassword");
 
-      return signInWithEmailAndPassword(auth, userEmail!, userPassword!);
+      if (userEmail && userPassword) {
+        return signInWithEmailAndPassword(auth, userEmail, userPassword);
+      }
     }
   }
 

@@ -5,7 +5,7 @@ import { CurrentToast, Subject, User } from "@shared/models";
 import { DatabaseVotingSession } from "@shared/firebase";
 import { SubjectStatus } from "@shared/enums";
 
-interface State extends Record<string, any> {
+interface State {
   connectedUser?: FirebaseUser | null;
   currentUserIsLoaded: boolean;
   connectedUserExists: boolean;

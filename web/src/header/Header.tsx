@@ -84,8 +84,8 @@ const Header: FunctionComponent = () => {
 
             <Box position="relative">
               <Avatar
-                name={firebaseData.connectedUser.displayName!}
-                src={firebaseData.connectedUser.photoURL!}
+                name={firebaseData.connectedUser.displayName || "N/A"}
+                src={firebaseData.connectedUser.photoURL || undefined}
                 size="sm"
               >
                 <AvatarBadge boxSize="1em" bg="green.500" />

@@ -1,69 +1,41 @@
-import React, { Suspense, useMemo } from "react";
+import React, { FC, Suspense } from "react";
 import { observer } from "mobx-react-lite";
-import { SkeletonText, useTheme } from "@chakra-ui/react";
+import { SkeletonText } from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
 
-import { firebaseData } from "@web/core/firebase/data";
 import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
 import { pageColors } from "@web/core/constants";
+import { CurrentToast } from "@shared/models";
 
-const NoTOAST = React.lazy(
-  () => import("./statuses/NoTOAST" /* webpackChunkName: "status-no-toast" */)
-);
-
+const NoTOAST = React.lazy(() => import("./statuses/NoTOAST"));
 const TOASTIsToday = React.lazy(
-  () =>
-    import(
-      "./statuses/components/TOASTIsToday" /* webpackChunkName: "status-toast-today" */
-    )
+  () => import("./statuses/components/TOASTIsToday")
 );
 
 const TOASTDateHasPassed = React.lazy(
-  () =>
-    import(
-      "./statuses/components/TOASTDateHasPassed" /* webpackChunkName: "status-toast-date-passed" */
-    )
+  () => import("./statuses/components/TOASTDateHasPassed")
 );
 
 const OpenForContributions = React.lazy(
-  () =>
-    import(
-      "./statuses/OpenForContributions" /* webpackChunkName: "status-open-for-contribution" */
-    )
+  () => import("./statuses/OpenForContributions")
 );
 
-const OpenForVotes = React.lazy(
-  () =>
-    import(
-      "./statuses/OpenForVotes" /* webpackChunkName: "status-open-for-votes" */
-    )
-);
+const OpenForVotes = React.lazy(() => import("./statuses/OpenForVotes"));
+const VoteClosed = React.lazy(() => import("./statuses/VoteClosed"));
+const WaitingForTOAST = React.lazy(() => import("./statuses/WaitingForTOAST"));
 
-const VoteClosed = React.lazy(
-  () =>
-    import("./statuses/VoteClosed" /* webpackChunkName: "status-vote-closed" */)
-);
+interface Props {
+  currentToast?: CurrentToast;
+}
 
-const WaitingForTOAST = React.lazy(
-  () =>
-    import(
-      "./statuses/WaitingForTOAST" /* webpackChunkName: "status-waiting-for-toast" */
-    )
-);
+const TOASTStatus: FC<Props> = ({ currentToast }) => {
+  const currentToastExists = !!currentToast;
 
-const TOASTStatus = () => {
-  const theme = useTheme();
+  const toastIsToday = currentToastExists && isTOASTToday(currentToast.date);
 
-  const currentToast = firebaseData.currentToast;
-
-  const toastIsToday = useMemo(() => {
-    return !!currentToast && isTOASTToday(currentToast.date);
-  }, [currentToast]);
-
-  const toastDateHasPassed = useMemo(() => {
-    return !!currentToast && hasTOASTDatePassed(currentToast.date);
-  }, [currentToast]);
+  const toastDateHasPassed =
+    currentToastExists && hasTOASTDatePassed(currentToast.date);
 
   return (
     <Suspense
@@ -77,30 +49,30 @@ const TOASTStatus = () => {
         />
       }
     >
-      {currentToast === null && <NoTOAST />}
+      {!currentToastExists && <NoTOAST />}
 
-      {currentToast !== null && (
+      {currentToastExists && (
         <>
-          {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast!} />}
+          {toastDateHasPassed && <TOASTDateHasPassed toast={currentToast} />}
 
-          {toastIsToday && <TOASTIsToday toast={currentToast!} />}
+          {toastIsToday && <TOASTIsToday toast={currentToast} />}
 
           {!toastIsToday && !toastDateHasPassed && (
             <>
-              {currentToast!.status === ToastStatus.OPEN_TO_CONTRIBUTION && (
-                <OpenForContributions toast={currentToast!} />
+              {currentToast.status === ToastStatus.OPEN_TO_CONTRIBUTION && (
+                <OpenForContributions toast={currentToast} />
               )}
 
-              {currentToast!.status === ToastStatus.OPEN_FOR_VOTE && (
-                <OpenForVotes toast={currentToast!} />
+              {currentToast.status === ToastStatus.OPEN_FOR_VOTE && (
+                <OpenForVotes toast={currentToast} />
               )}
 
-              {currentToast!.status === ToastStatus.VOTE_CLOSED && (
-                <VoteClosed toast={currentToast!} />
+              {currentToast.status === ToastStatus.VOTE_CLOSED && (
+                <VoteClosed toast={currentToast} />
               )}
 
-              {currentToast!.status === ToastStatus.WAITING_FOR_TOAST && (
-                <WaitingForTOAST toast={currentToast!} />
+              {currentToast.status === ToastStatus.WAITING_FOR_TOAST && (
+                <WaitingForTOAST toast={currentToast} />
               )}
             </>
           )}

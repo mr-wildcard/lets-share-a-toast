@@ -191,7 +191,7 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
          */
         const speakers = values.speakers.filter(Boolean);
 
-        let input = {
+        const input = {
           title: values.title,
           speakersIds: speakers.map((speaker) => speaker.id),
           description: values.description,

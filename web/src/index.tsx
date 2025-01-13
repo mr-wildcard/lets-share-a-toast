@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { configure } from "mobx";
 
 import { AppLoader } from "./core/components/app-loader";
@@ -9,11 +9,16 @@ configure({
   enforceActions: "never",
 });
 
-ReactDOM.render(
-  <React.StrictMode>
-    <AppLoader>
-      <App />
-    </AppLoader>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const rootHTMLElement = document.getElementById("root");
+
+if (rootHTMLElement) {
+  const root = createRoot(rootHTMLElement);
+
+  root.render(
+    <React.StrictMode>
+      <AppLoader>
+        <App />
+      </AppLoader>
+    </React.StrictMode>
+  );
+}

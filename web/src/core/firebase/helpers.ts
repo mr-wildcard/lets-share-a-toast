@@ -12,10 +12,7 @@ export function getFirestoreSubjectCollection(firestore = getFirestore()) {
   return collection(firestore, FirestoreCollection.SUBJECTS);
 }
 
-export function getFirestoreSubjectDoc(
-  subjectId: string,
-  firestore = getFirestore()
-) {
+export function getFirestoreSubjectDoc(subjectId: string) {
   const subjectsCollection = getFirestoreSubjectCollection();
 
   return doc(subjectsCollection, subjectId);

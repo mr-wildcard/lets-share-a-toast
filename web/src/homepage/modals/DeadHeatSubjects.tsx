@@ -46,11 +46,13 @@ interface Props {
   closeModal(): void;
 }
 
+const resolveDeadheatSubjects = getCloudFunctionResolveDeadHeatSubjects();
+
 const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
   ({ currentToast, closeModal }) => {
     const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
-    const votes = firebaseData.votingSession!.votes!;
+    const votes = firebaseData.votingSession?.votes;
     const selectedSubjects = currentToast.selectedSubjects;
 
     /**
@@ -58,7 +60,11 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
      * because they're the only ones to have this amount of votes
      */
     const alreadySettledSubjects = useMemo(() => {
-      let subjects: Subject[] = [];
+      if (!votes) {
+        return [];
+      }
+
+      const subjects: Subject[] = [];
 
       const allUniqueTotalVotes = getAllUniqueTotalVotes(votes);
       const subjectsByTotalVotes = getDictionaryOfSubjectPerTotalVotes(votes);
@@ -73,7 +79,9 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
             (selectedSubject) => selectedSubject.id === alreadySelectedSubjectId
           );
 
-          subjects.push(subject!);
+          if (subject) {
+            subjects.push(subject);
+          }
         }
       }
 
@@ -119,9 +127,6 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
               return errors;
             }}
             onSubmit={async (values: FormValues) => {
-              const resolveDeadheatSubjects =
-                getCloudFunctionResolveDeadHeatSubjects();
-
               return resolveDeadheatSubjects({
                 selectedSubjectIds: alreadySettledSubjects
                   .map((subject) => subject.id)
@@ -129,12 +134,7 @@ const DeadHeatSubjectsModal: FunctionComponent<Props> = observer(
               }).then(closeModal);
             }}
           >
-            {({
-              values,
-              isSubmitting,
-              isValid,
-              validateForm,
-            }: FormikProps<FormValues>) => {
+            {({ values, isSubmitting, isValid }: FormikProps<FormValues>) => {
               const remainingSubjectsToSelect =
                 currentToast.maxSelectableSubjects -
                 (alreadySettledSubjects.length +

@@ -98,7 +98,7 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                 }).then(closeModal);
               }}
             >
-              {({ values, isSubmitting, isValid }) => (
+              {({ isSubmitting, isValid }) => (
                 <Form>
                   <Box>
                     <Box my={5}>

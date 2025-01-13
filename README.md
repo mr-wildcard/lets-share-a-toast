@@ -3,7 +3,8 @@
 ## Installation
 
 1. `pnpm i`
-2. `unzip firebase/firestore-data.zip`
+2. Install [https://www.npmjs.com/package/firebase-tools](`firebase-tools`)
+3. `unzip firebase/firestore-data.zip`
 
 ## Getting started
 

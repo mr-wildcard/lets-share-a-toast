@@ -47,7 +47,7 @@ const ProposeSubjectForNextTOASTButton = () => {
         height={115}
         src="https://media.giphy.com/media/d7SlmU3j2QluzkOSIv/giphy.gif"
         style={{
-          // @ts-ignore
+          // @ts-expect-error I don't know tbh
           transform: anim.transform.to(
             (translateX, translateY, rotate) =>
               `translate(${translateX}px, ${translateY}px) rotate(${rotate}deg)`

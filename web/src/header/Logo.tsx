@@ -47,7 +47,6 @@ const Logo = () => {
         position="relative"
         className={css.heading}
         _after={{
-          // @ts-ignore
           content: `""`,
           position: "absolute",
           bottom: "-2px",

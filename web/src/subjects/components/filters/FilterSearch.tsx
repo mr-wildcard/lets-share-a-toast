@@ -16,7 +16,7 @@ interface Props {
 
 const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
   const input = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const text = useRef() as React.MutableRefObject<HTMLSpanElement>;
+  const text = useRef() as React.RefObject<HTMLParagraphElement>;
 
   const [focus, setFocus] = useState(false);
   const [textWidth, setTextWidth] = useState<null | number>(null);
@@ -41,7 +41,7 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
       }}
     >
       {focus ? (
-        <HighlightedText bgColor="white" d="inline-block" mx={2}>
+        <HighlightedText bgColor="white" display="inline-block" mx={2}>
           <Input
             ref={input}
             display="inline-block"
@@ -63,8 +63,6 @@ const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
       ) : (
         <Text
           as="span"
-          // TS expects a ref of `p` element as Text component returns a paragraph by default.
-          // @ts-ignore
           ref={text}
           textDecoration="underline"
           onClick={() => setFocus(true)}

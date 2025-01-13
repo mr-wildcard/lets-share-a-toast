@@ -24,7 +24,6 @@ const useActionsAnimations = () => {
       ? ["rotate(0.5deg) translateY(-70px)", [0, 15]]
       : ["rotate(-1.5deg) translateY(-60px)", [15, 0]];
     // I want a new value each time `backgroundOpened` change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backgroundOpened]);
 
   const backgroundAnimation = useSpring({

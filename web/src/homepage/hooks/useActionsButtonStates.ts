@@ -6,7 +6,7 @@ import { ToastStatus } from "@shared/enums";
 import toastStatusUtils from "@web/core/helpers/toastStatusUtils";
 import toastHasDeadheatSubjects from "@web/core/helpers/toastHasDeadheatSubjects";
 
-const useActionsButtonStates = (currentToast: CurrentToast) => {
+const useActionsButtonStates = (currentToast?: CurrentToast) => {
   return useMemo(() => {
     const isToast = !!currentToast;
 

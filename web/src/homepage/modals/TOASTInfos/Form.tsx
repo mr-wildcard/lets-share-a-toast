@@ -44,11 +44,13 @@ import {
 } from "@web/core/firebase/helpers";
 import { InfoIcon } from "@chakra-ui/icons";
 
+const createToastCloudFunction = getCloudFunctionCreateTOAST();
+
 /**
  * Related issue : https://github.com/gpbl/react-day-picker/issues/1194
  * DayPickerInput is working fine in dev mode, but was broken after production build.
  */
-// @ts-ignore
+// @ts-expect-error Ok alright
 const DayPickerInput = DayPicker.__esModule ? DayPicker.default : DayPicker;
 
 interface Props {
@@ -64,13 +66,13 @@ interface FormErrors {
   scribe?: boolean;
 }
 
-interface FormValues extends SlackNotificationFieldsValues {
+type FormValues = SlackNotificationFieldsValues & {
   dueDate: Date;
   maxSelectableSubjects: number;
   maxVotesPerUser: number;
   organizer?: User;
   scribe?: User;
-}
+};
 
 const today = new Date();
 
@@ -83,9 +85,12 @@ const TOASTForm: FunctionComponent<Props> = ({
   closeModal,
 }) => {
   const getFormattedSlackNotification = useCallback(
-    (notificationText, toastDueDate) => {
+    (notificationText: string, toastDueDate: Date) => {
       return notificationText
-        .replace("{{PROFILE}}", firebaseData.connectedUser?.displayName)
+        .replace(
+          "{{PROFILE}}",
+          firebaseData.connectedUser?.displayName || "N/A"
+        )
         .replace(
           "{{DATE}}",
           getFormattedTOASTDateWithRemainingDays(toastDueDate)
@@ -155,10 +160,8 @@ const TOASTForm: FunctionComponent<Props> = ({
 
         return errors;
       }}
-      onSubmit={async (values): Promise<void> => {
+      onSubmit={async (values: FormValues): Promise<void> => {
         if (!currentToast) {
-          const createToastCloudFunction = getCloudFunctionCreateTOAST();
-
           return createToastCloudFunction({
             date: values.dueDate.getTime(),
             maxSelectableSubjects: values.maxSelectableSubjects,
@@ -200,8 +203,6 @@ const TOASTForm: FunctionComponent<Props> = ({
                   >
                     <FormLabel htmlFor="dueDate">Day</FormLabel>
                     <Box position="relative">
-                      {/* datePickerCSS : needs to be of type react-day-picker/ClassNames instead of CSSModuleClasses.
-                        @ts-ignore */}
                       <DayPickerInput
                         {...field}
                         onDayChange={(date: Date) =>

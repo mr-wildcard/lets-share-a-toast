@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FC, PropsWithChildren, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { animated, to, useSpring, useTransition } from "@react-spring/web";
 
@@ -6,7 +6,7 @@ import { firebaseData } from "@web/core/firebase/data";
 import { negotiateLoginToFirebase } from "./helpers/negotiateLoginToFirebase";
 import { AnimatedImages } from "./components/AnimatedImages";
 
-const AppLoader: FunctionComponent = observer(({ children }) => {
+const AppLoader: FC<PropsWithChildren> = observer(({ children }) => {
   const [backgroundAnimated, setBackgroundAnimated] = useState(false);
 
   const appReady = firebaseData.dataLoadingPercentage === 100;

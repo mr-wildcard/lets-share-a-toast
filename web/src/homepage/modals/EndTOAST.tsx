@@ -74,12 +74,7 @@ const EndTOAST: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
             return endToast(values).then(closeModal);
           }}
         >
-          {({
-            values,
-            isValid,
-            isSubmitting,
-            errors,
-          }: FormikProps<FormValues>) => {
+          {({ values, isValid, isSubmitting }: FormikProps<FormValues>) => {
             return (
               <Form>
                 <ModalContent borderRadius="3px">

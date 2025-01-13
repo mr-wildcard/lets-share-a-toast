@@ -21,7 +21,7 @@ import { VotesList } from "./components/VotesList";
 import { UserVotesLeft } from "@web/votes/components/UserVotesLeft";
 
 function getPageState(currentToast?: CurrentToast): PageDisplayState {
-  if (!!currentToast) {
+  if (currentToast) {
     if (currentToast.status === ToastStatus.OPEN_FOR_VOTE) {
       return PageDisplayState.TIME_TO_VOTE;
     } else {
@@ -50,7 +50,7 @@ const Votes = () => {
   }, [currentToast]);
 
   const toastStatusIsAfterVoteOpened = useMemo(() => {
-    return !!currentToast
+    return currentToast
       ? getTOASTStatusUtils(currentToast.status).isAfter(
           ToastStatus.OPEN_FOR_VOTE
         )

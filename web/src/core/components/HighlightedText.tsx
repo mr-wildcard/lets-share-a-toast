@@ -38,7 +38,7 @@ const HighlightedText: FunctionComponent<Props> = ({
         height="100%"
         transformOrigin="0 50%"
         style={{
-          // @ts-ignore
+          // @ts-expect-error I don't knowt
           transform: animatedStyles.transform.to<string>(
             (
               translate: number,

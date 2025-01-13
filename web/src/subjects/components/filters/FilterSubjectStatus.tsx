@@ -71,7 +71,7 @@ const FilterSubjectStatus: FunctionComponent<Props> = ({ onStatusChanged }) => {
     >
       <Text
         as={animated.span}
-        // @ts-ignore
+        // @ts-expect-error I don't know ffs
         style={flash}
       >
         {currentStatusLabel}

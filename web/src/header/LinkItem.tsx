@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useLocation } from "react-router";
 import { Link as RouterLink } from "react-router-dom";
@@ -7,7 +12,7 @@ import { pageColorsByPathname, Pathnames } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import { ui } from "@web/core/stores/ui";
 
-interface Props {
+interface Props extends PropsWithChildren {
   href: Pathnames;
   bgColor: string;
 }

@@ -36,7 +36,7 @@ export function getSubjectTotalVotes(subjectVotes: SubjectVote) {
   const allVotes = Object.values(subjectVotes);
 
   let totalVotes = 0;
-  for (let vote in allVotes) {
+  for (const vote in allVotes) {
     totalVotes += allVotes[vote];
   }
 
