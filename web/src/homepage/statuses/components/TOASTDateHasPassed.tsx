@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
@@ -11,7 +11,7 @@ interface Props {
   toast: Toast;
 }
 
-const TOASTDateHasPassed: FunctionComponent<Props> = ({ toast }) => {
+const TOASTDateHasPassed: FC<Props> = ({ toast }) => {
   return (
     <Box fontWeight="bold" color="gray.800" textAlign="center">
       <Text fontSize="4xl" mt={0} mb={10}>

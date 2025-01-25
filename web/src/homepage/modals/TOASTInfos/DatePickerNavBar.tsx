@@ -1,37 +1,35 @@
-import React, { FunctionComponent } from "react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
+import React, { FC } from "react";
+import { Button, Group } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { NavbarElementProps } from "react-day-picker";
 
-const DatePickerNavBar: FunctionComponent<NavbarElementProps> = ({
+const DatePickerNavBar: FC<NavbarElementProps> = ({
   showPreviousButton,
   showNextButton,
   onPreviousClick,
   onNextClick,
 }) => {
   return (
-    <ButtonGroup display="flex" isAttached size="md" spacing={0}>
+    <Group attached gap={0}>
       <Button
         borderRadius={0}
         roundedTopLeft="3px"
         flex={1}
-        isDisabled={!showPreviousButton}
+        disabled={!showPreviousButton}
         onClick={() => onPreviousClick()}
-        leftIcon={<ArrowBackIcon />}
       >
-        Previous month
+        <ArrowBackIcon /> Previous month
       </Button>
       <Button
         borderRadius={0}
         borderTopRightRadius="3px"
         flex={1}
-        isDisabled={!showNextButton}
+        disabled={!showNextButton}
         onClick={() => onNextClick()}
-        rightIcon={<ArrowForwardIcon />}
       >
-        Next month
+        Next month <ArrowForwardIcon />
       </Button>
-    </ButtonGroup>
+    </Group>
   );
 };
 

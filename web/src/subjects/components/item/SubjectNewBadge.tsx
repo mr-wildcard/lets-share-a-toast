@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Badge } from "@chakra-ui/react";
 
 import Image from "@web/core/components/Image";
 
-const SubjectNewBadge: FunctionComponent = () => {
+const SubjectNewBadge: FC = () => {
   return (
     <Badge variant="outline" colorScheme="red" position="relative" pl="30px">
       <Image

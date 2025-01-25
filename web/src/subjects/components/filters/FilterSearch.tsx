@@ -1,10 +1,4 @@
-import React, {
-  FunctionComponent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Input, Text } from "@chakra-ui/react";
 
 import HighlightedText from "@web/core/components/HighlightedText";
@@ -14,7 +8,7 @@ interface Props {
   onSearchChanged(search: string): void;
 }
 
-const FilterSearch: FunctionComponent<Props> = ({ onSearchChanged }) => {
+const FilterSearch: FC<Props> = ({ onSearchChanged }) => {
   const input = useRef() as React.MutableRefObject<HTMLInputElement>;
   const text = useRef() as React.RefObject<HTMLParagraphElement>;
 

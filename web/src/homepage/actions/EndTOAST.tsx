@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Button, Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
@@ -11,13 +11,13 @@ interface Props {
   onClick: () => void;
 }
 
-const EndTOAST: FunctionComponent<Props> = ({ currentToast, onClick }) => {
+const EndTOAST: FC<Props> = ({ currentToast, onClick }) => {
   const isDisabled = currentToast.status !== ToastStatus.WAITING_FOR_TOAST;
 
   return (
     <Button
       onClick={onClick}
-      isDisabled={isDisabled}
+      disabled={isDisabled}
       variant="outline"
       position="relative"
       bg="white"

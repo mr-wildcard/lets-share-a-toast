@@ -1,15 +1,16 @@
 import React, { Suspense, useEffect } from "react";
-import { ChakraProvider, CSSReset } from "@chakra-ui/react";
+import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import dayjs from "dayjs";
+import { ThemeProvider } from "next-themes";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import Header from "./header/Header";
-import customTheme from "./core/theme";
 import { Pathnames } from "./core/constants";
 import { PageSkeleton } from "./core/components/PageSkeleton";
 import { ColoredBackground } from "./core/components/ColoredBackground";
 import { Main } from "./Main";
+import { Toaster } from "@web/notifications";
 
 const Home = React.lazy(() => import("./homepage"));
 const Subjects = React.lazy(() => import("./subjects"));
@@ -27,25 +28,26 @@ export default function LetsShareATOAST() {
   }, []);
 
   return (
-    <ChakraProvider theme={customTheme}>
-      <CSSReset />
+    <ChakraProvider value={defaultSystem}>
+      <ThemeProvider attribute="class" disableTransitionOnChange>
+        <Router>
+          <Toaster />
+          <Main>
+            <Header />
 
-      <Router>
-        <Main>
-          <Header />
-
-          <ColoredBackground>
-            <Suspense fallback={<PageSkeleton />}>
-              <Routes>
-                <Route path={Pathnames.HOME} element={<Home />} />
-                <Route path={Pathnames.SUBJECTS} element={<Subjects />} />
-                <Route path={Pathnames.VOTING_SESSION} element={<Votes />} />
-                <Route path="*" element={<PageNotFound />} />
-              </Routes>
-            </Suspense>
-          </ColoredBackground>
-        </Main>
-      </Router>
+            <ColoredBackground>
+              <Suspense fallback={<PageSkeleton />}>
+                <Routes>
+                  <Route path={Pathnames.HOME} element={<Home />} />
+                  <Route path={Pathnames.SUBJECTS} element={<Subjects />} />
+                  <Route path={Pathnames.VOTING_SESSION} element={<Votes />} />
+                  <Route path="*" element={<PageNotFound />} />
+                </Routes>
+              </Suspense>
+            </ColoredBackground>
+          </Main>
+        </Router>
+      </ThemeProvider>
     </ChakraProvider>
   );
 }

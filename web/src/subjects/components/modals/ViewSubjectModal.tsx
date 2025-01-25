@@ -1,14 +1,14 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FC, useState } from "react";
 import {
   Box,
-  Divider,
+  Separator,
   Heading,
   Img,
-  Modal,
-  ModalBody,
+  Dialog.Root,
+  Dialog.Body,
   ModalCloseButton,
-  ModalContent,
-  ModalHeader,
+  Dialog.Content,
+  Dialog.Header,
   ModalOverlay,
   Spinner,
   Stack,
@@ -27,29 +27,26 @@ interface Props {
   closeModal(): void;
 }
 
-const ViewSubjectModal: FunctionComponent<Props> = ({
-  subject,
-  closeModal,
-}) => {
+const ViewSubjectModal: FC<Props> = ({ subject, closeModal }) => {
   const [coverLoaded, setCoverLoaded] = useState(!subject.cover);
 
   return (
-    <Modal
-      isOpen={true}
-      onClose={closeModal}
-      isCentered={true}
+    <Dialog.Root
+      open={true}
+      onOpenChange={closeModal}
+      placement="center"
       motionPreset="slideInBottom"
       size="xl"
     >
-      <ModalOverlay>
-        <ModalContent
+      
+        <Dialog.Content
           maxHeight="90vh"
           margin={0}
           bg="transparent"
           boxShadow="none"
         >
           <Box bg="white" position="relative" maxHeight="100%" overflowY="auto">
-            <ModalHeader p={0}>
+            <Dialog.Header p={0}>
               {subject.cover && (
                 <Box
                   backgroundColor="gray.200"
@@ -84,7 +81,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                 </Box>
               )}
 
-              <Stack p={4} pr={0} mr="50px" spacing={3}>
+              <Stack p={4} pr={0} mr="50px" gap={3}>
                 {subject.cover && (
                   <Box>
                     <SubjectInfoBadges subject={subject} />
@@ -105,9 +102,9 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                   </Box>
                 )}
               </Stack>
-            </ModalHeader>
+            </Dialog.Header>
 
-            <Divider m={0} />
+            <Separator m={0} />
 
             <ModalCloseButton
               display="flex"
@@ -120,7 +117,7 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
               borderRadius={4}
             />
 
-            <ModalBody p={4}>
+            <Dialog.Body p={4}>
               <Text mb={8} fontSize="lg">
                 {subject.description}
               </Text>
@@ -133,9 +130,9 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
                   {subject.comment}
                 </Text>
               )}
-            </ModalBody>
+            </Dialog.Body>
 
-            <Divider />
+            <Separator />
 
             <Box pt={4} pb={10} px={4}>
               <Text fontStyle="italic" fontSize="sm">
@@ -151,9 +148,9 @@ const ViewSubjectModal: FunctionComponent<Props> = ({
               )}
             </Box>
           </Box>
-        </ModalContent>
-      </ModalOverlay>
-    </Modal>
+        </Dialog.Content>
+      
+    </Dialog.Root>
   );
 };
 

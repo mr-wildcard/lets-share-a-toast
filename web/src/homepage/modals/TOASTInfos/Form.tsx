@@ -1,24 +1,16 @@
 import { update, serverTimestamp } from "firebase/database";
-import React, { FunctionComponent, Ref, useCallback, useMemo } from "react";
+import React, { FC, Ref, useCallback, useMemo } from "react";
 import {
   Box,
   Button,
-  Checkbox,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  ModalFooter,
   Stack,
   HStack,
   Text,
   Textarea,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Input,
-  Tooltip,
+  FieldLabel,
+  NumberInput,
+  Dialog,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form } from "formik";
 import DayPicker from "react-day-picker/DayPickerInput";
@@ -26,6 +18,7 @@ import dayjs from "dayjs";
 
 import { CurrentToast, User } from "@shared/models";
 
+import { Field as ChakraField } from "@web/components/ui/field";
 import { firebaseData } from "@web/core/firebase/data";
 import { Pathnames } from "@web/core/constants";
 import getAppURL from "@web/core/helpers/getAppURL";
@@ -43,6 +36,8 @@ import {
   getFirebaseCurrentToastRef,
 } from "@web/core/firebase/helpers";
 import { InfoIcon } from "@chakra-ui/icons";
+import { Tooltip } from "@web/components/ui/tooltip";
+import { Checkbox } from "@web/components/ui/checkbox";
 
 const createToastCloudFunction = getCloudFunctionCreateTOAST();
 
@@ -79,7 +74,7 @@ const today = new Date();
 const defaultSlackNotificationMessage = `@here {{PROFILE}} scheduled a new 🍞 TOAST 🍞 for {{DATE}} ! 🎉
 ✍️ It’s time to add / remove / update your subject(s) {{URL}}`;
 
-const TOASTForm: FunctionComponent<Props> = ({
+const TOASTForm: FC<Props> = ({
   currentToast,
   cancelButtonRef,
   closeModal,
@@ -194,14 +189,14 @@ const TOASTForm: FunctionComponent<Props> = ({
       {({ values, setFieldValue, isSubmitting, isValid }) => {
         return (
           <Form>
-            <Stack spacing={6}>
+            <Stack gap={6}>
               <Field name="dueDate">
                 {({ field, meta }: FieldProps) => (
-                  <FormControl
-                    isRequired
-                    isInvalid={meta.touched && !!meta.error}
+                  <ChakraField
+                    required
+                    label="Day"
+                    invalid={meta.touched && !!meta.error}
                   >
-                    <FormLabel htmlFor="dueDate">Day</FormLabel>
                     <Box position="relative">
                       <DayPickerInput
                         {...field}
@@ -226,13 +221,12 @@ const TOASTForm: FunctionComponent<Props> = ({
                         }}
                       />
                     </Box>
-                  </FormControl>
+                  </ChakraField>
                 )}
               </Field>
 
-              <HStack spacing={5}>
-                <FormControl w="auto">
-                  <FormLabel htmlFor="selectedHour">Hour</FormLabel>
+              <HStack gap={5}>
+                <ChakraField label="Hour" w="auto">
                   <Input
                     id="selectedHour"
                     type="time"
@@ -249,86 +243,87 @@ const TOASTForm: FunctionComponent<Props> = ({
                       setFieldValue("dueDate", dueDate.toDate());
                     }}
                   />
-                </FormControl>
+                </ChakraField>
                 <Field name="maxSelectableSubjects">
                   {({ field, meta }: FieldProps) => (
-                    <FormControl
-                      isRequired
-                      isInvalid={meta.touched && !!meta.error}
+                    <ChakraField
+                      required
+                      invalid={meta.touched && !!meta.error}
                     >
-                      <FormLabel
+                      <FieldLabel
                         htmlFor={field.name}
                         display="flex"
                         alignItems="center"
                       >
                         Max subjects&nbsp;
                         <Tooltip
-                          label="Maximum number of subjects which can be presented during this TOAST"
+                          content="Maximum number of subjects which can be presented during this TOAST"
                           aria-label="Form field info"
                         >
                           <InfoIcon />
                         </Tooltip>
-                      </FormLabel>
-                      <NumberInput
+                      </FieldLabel>
+                      <NumberInput.Root
                         {...field}
-                        onChange={(value) => {
-                          setFieldValue(field.name, value);
+                        onValueChange={(event) => {
+                          setFieldValue(field.name, event.value);
                         }}
                         id={field.name}
                         min={1}
                       >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </FormControl>
+                        <NumberInput.Input />
+                        <NumberInput.Control>
+                          <NumberInput.IncrementTrigger />
+                          <NumberInput.DecrementTrigger />
+                        </NumberInput.Control>
+                      </NumberInput.Root>
+                    </ChakraField>
                   )}
                 </Field>
 
                 <Field name="maxVotesPerUser">
                   {({ field, meta }: FieldProps) => (
-                    <FormControl
-                      isRequired
-                      isInvalid={meta.touched && !!meta.error}
+                    <ChakraField
+                      label="Total votes per user"
+                      required
+                      invalid={meta.touched && !!meta.error}
                     >
-                      <FormLabel htmlFor={field.name}>
-                        Total votes per user
-                      </FormLabel>
-                      <NumberInput
+                      <NumberInput.Root
                         {...field}
-                        onChange={(value) => {
-                          setFieldValue(field.name, value);
+                        onValueChange={(event) => {
+                          setFieldValue(field.name, event.value);
                         }}
                         id={field.name}
                         min={1}
                       >
-                        <NumberInputField />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                    </FormControl>
+                        <NumberInput.Input />
+                        <NumberInput.Control>
+                          <NumberInput.IncrementTrigger />
+                          <NumberInput.DecrementTrigger />
+                        </NumberInput.Control>
+                      </NumberInput.Root>
+                    </ChakraField>
                   )}
                 </Field>
               </HStack>
 
-              <HStack spacing={5}>
+              <HStack gap={5}>
                 <Box flex={1}>
                   <Field name="organizer">
                     {({ field, meta }: FieldProps) => {
-                      const isInvalid = meta.touched && !!meta.error;
+                      const invalid = meta.touched && !!meta.error;
 
                       return (
-                        <FormControl isRequired isInvalid={isInvalid}>
-                          <FormLabel htmlFor={field.name}>Organizer</FormLabel>
+                        <ChakraField
+                          label="Organizer"
+                          required
+                          invalid={invalid}
+                          disabled={!firebaseData.users.length}
+                        >
                           <SelectUserInput
                             {...field}
-                            isDisabled={!firebaseData.users.length}
                             options={firebaseData.users}
-                            isInvalid={isInvalid}
+                            invalid={invalid}
                             inputId={field.name}
                             value={field.value}
                             onChange={(user) => {
@@ -337,7 +332,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                               }
                             }}
                           />
-                        </FormControl>
+                        </ChakraField>
                       );
                     }}
                   </Field>
@@ -346,15 +341,18 @@ const TOASTForm: FunctionComponent<Props> = ({
                 <Box flex={1}>
                   <Field name="scribe">
                     {({ field, meta }: FieldProps) => {
-                      const isInvalid = meta.touched && !!meta.error;
+                      const invalid = meta.touched && !!meta.error;
 
                       return (
-                        <FormControl isRequired isInvalid={isInvalid}>
-                          <FormLabel htmlFor={field.name}>Scribe</FormLabel>
+                        <ChakraField
+                          label="Scribe"
+                          required
+                          invalid={invalid}
+                          disabled={!firebaseData.users.length}
+                        >
                           <SelectUserInput
                             {...field}
-                            isInvalid={isInvalid}
-                            isDisabled={!firebaseData.users.length}
+                            invalid={invalid}
                             options={firebaseData.users}
                             name={field.name}
                             inputId={field.name}
@@ -365,7 +363,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                               }
                             }}
                           />
-                        </FormControl>
+                        </ChakraField>
                       );
                     }}
                   </Field>
@@ -384,34 +382,33 @@ const TOASTForm: FunctionComponent<Props> = ({
 
                   <Field name="slackMessage">
                     {({ field, meta }: FieldProps) => (
-                      <FormControl>
+                      <ChakraField
+                        helperText="You can use Slack formatting message."
+                        disabled={!values.notifySlack}
+                        invalid={meta.touched && !!meta.error}
+                        required={values.notifySlack}
+                      >
                         <Textarea
                           {...field}
                           height="150px"
-                          isRequired={values.notifySlack}
-                          isDisabled={!values.notifySlack}
-                          isInvalid={meta.touched && !!meta.error}
                           value={getFormattedSlackNotification(
                             values.slackMessage,
                             values.dueDate
                           )}
                         />
-                        <FormHelperText id="slackMessage">
-                          You can use Slack formatting message.
-                        </FormHelperText>
-                      </FormControl>
+                      </ChakraField>
                     )}
                   </Field>
                 </Box>
               )}
 
-              <ModalFooter justifyContent="center">
+              <Dialog.Footer justifyContent="center">
                 <Button
                   type="submit"
-                  isDisabled={!isValid}
+                  disabled={!isValid}
                   overflow="hidden"
                   colorScheme="blue"
-                  isLoading={isSubmitting}
+                  loading={isSubmitting}
                   loadingText={
                     !currentToast ? "Creating TOAST..." : "Saving..."
                   }
@@ -432,7 +429,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                 </Button>
                 <Button
                   ref={cancelButtonRef}
-                  isDisabled={isSubmitting}
+                  disabled={isSubmitting}
                   onClick={() => closeModal(false)}
                   overflow="hidden"
                   type="button"
@@ -452,7 +449,7 @@ const TOASTForm: FunctionComponent<Props> = ({
                     Cancel
                   </Text>
                 </Button>
-              </ModalFooter>
+              </Dialog.Footer>
             </Stack>
           </Form>
         );

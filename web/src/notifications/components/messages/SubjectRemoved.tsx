@@ -1,12 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FC } from "react";
+import * as C from "@chakra-ui/react";
 
-import NotificationSubjectRemoved from '@web/notifications/types/NotificationSubjectRemoved';
-import NotificationWrapper from '../NotificationWrapper';
+import NotificationSubjectRemoved from "@web/notifications/types/NotificationSubjectRemoved";
+import NotificationWrapper from "../NotificationWrapper";
 
-const SubjectRemoved: FunctionComponent<NotificationSubjectRemoved> = (
-  data
-) => {
+const SubjectRemoved: FC<NotificationSubjectRemoved> = (data) => {
   return (
     <NotificationWrapper>
       <C.Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />

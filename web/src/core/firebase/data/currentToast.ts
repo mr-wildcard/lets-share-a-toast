@@ -41,7 +41,7 @@ onValue(currentToastRef, (snapshot) => {
     firebaseData.currentToast = currentToast;
   }
 
-  if (import.meta.env.DEV || window._log_firebase) {
+  if (import.meta.env || window._log_firebase) {
     console.log({ currentToast });
   }
 });

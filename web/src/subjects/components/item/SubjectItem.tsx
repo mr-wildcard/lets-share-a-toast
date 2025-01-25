@@ -1,16 +1,10 @@
 import { deleteDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import React, {
-  FunctionComponent,
-  ReactElement,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { FC, ReactElement, useCallback, useMemo, useState } from "react";
 import {
   Badge,
   Box,
   ButtonGroup,
-  Divider,
+  Separator,
   Flex,
   IconButton,
   Spinner,
@@ -45,7 +39,7 @@ interface Props {
   onEditSubject(subject: Subject): void;
 }
 
-const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
+const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
   const [gray50] = useToken("colors", ["gray.50"]);
 
   const { users, currentToast, connectedUser } = firebaseData;
@@ -222,7 +216,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
               <SubjectSpeakers speakers={subject.speakers} />
             </Box>
 
-            <Divider mt="30px" mb={3} borderColor="gray.300" />
+            <Separator mt="30px" mb={3} borderColor="gray.300" />
 
             <Flex align="center">
               <SubjectStatusBadge status={subject.status} />
@@ -299,7 +293,7 @@ const SubjectItem: FunctionComponent<Props> = ({ onEditSubject, subject }) => {
           contextMenuStatusOptions.length > 0 &&
           contextMenuStatusOptions}
 
-        {contextMenuStatusOptions.length > 0 && <Divider />}
+        {contextMenuStatusOptions.length > 0 && <Separator />}
 
         <MenuItem onClick={() => onEditSubject(subject)}>
           <Box

@@ -264,7 +264,7 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
             )}
 
             <TOASTInfosModal
-              isOpen={modalsStates.toast.isOpen}
+              open={modalsStates.toast.isOpen}
               closeModal={closeTOASTFormModal}
             />
           </Flex>

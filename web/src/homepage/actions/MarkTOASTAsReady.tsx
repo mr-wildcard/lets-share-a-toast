@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Button, Text } from "@chakra-ui/react";
 
 import Image from "@web/core/components/Image";
@@ -7,7 +7,7 @@ interface Props {
   onClick: () => void;
 }
 
-const MarkTOASTAsReady: FunctionComponent<Props> = ({ onClick }) => {
+const MarkTOASTAsReady: FC<Props> = ({ onClick }) => {
   return (
     <Button
       onClick={onClick}

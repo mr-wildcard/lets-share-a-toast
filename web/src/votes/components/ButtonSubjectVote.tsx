@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FC, useMemo, PropsWithChildren } from "react";
 import { observer } from "mobx-react-lite";
 import { Button, Text } from "@chakra-ui/react";
 
@@ -16,7 +16,7 @@ enum TextContentState {
   NO_ACTION,
 }
 
-const TextContent: FunctionComponent<{ show: boolean }> = ({
+const TextContent: FC<PropsWithChildren<{ show: boolean }>> = ({
   show,
   children,
 }) => {
@@ -37,7 +37,7 @@ const TextContent: FunctionComponent<{ show: boolean }> = ({
   );
 };
 
-export const ButtonSubjectVote: FunctionComponent<Props> = observer(
+export const ButtonSubjectVote: FC<Props> = observer(
   ({ vote, voting, subjectId }) => {
     const { currentUserRemainingVotes, getUserTotalVotesForSubjectId } =
       useClientSideVotingSession();

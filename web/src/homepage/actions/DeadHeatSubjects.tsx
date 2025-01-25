@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Button } from "@chakra-ui/react";
 
 import Image from "@web/core/components/Image";
@@ -8,7 +8,7 @@ interface Props {
   onClick: () => void;
 }
 
-const DeadHeatSubjects: FunctionComponent<Props> = ({ onClick }) => {
+const DeadHeatSubjects: FC<Props> = ({ onClick }) => {
   return (
     <Button
       className={css.button}

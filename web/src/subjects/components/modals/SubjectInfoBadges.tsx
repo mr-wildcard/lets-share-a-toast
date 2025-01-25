@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { Box, Flex } from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
@@ -14,7 +14,7 @@ interface Props {
   subject: Subject;
 }
 
-const SubjectInfoBadges: FunctionComponent<Props> = ({ subject }) => {
+const SubjectInfoBadges: FC<Props> = ({ subject }) => {
   const subjectIsNew = useMemo(() => {
     return isSubjectNew(subject.createdDate);
   }, [subject]);

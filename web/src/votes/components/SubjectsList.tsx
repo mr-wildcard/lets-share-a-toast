@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { HStack } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
@@ -6,7 +6,7 @@ import { firebaseData } from "@web/core/firebase/data";
 import { useVote } from "../hooks/useVote";
 import { VotableSubject } from "./VotableSubject";
 
-export const SubjectsList: FunctionComponent = observer(() => {
+export const SubjectsList: FC = observer(() => {
   const vote = useVote();
 
   const votingSession = firebaseData.votingSession!;
@@ -14,7 +14,7 @@ export const SubjectsList: FunctionComponent = observer(() => {
   const allAvailableSubjects = firebaseData.availableSubjects;
 
   return (
-    <HStack spacing="2vw" alignItems="start">
+    <HStack gap="2vw" alignItems="start">
       {allAvailableSubjects.map((subject) => {
         return (
           <VotableSubject

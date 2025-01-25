@@ -3,9 +3,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "typeRoots": ["./node_modules/@types", "./typings"],
     "types": ["vite/client"],
     "allowJs": false,
     "skipLibCheck": true,

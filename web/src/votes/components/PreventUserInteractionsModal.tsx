@@ -1,11 +1,7 @@
-import React, { FunctionComponent, useRef } from "react";
+import React, { FC, PropsWithChildren, useRef } from "react";
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
+  Link as ChakraLink,
+  Dialog,
   Box,
   Button,
   Text,
@@ -22,60 +18,60 @@ interface Props {
   isOpen: boolean;
 }
 
-const PreventUserInteractionsModal: FunctionComponent<Props> = ({
+const PreventUserInteractionsModal: FC<PropsWithChildren<Props>> = ({
   isOpen,
   title,
   children,
 }) => {
   const push = useNavigate();
 
-  const cancelBtn = useRef() as React.MutableRefObject<HTMLAnchorElement>;
+  const cancelBtn = useRef<HTMLAnchorElement>(null);
 
   return (
-    <AlertDialog
-      isOpen={isOpen}
-      blockScrollOnMount={true}
+    <Dialog.Root
+      open={isOpen}
+      preventScroll={true}
       trapFocus={true}
-      isCentered={true}
-      closeOnEsc={false}
-      closeOnOverlayClick={false}
-      leastDestructiveRef={cancelBtn}
-      onClose={() => {
+      placement="center"
+      closeOnEscape={false}
+      closeOnInteractOutside={false}
+      initialFocusEl={() => cancelBtn.current}
+      onOpenChange={() => {
         push("/");
       }}
     >
-      <AlertDialogOverlay>
-        <AlertDialogContent>
-          <Box
+      <Dialog.Content>
+        <Box
+          position="absolute"
+          w="full"
+          h="100px"
+          bottom="calc(100% - 17px)"
+          className={css.happyToast}
+        >
+          <Image
             position="absolute"
-            w="full"
-            h="100px"
-            bottom="calc(100% - 17px)"
-            className={css.happyToast}
-          >
-            <Image
-              position="absolute"
-              width={100}
-              height={100}
-              src="https://media.giphy.com/media/OGbmHMUlApcIHRl6zd/giphy.gif"
-            />
+            width={100}
+            height={100}
+            src="https://media.giphy.com/media/OGbmHMUlApcIHRl6zd/giphy.gif"
+          />
+        </Box>
+        <Dialog.Header textAlign="center">
+          <Text position="relative">
+            <HighlightedText bgColor={pageColors.votingSession}>
+              {title}
+            </HighlightedText>
+          </Text>
+        </Dialog.Header>
+
+        <Dialog.Body>
+          <Box p={10} textAlign="center">
+            {children}
           </Box>
-          <AlertDialogHeader textAlign="center">
-            <Text position="relative">
-              <HighlightedText bgColor={pageColors.votingSession}>
-                {title}
-              </HighlightedText>
-            </Text>
-          </AlertDialogHeader>
+        </Dialog.Body>
 
-          <AlertDialogBody>
-            <Box p={10} textAlign="center">
-              {children}
-            </Box>
-          </AlertDialogBody>
-
-          <AlertDialogFooter justifyContent="center">
-            <Button as={Link} to="/" ref={cancelBtn}>
+        <Dialog.Footer justifyContent="center">
+          <ChakraLink asChild>
+            <Link to="/">
               <Image
                 transform="translate(-8px, -6px)"
                 width={60}
@@ -83,11 +79,11 @@ const PreventUserInteractionsModal: FunctionComponent<Props> = ({
                 src="https://media.giphy.com/media/cP6REpq2OvhLajI0RY/giphy.gif"
               />
               <Text as="span">Bring me back to homepage</Text>
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialogOverlay>
-    </AlertDialog>
+            </Link>
+          </ChakraLink>
+        </Dialog.Footer>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
 

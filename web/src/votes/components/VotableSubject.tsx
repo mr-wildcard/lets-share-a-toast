@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import {
   Avatar,
   AvatarBadge,
@@ -32,7 +27,7 @@ interface Props {
   onVote(subjectId: string): void;
 }
 
-export const VotableSubject: FunctionComponent<Props> = observer(
+export const VotableSubject: FC<Props> = observer(
   ({ subject, currentToast, votingSession, onVote }) => {
     const [gray300, gray600] = useToken("colors", ["gray.300", "gray.600"]);
 
@@ -99,7 +94,7 @@ export const VotableSubject: FunctionComponent<Props> = observer(
             )}
 
             {totalVotes > 0 && (
-              <AvatarGroup spacing={0} gap="20px" flexWrap="wrap">
+              <AvatarGroup gap={0} gap="20px" flexWrap="wrap">
                 {Object.entries(subjectVotes!).map(
                   ([userId, userTotalVotes]) => {
                     const userAvatarURL = userIdAvatarMapping.get(userId);

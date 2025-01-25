@@ -1,21 +1,22 @@
-import React, { FunctionComponent } from "react";
-import { Flex, useTheme } from "@chakra-ui/react";
+import React, { FC, PropsWithChildren } from "react";
+import { Flex } from "@chakra-ui/react";
 import { MenuItem } from "react-contextmenu";
 
 interface Props {
   onClick: () => void;
 }
 
-const ContextMenuItem: FunctionComponent<Props> = ({ onClick, children }) => {
-  const theme = useTheme();
-
+const ContextMenuItem: FC<PropsWithChildren<Props>> = ({
+  onClick,
+  children,
+}) => {
   return (
     <MenuItem onClick={onClick}>
       <Flex
         align="center"
         cursor="pointer"
         _hover={{
-          bg: theme.colors.gray["100"],
+          bg: "gray.100",
         }}
         p={2}
         px={3}

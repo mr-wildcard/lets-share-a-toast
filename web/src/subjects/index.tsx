@@ -99,7 +99,7 @@ const Subjects = () => {
 
         <SubjectsList
           subjects={filteredSubjects}
-          creatingSubject={formDrawerState.isOpen && !editedSubject}
+          creatingSubject={formDrawerState.open && !editedSubject}
           onEditSubject={toggleSubjectEditForm}
           onAddSubject={formDrawerState.onOpen}
         />
@@ -107,7 +107,7 @@ const Subjects = () => {
         {!!users && (
           <SubjectForm
             subject={editedSubject}
-            isOpen={formDrawerState.isOpen}
+            isOpen={formDrawerState.open}
             closeForm={toggleSubjectEditForm}
           />
         )}

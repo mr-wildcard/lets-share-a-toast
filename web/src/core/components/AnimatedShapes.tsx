@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 
 interface Props {
   width: number;
@@ -8,7 +8,7 @@ interface Props {
 
 const randomPaths = getRandomPaths();
 
-const Component: FunctionComponent<Props> = ({ width, height, color }) => {
+const Component: FC<Props> = ({ width, height, color }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

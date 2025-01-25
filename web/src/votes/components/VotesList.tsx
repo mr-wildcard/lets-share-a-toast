@@ -9,7 +9,7 @@ export const VotesList = observer(() => {
   const allAvailableSubjects = firebaseData.availableSubjects;
 
   return (
-    <HStack spacing="2vw" h="full" minHeight="200px" alignItems="end">
+    <HStack gap="2vw" h="full" minHeight="200px" alignItems="end">
       {allAvailableSubjects.map((subject, index) => {
         return (
           <SubjectVotes key={`${subject.id}-${index}`} subjectId={subject.id} />

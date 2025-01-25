@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import * as C from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
@@ -6,12 +6,10 @@ import { SubjectStatus } from "@shared/enums";
 import NotificationSubjectEditedStatus from "@web/notifications/types/NotificationSubjectEditedStatus";
 import NotificationWrapper from "../NotificationWrapper";
 
-const SubjectStatusEdited: FunctionComponent<NotificationSubjectEditedStatus> = (
-  data
-) => {
+const SubjectStatusEdited: FC<NotificationSubjectEditedStatus> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" spacing={2}>
+      <C.Stack direction="row" gap={2}>
         <C.Avatar name={data.username} src={data.userPicture} size="xs" />
         <C.Box>
           <C.Text as="span" fontWeight="bold">

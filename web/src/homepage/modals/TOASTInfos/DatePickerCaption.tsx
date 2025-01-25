@@ -1,13 +1,11 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Text } from "@chakra-ui/react";
 import { CaptionElementProps } from "react-day-picker";
 import day from "dayjs";
 
 import css from "./DatePicker.module.css";
 
-const DatePickerCaption: FunctionComponent<CaptionElementProps> = ({
-  date,
-}) => {
+const DatePickerCaption: FC<CaptionElementProps> = ({ date }) => {
   const parsedDate = day(date);
   const month = parsedDate.get("month");
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Divider, Flex } from "@chakra-ui/react";
+import { Box, Separator, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { ToastStatus } from "@shared/enums";
@@ -88,7 +88,7 @@ const Votes = () => {
                   <VotesList />
                 </Box>
 
-                <Divider borderColor="gray.800" />
+                <Separator borderColor="gray.800" />
 
                 <Box flex={1}>
                   <SubjectsList />

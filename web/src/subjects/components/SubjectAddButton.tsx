@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import {
   Box,
   Button,
-  Divider,
+  Separator,
   Flex,
   HStack,
   SkeletonCircle,
@@ -18,10 +18,7 @@ interface Props {
   onClick(): void;
 }
 
-const SubjectAddButton: FunctionComponent<Props> = ({
-  creatingSubject,
-  onClick,
-}) => {
+const SubjectAddButton: FC<Props> = ({ creatingSubject, onClick }) => {
   return (
     <Button
       display="block"
@@ -30,7 +27,7 @@ const SubjectAddButton: FunctionComponent<Props> = ({
       colorScheme="gray"
       borderColor="black"
       onClick={onClick}
-      isDisabled={creatingSubject}
+      disabled={creatingSubject}
       w="100%"
       h="auto"
       minH="142px"
@@ -56,14 +53,14 @@ const SubjectAddButton: FunctionComponent<Props> = ({
       )}
 
       <Box style={{ opacity: !creatingSubject ? 1 : 0 }}>
-        <Stack borderRadius="3px" h="100%" spacing={4} p={5}>
+        <Stack borderRadius="3px" h="100%" gap={4} p={5}>
           <SkeletonText noOfLines={1} skeletonHeight="25px" />
           <HStack mb={10}>
             <SkeletonCircle size="28px" />
             <SkeletonText flex={1} noOfLines={1} skeletonHeight="25px" />
           </HStack>
           <Box />
-          <Divider mb={3} />
+          <Separator mb={3} />
         </Stack>
 
         <Flex

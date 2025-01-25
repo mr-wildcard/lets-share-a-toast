@@ -5,36 +5,23 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import {
   Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Box,
-  Button,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerFooter,
-  DrawerHeader,
-  Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  InputRightAddon,
-  SimpleGrid,
   Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
+  Button,
+  Drawer,
+  Flex,
+  Input,
+  SimpleGrid,
   Stack,
   Text,
   Textarea,
-  useToken,
+  Group,
+  InputAddon,
 } from "@chakra-ui/react";
+import { Field as ChakraField } from "@web/components/ui/field";
 import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
 import { observer } from "mobx-react-lite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -53,6 +40,7 @@ import { Subject, User } from "@shared/models";
 import { SubjectLanguage, SubjectStatus, ToastStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
 
+// import { Slider } from '@web/components/ui/slider';
 import { firebaseData } from "@web/core/firebase/data";
 import { pageColors } from "@web/core/constants";
 import { getTOASTRemainingDays } from "@web/core/helpers/timing";
@@ -108,9 +96,7 @@ const languageOptions: LanguageValue[] = [
   },
 ];
 
-const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
-  const [space6, space10] = useToken("space", [6, 10]);
-
+const Form: FC<Props> = ({ subject, closeForm }) => {
   const { currentToast, users, connectedUser } = firebaseData;
 
   const isCreatingSubject = !subject;
@@ -247,368 +233,365 @@ const Form: FunctionComponent<Props> = ({ subject, closeForm }) => {
       }: FormikProps<FormValues>) => {
         return (
           <FormikForm>
-            <DrawerHeader>
-              <Flex wrap="nowrap" align="start">
-                <Flex align="center" justify="center" mx="auto">
-                  <Text textAlign="center" wordBreak="break-word">
-                    <HighlightedText
-                      display="inline-block"
-                      bgColor={pageColors.subjects}
-                      animDelay={500}
-                    >
-                      {isCreatingSubject
-                        ? values.title.length
-                          ? `Creating new subject: "${values.title}"`
-                          : "Creating a new subject"
-                        : `Editing subject: "${subject!.title}"`}
-                    </HighlightedText>
-                  </Text>
-                  <Image
-                    transform="translateY(-3px)"
-                    width={141}
-                    height={65}
-                    src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
-                  />
-                </Flex>
-                <DrawerCloseButton padding={2} />
-              </Flex>
-            </DrawerHeader>
-
-            <DrawerBody>
-              <Box mb={5}>
-                {warnAboutNewSubjectDuringVotingSession && (
-                  <Alert status="warning" variant="left-accent">
-                    <AlertIcon />
-                    <Box flex="1">
-                      <AlertTitle fontSize="lg">
-                        You're about to create a new subject: that's great! But
-                        be advised...
-                      </AlertTitle>
-                      <AlertDescription>
-                        A voting session for the next TOAST coming&nbsp;
-                        {getTOASTRemainingDays(new Date(currentToast!.date))}
-                        &nbsp;is currently opened. If you submit this subject
-                        with the&nbsp;
-                        <SubjectStatusBadge status={SubjectStatus.AVAILABLE} />
-                        &nbsp;status, it will be automatically added to it.
-                      </AlertDescription>
-                    </Box>
-                  </Alert>
-                )}
-                {alertAboutStatusChangeDuringVotingSession && (
-                  <Alert status="error" variant="left-accent">
-                    <AlertIcon />
-                    <Box flex="1">
-                      <AlertTitle fontSize="lg">Watch out!</AlertTitle>
-                      <AlertDescription>
-                        <Text>
-                          This subject is currently in the voting session for
-                          the next TOAST!
-                        </Text>
-                        <Text>
-                          Changing its status to something else than&nbsp;
-                          <SubjectStatusBadge status={subject!.status} />
-                          &nbsp;will make it lose all its votes!
-                        </Text>
-                      </AlertDescription>
-                    </Box>
-                  </Alert>
-                )}
-              </Box>
-
-              <Stack spacing={8}>
-                <Box>
-                  <Field name="title">
-                    {({ field, meta }: FieldProps) => (
-                      <FormControl
-                        isRequired
-                        isInvalid={meta.touched && !!meta.error}
-                      >
-                        <FormLabel htmlFor={field.name}>Title</FormLabel>
-                        <Input id={field.name} {...field} />
-                      </FormControl>
-                    )}
-                  </Field>
-                </Box>
-                <Box>
-                  <Field name="description">
-                    {({ field, meta }: FieldProps) => (
-                      <FormControl
-                        isRequired
-                        isInvalid={meta.touched && !!meta.error}
-                      >
-                        <FormLabel htmlFor={field.name}>Description</FormLabel>
-                        <Textarea id={field.name} {...field} />
-                        <FormHelperText id={field.name}>
-                          Few words about your subject.
-                        </FormHelperText>
-                      </FormControl>
-                    )}
-                  </Field>
-                </Box>
-                <Stack direction="row" spacing={5}>
-                  <Box flex={1}>
-                    <Field name="language">
-                      {({ field, meta }: FieldProps) => (
-                        <FormControl
-                          isRequired
-                          isInvalid={meta.touched && !!meta.error}
+            <Drawer.Root>
+              <Drawer.Backdrop />
+              <Drawer.Content>
+                <Drawer.Header>
+                  <Flex wrap="nowrap" align="start">
+                    <Flex align="center" justify="center" mx="auto">
+                      <Text textAlign="center" wordBreak="break-word">
+                        <HighlightedText
+                          display="inline-block"
+                          bgColor={pageColors.subjects}
+                          animDelay={500}
                         >
-                          <FormLabel htmlFor={field.name}>
-                            Spoken language
-                          </FormLabel>
-                          <Select
-                            {...field}
-                            id={field.name}
-                            name={field.name}
-                            inputId={field.name}
-                            getOptionLabel={({ label }) => label}
-                            getOptionValue={({ value }) => value}
-                            placeholder="Bryan is in the kitchen"
-                            options={languageOptions}
-                            onChange={(language) =>
-                              setFieldValue(field.name, language)
-                            }
-                          />
-                        </FormControl>
-                      )}
-                    </Field>
+                          {isCreatingSubject
+                            ? values.title.length
+                              ? `Creating new subject: "${values.title}"`
+                              : "Creating a new subject"
+                            : `Editing subject: "${subject!.title}"`}
+                        </HighlightedText>
+                      </Text>
+                      <Image
+                        transform="translateY(-3px)"
+                        width={141}
+                        height={65}
+                        src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
+                      />
+                    </Flex>
+                    <Drawer.CloseTrigger padding={2} />
+                  </Flex>
+                </Drawer.Header>
+                <Drawer.Body>
+                  <Box mb={5}>
+                    {warnAboutNewSubjectDuringVotingSession && (
+                      <Alert.Root status="warning">
+                        <Alert.Indicator />
+                        <Box flex="1">
+                          <Alert.Title fontSize="lg">
+                            You're about to create a new subject: that's great!
+                            But be advised...
+                          </Alert.Title>
+                          <Alert.Description>
+                            A voting session for the next TOAST coming&nbsp;
+                            {getTOASTRemainingDays(
+                              new Date(currentToast!.date)
+                            )}
+                            &nbsp;is currently opened. If you submit this
+                            subject with the&nbsp;
+                            <SubjectStatusBadge
+                              status={SubjectStatus.AVAILABLE}
+                            />
+                            &nbsp;status, it will be automatically added to it.
+                          </Alert.Description>
+                        </Box>
+                      </Alert.Root>
+                    )}
+                    {alertAboutStatusChangeDuringVotingSession && (
+                      <Alert.Root status="error">
+                        <Alert.Indicator />
+                        <Box flex="1">
+                          <Alert.Title fontSize="lg">Watch out!</Alert.Title>
+                          <Alert.Description>
+                            <Text>
+                              This subject is currently in the voting session
+                              for the next TOAST!
+                            </Text>
+                            <Text>
+                              Changing its status to something else than&nbsp;
+                              <SubjectStatusBadge status={subject!.status} />
+                              &nbsp;will make it lose all its votes!
+                            </Text>
+                          </Alert.Description>
+                        </Box>
+                      </Alert.Root>
+                    )}
                   </Box>
-                  <Box flex={1}>
-                    <Field name="duration">
-                      {({ field, meta }: FieldProps) => (
-                        <FormControl
-                          isRequired
-                          isInvalid={meta.touched && !!meta.error}
-                        >
-                          <FormLabel htmlFor={field.name}>
-                            Duration : {field.value} min
-                          </FormLabel>
-                          <Slider
-                            {...field}
-                            name={field.name}
-                            min={5}
-                            max={120}
-                            step={5}
-                            p={0}
-                            height={space10}
-                            display="block"
-                            size="lg"
-                            onChange={(value) => {
-                              if (value !== field.value) {
-                                setFieldValue(field.name, value);
-                              }
-                            }}
+
+                  <Stack gap={8}>
+                    <Box>
+                      <Field name="title">
+                        {({ field, meta }: FieldProps) => (
+                          <ChakraField
+                            required
+                            invalid={meta.touched && !!meta.error}
+                            label="Title"
                           >
-                            <SliderTrack>
-                              <SliderFilledTrack />
-                            </SliderTrack>
-
-                            <SliderThumb id={field.name}>
-                              <TimeIcon />
-                            </SliderThumb>
-                          </Slider>
-                        </FormControl>
-                      )}
-                    </Field>
-                  </Box>
-                </Stack>
-                <Box>
-                  <FieldArray
-                    name="speakers"
-                    render={(arrayHelpers) => (
-                      <FormControl isRequired>
-                        <FormLabel htmlFor="speakers.0">Speaker(s)</FormLabel>
-                        <SimpleGrid columns={2} spacing={4}>
-                          {values.speakers.map((speaker, speakerIndex) => (
-                            <Stack
-                              key={`speakers.${speakerIndex}`}
-                              align="center"
-                              spacing={1}
-                              direction="row"
+                            <Input id={field.name} {...field} />
+                          </ChakraField>
+                        )}
+                      </Field>
+                    </Box>
+                    <Box>
+                      <Field name="description">
+                        {({ field, meta }: FieldProps) => (
+                          <ChakraField
+                            required
+                            invalid={meta.touched && !!meta.error}
+                            helperText="Few words about your subject."
+                            label="Description"
+                          >
+                            <Textarea id={field.name} {...field} />
+                          </ChakraField>
+                        )}
+                      </Field>
+                    </Box>
+                    <Stack direction="row" gap={5}>
+                      <Box flex={1}>
+                        <Field name="language">
+                          {({ field, meta }: FieldProps) => (
+                            <ChakraField
+                              required
+                              invalid={meta.touched && !!meta.error}
+                              label="Spoken language"
                             >
-                              <Box flex={1}>
-                                <Field name={`speakers.${speakerIndex}`}>
-                                  {({ field }: FieldProps) => {
-                                    return (
-                                      <SelectUserInput
-                                        {...field}
-                                        placeholder="You?"
-                                        isInvalid={false}
-                                        options={users.filter(
-                                          (user) =>
-                                            !values.speakers.find(
-                                              (selectedUser) =>
-                                                selectedUser?.id === user.id
-                                            )
-                                        )}
-                                        name={field.name}
-                                        inputId={field.name}
-                                        value={field.value}
-                                        onChange={(user) =>
-                                          setFieldValue(
-                                            `speakers.${speakerIndex}`,
-                                            user
-                                          )
-                                        }
-                                      />
-                                    );
-                                  }}
-                                </Field>
-                              </Box>
-
-                              {values.speakers.length > 1 && (
-                                <Button
-                                  colorScheme="red"
-                                  isDisabled={
-                                    speakerIndex === 0 &&
-                                    !values.speakers[speakerIndex + 1]
-                                  }
-                                  onClick={() =>
-                                    arrayHelpers.remove(speakerIndex)
-                                  }
-                                >
-                                  -
-                                </Button>
-                              )}
-                            </Stack>
-                          ))}
-                          <Button
-                            rightIcon={<AddIcon />}
-                            isDisabled={!values.speakers.every(Boolean)}
-                            onClick={() => arrayHelpers.push(null)}
-                          >
-                            Add a speaker
-                          </Button>
-                        </SimpleGrid>
-                      </FormControl>
-                    )}
-                  />
-                </Box>
-
-                {!subjectHasBeenSelectedForNextTOAST && (
-                  <Box>
-                    <Field
-                      name="status"
-                      component={StatusField}
-                      showHints={!alertAboutStatusChangeDuringVotingSession}
-                    />
-                  </Box>
-                )}
-
-                <Box>
-                  <Field name="cover">
-                    {({ field, meta }: FieldProps<FormValues["cover"]>) => {
-                      const urlIsValid = !meta.error;
-
-                      return (
-                        <FormControl>
-                          <FormLabel htmlFor={field.name}>Cover</FormLabel>
-                          <Flex
-                            position="relative"
-                            align="center"
-                            justify="center"
-                            height="170px"
-                            marginLeft={`-${space6}`}
-                            marginRight={`-${space6}`}
-                            backgroundColor="gray.300"
-                            backgroundRepeat="no-repeat"
-                            backgroundPosition="center center"
-                            backgroundSize="cover"
-                            style={{
-                              backgroundImage: `url(${
-                                urlIsValid ? field.value : coverPlaceholder
-                              })`,
-                            }}
-                          >
-                            <InputGroup width="70%" mx="auto">
-                              <InputLeftAddon>
-                                <FontAwesomeIcon icon={faImage} size="lg" />
-                              </InputLeftAddon>
-                              <Input
+                              <Select
                                 {...field}
                                 id={field.name}
-                                borderRadius="0"
-                                placeholder="Image URL"
-                                bg="white"
+                                name={field.name}
+                                inputId={field.name}
+                                getOptionLabel={({ label }) => label}
+                                getOptionValue={({ value }) => value}
+                                placeholder="Bryan is in the kitchen"
+                                options={languageOptions}
+                                onChange={(language) =>
+                                  setFieldValue(field.name, language)
+                                }
                               />
-                              {field.value && urlIsValid && (
-                                <InputRightAddon>
-                                  <CheckIcon color="green.500" />
-                                </InputRightAddon>
-                              )}
+                            </ChakraField>
+                          )}
+                        </Field>
+                      </Box>
+                      <Box flex={1}>
+                        <Field name="duration">
+                          {({ field, meta }: FieldProps) => (
+                            <ChakraField
+                              required
+                              invalid={meta.touched && !!meta.error}
+                              label={`Duration : ${field.value} min`}
+                            >
+                              <Slider.Root
+                                {...field}
+                                name={field.name}
+                                min={5}
+                                max={120}
+                                step={5}
+                                p={0}
+                                display="block"
+                                size="lg"
+                                onValueChange={(event) => {
+                                  if (event !== field.value) {
+                                    setFieldValue(field.name, event.value);
+                                  }
+                                }}
+                              >
+                                <Slider.Control>
+                                  <Slider.Track>
+                                    <Slider.Range />
+                                  </Slider.Track>
 
-                              {field.value && !urlIsValid && (
-                                <InputRightAddon>
-                                  <WarningIcon color="red.500" />
-                                </InputRightAddon>
-                              )}
-                            </InputGroup>
-                          </Flex>
-                        </FormControl>
-                      );
-                    }}
-                  </Field>
-                </Box>
+                                  <Slider.DraggingIndicator id={field.name}>
+                                    <TimeIcon />
+                                  </Slider.DraggingIndicator>
+                                </Slider.Control>
+                              </Slider.Root>
+                            </ChakraField>
+                          )}
+                        </Field>
+                      </Box>
+                    </Stack>
+                    <Box>
+                      <FieldArray
+                        name="speakers"
+                        render={(arrayHelpers) => (
+                          <ChakraField required label="Speaker(s)">
+                            <SimpleGrid columns={2} gap={4}>
+                              {values.speakers.map((speaker, speakerIndex) => (
+                                <Stack
+                                  key={`speakers.${speakerIndex}`}
+                                  align="center"
+                                  gap={1}
+                                  direction="row"
+                                >
+                                  <Box flex={1}>
+                                    <Field name={`speakers.${speakerIndex}`}>
+                                      {({ field }: FieldProps) => {
+                                        return (
+                                          <SelectUserInput
+                                            {...field}
+                                            placeholder="You?"
+                                            invalid={false}
+                                            options={users.filter(
+                                              (user) =>
+                                                !values.speakers.find(
+                                                  (selectedUser) =>
+                                                    selectedUser?.id === user.id
+                                                )
+                                            )}
+                                            name={field.name}
+                                            inputId={field.name}
+                                            value={field.value}
+                                            onChange={(user) =>
+                                              setFieldValue(
+                                                `speakers.${speakerIndex}`,
+                                                user
+                                              )
+                                            }
+                                          />
+                                        );
+                                      }}
+                                    </Field>
+                                  </Box>
 
-                <Box>
-                  <Field name="comment">
-                    {({ field }: FieldProps) => (
-                      <FormControl>
-                        <FormLabel htmlFor={field.name}>Side notes</FormLabel>
-                        <Input id={field.name} {...field} />
-                        <FormHelperText id={field.name}>
-                          Use this field to elaborate on your subject, or simply
-                          explain why your talk may not be available yet.
-                        </FormHelperText>
-                      </FormControl>
+                                  {values.speakers.length > 1 && (
+                                    <Button
+                                      colorScheme="red"
+                                      disabled={
+                                        speakerIndex === 0 &&
+                                        !values.speakers[speakerIndex + 1]
+                                      }
+                                      onClick={() =>
+                                        arrayHelpers.remove(speakerIndex)
+                                      }
+                                    >
+                                      -
+                                    </Button>
+                                  )}
+                                </Stack>
+                              ))}
+                              <Button
+                                disabled={!values.speakers.every(Boolean)}
+                                onClick={() => arrayHelpers.push(null)}
+                              >
+                                Add a speaker <AddIcon />
+                              </Button>
+                            </SimpleGrid>
+                          </ChakraField>
+                        )}
+                      />
+                    </Box>
+
+                    {!subjectHasBeenSelectedForNextTOAST && (
+                      <Box>
+                        <Field
+                          name="status"
+                          component={StatusField}
+                          showHints={!alertAboutStatusChangeDuringVotingSession}
+                        />
+                      </Box>
                     )}
-                  </Field>
-                </Box>
-              </Stack>
-            </DrawerBody>
 
-            <DrawerFooter>
-              <Stack align="center" spacing={3} direction="row">
-                <Button
-                  overflow="hidden"
-                  type="submit"
-                  colorScheme="blue"
-                  isLoading={isSubmitting}
-                  isDisabled={!isValid}
-                  loadingText={
-                    isCreatingSubject
-                      ? "Creating subject..."
-                      : "Editing subject..."
-                  }
-                  mx={2}
-                >
-                  <Image
-                    position="absolute"
-                    left="5px"
-                    bottom="-10px"
-                    width={42}
-                    height={50}
-                    src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
-                  />
-                  <Text as="span" pl={35}>
-                    {isCreatingSubject && "Add your subject"}
-                    {!isCreatingSubject && "Edit subject"}
-                  </Text>
-                </Button>
-                <Button
-                  isDisabled={isSubmitting}
-                  onClick={() => closeForm()}
-                  overflow="hidden"
-                  type="button"
-                  colorScheme="red"
-                  variant="outline"
-                  mx={2}
-                >
-                  Cancel
-                </Button>
-              </Stack>
-            </DrawerFooter>
+                    <Box>
+                      <Field name="cover">
+                        {({ field, meta }: FieldProps<FormValues["cover"]>) => {
+                          const urlIsValid = !meta.error;
+
+                          return (
+                            <ChakraField label="Cover">
+                              <Flex
+                                position="relative"
+                                align="center"
+                                justify="center"
+                                height="170px"
+                                backgroundColor="gray.300"
+                                backgroundRepeat="no-repeat"
+                                backgroundPosition="center center"
+                                backgroundSize="cover"
+                                style={{
+                                  backgroundImage: `url(${
+                                    urlIsValid ? field.value : coverPlaceholder
+                                  })`,
+                                }}
+                              >
+                                <Group width="70%" mx="auto">
+                                  <InputAddon>
+                                    <FontAwesomeIcon icon={faImage} size="lg" />
+                                  </InputAddon>
+                                  <Input
+                                    {...field}
+                                    id={field.name}
+                                    borderRadius="0"
+                                    placeholder="Image URL"
+                                    bg="white"
+                                  />
+
+                                  {field.value && urlIsValid && (
+                                    <InputAddon>
+                                      <CheckIcon color="green.500" />
+                                    </InputAddon>
+                                  )}
+
+                                  {field.value && !urlIsValid && (
+                                    <InputAddon>
+                                      <WarningIcon color="red.500" />
+                                    </InputAddon>
+                                  )}
+                                </Group>
+                              </Flex>
+                            </ChakraField>
+                          );
+                        }}
+                      </Field>
+                    </Box>
+
+                    <Box>
+                      <Field name="comment">
+                        {({ field }: FieldProps) => (
+                          <ChakraField
+                            label="Side notes"
+                            helperText="Use this field to elaborate on your subject, or simply explain why your talk may not be available yet."
+                          >
+                            <Input id={field.name} {...field} />
+                          </ChakraField>
+                        )}
+                      </Field>
+                    </Box>
+                  </Stack>
+                </Drawer.Body>
+
+                <Drawer.Footer>
+                  <Stack align="center" gap={3} direction="row">
+                    <Button
+                      overflow="hidden"
+                      type="submit"
+                      colorScheme="blue"
+                      loading={isSubmitting}
+                      disabled={!isValid}
+                      loadingText={
+                        isCreatingSubject
+                          ? "Creating subject..."
+                          : "Editing subject..."
+                      }
+                      mx={2}
+                    >
+                      <Image
+                        position="absolute"
+                        left="5px"
+                        bottom="-10px"
+                        width={42}
+                        height={50}
+                        src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
+                      />
+                      <Text as="span" pl={35}>
+                        {isCreatingSubject && "Add your subject"}
+                        {!isCreatingSubject && "Edit subject"}
+                      </Text>
+                    </Button>
+                    <Button
+                      disabled={isSubmitting}
+                      onClick={() => closeForm()}
+                      overflow="hidden"
+                      type="button"
+                      colorScheme="red"
+                      variant="outline"
+                      mx={2}
+                    >
+                      Cancel
+                    </Button>
+                  </Stack>
+                </Drawer.Footer>
+              </Drawer.Content>
+            </Drawer.Root>
           </FormikForm>
         );
       }}

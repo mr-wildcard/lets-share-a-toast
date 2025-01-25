@@ -1,5 +1,5 @@
-import { UseToastOptions } from '@chakra-ui/react';
+import { ToasterProps } from "@chakra-ui/react";
 
-type Toaster = (props: UseToastOptions) => void;
+type Toaster = (props: ToasterProps) => void;
 
 export default Toaster;

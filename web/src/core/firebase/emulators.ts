@@ -4,7 +4,6 @@ import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 export function initFirebaseEmulators() {
-  console.log(import.meta.env.VITE_FIREBASE_EMULATOR_AUTH_HOST);
   connectAuthEmulator(
     getAuth(),
     import.meta.env.VITE_FIREBASE_EMULATOR_AUTH_HOST

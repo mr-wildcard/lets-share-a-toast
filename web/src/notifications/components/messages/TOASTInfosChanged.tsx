@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FC } from "react";
+import * as C from "@chakra-ui/react";
 
-import Notification from '../../types/Notification';
-import NotificationWrapper from '../NotificationWrapper';
+import Notification from "../../types/Notification";
+import NotificationWrapper from "../NotificationWrapper";
 
-const TOASTInfosChanged: FunctionComponent<Notification> = (data) => {
+const TOASTInfosChanged: FC<Notification> = (data) => {
   return (
     <NotificationWrapper>
       <C.Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />

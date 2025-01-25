@@ -1,5 +1,10 @@
-import React, { ReactElement } from "react";
-import { UseToastOptions } from "@chakra-ui/react";
+import React, { ElementType } from "react";
+import {
+  createToaster,
+  Portal,
+  Toast,
+  Toaster as ChakraToaster,
+} from "@chakra-ui/react";
 
 import NotificationSubjectAdded from "@web/notifications/types/NotificationSubjectAdded";
 import NotificationSubjectEdited from "@web/notifications/types/NotificationSubjectEdited";
@@ -8,7 +13,6 @@ import NotificationSubjectEditedStatus from "@web/notifications/types/Notificati
 import NotificationTOASTCreated from "@web/notifications/types/NotificationTOASTCreated";
 import NotificationTOASTStatusChanged from "@web/notifications/types/NotificationTOASTStatusChanged";
 import Notification from "@web/notifications/types/Notification";
-import Toaster from "@web/notifications/types/Toaster";
 import SubjectAdded from "./components/messages/SubjectAdded";
 import SubjectEdited from "./components/messages/SubjectEdited";
 import SubjectStatusEdited from "./components/messages/SubjectStatusEdited";
@@ -17,59 +21,85 @@ import TOASTCreated from "./components/messages/TOASTCreated";
 import TOASTInfosChanged from "./components/messages/TOASTInfosChanged";
 import TOASTStatusChanged from "./components/messages/TOASTStatusChanged";
 
-const getToasterConfig = (Component: ReactElement): UseToastOptions => ({
+const toaster = createToaster({
   duration: 5000,
-  position: "bottom-left",
-  render: function Notification() {
-    return Component;
-  },
+  placement: "bottom-end",
+  pauseOnPageIdle: true,
 });
 
-export default function toasterHandler(toaster: Toaster) {
-  /**
-   * Wrap into a try catch any attempt to display a notification.
-   * This way, no petit rigolo can try to emit bullshit from their own socket instance.
-   * @param data
-   */
-  const displayNotification = <T extends Notification>(data: T) => (
-    notificationOptions: UseToastOptions
-  ): void => {
-    try {
-      toaster(notificationOptions);
-    } catch (error) {
-      console.error("An error occured while trying to display a notification.");
-      console.error(error);
-      console.error("Data received from socket :", data);
-    }
-  };
-
+export function toasterHandler() {
   return {
     addSubject(data: NotificationSubjectAdded) {
-      displayNotification(data)(getToasterConfig(<SubjectAdded {...data} />));
+      toaster.create({
+        meta: {
+          component: SubjectAdded,
+          data,
+        },
+      });
     },
     editSubject: (data: NotificationSubjectEdited) => {
-      displayNotification(data)(getToasterConfig(<SubjectEdited {...data} />));
+      toaster.create({
+        meta: {
+          component: SubjectEdited,
+          data,
+        },
+      });
     },
     editSubjectStatus: (data: NotificationSubjectEditedStatus) => {
-      displayNotification(data)(
-        getToasterConfig(<SubjectStatusEdited {...data} />)
-      );
+      toaster.create({
+        meta: {
+          component: SubjectStatusEdited,
+          data,
+        },
+      });
     },
     removeSubject: (data: NotificationSubjectRemoved) => {
-      displayNotification(data)(getToasterConfig(<SubjectRemoved {...data} />));
+      toaster.create({
+        meta: {
+          component: SubjectRemoved,
+          data,
+        },
+      });
     },
     createTOAST: (data: NotificationTOASTCreated) => {
-      displayNotification(data)(getToasterConfig(<TOASTCreated {...data} />));
+      toaster.create({
+        meta: {
+          component: TOASTCreated,
+          data,
+        },
+      });
     },
     editTOASTInfos: (data: Notification) => {
-      displayNotification(data)(
-        getToasterConfig(<TOASTInfosChanged {...data} />)
-      );
+      toaster.create({
+        meta: {
+          component: TOASTInfosChanged,
+          data,
+        },
+      });
     },
     editTOASTStatus: (data: NotificationTOASTStatusChanged) => {
-      displayNotification(data)(
-        getToasterConfig(<TOASTStatusChanged {...data} />)
-      );
+      toaster.create({
+        meta: {
+          component: TOASTStatusChanged,
+          data,
+        },
+      });
     },
   };
 }
+
+export const Toaster = () => {
+  return (
+    <Portal>
+      <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }}>
+        {(toast) => (
+          <Toast.Root>
+            {toast.meta?.Component && toast.meta?.data ? (
+              <toast.meta.Component {...toast.meta.data} />
+            ) : null}
+          </Toast.Root>
+        )}
+      </ChakraToaster>
+    </Portal>
+  );
+};

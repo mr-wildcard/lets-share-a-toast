@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
+import React, { FC, PropsWithChildren, useEffect, useState } from "react";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { useLocation } from "react-router";
 import { Link as RouterLink } from "react-router-dom";
@@ -17,7 +12,7 @@ interface Props extends PropsWithChildren {
   bgColor: string;
 }
 
-const LinkItem: FunctionComponent<Props> = ({ children, href, bgColor }) => {
+const LinkItem: FC<Props> = ({ children, href, bgColor }) => {
   const { pathname } = useLocation();
 
   const [hovered, setHover] = useState(false);
@@ -36,14 +31,13 @@ const LinkItem: FunctionComponent<Props> = ({ children, href, bgColor }) => {
     <>
       {!currentlySelected && (
         <ChakraLink
-          as={RouterLink}
-          to={href}
+          asChild
           fontWeight="bold"
           fontSize="lg"
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
-          {children}
+          <RouterLink to={href}>{children}</RouterLink>
         </ChakraLink>
       )}
 

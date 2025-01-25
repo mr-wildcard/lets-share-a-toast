@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
@@ -12,7 +12,7 @@ interface Props {
   toast: Toast;
 }
 
-const WhosInChargeRecap: FunctionComponent<Props> = ({ toast }) => {
+const WhosInChargeRecap: FC<Props> = ({ toast }) => {
   const organizerFullname = getUserFullname(toast.organizer);
   const scribeFullname = getUserFullname(toast.scribe);
 

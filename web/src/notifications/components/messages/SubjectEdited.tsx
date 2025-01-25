@@ -1,14 +1,14 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FC } from "react";
+import * as C from "@chakra-ui/react";
 
-import NotificationSubjectEdited from '@web/notifications/types/NotificationSubjectEdited';
-import Image from '@web/core/components/Image';
-import NotificationWrapper from '../NotificationWrapper';
+import NotificationSubjectEdited from "@web/notifications/types/NotificationSubjectEdited";
+import Image from "@web/core/components/Image";
+import NotificationWrapper from "../NotificationWrapper";
 
-const SubjectEdited: FunctionComponent<NotificationSubjectEdited> = (data) => {
+const SubjectEdited: FC<NotificationSubjectEdited> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" spacing={2}>
+      <C.Stack direction="row" gap={2}>
         <C.Avatar
           name={data.username}
           src={data.userPicture}

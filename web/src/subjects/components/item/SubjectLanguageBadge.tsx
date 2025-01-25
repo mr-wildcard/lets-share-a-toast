@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Badge } from "@chakra-ui/react";
 
 import { SubjectLanguage } from "@shared/enums";
@@ -17,7 +17,7 @@ interface Props {
   language: SubjectLanguage;
 }
 
-const SubjectLanguageBadge: FunctionComponent<Props> = ({ language }) => {
+const SubjectLanguageBadge: FC<Props> = ({ language }) => {
   return (
     <Badge
       display="flex"

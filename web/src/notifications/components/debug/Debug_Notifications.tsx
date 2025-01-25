@@ -36,9 +36,9 @@ const Debug_Notifications = () => {
 
   return (
     <Drawer
-      isOpen={opened}
+      open={opened}
       placement="right"
-      onClose={() => open(false)}
+      onOpenChange={() => open(false)}
       size="xl"
     >
       <DrawerOverlay>

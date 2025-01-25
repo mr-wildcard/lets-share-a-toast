@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import Select, { Props as SelectProps } from "react-select";
 import { Avatar, Stack, Text, useToken } from "@chakra-ui/react";
 
@@ -7,12 +7,12 @@ import { User } from "@shared/models";
 import getUserFullname from "@web/core/helpers/getUserFullname";
 
 interface Props extends SelectProps<User> {
-  isInvalid: boolean;
+  invalid: boolean;
 }
 
-const SelectUserInput: FunctionComponent<Props> = ({
+const SelectUserInput: FC<Props> = ({
   placeholder = "Pick up someone...",
-  isInvalid,
+  invalid,
   ...props
 }) => {
   const [red500, red600] = useToken("colors", ["red.500", "red.600"]);
@@ -28,7 +28,7 @@ const SelectUserInput: FunctionComponent<Props> = ({
       getOptionValue={(user: User) => user.id}
       getOptionLabel={(user: User) => getUserFullname(user)}
       formatOptionLabel={(user: User) => (
-        <Stack align="center" spacing={2} direction="row">
+        <Stack align="center" gap={2} direction="row">
           <Avatar
             size="xs"
             name={getUserFullname(user)}
@@ -47,11 +47,11 @@ const SelectUserInput: FunctionComponent<Props> = ({
            * as the button '-' next to it.
            */
           height: space10,
-          borderColor: isInvalid ? red600 : baseStyles.borderColor,
+          borderColor: invalid ? red600 : baseStyles.borderColor,
         }),
         placeholder: (baseStyles) => ({
           ...baseStyles,
-          color: isInvalid ? red500 : baseStyles.color,
+          color: invalid ? red500 : baseStyles.color,
         }),
       }}
     />

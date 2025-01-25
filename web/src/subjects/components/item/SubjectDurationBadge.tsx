@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Badge } from "@chakra-ui/react";
 import { TimeIcon } from "@chakra-ui/icons";
 
@@ -6,7 +6,7 @@ interface Props {
   duration: number;
 }
 
-const SubjectDurationBadge: FunctionComponent<Props> = ({ duration }) => {
+const SubjectDurationBadge: FC<Props> = ({ duration }) => {
   return (
     <Badge
       display="flex"

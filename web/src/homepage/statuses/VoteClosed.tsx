@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Box, Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
@@ -13,7 +13,7 @@ interface Props {
   toast: Toast;
 }
 
-const VotesClosed: FunctionComponent<Props> = ({ toast }) => {
+const VotesClosed: FC<Props> = ({ toast }) => {
   return (
     <Box fontWeight="bold" color="gray.800" textAlign="center">
       <Text fontSize="4xl" mt={0} mb={5}>

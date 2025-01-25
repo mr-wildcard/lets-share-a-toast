@@ -72,7 +72,7 @@ export const AnimatedImages = () => {
   );
 
   const gotoImage = useCallback(
-    (index) => {
+    (index: number) => {
       const { src } = ALL_GIFS[index];
 
       /**

@@ -1,17 +1,17 @@
-import React, { FunctionComponent, useRef } from "react";
+import React, { FC, useRef } from "react";
 import {
   Alert,
-  AlertDescription,
-  AlertTitle,
+  Alert.Description,
+  Alert.Title,
   Box,
   Button,
   Checkbox,
-  FormControl,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  Field as ChakraField,
+  Dialog.Root,
+  Dialog.Body,
+  Dialog.Content,
+  Dialog.Footer,
+  Dialog.Header,
   ModalOverlay,
   Text,
   Textarea,
@@ -42,25 +42,25 @@ interface Props {
   closeModal(): void;
 }
 
-const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
-  const cancelBtn = useRef() as React.MutableRefObject<HTMLButtonElement>;
+const OpenVotes: FC<Props> = ({ currentToast, closeModal }) => {
+  const cancelBtn = useRef<HTMLButtonElement>(null);
 
   const votingToastURL = getAppURL() + Pathnames.VOTING_SESSION;
 
   const totalAvailableSubjects = firebaseData.availableSubjects.length;
 
   return (
-    <Modal
-      isCentered
-      onClose={closeModal}
-      isOpen={true}
-      initialFocusRef={cancelBtn}
-      closeOnEsc={true}
+    <Dialog.Root
+      placement="center"
+      onOpenChange={closeModal}
+      open={true}
+      initialFocusEl={() => cancelBtn.current}
+      closeOnEscape={true}
       size="lg"
     >
-      <ModalOverlay>
-        <ModalContent borderRadius="3px">
-          <ModalHeader textAlign="center">
+
+        <Dialog.Content borderRadius="3px">
+          <Dialog.Header textAlign="center">
             <Text position="relative">
               <HighlightedText bgColor={pageColors.homepage}>
                 Open voting session !
@@ -74,8 +74,8 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                 src="https://media.giphy.com/media/QLREiT3pNpO2VPbGjj/giphy.gif"
               />
             </Text>
-          </ModalHeader>
-          <ModalBody>
+          </Dialog.Header>
+          <Dialog.Body>
             <Formik
               initialValues={{
                 notifySlack: false,
@@ -102,16 +102,16 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                 <Form>
                   <Box>
                     <Box my={5}>
-                      <Alert status="warning" variant="left-accent">
+                      <Alert.Root status="warning" >
                         <Box flex={1}>
-                          <AlertTitle textDecoration="underline">
+                          <Alert.Title textDecoration="underline">
                             TOAST has been created&nbsp;
                             {getTOASTElapsedTimeSinceCreation(
                               new Date(currentToast.createdDate)
                             )}
                             .
-                          </AlertTitle>
-                          <AlertDescription>
+                          </Alert.Title>
+                          <Alert.Description>
                             Be sure that people had enough time to manage their
                             subject(s) before opening votes!
                             <br />
@@ -120,9 +120,9 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                             </Text>
                             &nbsp;available subjects will be added to the voting
                             session.
-                          </AlertDescription>
+                          </Alert.Description>
                         </Box>
-                      </Alert>
+                      </Alert.Root>
                     </Box>
 
                     <Box>
@@ -136,27 +136,27 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
 
                       <Field name="slackMessage">
                         {({ field, meta, form }: FieldProps) => (
-                          <FormControl>
+                          <ChakraField.Root>
                             <Textarea
                               {...field}
                               height="150px"
-                              isRequired={form.values.notifySlack}
-                              isDisabled={!form.values.notifySlack}
-                              isInvalid={meta.touched && !!meta.error}
+                              required={form.values.notifySlack}
+                              disabled={!form.values.notifySlack}
+                              invalid={meta.touched && !!meta.error}
                               value={field.value}
                             />
-                          </FormControl>
+                          </ChakraField.Root>
                         )}
                       </Field>
                     </Box>
                   </Box>
 
-                  <ModalFooter justifyContent="center">
+                  <Dialog.Footer justifyContent="center">
                     <Button
-                      isDisabled={!isValid}
+                      disabled={!isValid}
                       type="submit"
                       colorScheme="blue"
-                      isLoading={isSubmitting}
+                      loading={isSubmitting}
                       loadingText="Opening votes..."
                       mx={2}
                     >
@@ -164,7 +164,7 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                     </Button>
                     <Button
                       ref={cancelBtn}
-                      isDisabled={isSubmitting}
+                      disabled={isSubmitting}
                       onClick={closeModal}
                       type="button"
                       colorScheme="red"
@@ -173,14 +173,14 @@ const OpenVotes: FunctionComponent<Props> = ({ currentToast, closeModal }) => {
                     >
                       Cancel
                     </Button>
-                  </ModalFooter>
+                  </Dialog.Footer>
                 </Form>
               )}
             </Formik>
-          </ModalBody>
-        </ModalContent>
-      </ModalOverlay>
-    </Modal>
+          </Dialog.Body>
+        </Dialog.Content>
+
+    </Dialog.Root>
   );
 };
 

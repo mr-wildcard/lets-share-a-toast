@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { BoxProps, Text } from "@chakra-ui/react";
 import { useSpring, animated } from "@react-spring/web";
 
@@ -7,7 +7,7 @@ interface Props extends BoxProps {
   animDelay?: number;
 }
 
-const HighlightedText: FunctionComponent<Props> = ({
+const HighlightedText: FC<Props> = ({
   children,
   bgColor,
   animDelay = 0,

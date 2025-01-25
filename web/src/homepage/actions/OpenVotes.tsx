@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 
@@ -10,7 +10,7 @@ interface Props {
   onClick: () => void;
 }
 
-const OpenVotes: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+const OpenVotes: FC<Props> = ({ isSuccess, onClick }) => {
   const { availableSubjects } = firebaseData;
 
   const notEnoughAvailableSubjects = availableSubjects.length <= 1;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { Input, Group, InputAddon } from "@chakra-ui/react";
 import { CalendarIcon } from "@chakra-ui/icons";
 
 class DateInput extends React.PureComponent {
@@ -7,12 +7,12 @@ class DateInput extends React.PureComponent {
 
   public render() {
     return (
-      <InputGroup>
-        <InputLeftElement>
+      <Group attached>
+        <InputAddon>
           <CalendarIcon color="gray.300" />
-        </InputLeftElement>
-        <Input cursor="pointer" isReadOnly id="dueDate" {...this.props} />;
-      </InputGroup>
+        </InputAddon>
+        <Input cursor="pointer" readOnly id="dueDate" {...this.props} />;
+      </Group>
     );
   }
 }

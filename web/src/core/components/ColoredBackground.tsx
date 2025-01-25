@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { Box, BoxProps, Flex } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
@@ -7,58 +7,59 @@ import { AnimatedShapes } from "@web/core/components/AnimatedShapes";
 import { backgroundShapesColorByPageColor } from "@web/core/constants";
 import { useDebouncedCallback } from "@web/core/components/hooks/useDebouncedCallback";
 
-export const ColoredBackground: FunctionComponent<BoxProps> = observer(
-  ({ children }) => {
-    const rootElementRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+export const ColoredBackground: FC<BoxProps> = observer(({ children }) => {
+  const rootElementRef = useRef() as React.MutableRefObject<HTMLDivElement>;
 
-    const [size, setSize] = useState<number[]>([]);
+  const [size, setSize] = useState<number[]>([]);
 
-    const debouncedSetSize = useDebouncedCallback((width, height) => {
+  const debouncedSetSize = useDebouncedCallback(
+    (width: number, height: number) => {
       setSize([width, height]);
-    }, 500);
+    },
+    500
+  );
 
-    useEffect(() => {
-      const backgroundRO = new ResizeObserver((entries) => {
-        const [mutation] = entries;
+  useEffect(() => {
+    const backgroundRO = new ResizeObserver((entries) => {
+      const [mutation] = entries;
 
-        const width = mutation.contentRect.width;
-        const height = mutation.contentRect.height;
+      const width = mutation.contentRect.width;
+      const height = mutation.contentRect.height;
 
-        debouncedSetSize(width, height);
-      });
+      debouncedSetSize(width, height);
+    });
 
-      backgroundRO.observe(rootElementRef.current);
+    backgroundRO.observe(rootElementRef.current);
 
-      return function dispose() {
-        backgroundRO.disconnect();
-      };
-    }, []);
+    return function dispose() {
+      backgroundRO.disconnect();
+    };
+  }, []);
 
-    const shapesColor = backgroundShapesColorByPageColor[ui.currentPageBgColor];
+  const shapesColor = backgroundShapesColorByPageColor[ui.currentPageBgColor];
 
-    return (
-      <Flex
-        ref={rootElementRef}
-        flex={1}
-        position="relative"
-        borderRadius={3}
-        transition="background-color 500ms ease"
-        style={{
-          backgroundColor: ui.currentPageBgColor,
-        }}
-      >
-        {size.length === 2 && (
-          <Box position="absolute" inset="0" zIndex={0}>
-            <AnimatedShapes
-              width={size[0]}
-              height={size[1]}
-              color={shapesColor}
-            />
-          </Box>
-        )}
+  return (
+    <Flex
+      ref={rootElementRef}
+      flex={1}
+      position="relative"
+      borderRadius={3}
+      transition="background-color 500ms ease"
+      style={{
+        backgroundColor: ui.currentPageBgColor,
+      }}
+    >
+      {size.length === 2 && (
+        <Box position="absolute" inset="0" zIndex={0}>
+          <AnimatedShapes
+            width={size[0]}
+            height={size[1]}
+            color={shapesColor}
+          />
+        </Box>
+      )}
 
-        {children}
-      </Flex>
-    );
-  }
-);
+      {children}
+    </Flex>
+  );
+});

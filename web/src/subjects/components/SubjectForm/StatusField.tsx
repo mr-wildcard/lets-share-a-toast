@@ -1,16 +1,10 @@
-import React, {
-  FunctionComponent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { FieldProps } from "formik";
 import {
   Box,
   Button,
   ButtonGroup,
-  FormControl,
+  Field as ChakraField,
   FormLabel,
   Text,
   useTheme,
@@ -75,11 +69,7 @@ interface Props extends FieldProps<SubjectSelectableStatus> {
   showHints?: boolean;
 }
 
-const StatusField: FunctionComponent<Props> = ({
-  field,
-  form,
-  showHints = true,
-}) => {
+const StatusField: FC<Props> = ({ field, form, showHints = true }) => {
   const theme = useTheme();
 
   const [bgStyles, setBgStyles] = useState<StatusBackgroundStyles>({
@@ -125,9 +115,11 @@ const StatusField: FunctionComponent<Props> = ({
   }, [field]);
 
   return (
-    <FormControl ref={rootElement}>
+    <ChakraField.Root ref={rootElement}>
       <Box>
-        <FormLabel htmlFor={field.name}>Subject status</FormLabel>
+        <ChakraField.Label htmlFor={field.name}>
+          Subject status
+        </ChakraField.Label>
       </Box>
       <Box
         position="relative"
@@ -185,7 +177,7 @@ const StatusField: FunctionComponent<Props> = ({
           {StatusInfos[field.value]}
         </Text>
       )}
-    </FormControl>
+    </ChakraField.Root>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { Fragment, FunctionComponent } from "react";
+import React, { Fragment, FC } from "react";
 import {
   Avatar,
   AvatarGroup,
@@ -17,9 +17,7 @@ interface Props {
   selectedSubjects: Subject[];
 }
 
-const SelectedSubjectsList: FunctionComponent<Props> = ({
-  selectedSubjects,
-}) => {
+const SelectedSubjectsList: FC<Props> = ({ selectedSubjects }) => {
   return (
     <List fontSize="lg" fontWeight="normal">
       {selectedSubjects.map((subject, index, arrayOfSubjects) => (

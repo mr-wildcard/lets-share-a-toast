@@ -1,17 +1,18 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { observer } from "mobx-react-lite";
-import { Avatar, AvatarBadge, Box, Flex, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import { useLocation } from "react-router";
 
 import { ToastStatus } from "@shared/enums";
 
+import { Avatar } from "@web/components/ui/avatar";
 import { header, pageColors, Pathnames, spacing } from "@web/core/constants";
 import { firebaseData } from "@web/core/firebase/data";
 import Image from "@web/core/components/Image";
 import Logo from "./Logo";
 import LinkItem from "./LinkItem";
 
-const Header: FunctionComponent = () => {
+const Header: FC = () => {
   const { pathname } = useLocation();
 
   const toastHasBeenCreated = !!firebaseData.currentToast;
@@ -74,7 +75,7 @@ const Header: FunctionComponent = () => {
         </Flex>
 
         {firebaseData.connectedUser && (
-          <Stack direction="row" spacing={5} align="center">
+          <Stack direction="row" gap={5} align="center">
             <Text>
               Welcome
               <Text as="span" pl={1} fontWeight="bold" fontStyle="italic">
@@ -87,9 +88,7 @@ const Header: FunctionComponent = () => {
                 name={firebaseData.connectedUser.displayName || "N/A"}
                 src={firebaseData.connectedUser.photoURL || undefined}
                 size="sm"
-              >
-                <AvatarBadge boxSize="1em" bg="green.500" />
-              </Avatar>
+              />
             </Box>
           </Stack>
         )}

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { SimpleGrid } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
@@ -13,7 +13,7 @@ interface Props {
   onEditSubject(subject: Subject): void;
 }
 
-const SubjectsList: FunctionComponent<Props> = ({
+const SubjectsList: FC<Props> = ({
   subjects,
   creatingSubject,
   onAddSubject,
@@ -29,7 +29,7 @@ const SubjectsList: FunctionComponent<Props> = ({
   }, [creatingSubject, onAddSubject]);
 
   return (
-    <SimpleGrid columns={3} spacing={4}>
+    <SimpleGrid columns={3} gap={4}>
       {subjectAddButton}
 
       {subjects.map((subject, index) => (

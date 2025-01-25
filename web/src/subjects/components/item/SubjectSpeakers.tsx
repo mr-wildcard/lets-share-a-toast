@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react";
 
 import { User } from "@shared/models";
@@ -10,7 +10,7 @@ interface Props {
   speakers: User[];
 }
 
-const SubjectSpeakers: FunctionComponent<Props> = ({ speakers }) => {
+const SubjectSpeakers: FC<Props> = ({ speakers }) => {
   const namesList = useMemo(() => {
     return getSubjectSpeakersAsText(speakers);
   }, [speakers]);

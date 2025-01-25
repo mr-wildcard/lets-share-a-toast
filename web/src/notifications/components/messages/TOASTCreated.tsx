@@ -1,15 +1,15 @@
-import React, { FunctionComponent } from 'react';
-import * as C from '@chakra-ui/react';
+import React, { FC } from "react";
+import * as C from "@chakra-ui/react";
 
-import { getFormattedTOASTDateWithRemainingDays } from '@web/core/helpers/timing';
-import Image from '@web/core/components/Image';
-import NotificationTOASTCreated from '../../types/NotificationTOASTCreated';
-import NotificationWrapper from '../NotificationWrapper';
+import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
+import Image from "@web/core/components/Image";
+import NotificationTOASTCreated from "../../types/NotificationTOASTCreated";
+import NotificationWrapper from "../NotificationWrapper";
 
-const TOASTCreated: FunctionComponent<NotificationTOASTCreated> = (data) => {
+const TOASTCreated: FC<NotificationTOASTCreated> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" spacing={2}>
+      <C.Stack direction="row" gap={2}>
         <C.Avatar name={data.username} src={data.userPicture} size="xs" />
         <C.Box>
           <C.Text position="relative" pr="40px">

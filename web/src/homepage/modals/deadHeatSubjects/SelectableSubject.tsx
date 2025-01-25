@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Box, Text, useToken } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
@@ -12,7 +12,7 @@ interface Props {
   onClick?(): void;
 }
 
-const SelectableSubject: FunctionComponent<Props> = ({
+const SelectableSubject: FC<Props> = ({
   subject,
   selected,
   totalVotes,

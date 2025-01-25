@@ -1,12 +1,11 @@
-import React, { Suspense, FunctionComponent } from "react";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerOverlay,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
+import React, { Suspense, FC } from "react";
+import { Flex, Spinner } from "@chakra-ui/react";
 
+import {
+  DrawerBackdrop,
+  DrawerContent,
+  DrawerRoot,
+} from "@web/components/ui/drawer";
 import { Subject } from "@shared/models";
 
 import { pageColors } from "@web/core/constants";
@@ -21,39 +20,34 @@ const Form = React.lazy(
   () => import("./Form" /* webpackChunkName: "subject-form" */)
 );
 
-const SubjectForm: FunctionComponent<Props> = ({
-  subject,
-  closeForm,
-  isOpen,
-}) => {
+const SubjectForm: FC<Props> = ({ subject, closeForm, isOpen }) => {
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={closeForm}
-      placement="right"
+    <DrawerRoot
+      open={isOpen}
+      onOpenChange={closeForm}
+      placement="end"
       size="xl"
-      closeOnEsc={true}
+      closeOnEscape={true}
     >
-      <DrawerOverlay>
-        <DrawerContent overflowY="auto">
-          <Suspense
-            fallback={
-              <Flex h="100%" justifyContent="center" alignItems="center">
-                <Spinner
-                  thickness="4px"
-                  speed="0.65s"
-                  emptyColor="gray.800"
-                  color={pageColors.subjects}
-                  size="xl"
-                />
-              </Flex>
-            }
-          >
-            <Form subject={subject} closeForm={closeForm} />
-          </Suspense>
-        </DrawerContent>
-      </DrawerOverlay>
-    </Drawer>
+      <DrawerBackdrop />
+      <DrawerContent overflowY="auto">
+        <Suspense
+          fallback={
+            <Flex h="100%" justifyContent="center" alignItems="center">
+              <Spinner
+                borderWidth="4px"
+                animationDuration="0.65s"
+                css={{ "--spinner-track-color": "colors.gray.800" }}
+                color={pageColors.subjects}
+                size="xl"
+              />
+            </Flex>
+          }
+        >
+          <Form subject={subject} closeForm={closeForm} />
+        </Suspense>
+      </DrawerContent>
+    </DrawerRoot>
   );
 };
 

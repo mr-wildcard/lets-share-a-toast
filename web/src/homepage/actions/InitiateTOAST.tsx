@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 
@@ -9,7 +9,7 @@ interface Props {
   onClick: () => void;
 }
 
-const InitiateTOAST: FunctionComponent<Props> = ({ isSuccess, onClick }) => {
+const InitiateTOAST: FC<Props> = ({ isSuccess, onClick }) => {
   return !isSuccess ? (
     <Button
       onClick={onClick}

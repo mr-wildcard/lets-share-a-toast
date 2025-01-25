@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import * as C from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
@@ -7,18 +7,16 @@ import Image from "@web/core/components/Image";
 import NotificationTOASTStatusChanged from "../../types/NotificationTOASTStatusChanged";
 import NotificationWrapper from "../NotificationWrapper";
 
-const Username: FunctionComponent<{ username: string }> = ({ username }) => (
+const Username: FC<{ username: string }> = ({ username }) => (
   <C.Text as="span" fontWeight="bold">
     {username}&nbsp;
   </C.Text>
 );
 
-const TOASTStatusChanged: FunctionComponent<NotificationTOASTStatusChanged> = (
-  data
-) => {
+const TOASTStatusChanged: FC<NotificationTOASTStatusChanged> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" spacing={2}>
+      <C.Stack direction="row" gap={2}>
         <C.Avatar name={data.username} src={data.userPicture} size="xs" />
         {data.status === ToastStatus.OPEN_FOR_VOTE && (
           <C.Text position="relative" pr="35px">

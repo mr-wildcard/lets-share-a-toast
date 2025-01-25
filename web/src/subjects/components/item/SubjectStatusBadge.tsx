@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FC } from "react";
 import { Badge } from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
@@ -7,7 +7,7 @@ interface Props {
   status: SubjectStatus;
 }
 
-const SubjectStatusBadge: FunctionComponent<Props> = ({ status }) => (
+const SubjectStatusBadge: FC<Props> = ({ status }) => (
   <>
     {status === SubjectStatus.AVAILABLE && (
       <Badge variant="solid" colorScheme="green" title="Available for a TOAST">

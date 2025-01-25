@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useSpring, animated } from "@react-spring/web";
 import { Button, Text } from "@chakra-ui/react";
 
@@ -28,7 +28,7 @@ interface Props {
   onStatusChanged(status: StatusFilterValue): void;
 }
 
-const FilterSubjectStatus: FunctionComponent<Props> = ({ onStatusChanged }) => {
+const FilterSubjectStatus: FC<Props> = ({ onStatusChanged }) => {
   const [statusIndex, setStatusIndex] = useState(0);
 
   const { currentStatusValue, currentStatusLabel } = useMemo(() => {

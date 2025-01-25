@@ -1,14 +1,5 @@
-import React, { Suspense, FunctionComponent, useRef } from "react";
-import {
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import React, { Suspense, FC, useRef } from "react";
+import { Flex, Dialog, Spinner, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { CurrentToast } from "@shared/models";
@@ -25,56 +16,56 @@ interface Props {
 
 const Form = React.lazy(() => import("./Form"));
 
-const TOASTInfosForm: FunctionComponent<Props> = (props) => {
-  const cancelButtonRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
+const TOASTInfosForm: FC<Props> = (props) => {
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
   const isCreatingToast = firebaseData.currentToast === null;
 
   return (
-    <Modal
-      onClose={() => props.closeModal(false)}
-      initialFocusRef={isCreatingToast ? undefined : cancelButtonRef}
-      isOpen={props.isOpen}
-      closeOnEsc={true}
+    <Dialog.Root
+      onOpenChange={() => props.closeModal(false)}
+      initialFocusEl={
+        isCreatingToast ? undefined : () => cancelButtonRef.current
+      }
+      open={props.isOpen}
+      closeOnEscape={true}
       size="xl"
-      isCentered
+      placement="center"
       scrollBehavior="inside"
     >
-      <ModalOverlay>
-        <ModalContent borderRadius="3px">
-          <ModalHeader textAlign="center">
-            <Text position="relative">
-              <HighlightedText bgColor={pageColors.homepage}>
-                {isCreatingToast ? "Start a new TOAST" : "Edit current TOAST"}
-              </HighlightedText>
-              <Image
-                position="absolute"
-                right={0}
-                top="-50px"
-                width={100}
-                height={100}
-                src="https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp"
-              />
-            </Text>
-          </ModalHeader>
-          <ModalBody pb={6}>
-            <Suspense
-              fallback={
-                <Flex my={10} align="center" justify="center">
-                  <Spinner />
-                </Flex>
-              }
-            >
-              <Form
-                currentToast={firebaseData.currentToast as CurrentToast}
-                closeModal={props.closeModal}
-                cancelButtonRef={cancelButtonRef}
-              />
-            </Suspense>
-          </ModalBody>
-        </ModalContent>
-      </ModalOverlay>
-    </Modal>
+      <Dialog.Content borderRadius="3px">
+        <Dialog.Header textAlign="center">
+          <Text position="relative">
+            <HighlightedText bgColor={pageColors.homepage}>
+              {isCreatingToast ? "Start a new TOAST" : "Edit current TOAST"}
+            </HighlightedText>
+            <Image
+              position="absolute"
+              right={0}
+              top="-50px"
+              width={100}
+              height={100}
+              src="https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp"
+            />
+          </Text>
+        </Dialog.Header>
+        <Dialog.Body pb={6}>
+          <Suspense
+            fallback={
+              <Flex my={10} align="center" justify="center">
+                <Spinner />
+              </Flex>
+            }
+          >
+            <Form
+              currentToast={firebaseData.currentToast as CurrentToast}
+              closeModal={props.closeModal}
+              cancelButtonRef={cancelButtonRef}
+            />
+          </Suspense>
+        </Dialog.Body>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 };
 
