@@ -1,16 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { FC, useCallback, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Image,
-  Portal,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Image } from "@chakra-ui/react";
 import {
   CloseIcon,
   SettingsIcon,
@@ -37,6 +27,13 @@ import MarkTOASTAsReady from "./actions/MarkTOASTAsReady";
 import DeadHeatSubjects from "./actions/DeadHeatSubjects";
 import EndTOAST from "./actions/EndTOAST";
 import { CurrentToast } from "@shared/models";
+import {
+  MenuContent,
+  MenuItem,
+  MenuRoot,
+  MenuTrigger,
+} from "@web/components/ui/menu";
+import { MenuList } from "react-select/dist/declarations/src/components/Menu";
 
 const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
 
@@ -114,7 +111,7 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
       </Button>
       <Box
         as={animated.div}
-        p={padding}
+        padding={padding}
         position="relative"
         style={{
           // @ts-expect-error I don't know tbh
@@ -220,42 +217,42 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
                   </Box>
                 )}
 
-                {modalsStates.openVotes.isOpen && (
+                {modalsStates.openVotes.open && (
                   <OpenVotesModal
                     currentToast={currentToast}
                     closeModal={modalsStates.openVotes.onClose}
                   />
                 )}
 
-                {modalsStates.closeVotes.isOpen && (
+                {modalsStates.closeVotes.open && (
                   <CloseVotesModal
                     currentToast={currentToast}
                     closeModal={modalsStates.closeVotes.onClose}
                   />
                 )}
 
-                {modalsStates.deadHeatSubjects.isOpen && (
+                {modalsStates.deadHeatSubjects.open && (
                   <DeadHeatSubjectsModal
                     currentToast={currentToast}
                     closeModal={modalsStates.deadHeatSubjects.onClose}
                   />
                 )}
 
-                {modalsStates.markTOASTAsReady.isOpen && (
+                {modalsStates.markTOASTAsReady.open && (
                   <MarkTOASTAsReadyModal
                     currentToast={currentToast}
                     closeModal={modalsStates.markTOASTAsReady.onClose}
                   />
                 )}
 
-                {modalsStates.endTOAST.isOpen && (
+                {modalsStates.endTOAST.open && (
                   <EndTOASTModal
                     currentToast={currentToast}
                     closeModal={modalsStates.endTOAST.onClose}
                   />
                 )}
 
-                {modalsStates.cancelTOAST.isOpen && (
+                {modalsStates.cancelTOAST.open && (
                   <CancelTOASTModal
                     closeModal={modalsStates.cancelTOAST.onClose}
                   />
@@ -264,41 +261,43 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
             )}
 
             <TOASTInfosModal
-              open={modalsStates.toast.isOpen}
+              isOpen={modalsStates.toast.open}
               closeModal={closeTOASTFormModal}
             />
           </Flex>
 
           {!!currentToast && (
-            <Menu>
-              <MenuButton
-                textDecoration="underline"
-                position="relative"
-                pt={0}
-                fontWeight="bold"
-              >
-                More actions
-              </MenuButton>
-              <Portal>
-                <MenuList>
-                  <MenuItem
-                    onClick={modalsStates.toast.onOpen}
-                    fontWeight="bold"
-                  >
-                    <EditIcon mr={3} />
-                    Edit TOAST
-                  </MenuItem>
-                  <MenuItem
-                    onClick={modalsStates.cancelTOAST.onOpen}
-                    fontWeight="bold"
-                    color="red.500"
-                  >
-                    <DeleteIcon mr={3} />
-                    Cancel TOAST
-                  </MenuItem>
-                </MenuList>
-              </Portal>
-            </Menu>
+            <MenuRoot>
+              <MenuTrigger asChild>
+                <Button
+                  textDecoration="underline"
+                  position="relative"
+                  pt={0}
+                  fontWeight="bold"
+                >
+                  More actions
+                </Button>
+              </MenuTrigger>
+              <MenuContent>
+                <MenuItem
+                  value="edit-toast"
+                  onClick={modalsStates.toast.onOpen}
+                  fontWeight="bold"
+                >
+                  <EditIcon mr={3} />
+                  Edit TOAST
+                </MenuItem>
+                <MenuItem
+                  value="cancel-toast"
+                  onClick={modalsStates.cancelTOAST.onOpen}
+                  fontWeight="bold"
+                  color="red.500"
+                >
+                  <DeleteIcon mr={3} />
+                  Cancel TOAST
+                </MenuItem>
+              </MenuContent>
+            </MenuRoot>
           )}
         </Flex>
       </Box>

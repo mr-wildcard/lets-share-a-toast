@@ -16,7 +16,7 @@ const UserVotesLeft = observer(() => {
       fontSize="xl"
       fontWeight="bold"
       borderRadius="sm"
-      p={4}
+      padding={4}
     >
       You have {currentUserRemainingVotes} {voteWord} left.
     </Text>

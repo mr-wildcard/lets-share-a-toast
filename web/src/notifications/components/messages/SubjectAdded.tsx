@@ -1,26 +1,27 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import Image from "@web/core/components/Image";
 import NotificationSubjectAdded from "../../types/NotificationSubjectAdded";
 import NotificationWrapper from "../NotificationWrapper";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import { Avatar } from "@web/components/ui/avatar";
 
 const SubjectAdded: FC<NotificationSubjectAdded> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" gap={2}>
-        <C.Avatar name={data.username} src={data.userPicture} size="xs" />
-        <C.Box position="relative" pr="40px">
-          <C.Text>
-            <C.Text as="span" fontWeight="bold">
+      <Stack direction="row" gap={2}>
+        <Avatar name={data.username} src={data.userPicture} size="xs" />
+        <Box position="relative" pr="40px">
+          <Text>
+            <Text as="span" fontWeight="bold">
               {data.username}
-            </C.Text>
+            </Text>
             &nbsp;added new subject:&nbsp;
-          </C.Text>
-          <C.Text>
-            <C.Text as="span" fontStyle="italic">
+          </Text>
+          <Text>
+            <Text as="span" fontStyle="italic">
               &laquo; {data.subjectTitle} &raquo;
-            </C.Text>
+            </Text>
             <Image
               position="absolute"
               right="-5px"
@@ -30,9 +31,9 @@ const SubjectAdded: FC<NotificationSubjectAdded> = (data) => {
               alt="Bravo"
               src="https://media.giphy.com/media/xUPGclxTfaPjj31CCI/giphy.webp"
             />
-          </C.Text>
-        </C.Box>
-      </C.Stack>
+          </Text>
+        </Box>
+      </Stack>
     </NotificationWrapper>
   );
 };

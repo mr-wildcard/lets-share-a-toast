@@ -10,7 +10,7 @@ export const useVote = () => {
   const { currentUserRemainingVotes } = useClientSideVotingSession();
 
   return useCallback(
-    (subjectId) => {
+    (subjectId: string) => {
       const database = getDatabase();
       const userSubjectVoteRef = ref(
         database,

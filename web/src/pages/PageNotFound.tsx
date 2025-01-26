@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
-import { Flex, Heading, useTheme } from "@chakra-ui/react";
+import { Flex, Heading, useToken } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import Image from "@web/core/components/Image";
 import HighlightedText from "@web/core/components/HighlightedText";
 import { ui } from "@web/core/stores/ui";
+import { system } from "@web/core/theme";
 
 const PageNotFound = () => {
-  const theme = useTheme();
-
   useEffect(() => {
-    ui.currentPageBgColor = theme.colors.purple["400"];
+    ui.currentPageBgColor = system.token("colors.purple.400");
   }, []);
 
   return (

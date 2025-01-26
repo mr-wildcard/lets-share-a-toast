@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useRef, useState } from "react";
-import { Alert, Box, Button, Dialog, Text } from "@chakra-ui/react";
+import { Alert, Box, Button, Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
 
@@ -8,6 +8,13 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getTOASTElapsedTimeSinceCreation } from "@web/core/helpers/timing";
 import { getCloudFunctionCloseVotes } from "@web/core/firebase/helpers";
+import {
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface Props {
   currentToast: Toast;
@@ -34,7 +41,7 @@ const CloseVotes: FC<Props> = ({ currentToast, closeModal }) => {
   }, []);
 
   return (
-    <Dialog.Root
+    <DialogRoot
       placement="center"
       onOpenChange={closeModal}
       open={true}
@@ -42,8 +49,8 @@ const CloseVotes: FC<Props> = ({ currentToast, closeModal }) => {
       closeOnEscape={true}
       size="lg"
     >
-      <Dialog.Content borderRadius="3px">
-        <Dialog.Header textAlign="center">
+      <DialogContent borderRadius="3px">
+        <DialogHeader textAlign="center">
           <Text position="relative">
             <HighlightedText bgColor={pageColors.homepage}>
               Close voting session
@@ -57,9 +64,9 @@ const CloseVotes: FC<Props> = ({ currentToast, closeModal }) => {
               src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
             />
           </Text>
-        </Dialog.Header>
+        </DialogHeader>
 
-        <Dialog.Body>
+        <DialogBody>
           <Alert.Root my={5} status="info">
             <Alert.Content>
               <Alert.Title>
@@ -80,8 +87,8 @@ const CloseVotes: FC<Props> = ({ currentToast, closeModal }) => {
           <Box fontSize="lg" my={10} textAlign="center">
             <Text>Are you sure you want to proceed ?</Text>
           </Box>
-        </Dialog.Body>
-        <Dialog.Footer justifyContent="center">
+        </DialogBody>
+        <DialogFooter justifyContent="center">
           <Button
             colorScheme="blue"
             onClick={closeVotingToast}
@@ -103,9 +110,9 @@ const CloseVotes: FC<Props> = ({ currentToast, closeModal }) => {
           >
             Cancel
           </Button>
-        </Dialog.Footer>
-      </Dialog.Content>
-    </Dialog.Root>
+        </DialogFooter>
+      </DialogContent>
+    </DialogRoot>
   );
 };
 

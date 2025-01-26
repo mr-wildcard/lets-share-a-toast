@@ -1,20 +1,21 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import NotificationSubjectRemoved from "@web/notifications/types/NotificationSubjectRemoved";
 import NotificationWrapper from "../NotificationWrapper";
+import { Avatar } from "@web/components/ui/avatar";
+import { Text } from "@chakra-ui/react";
 
 const SubjectRemoved: FC<NotificationSubjectRemoved> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />
-      <C.Text as="span" fontWeight="bold">
+      <Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />
+      <Text as="span" fontWeight="bold">
         {data.username}
-      </C.Text>
+      </Text>
       &nbsp;removed subject&nbsp;
-      <C.Text as="span" fontWeight="bold">
+      <Text as="span" fontWeight="bold">
         {data.subjectTitle}
-      </C.Text>
+      </Text>
     </NotificationWrapper>
   );
 };

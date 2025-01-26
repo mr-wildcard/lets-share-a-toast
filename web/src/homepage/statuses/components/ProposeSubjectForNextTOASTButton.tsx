@@ -29,8 +29,7 @@ const ProposeSubjectForNextTOASTButton = () => {
 
   return (
     <Button
-      to={Pathnames.SUBJECTS}
-      as={Link}
+      asChild
       cursor="pointer"
       variant="outline"
       position="relative"
@@ -38,22 +37,24 @@ const ProposeSubjectForNextTOASTButton = () => {
       size="lg"
       colorScheme="blue"
     >
-      Propose a subject for the next TOAST!
-      <Image
-        pointerEvents="none"
-        as={animated.img}
-        position="absolute"
-        width={115}
-        height={115}
-        src="https://media.giphy.com/media/d7SlmU3j2QluzkOSIv/giphy.gif"
-        style={{
-          // @ts-expect-error I don't know tbh
-          transform: anim.transform.to(
-            (translateX, translateY, rotate) =>
-              `translate(${translateX}px, ${translateY}px) rotate(${rotate}deg)`
-          ),
-        }}
-      />
+      <Link to={Pathnames.SUBJECTS}>
+        Propose a subject for the next TOAST!
+        <Image
+          pointerEvents="none"
+          as={animated.img}
+          position="absolute"
+          width={115}
+          height={115}
+          src="https://media.giphy.com/media/d7SlmU3j2QluzkOSIv/giphy.gif"
+          style={{
+            // @ts-expect-error I don't know tbh
+            transform: anim.transform.to(
+              (translateX, translateY, rotate) =>
+                `translate(${translateX}px, ${translateY}px) rotate(${rotate}deg)`
+            ),
+          }}
+        />
+      </Link>
     </Button>
   );
 };

@@ -5,13 +5,12 @@ import {
   Separator,
   Flex,
   HStack,
-  SkeletonCircle,
-  SkeletonText,
   Stack,
   Text,
 } from "@chakra-ui/react";
 
 import Image from "@web/core/components/Image";
+import { SkeletonCircle, SkeletonText } from "@web/components/ui/skeleton";
 
 interface Props {
   creatingSubject: boolean;
@@ -31,7 +30,7 @@ const SubjectAddButton: FC<Props> = ({ creatingSubject, onClick }) => {
       w="100%"
       h="auto"
       minH="142px"
-      p={0}
+      padding={0}
       fontWeight="bold"
       fontSize="lg"
       textTransform="uppercase"
@@ -53,11 +52,11 @@ const SubjectAddButton: FC<Props> = ({ creatingSubject, onClick }) => {
       )}
 
       <Box style={{ opacity: !creatingSubject ? 1 : 0 }}>
-        <Stack borderRadius="3px" h="100%" gap={4} p={5}>
-          <SkeletonText noOfLines={1} skeletonHeight="25px" />
+        <Stack borderRadius="3px" h="100%" gap={4} padding={5}>
+          <SkeletonText noOfLines={1} />
           <HStack mb={10}>
             <SkeletonCircle size="28px" />
-            <SkeletonText flex={1} noOfLines={1} skeletonHeight="25px" />
+            <SkeletonText flex={1} noOfLines={1} />
           </HStack>
           <Box />
           <Separator mb={3} />

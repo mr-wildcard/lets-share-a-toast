@@ -1,39 +1,38 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
 
 import NotificationSubjectEditedStatus from "@web/notifications/types/NotificationSubjectEditedStatus";
 import NotificationWrapper from "../NotificationWrapper";
+import { Badge, Box, Stack, Text } from "@chakra-ui/react";
+import { Avatar } from "@web/components/ui/avatar";
 
 const SubjectStatusEdited: FC<NotificationSubjectEditedStatus> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" gap={2}>
-        <C.Avatar name={data.username} src={data.userPicture} size="xs" />
-        <C.Box>
-          <C.Text as="span" fontWeight="bold">
+      <Stack direction="row" gap={2}>
+        <Avatar name={data.username} src={data.userPicture} size="xs" />
+        <Box>
+          <Text as="span" fontWeight="bold">
             {data.username}&nbsp;
-          </C.Text>
+          </Text>
           marked the following subject as: &nbsp;
           {data.newStatus === SubjectStatus.AVAILABLE && (
-            <C.Badge variant="solid" colorScheme="green">
+            <Badge variant="solid" colorScheme="green">
               Available for a TOAST
-            </C.Badge>
+            </Badge>
           )}
           {data.newStatus === SubjectStatus.UNAVAILABLE && (
-            <C.Badge variant="solid" colorScheme="red">
+            <Badge variant="solid" colorScheme="red">
               Unavailable
-            </C.Badge>
+            </Badge>
           )}
           {data.newStatus === SubjectStatus.DONE && (
-            <C.Badge variant="solid">ALREADY GIVEN</C.Badge>
+            <Badge variant="solid">ALREADY GIVEN</Badge>
           )}
-          <C.Text fontStyle="italic">
-            &laquo; {data.subjectTitle} &raquo;
-          </C.Text>
-        </C.Box>
-      </C.Stack>
+          <Text fontStyle="italic">&laquo; {data.subjectTitle} &raquo;</Text>
+        </Box>
+      </Stack>
     </NotificationWrapper>
   );
 };

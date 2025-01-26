@@ -124,7 +124,7 @@ const EndTOAST: FC<Props> = ({ currentToast, closeModal }) => {
                             >) => (
                               <Button
                                 key={`subject-${selectedSubject.id}`}
-                                p={3}
+                                padding={3}
                                 borderRadius="md"
                                 borderWidth="1px"
                                 borderStyle="solid"

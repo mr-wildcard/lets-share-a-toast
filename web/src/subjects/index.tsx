@@ -69,7 +69,7 @@ const Subjects = () => {
         flex={1}
         position="relative"
         direction="column"
-        p={`${spacing.stylizedGap}px`}
+        padding={`${spacing.stylizedGap}px`}
       >
         {filteredSubjects.length === 0 && (
           <Image

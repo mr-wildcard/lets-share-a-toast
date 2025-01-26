@@ -64,7 +64,7 @@ const PreventUserInteractionsModal: FC<PropsWithChildren<Props>> = ({
         </Dialog.Header>
 
         <Dialog.Body>
-          <Box p={10} textAlign="center">
+          <Box padding={10} textAlign="center">
             {children}
           </Box>
         </Dialog.Body>

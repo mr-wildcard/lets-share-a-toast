@@ -46,6 +46,7 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
     const cancelBtn = useRef<HTMLButtonElement>(null);
 
     const votes = firebaseData.votingSession?.votes;
+
     const selectedSubjects = currentToast.selectedSubjects;
 
     /**
@@ -149,7 +150,7 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
                       />
                     </Text>
                   </Dialog.Header>
-                  <Dialog.Body p={0}>
+                  <Dialog.Body padding={0}>
                     <Box mb={5} px={5}>
                       <Alert.Root status="warning">
                         <Alert.Content flex={1}>
@@ -179,14 +180,16 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
                         </Heading>
                         <Stack gap={3}>
                           {alreadySettledSubjects.map((subject) => {
+                            const totalVotes = votes
+                              ? getSubjectTotalVotes(votes[subject.id])
+                              : 0;
+
                             return (
                               <SelectableSubject
                                 key={subject.id}
                                 subject={subject}
                                 selected={true}
-                                totalVotes={getSubjectTotalVotes(
-                                  votes[subject.id]
-                                )}
+                                totalVotes={totalVotes}
                               />
                             );
                           })}
@@ -204,14 +207,16 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
                               const subjectIsSelected =
                                 values.selectedSubjectIds.includes(subject.id);
 
+                              const totalVotes = votes
+                                ? getSubjectTotalVotes(votes[subject.id])
+                                : 0;
+
                               return (
                                 <SelectableSubject
                                   key={subject.id}
                                   subject={subject}
                                   selected={subjectIsSelected}
-                                  totalVotes={getSubjectTotalVotes(
-                                    votes[subject.id]
-                                  )}
+                                  totalVotes={totalVotes}
                                   onClick={() => {
                                     if (subjectIsSelected) {
                                       /**

@@ -1,17 +1,11 @@
 import React, { Fragment, FC } from "react";
-import {
-  Avatar,
-  AvatarGroup,
-  Flex,
-  List,
-  ListItem,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, List, ListItem, Text } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
 import FloralSeparator from "./FloralSeparator";
+import { Avatar, AvatarGroup } from "@web/components/ui/avatar";
 
 interface Props {
   selectedSubjects: Subject[];
@@ -19,10 +13,10 @@ interface Props {
 
 const SelectedSubjectsList: FC<Props> = ({ selectedSubjects }) => {
   return (
-    <List fontSize="lg" fontWeight="normal">
+    <List.Root fontSize="lg" fontWeight="normal">
       {selectedSubjects.map((subject, index, arrayOfSubjects) => (
         <Fragment key={`subject-${subject.id}-${index}`}>
-          <ListItem>
+          <List.Item>
             <Flex direction="column" align="center">
               <AvatarGroup size="md">
                 {subject.speakers.map((speaker) => {
@@ -54,7 +48,7 @@ const SelectedSubjectsList: FC<Props> = ({ selectedSubjects }) => {
                 .
               </Text>
             </Flex>
-          </ListItem>
+          </List.Item>
 
           {index < arrayOfSubjects.length - 1 && (
             <Flex my={5} justify="center">
@@ -63,7 +57,7 @@ const SelectedSubjectsList: FC<Props> = ({ selectedSubjects }) => {
           )}
         </Fragment>
       ))}
-    </List>
+    </List.Root>
   );
 };
 

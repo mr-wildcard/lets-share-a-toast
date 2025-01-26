@@ -1,16 +1,17 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import Notification from "../../types/Notification";
 import NotificationWrapper from "../NotificationWrapper";
+import { Avatar } from "@web/components/ui/avatar";
+import { Text } from "@chakra-ui/react";
 
 const TOASTInfosChanged: FC<Notification> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />
-      <C.Text as="span" fontWeight="bold">
+      <Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />
+      <Text as="span" fontWeight="bold">
         {data.username}
-      </C.Text>
+      </Text>
       &nbsp;updated current TOAST infos.
     </NotificationWrapper>
   );

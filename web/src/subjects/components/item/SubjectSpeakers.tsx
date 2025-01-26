@@ -1,10 +1,11 @@
 import React, { FC, useMemo } from "react";
-import { Avatar, AvatarGroup, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
 import { getSubjectSpeakersAsText } from "@web/core/helpers/getSubjectSpeakersAsText";
+import { Avatar, AvatarGroup } from "@web/components/ui/avatar";
 
 interface Props {
   speakers: User[];

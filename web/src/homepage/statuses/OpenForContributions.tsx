@@ -29,8 +29,7 @@ const OpenForContributions: FC<Props> = ({ toast }) => {
       </Box>
 
       <Button
-        as={Link}
-        to={Pathnames.SUBJECTS}
+        asChild
         cursor="pointer"
         variant="outline"
         position="relative"
@@ -38,14 +37,16 @@ const OpenForContributions: FC<Props> = ({ toast }) => {
         size="lg"
         colorScheme="blue"
       >
-        Propose a subject for the upcoming TOAST
-        <Image
-          position="absolute"
-          width={58}
-          height={62}
-          bottom="-32px"
-          src="https://media.giphy.com/media/lMClXMEGuSJLZBqBh9/giphy.gif"
-        />
+        <Link to={Pathnames.SUBJECTS}>
+          Propose a subject for the upcoming TOAST
+          <Image
+            position="absolute"
+            width={58}
+            height={62}
+            bottom="-32px"
+            src="https://media.giphy.com/media/lMClXMEGuSJLZBqBh9/giphy.gif"
+          />
+        </Link>
       </Button>
     </Box>
   );

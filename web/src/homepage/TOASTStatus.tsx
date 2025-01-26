@@ -1,12 +1,11 @@
 import React, { FC, Suspense } from "react";
 import { observer } from "mobx-react-lite";
-import { SkeletonText } from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
 
 import { hasTOASTDatePassed, isTOASTToday } from "@web/core/helpers/timing";
-import { pageColors } from "@web/core/constants";
 import { CurrentToast } from "@shared/models";
+import { SkeletonText } from "@web/components/ui/skeleton";
 
 const NoTOAST = React.lazy(() => import("./statuses/NoTOAST"));
 const TOASTIsToday = React.lazy(
@@ -38,17 +37,7 @@ const TOASTStatus: FC<Props> = ({ currentToast }) => {
     currentToastExists && hasTOASTDatePassed(currentToast.date);
 
   return (
-    <Suspense
-      fallback={
-        <SkeletonText
-          w="30vw"
-          skeletonHeight="20px"
-          noOfLines={5}
-          spacing="4"
-          startColor={pageColors.homepage}
-        />
-      }
-    >
+    <Suspense fallback={<SkeletonText w="30vw" noOfLines={5} gap="4" />}>
       {!currentToastExists && <NoTOAST />}
 
       {currentToastExists && (

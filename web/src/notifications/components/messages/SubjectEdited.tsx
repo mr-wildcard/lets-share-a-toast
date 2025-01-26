@@ -1,31 +1,27 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import NotificationSubjectEdited from "@web/notifications/types/NotificationSubjectEdited";
 import Image from "@web/core/components/Image";
 import NotificationWrapper from "../NotificationWrapper";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import { Avatar } from "@web/components/ui/avatar";
 
 const SubjectEdited: FC<NotificationSubjectEdited> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" gap={2}>
-        <C.Avatar
-          name={data.username}
-          src={data.userPicture}
-          size="xs"
-          mr={1}
-        />
-        <C.Box position="relative" pr="40px">
-          <C.Text>
-            <C.Text as="span" fontWeight="bold">
+      <Stack direction="row" gap={2}>
+        <Avatar name={data.username} src={data.userPicture} size="xs" mr={1} />
+        <Box position="relative" pr="40px">
+          <Text>
+            <Text as="span" fontWeight="bold">
               {data.username}&nbsp;
-            </C.Text>
+            </Text>
             edited subject:
-          </C.Text>
-          <C.Text>
-            <C.Text as="span" fontStyle="italic">
+          </Text>
+          <Text>
+            <Text as="span" fontStyle="italic">
               &laquo; {data.subjectTitle} &raquo;
-            </C.Text>
+            </Text>
             <Image
               position="absolute"
               right="-23px"
@@ -34,9 +30,9 @@ const SubjectEdited: FC<NotificationSubjectEdited> = (data) => {
               height={28}
               src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
             />
-          </C.Text>
-        </C.Box>
-      </C.Stack>
+          </Text>
+        </Box>
+      </Stack>
     </NotificationWrapper>
   );
 };

@@ -1,12 +1,12 @@
-import React, { FC } from "react";
+import React, { FC, PropsWithChildren } from "react";
 import { Box, ChakraProvider } from "@chakra-ui/react";
 
-import customTheme from "@web/core/theme";
+import { system } from "@web/core/theme";
 
-const NotificationWrapper: FC = ({ children }) => {
+const NotificationWrapper: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <ChakraProvider theme={customTheme}>
-      <Box mt={1} p={3} borderRadius="3px" boxShadow="sm" bg="white">
+    <ChakraProvider value={system}>
+      <Box mt={1} padding={3} borderRadius="3px" boxShadow="sm" bg="white">
         {children}
       </Box>
     </ChakraProvider>

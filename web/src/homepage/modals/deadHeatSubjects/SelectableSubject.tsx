@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Box, Text, useToken } from "@chakra-ui/react";
+import { Box, Button, Text, useToken } from "@chakra-ui/react";
 
 import { Subject } from "@shared/models";
 
@@ -16,7 +16,6 @@ const SelectableSubject: FC<Props> = ({
   subject,
   selected,
   totalVotes,
-
   onClick,
 }) => {
   const [gray50, gray100, gray300, green500] = useToken("colors", [
@@ -27,10 +26,8 @@ const SelectableSubject: FC<Props> = ({
   ]);
 
   return (
-    <Box
-      p={4}
-      as="button"
-      type="button"
+    <Button
+      padding={4}
       position="relative"
       disabled={!onClick}
       w="full"
@@ -63,7 +60,7 @@ const SelectableSubject: FC<Props> = ({
           {totalVotes}
         </Text>
       </Text>
-    </Box>
+    </Button>
   );
 };
 

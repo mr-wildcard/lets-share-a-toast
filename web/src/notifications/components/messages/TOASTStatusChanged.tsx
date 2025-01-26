@@ -1,29 +1,30 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import { ToastStatus } from "@shared/enums";
 
 import Image from "@web/core/components/Image";
 import NotificationTOASTStatusChanged from "../../types/NotificationTOASTStatusChanged";
 import NotificationWrapper from "../NotificationWrapper";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import { Avatar } from "@web/components/ui/avatar";
 
 const Username: FC<{ username: string }> = ({ username }) => (
-  <C.Text as="span" fontWeight="bold">
+  <Text as="span" fontWeight="bold">
     {username}&nbsp;
-  </C.Text>
+  </Text>
 );
 
 const TOASTStatusChanged: FC<NotificationTOASTStatusChanged> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" gap={2}>
-        <C.Avatar name={data.username} src={data.userPicture} size="xs" />
+      <Stack direction="row" gap={2}>
+        <Avatar name={data.username} src={data.userPicture} size="xs" />
         {data.status === ToastStatus.OPEN_FOR_VOTE && (
-          <C.Text position="relative" pr="35px">
+          <Text position="relative" pr="35px">
             <Username username={data.username} />
-            <C.Text as="span" fontWeight="bold" color="green.500">
+            <Text as="span" fontWeight="bold" color="green.500">
               opened the votes&nbsp;
-            </C.Text>
+            </Text>
             for the next TOAST!
             <Image
               position="absolute"
@@ -33,32 +34,32 @@ const TOASTStatusChanged: FC<NotificationTOASTStatusChanged> = (data) => {
               right="-2px"
               src="https://media.giphy.com/media/B1eGdIUyOhfPi/giphy.webp"
             />
-          </C.Text>
+          </Text>
         )}
 
         {data.status === ToastStatus.VOTE_CLOSED && (
-          <C.Box>
-            <C.Text>
+          <Box>
+            <Text>
               <Username username={data.username} />
-              <C.Text as="span" fontWeight="bold" color="blue.600">
+              <Text as="span" fontWeight="bold" color="blue.600">
                 closed the voting session!
-              </C.Text>
-            </C.Text>
-            <C.Text>Thank you all for your contribution!</C.Text>
-          </C.Box>
+              </Text>
+            </Text>
+            <Text>Thank you all for your contribution!</Text>
+          </Box>
         )}
 
         {data.status === ToastStatus.WAITING_FOR_TOAST && (
-          <C.Box position="relative" pr="50px">
-            <C.Text>
+          <Box position="relative" pr="50px">
+            <Text>
               <Username username={data.username} />
               marked the TOAST as&nbsp;
-              <C.Text as="span" fontWeight="bold" color="green.500">
+              <Text as="span" fontWeight="bold" color="green.500">
                 ready
-              </C.Text>
+              </Text>
               !
-            </C.Text>
-            <C.Text>See you there ;)</C.Text>
+            </Text>
+            <Text>See you there ;)</Text>
             <Image
               position="absolute"
               top="-5px"
@@ -67,15 +68,15 @@ const TOASTStatusChanged: FC<NotificationTOASTStatusChanged> = (data) => {
               height={83}
               src="https://media.giphy.com/media/JRgO9fxNbvXn6aMz5j/giphy.gif"
             />
-          </C.Box>
+          </Box>
         )}
 
         {data.status === ToastStatus.CLOSED && (
-          <C.Text position="relative" pr="35px">
+          <Text position="relative" pr="35px">
             <Username username={data.username} />
-            <C.Text as="span" fontWeight="bold" color="blue.600">
+            <Text as="span" fontWeight="bold" color="blue.600">
               closed&nbsp;
-            </C.Text>
+            </Text>
             the TOAST!
             <Image
               position="absolute"
@@ -86,15 +87,15 @@ const TOASTStatusChanged: FC<NotificationTOASTStatusChanged> = (data) => {
               alt="Bravo"
               src="https://media.giphy.com/media/xUPGclxTfaPjj31CCI/giphy.webp"
             />
-          </C.Text>
+          </Text>
         )}
 
         {data.status === ToastStatus.CANCELLED && (
-          <C.Text position="relative" pr="35px">
+          <Text position="relative" pr="35px">
             <Username username={data.username} />
-            <C.Text as="span" fontWeight="bold" color="tomato">
+            <Text as="span" fontWeight="bold" color="tomato">
               cancelled&nbsp;
-            </C.Text>
+            </Text>
             the current TOAST
             <Image
               position="absolute"
@@ -104,9 +105,9 @@ const TOASTStatusChanged: FC<NotificationTOASTStatusChanged> = (data) => {
               bottom="-4px"
               src="https://media.giphy.com/media/yc2ENyer5HfbRZvYGA/giphy.webp"
             />
-          </C.Text>
+          </Text>
         )}
-      </C.Stack>
+      </Stack>
     </NotificationWrapper>
   );
 };

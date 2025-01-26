@@ -1,10 +1,8 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
 import {
-  Avatar,
-  AvatarBadge,
-  AvatarGroup,
   Box,
   Button,
+  Float,
   Text,
   useDisclosure,
   useToken,
@@ -19,6 +17,7 @@ import ViewSubjectModal from "@web/subjects/components/modals/ViewSubjectModal";
 import { useClientSideVotingSession } from "../stores/ClientSideVotingSession";
 import { ButtonSubjectVote } from "../components/ButtonSubjectVote";
 import { votableSubjectWidth } from "../constants";
+import { Avatar, AvatarGroup } from "@web/components/ui/avatar";
 
 interface Props {
   subject: Subject;
@@ -56,7 +55,7 @@ export const VotableSubject: FC<Props> = observer(
 
     return (
       <Box w={`${votableSubjectWidth}px`} boxShadow="lg">
-        <Box p={4} bg="white">
+        <Box padding={4} bg="white">
           <Button
             colorScheme="black"
             variant="link"
@@ -69,10 +68,10 @@ export const VotableSubject: FC<Props> = observer(
           </Button>
         </Box>
 
-        <Box p={4} bg="white">
+        <Box padding={4} bg="white">
           <Box
             position="relative"
-            p={4}
+            padding={4}
             borderStyle="dashed"
             borderWidth="1px"
             style={{
@@ -94,7 +93,7 @@ export const VotableSubject: FC<Props> = observer(
             )}
 
             {totalVotes > 0 && (
-              <AvatarGroup gap={0} gap="20px" flexWrap="wrap">
+              <AvatarGroup gap="20px" flexWrap="wrap">
                 {Object.entries(subjectVotes!).map(
                   ([userId, userTotalVotes]) => {
                     const userAvatarURL = userIdAvatarMapping.get(userId);
@@ -105,14 +104,9 @@ export const VotableSubject: FC<Props> = observer(
                         src={userAvatarURL}
                       >
                         {userTotalVotes > 1 && (
-                          <AvatarBadge
-                            boxSize="1.6em"
-                            fontSize="0.8em"
-                            bg="blue.500"
-                            color="white"
-                          >
+                          <Float placement="bottom-end" offsetX="1" offsetY="1">
                             {userTotalVotes}
-                          </AvatarBadge>
+                          </Float>
                         )}
                       </Avatar>
                     );
@@ -125,7 +119,7 @@ export const VotableSubject: FC<Props> = observer(
 
         <ButtonSubjectVote vote={vote} voting={voting} subjectId={subject.id} />
 
-        {viewModal.isOpen && (
+        {viewModal.open && (
           <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
         )}
       </Box>

@@ -5,7 +5,7 @@ import { spacing } from "@web/core/constants";
 
 export const Main: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Flex direction="column" minH="full" p={`${spacing.stylizedGap}px`}>
+    <Flex direction="column" minH="full" padding={`${spacing.stylizedGap}px`}>
       {children}
     </Flex>
   );

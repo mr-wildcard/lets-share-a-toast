@@ -23,15 +23,16 @@ const TOASTIsToday: FC<Props> = ({ toast }) => {
       </Box>
 
       <Button
-        as={Link}
-        to={Pathnames.SUBJECTS}
+        asChild
         cursor="pointer"
         variant="outline"
         bg="white"
         size="lg"
         colorScheme="blue"
       >
-        Propose a subject for the next TOAST!
+        <Link to={Pathnames.SUBJECTS}>
+          Propose a subject for the next TOAST!
+        </Link>
       </Button>
     </Box>
   );

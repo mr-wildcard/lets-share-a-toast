@@ -1,13 +1,13 @@
 import React, { Suspense, useEffect } from "react";
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
+import { ChakraProvider, Skeleton } from "@chakra-ui/react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import dayjs from "dayjs";
 import { ThemeProvider } from "next-themes";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { system } from "./core/theme";
 import Header from "./header/Header";
 import { Pathnames } from "./core/constants";
-import { PageSkeleton } from "./core/components/PageSkeleton";
 import { ColoredBackground } from "./core/components/ColoredBackground";
 import { Main } from "./Main";
 import { Toaster } from "@web/notifications";
@@ -28,7 +28,7 @@ export default function LetsShareATOAST() {
   }, []);
 
   return (
-    <ChakraProvider value={defaultSystem}>
+    <ChakraProvider value={system}>
       <ThemeProvider attribute="class" disableTransitionOnChange>
         <Router>
           <Toaster />
@@ -36,7 +36,7 @@ export default function LetsShareATOAST() {
             <Header />
 
             <ColoredBackground>
-              <Suspense fallback={<PageSkeleton />}>
+              <Suspense fallback={<Skeleton />}>
                 <Routes>
                   <Route path={Pathnames.HOME} element={<Home />} />
                   <Route path={Pathnames.SUBJECTS} element={<Subjects />} />

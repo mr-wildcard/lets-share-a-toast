@@ -18,7 +18,7 @@ const ContextMenuItem: FC<PropsWithChildren<Props>> = ({
         _hover={{
           bg: "gray.100",
         }}
-        p={2}
+        padding={2}
         px={3}
       >
         {children}

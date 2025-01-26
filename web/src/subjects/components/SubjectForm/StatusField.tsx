@@ -1,20 +1,11 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { FieldProps } from "formik";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Field as ChakraField,
-  FormLabel,
-  Text,
-  useTheme,
-} from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Text, useToken } from "@chakra-ui/react";
 
 import { SubjectStatus } from "@shared/enums";
 
 import { getStatusButtonStyleProps } from "@web/subjects/components/SubjectForm/helpers";
-import { Subject } from "@shared/models";
-import SubjectStatusBadge from "@web/subjects/components/item/SubjectStatusBadge";
+import { Field as ChakraField } from "@web/components/ui/field";
 
 interface StatusBackgroundStyles {
   x: number;
@@ -70,7 +61,11 @@ interface Props extends FieldProps<SubjectSelectableStatus> {
 }
 
 const StatusField: FC<Props> = ({ field, form, showHints = true }) => {
-  const theme = useTheme();
+  const [green500, red500, gray500] = useToken("colors", [
+    "green.500",
+    "red.500",
+    "gray.500",
+  ]);
 
   const [bgStyles, setBgStyles] = useState<StatusBackgroundStyles>({
     x: 0,
@@ -82,11 +77,11 @@ const StatusField: FC<Props> = ({ field, form, showHints = true }) => {
 
   const statusColors = useMemo(
     () => ({
-      [SubjectStatus.AVAILABLE]: theme.colors.green["500"],
-      [SubjectStatus.UNAVAILABLE]: theme.colors.red["500"],
-      [SubjectStatus.DONE]: theme.colors.gray["500"],
+      [SubjectStatus.AVAILABLE]: green500,
+      [SubjectStatus.UNAVAILABLE]: red500,
+      [SubjectStatus.DONE]: gray500,
     }),
-    [theme.colors.green, theme.colors.red, theme.colors.gray]
+    [green500, red500, gray500]
   );
 
   /**
@@ -115,12 +110,7 @@ const StatusField: FC<Props> = ({ field, form, showHints = true }) => {
   }, [field]);
 
   return (
-    <ChakraField.Root ref={rootElement}>
-      <Box>
-        <ChakraField.Label htmlFor={field.name}>
-          Subject status
-        </ChakraField.Label>
-      </Box>
+    <ChakraField ref={rootElement} label="Subject status">
       <Box
         position="relative"
         borderRadius={6}
@@ -139,9 +129,9 @@ const StatusField: FC<Props> = ({ field, form, showHints = true }) => {
             backgroundColor: bgStyles.color,
           }}
         />
-        <ButtonGroup isAttached variant="outline">
+        <ButtonGroup attached>
           <Button
-            type="button"
+            variant="outline"
             mr="-1px"
             onClick={() => {
               form.setFieldValue(field.name, SubjectStatus.AVAILABLE);
@@ -177,7 +167,7 @@ const StatusField: FC<Props> = ({ field, form, showHints = true }) => {
           {StatusInfos[field.value]}
         </Text>
       )}
-    </ChakraField.Root>
+    </ChakraField>
   );
 };
 

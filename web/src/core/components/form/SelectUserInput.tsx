@@ -1,10 +1,11 @@
 import React, { FC } from "react";
 import Select, { Props as SelectProps } from "react-select";
-import { Avatar, Stack, Text, useToken } from "@chakra-ui/react";
+import { Stack, Text, useToken } from "@chakra-ui/react";
 
 import { User } from "@shared/models";
 
 import getUserFullname from "@web/core/helpers/getUserFullname";
+import { Avatar } from "@web/components/ui/avatar";
 
 interface Props extends SelectProps<User> {
   invalid: boolean;
@@ -16,7 +17,7 @@ const SelectUserInput: FC<Props> = ({
   ...props
 }) => {
   const [red500, red600] = useToken("colors", ["red.500", "red.600"]);
-  const [space10] = useToken("space", [10]);
+  const [space10] = useToken("spacing", ["10"]);
 
   return (
     <Select

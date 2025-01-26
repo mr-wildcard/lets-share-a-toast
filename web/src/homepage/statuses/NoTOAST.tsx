@@ -12,8 +12,7 @@ const NoTOAST = () => {
         No scheduled TOAST yet.
       </Text>
       <Button
-        as={Link}
-        to={Pathnames.SUBJECTS}
+        asChild
         variant="outline"
         cursor="pointer"
         position="relative"
@@ -22,16 +21,18 @@ const NoTOAST = () => {
         colorScheme="blue"
         pr="70px"
       >
-        Propose a subject for the next TOAST
-        <Image
-          position="absolute"
-          transform="translateY(-4px)"
-          width={98}
-          height={45}
-          right="-30px"
-          top={0}
-          src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
-        />
+        <Link to={Pathnames.SUBJECTS}>
+          Propose a subject for the next TOAST
+          <Image
+            position="absolute"
+            transform="translateY(-4px)"
+            width={98}
+            height={45}
+            right="-30px"
+            top={0}
+            src="https://media.giphy.com/media/3og0IARm07OVhdM8a4/giphy.webp"
+          />
+        </Link>
       </Button>
     </Box>
   );

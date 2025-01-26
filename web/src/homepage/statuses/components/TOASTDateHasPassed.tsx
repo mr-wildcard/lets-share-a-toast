@@ -19,15 +19,16 @@ const TOASTDateHasPassed: FC<Props> = ({ toast }) => {
       </Text>
 
       <Button
-        to={Pathnames.SUBJECTS}
-        as={Link}
+        asChild
         cursor="pointer"
         variant="outline"
         bg="white"
         size="lg"
         colorScheme="blue"
       >
-        Propose a subject for the next TOAST!
+        <Link to={Pathnames.SUBJECTS}>
+          Propose a subject for the next TOAST!
+        </Link>
       </Button>
     </Box>
   );

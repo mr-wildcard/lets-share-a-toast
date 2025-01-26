@@ -24,10 +24,9 @@ const OpenForVotes: FC<Props> = ({ toast }) => {
         <WhosInChargeRecap toast={toast} />
       </Box>
 
-      <Box d="inline-block" position="relative">
+      <Box display="inline-block" position="relative">
         <Button
-          as={Link}
-          to={Pathnames.VOTING_SESSION}
+          asChild
           className={css.link}
           position="relative"
           color="orange.500"
@@ -38,7 +37,9 @@ const OpenForVotes: FC<Props> = ({ toast }) => {
           size="lg"
           px={4}
         >
-          <Text pl="60px">Join voting session !</Text>
+          <Link to={Pathnames.VOTING_SESSION}>
+            <Text pl="60px">Join voting session !</Text>
+          </Link>
         </Button>
         <Image
           position="absolute"

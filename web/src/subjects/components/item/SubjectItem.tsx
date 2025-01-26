@@ -231,29 +231,32 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
               )}
 
               <Box ml="auto" className={css.actions} opacity={0}>
-                <ButtonGroup isAttached variant="outline" size="sm">
+                <ButtonGroup attached variant="outline" size="sm">
                   <IconButton
-                    icon={<ViewIcon />}
                     onClick={viewModal.onOpen}
                     mr="-1px"
                     title="View"
                     aria-label="View"
-                  />
+                  >
+                    <ViewIcon />
+                  </IconButton>
                   <IconButton
-                    icon={<EditIcon />}
                     onClick={() => onEditSubject(subject)}
                     mr="-1px"
                     title="Edit"
                     aria-label="Edit"
-                  />
+                  >
+                    <EditIcon />
+                  </IconButton>
 
                   {allowDeletion && (
                     <IconButton
-                      icon={<DeleteIcon />}
                       onClick={deleteModal.onOpen}
                       title="Delete"
                       aria-label="Delete"
-                    />
+                    >
+                      <DeleteIcon />
+                    </IconButton>
                   )}
                 </ButtonGroup>
               </Box>
@@ -282,54 +285,57 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
         borderRadius={4}
         boxShadow="lg"
         bg="white"
-        as={ContextMenu}
+        asChild
         overflow="hidden"
-        id={`subject-${subject.id}`}
         zIndex={9999}
-        onShow={() => setContextualMenuOpened(true)}
-        onHide={() => setContextualMenuOpened(false)}
       >
-        {!subjectIsInCurrentTOASTVotingSession &&
-          contextMenuStatusOptions.length > 0 &&
-          contextMenuStatusOptions}
+        <ContextMenu
+          id={`subject-${subject.id}`}
+          onShow={() => setContextualMenuOpened(true)}
+          onHide={() => setContextualMenuOpened(false)}
+        >
+          {!subjectIsInCurrentTOASTVotingSession &&
+            contextMenuStatusOptions.length > 0 &&
+            contextMenuStatusOptions}
 
-        {contextMenuStatusOptions.length > 0 && <Separator />}
+          {contextMenuStatusOptions.length > 0 && <Separator />}
 
-        <MenuItem onClick={() => onEditSubject(subject)}>
-          <Box
-            display="flex"
-            alignItems="center"
-            cursor="pointer"
-            _hover={{
-              bg: "gray.100",
-            }}
-            p={2}
-            px={3}
-          >
-            <EditIcon mr={3} />
-            <Text fontWeight="bold">Edit</Text>
-          </Box>
-        </MenuItem>
-
-        {allowDeletion && (
-          <MenuItem onClick={deleteModal.onOpen}>
-            <Flex
-              align="center"
+          <MenuItem onClick={() => onEditSubject(subject)}>
+            <Box
+              display="flex"
+              alignItems="center"
               cursor="pointer"
               _hover={{
                 bg: "gray.100",
               }}
-              p={2}
+              padding={2}
               px={3}
             >
-              <DeleteIcon mr={3} />
-              <Text fontWeight="bold">Delete</Text>
-            </Flex>
+              <EditIcon mr={3} />
+              <Text fontWeight="bold">Edit</Text>
+            </Box>
           </MenuItem>
-        )}
+
+          {allowDeletion && (
+            <MenuItem onClick={deleteModal.onOpen}>
+              <Flex
+                align="center"
+                cursor="pointer"
+                _hover={{
+                  bg: "gray.100",
+                }}
+                padding={2}
+                px={3}
+              >
+                <DeleteIcon mr={3} />
+                <Text fontWeight="bold">Delete</Text>
+              </Flex>
+            </MenuItem>
+          )}
+        </ContextMenu>
       </Box>
 
-      {deleteModal.isOpen && (
+      {deleteModal.open && (
         <DeleteSubjectModal
           alertAboutVotingSession={subjectIsInCurrentTOASTVotingSession}
           subject={subject}
@@ -337,7 +343,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
         />
       )}
 
-      {viewModal.isOpen && (
+      {viewModal.open && (
         <ViewSubjectModal subject={subject} closeModal={viewModal.onClose} />
       )}
     </Box>

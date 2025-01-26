@@ -1,21 +1,22 @@
 import React, { FC } from "react";
-import * as C from "@chakra-ui/react";
 
 import { getFormattedTOASTDateWithRemainingDays } from "@web/core/helpers/timing";
 import Image from "@web/core/components/Image";
 import NotificationTOASTCreated from "../../types/NotificationTOASTCreated";
 import NotificationWrapper from "../NotificationWrapper";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import { Avatar } from "@web/components/ui/avatar";
 
 const TOASTCreated: FC<NotificationTOASTCreated> = (data) => {
   return (
     <NotificationWrapper>
-      <C.Stack direction="row" gap={2}>
-        <C.Avatar name={data.username} src={data.userPicture} size="xs" />
-        <C.Box>
-          <C.Text position="relative" pr="40px">
-            <C.Text as="span" fontWeight="bold">
+      <Stack direction="row" gap={2}>
+        <Avatar name={data.username} src={data.userPicture} size="xs" />
+        <Box>
+          <Text position="relative" pr="40px">
+            <Text as="span" fontWeight="bold">
               {data.username}&nbsp;
-            </C.Text>
+            </Text>
             scheduled a new TOAST !
             <Image
               position="absolute"
@@ -26,15 +27,15 @@ const TOASTCreated: FC<NotificationTOASTCreated> = (data) => {
               alt="Bravo"
               src="https://media.giphy.com/media/xUPGclxTfaPjj31CCI/giphy.webp"
             />
-          </C.Text>
-          <C.Text>
-            <C.Text as="span" fontWeight="bold">
+          </Text>
+          <Text>
+            <Text as="span" fontWeight="bold">
               Due date:&nbsp;
-            </C.Text>
+            </Text>
             {getFormattedTOASTDateWithRemainingDays(new Date(data.dueDate))}
-          </C.Text>
-        </C.Box>
-      </C.Stack>
+          </Text>
+        </Box>
+      </Stack>
     </NotificationWrapper>
   );
 };

@@ -376,7 +376,7 @@ const Form: FC<Props> = ({ subject, closeForm }) => {
                                 min={5}
                                 max={120}
                                 step={5}
-                                p={0}
+                                padding={0}
                                 display="block"
                                 size="lg"
                                 onValueChange={(event) => {
