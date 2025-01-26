@@ -5,7 +5,7 @@ import { SubjectStatus } from "@shared/enums";
 
 import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
-export function cancelledAfterVotes() {
+export async function cancelledAfterVotes() {
   return admin
     .firestore()
     .collection(FirestoreCollection.SUBJECTS)

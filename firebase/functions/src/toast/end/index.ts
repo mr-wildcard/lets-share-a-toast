@@ -1,4 +1,5 @@
-import * as functions from "firebase-functions";
+import * as https from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths } from "@shared/firebase";
@@ -6,8 +7,8 @@ import { SubjectStatus } from "@shared/enums";
 
 import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
-export const endToast = functions.https.onCall(
-  async ({ givenSubjectsIds }, context) => {
+export const endToast = https.onCall<{ givenSubjectsIds: string[] }>(
+  async (request) => {
     /**
      * Get selected subjects from TOAST
      */
@@ -23,7 +24,7 @@ export const endToast = functions.https.onCall(
      * Update all given subject statuses to "DONE"
      */
     const doneSubjectsStatusesUpdates = changeMultipleSubjectsStatusAtOnce(
-      givenSubjectsIds,
+      request.data.givenSubjectsIds,
       SubjectStatus.DONE,
     );
 
@@ -33,7 +34,7 @@ export const endToast = functions.https.onCall(
      * Update all subjects which have not been given to AVAILABLE again
      */
     const notGivenSubjectIds = selectedSubjectIds.filter(
-      (subjectId) => !givenSubjectsIds.includes(subjectId),
+      (subjectId) => !request.data.givenSubjectsIds.includes(subjectId),
     );
 
     if (notGivenSubjectIds.length > 0) {
@@ -49,7 +50,7 @@ export const endToast = functions.https.onCall(
     requests.push(admin.database().ref().set(null));
 
     return Promise.all(requests).catch((error) => {
-      functions.logger.error(
+      logger.error(
         "An error occured while ending the TOAST in Firebase",
         error,
       );

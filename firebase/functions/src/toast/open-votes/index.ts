@@ -1,4 +1,5 @@
-import * as functions from "firebase-functions";
+import * as https from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths, DatabaseVotingSession } from "@shared/firebase";
@@ -6,8 +7,8 @@ import { ToastStatus } from "@shared/enums";
 
 import notifySlackChannel from "../../slack/notify-channel";
 
-export const openVotes = functions.https.onCall(async (data, context) => {
-  functions.logger.info("Open voting session.");
+export const openVotes = https.onCall(async (request) => {
+  logger.info("Open voting session.");
 
   /**
    * Create a voting session object ready to be stored in
@@ -29,13 +30,13 @@ export const openVotes = functions.https.onCall(async (data, context) => {
       [DatabaseRefPaths.VOTING_SESSION]: votingSession,
     })
     .then((result) => {
-      if (data.slackMessage) {
-        notifySlackChannel(data.slackMessage);
+      if (request.data.slackMessage) {
+        notifySlackChannel(request.data.slackMessage);
       }
 
       return result;
     })
     .catch((error) => {
-      functions.logger.error("An error occured while opening votes", error);
+      logger.error("An error occured while opening votes", error);
     });
 });

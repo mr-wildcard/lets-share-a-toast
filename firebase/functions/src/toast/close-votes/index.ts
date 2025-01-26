@@ -1,4 +1,5 @@
-import * as functions from "firebase-functions";
+import * as https from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths, SubjectsVotes } from "@shared/firebase";
@@ -7,8 +8,8 @@ import { SubjectStatus, ToastStatus } from "@shared/enums";
 
 import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
-export const closeVotes = functions.https.onCall(async () => {
-  functions.logger.info("Close voting session.");
+export const closeVotes = https.onCall(async () => {
+  logger.info("Close voting session.");
 
   /**
    * Prevent people from voting.
@@ -77,6 +78,6 @@ export const closeVotes = functions.https.onCall(async () => {
     updateCurrentTOAST,
     subjectsStatusChanges.commit(),
   ]).catch((error) => {
-    functions.logger.error("An error occured while closing votes", error);
+    logger.error("An error occured while closing votes", error);
   });
 });

@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import * as firestore from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths, FirestoreCollection } from "@shared/firebase";
@@ -20,14 +20,15 @@ function removeSubjectFromCurrentTOASTSelectedSubjects(subjectId: string) {
     });
 }
 
-export const syncDeletedSubjects = functions.firestore
-  .document(`${FirestoreCollection.SUBJECTS}/{subjectId}`)
-  .onDelete(async (change, context) => {
-    const subjectStatus: SubjectStatus = change.get("status");
+export const syncDeletedSubjects = firestore.onDocumentDeleted(
+  `${FirestoreCollection.SUBJECTS}/{subjectId}`,
+  async (event) => {
+    const subjectStatus: SubjectStatus = event.data?.get("status");
 
     if (subjectStatus === SubjectStatus.SELECTED_FOR_NEXT_TOAST) {
       return removeSubjectFromCurrentTOASTSelectedSubjects(
-        context.params.subjectId,
+        event.params.subjectId,
       );
     }
-  });
+  },
+);

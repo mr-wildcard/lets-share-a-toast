@@ -1,5 +1,5 @@
-import { SubjectStatus } from "@shared/enums";
 import * as admin from "firebase-admin";
+import { SubjectStatus } from "@shared/enums";
 import { FirestoreCollection } from "@shared/firebase";
 
 export function changeMultipleSubjectsStatusAtOnce(

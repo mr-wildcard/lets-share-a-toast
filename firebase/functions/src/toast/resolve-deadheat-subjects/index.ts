@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import * as https from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths, FirestoreCollection } from "@shared/firebase";
@@ -6,12 +6,14 @@ import { SubjectStatus, ToastStatus } from "@shared/enums";
 
 import { changeMultipleSubjectsStatusAtOnce } from "../../helpers/changeMultipleSubjectsStatusAtOnce";
 
-export const resolveDeadheatSubjects = functions.https.onCall(async (data) => {
+export const resolveDeadheatSubjects = https.onCall<{
+  selectedSubjectIds: string[];
+}>(async (request) => {
   const updateCurrentToast = admin
     .database()
     .ref(DatabaseRefPaths.CURRENT_TOAST)
     .update({
-      selectedSubjectIds: data.selectedSubjectIds,
+      selectedSubjectIds: request.data.selectedSubjectIds,
       status: ToastStatus.WAITING_FOR_TOAST,
     });
 
@@ -31,7 +33,7 @@ export const resolveDeadheatSubjects = functions.https.onCall(async (data) => {
 
   const subjectIDsNotSelectedForNextTOAST =
     subjectsIDsWithStatusSelectedForNextTOAST.filter(
-      (subjectId) => !data.selectedSubjectIds.includes(subjectId),
+      (subjectId) => !request.data.selectedSubjectIds.includes(subjectId),
     );
 
   const updateSubjectStatus = changeMultipleSubjectsStatusAtOnce(

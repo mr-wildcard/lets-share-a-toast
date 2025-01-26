@@ -1,4 +1,4 @@
-import * as functions from "firebase-functions";
+import * as firestore from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 
 import { DatabaseRefPaths, FirestoreCollection } from "@shared/firebase";
@@ -15,18 +15,22 @@ function removeSubjectFromVotingSession(subjectId: string) {
     .set(null);
 }
 
-export const syncSubjectsAfterStatusChange = functions.firestore
-  .document(`${FirestoreCollection.SUBJECTS}/{subjectId}`)
-  .onUpdate(async (change, context) => {
+export const syncSubjectsAfterStatusChange = firestore.onDocumentUpdated(
+  `${FirestoreCollection.SUBJECTS}/{subjectId}`,
+  async (event) => {
     const currentToast = await getCurrentTOAST();
-    const previousSubjectStatus: SubjectStatus = change.before.get("status");
-    const newSubjectStatus: SubjectStatus = change.after.get("status");
+
+    const previousSubjectStatus: SubjectStatus =
+      event.data?.before.get("status");
+
+    const newSubjectStatus: SubjectStatus = event.data?.after.get("status");
 
     if (
       previousSubjectStatus === SubjectStatus.AVAILABLE &&
       newSubjectStatus !== SubjectStatus.AVAILABLE &&
       currentToast.status === ToastStatus.OPEN_FOR_VOTE
     ) {
-      return removeSubjectFromVotingSession(context.params.subjectId);
+      return removeSubjectFromVotingSession(event.params.subjectId);
     }
-  });
+  },
+);

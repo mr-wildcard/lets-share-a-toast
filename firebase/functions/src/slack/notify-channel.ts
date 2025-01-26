@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import * as logger from "firebase-functions/logger";
 import axios from "axios";
 
 export default function notifySlackChannel(message: string) {
@@ -13,14 +14,11 @@ export default function notifySlackChannel(message: string) {
     })
     .catch((error) => {
       if (error.isAxiosError) {
-        functions.logger.error(
+        logger.error(
           `Couldn't notify Slack. HTTP error code: ${error.code}. Error message: ${error.message}`,
         );
       } else {
-        functions.logger.error(
-          "An unknown error occured while notifying Slack",
-          error,
-        );
+        logger.error("An unknown error occured while notifying Slack", error);
       }
     });
 }
