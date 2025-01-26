@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Button, Flex, Text } from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
+import { LuCircleCheck } from "react-icons/lu";
 
 import { votingSessionHasAtLeastOneVote } from "@shared/utils";
 
@@ -63,7 +63,7 @@ const CloseVotes: FC<Props> = ({ isSuccess, onClick }) => {
           borderRadius={3}
         >
           Votes closed
-          <CheckCircleIcon ml={3} color="white" boxSize="24px" />
+          <LuCircleCheck ml={3} color="white" boxSize="24px" />
         </Flex>
       )}
     </>

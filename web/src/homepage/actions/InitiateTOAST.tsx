@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { Button, Flex, Text } from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { LuCircleCheck } from "react-icons/lu";
 
 import Image from "@web/core/components/Image";
 
@@ -42,7 +42,9 @@ const InitiateTOAST: FC<Props> = ({ isSuccess, onClick }) => {
       borderRadius={3}
     >
       TOAST Initiated
-      <CheckCircleIcon ml={3} color="white" boxSize="24px" />
+      <Box ml={3} color="white" boxSize="24px">
+        <LuCircleCheck />
+      </Box>
     </Flex>
   );
 };

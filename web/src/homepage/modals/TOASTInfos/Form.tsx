@@ -35,7 +35,7 @@ import {
   getCloudFunctionCreateTOAST,
   getFirebaseCurrentToastRef,
 } from "@web/core/firebase/helpers";
-import { InfoIcon } from "@chakra-ui/icons";
+import { LuInfo } from "react-icons/lu";
 import { Tooltip } from "@web/components/ui/tooltip";
 import { Checkbox } from "@web/components/ui/checkbox";
 
@@ -260,7 +260,7 @@ const TOASTForm: FC<Props> = ({
                           content="Maximum number of subjects which can be presented during this TOAST"
                           aria-label="Form field info"
                         >
-                          <InfoIcon />
+                          <LuInfo />
                         </Tooltip>
                       </FieldLabel>
                       <NumberInput.Root

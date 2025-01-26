@@ -13,7 +13,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
-import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
+import { LuTrash2, LuPencilLine, LuEye } from "react-icons/lu";
 import { ContextMenu, ContextMenuTrigger, MenuItem } from "react-contextmenu";
 import { observer } from "mobx-react-lite";
 
@@ -238,7 +238,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
                     title="View"
                     aria-label="View"
                   >
-                    <ViewIcon />
+                    <LuEye />
                   </IconButton>
                   <IconButton
                     onClick={() => onEditSubject(subject)}
@@ -246,7 +246,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
                     title="Edit"
                     aria-label="Edit"
                   >
-                    <EditIcon />
+                    <LuPencilLine />
                   </IconButton>
 
                   {allowDeletion && (
@@ -255,7 +255,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
                       title="Delete"
                       aria-label="Delete"
                     >
-                      <DeleteIcon />
+                      <LuTrash2 />
                     </IconButton>
                   )}
                 </ButtonGroup>
@@ -311,7 +311,9 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
               padding={2}
               px={3}
             >
-              <EditIcon mr={3} />
+              <Box mr={3}>
+                <LuPencilLine />
+              </Box>
               <Text fontWeight="bold">Edit</Text>
             </Box>
           </MenuItem>
@@ -327,7 +329,9 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
                 padding={2}
                 px={3}
               >
-                <DeleteIcon mr={3} />
+                <Box mr={3}>
+                  <LuTrash2 />
+                </Box>
                 <Text fontWeight="bold">Delete</Text>
               </Flex>
             </MenuItem>

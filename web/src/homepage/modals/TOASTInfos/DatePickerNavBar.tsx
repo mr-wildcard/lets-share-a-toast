@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { LuArrowLeft, LuArrowRight } from "react-icons/lu";
 import { NavbarElementProps } from "react-day-picker";
 
 const DatePickerNavBar: FC<NavbarElementProps> = ({
@@ -18,7 +18,7 @@ const DatePickerNavBar: FC<NavbarElementProps> = ({
         disabled={!showPreviousButton}
         onClick={() => onPreviousClick()}
       >
-        <ArrowBackIcon /> Previous month
+        <LuArrowLeft /> Previous month
       </Button>
       <Button
         borderRadius={0}
@@ -27,7 +27,7 @@ const DatePickerNavBar: FC<NavbarElementProps> = ({
         disabled={!showNextButton}
         onClick={() => onNextClick()}
       >
-        Next month <ArrowForwardIcon />
+        Next month <LuArrowRight />
       </Button>
     </ButtonGroup>
   );

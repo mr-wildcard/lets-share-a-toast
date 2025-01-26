@@ -1,12 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { FC, useCallback, useEffect } from "react";
 import { Box, Button, Flex, Image } from "@chakra-ui/react";
-import {
-  CloseIcon,
-  SettingsIcon,
-  EditIcon,
-  DeleteIcon,
-} from "@chakra-ui/icons";
+import { LuX, LuSettings, LuPencilLine, LuTrash2 } from "react-icons/lu";
 import { animated } from "@react-spring/web";
 
 import { spacing } from "@web/core/constants";
@@ -33,7 +28,6 @@ import {
   MenuRoot,
   MenuTrigger,
 } from "@web/components/ui/menu";
-import { MenuList } from "react-select/dist/declarations/src/components/Menu";
 
 const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
 
@@ -89,9 +83,7 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
         onClick={() =>
           animations.background.open(!animations.background.opened)
         }
-        leftIcon={
-          animations.background.opened ? <CloseIcon /> : <SettingsIcon />
-        }
+        leftIcon={animations.background.opened ? <LuX /> : <LuSettings />}
       >
         {animations.background.opened && "Close"}
         {!animations.background.opened && (
@@ -284,7 +276,9 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
                   onClick={modalsStates.toast.onOpen}
                   fontWeight="bold"
                 >
-                  <EditIcon mr={3} />
+                  <Box mr={3}>
+                    <LuPencilLine />
+                  </Box>
                   Edit TOAST
                 </MenuItem>
                 <MenuItem
@@ -293,7 +287,9 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
                   fontWeight="bold"
                   color="red.500"
                 >
-                  <DeleteIcon mr={3} />
+                  <Box mr={3}>
+                    <LuTrash2 />
+                  </Box>
                   Cancel TOAST
                 </MenuItem>
               </MenuContent>

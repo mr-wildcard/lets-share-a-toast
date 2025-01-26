@@ -9,7 +9,6 @@
     "test": "jest --config config/jest/config.js"
   },
   "dependencies": {
-    "@chakra-ui/icons": "1.1.2",
     "@chakra-ui/react": "3.5.1",
     "@emotion/react": "11.14.0",
     "@fortawesome/fontawesome-svg-core": "1.2.36",

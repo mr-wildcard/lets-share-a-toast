@@ -22,7 +22,7 @@ import {
   InputAddon,
 } from "@chakra-ui/react";
 import { Field as ChakraField } from "@web/components/ui/field";
-import { AddIcon, CheckIcon, TimeIcon, WarningIcon } from "@chakra-ui/icons";
+import { LuCheck, LuTriangleAlert, LuUserPlus } from "react-icons/lu";
 import { observer } from "mobx-react-lite";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
@@ -463,7 +463,7 @@ const Form: FC<Props> = ({ subject, closeForm }) => {
                                 disabled={!values.speakers.every(Boolean)}
                                 onClick={() => arrayHelpers.push(null)}
                               >
-                                Add a speaker <AddIcon />
+                                Add a speaker <LuUserPlus />
                               </Button>
                             </SimpleGrid>
                           </ChakraField>
@@ -517,13 +517,13 @@ const Form: FC<Props> = ({ subject, closeForm }) => {
 
                                   {field.value && urlIsValid && (
                                     <InputAddon>
-                                      <CheckIcon color="green.500" />
+                                      <LuCheck color="green.500" />
                                     </InputAddon>
                                   )}
 
                                   {field.value && !urlIsValid && (
                                     <InputAddon>
-                                      <WarningIcon color="red.500" />
+                                      <LuTriangleAlert color="red.500" />
                                     </InputAddon>
                                   )}
                                 </Group>

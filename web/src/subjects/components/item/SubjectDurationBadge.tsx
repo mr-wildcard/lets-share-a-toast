@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { Badge } from "@chakra-ui/react";
-import { TimeIcon } from "@chakra-ui/icons";
+import { Badge, Box } from "@chakra-ui/react";
+import { LuTimer } from "react-icons/lu";
 
 interface Props {
   duration: number;
@@ -15,7 +15,9 @@ const SubjectDurationBadge: FC<Props> = ({ duration }) => {
       colorScheme="blue"
       fontWeight="bold"
     >
-      <TimeIcon boxSize="10px" mr={1} />
+      <Box boxSize="10px" mr={1}>
+        <LuTimer />
+      </Box>
       &nbsp;{duration} mins
     </Badge>
   );
