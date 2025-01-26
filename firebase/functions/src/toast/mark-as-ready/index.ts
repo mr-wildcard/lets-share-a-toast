@@ -25,8 +25,8 @@ export const markToastAsReady = functions.https.onCall(
       .catch((error) => {
         functions.logger.error(
           "An error occured while marking the TOAST as ready",
-          error
+          error,
         );
       });
-  }
+  },
 );

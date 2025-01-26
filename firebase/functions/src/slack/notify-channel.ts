@@ -14,12 +14,12 @@ export default function notifySlackChannel(message: string) {
     .catch((error) => {
       if (error.isAxiosError) {
         functions.logger.error(
-          `Couldn't notify Slack. HTTP error code: ${error.code}. Error message: ${error.message}`
+          `Couldn't notify Slack. HTTP error code: ${error.code}. Error message: ${error.message}`,
         );
       } else {
         functions.logger.error(
           "An unknown error occured while notifying Slack",
-          error
+          error,
         );
       }
     });

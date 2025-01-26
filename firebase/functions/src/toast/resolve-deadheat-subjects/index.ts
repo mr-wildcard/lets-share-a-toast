@@ -31,12 +31,12 @@ export const resolveDeadheatSubjects = functions.https.onCall(async (data) => {
 
   const subjectIDsNotSelectedForNextTOAST =
     subjectsIDsWithStatusSelectedForNextTOAST.filter(
-      (subjectId) => !data.selectedSubjectIds.includes(subjectId)
+      (subjectId) => !data.selectedSubjectIds.includes(subjectId),
     );
 
   const updateSubjectStatus = changeMultipleSubjectsStatusAtOnce(
     subjectIDsNotSelectedForNextTOAST,
-    SubjectStatus.AVAILABLE
+    SubjectStatus.AVAILABLE,
   );
 
   return Promise.all([updateCurrentToast, updateSubjectStatus.commit()]);

@@ -19,7 +19,7 @@ export const cancelToast = functions.https.onCall(async () => {
 
   if (toastStatusUtil.isAfter(ToastStatus.OPEN_FOR_VOTE)) {
     functions.logger.info(
-      `TOAST is about to be cancelled after votes have been closed. Selected subjects status need to be set back to ${SubjectStatus.AVAILABLE}`
+      `TOAST is about to be cancelled after votes have been closed. Selected subjects status need to be set back to ${SubjectStatus.AVAILABLE}`,
     );
 
     cancelActions.push(cancelledAfterVotes());

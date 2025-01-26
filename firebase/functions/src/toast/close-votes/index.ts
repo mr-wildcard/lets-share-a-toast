@@ -70,7 +70,7 @@ export const closeVotes = functions.https.onCall(async () => {
    */
   const subjectsStatusChanges = changeMultipleSubjectsStatusAtOnce(
     selectedSubjectIds,
-    SubjectStatus.SELECTED_FOR_NEXT_TOAST
+    SubjectStatus.SELECTED_FOR_NEXT_TOAST,
   );
 
   return Promise.all([

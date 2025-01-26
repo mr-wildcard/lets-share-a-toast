@@ -24,7 +24,7 @@ export const endToast = functions.https.onCall(
      */
     const doneSubjectsStatusesUpdates = changeMultipleSubjectsStatusAtOnce(
       givenSubjectsIds,
-      SubjectStatus.DONE
+      SubjectStatus.DONE,
     );
 
     const requests: Promise<unknown>[] = [doneSubjectsStatusesUpdates.commit()];
@@ -33,14 +33,14 @@ export const endToast = functions.https.onCall(
      * Update all subjects which have not been given to AVAILABLE again
      */
     const notGivenSubjectIds = selectedSubjectIds.filter(
-      (subjectId) => !givenSubjectsIds.includes(subjectId)
+      (subjectId) => !givenSubjectsIds.includes(subjectId),
     );
 
     if (notGivenSubjectIds.length > 0) {
       const availableSubjectsStatusesUpdates =
         changeMultipleSubjectsStatusAtOnce(
           notGivenSubjectIds,
-          SubjectStatus.AVAILABLE
+          SubjectStatus.AVAILABLE,
         );
 
       requests.push(availableSubjectsStatusesUpdates.commit());
@@ -51,8 +51,8 @@ export const endToast = functions.https.onCall(
     return Promise.all(requests).catch((error) => {
       functions.logger.error(
         "An error occured while ending the TOAST in Firebase",
-        error
+        error,
       );
     });
-  }
+  },
 );

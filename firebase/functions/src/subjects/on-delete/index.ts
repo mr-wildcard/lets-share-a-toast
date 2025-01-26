@@ -12,7 +12,7 @@ function removeSubjectFromCurrentTOASTSelectedSubjects(subjectId: string) {
     .transaction((selectedSubjectIds: string[]) => {
       if (selectedSubjectIds.includes(subjectId)) {
         return selectedSubjectIds.filter(
-          (subjectIds) => subjectIds !== subjectId
+          (subjectIds) => subjectIds !== subjectId,
         );
       }
 
@@ -27,7 +27,7 @@ export const syncDeletedSubjects = functions.firestore
 
     if (subjectStatus === SubjectStatus.SELECTED_FOR_NEXT_TOAST) {
       return removeSubjectFromCurrentTOASTSelectedSubjects(
-        context.params.subjectId
+        context.params.subjectId,
       );
     }
   });

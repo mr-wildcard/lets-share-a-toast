@@ -37,7 +37,7 @@ export const createToast = functions.https.onCall((data, context) => {
     .catch((error) => {
       functions.logger.error(
         "An error occured while creating the TOAST in Firebase",
-        error
+        error,
       );
     });
 });

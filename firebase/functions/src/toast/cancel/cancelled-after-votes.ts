@@ -12,13 +12,13 @@ export function cancelledAfterVotes() {
     .where("status", "==", SubjectStatus.SELECTED_FOR_NEXT_TOAST)
     .get()
     .then((snapshot) =>
-      snapshot.empty ? [] : snapshot.docs.map((doc) => doc.id)
+      snapshot.empty ? [] : snapshot.docs.map((doc) => doc.id),
     )
     .then((subjectIds) => {
       if (subjectIds.length) {
         const subjectsStatusUpdate = changeMultipleSubjectsStatusAtOnce(
           subjectIds,
-          SubjectStatus.AVAILABLE
+          SubjectStatus.AVAILABLE,
         );
 
         return subjectsStatusUpdate.commit();

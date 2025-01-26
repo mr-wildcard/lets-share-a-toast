@@ -4,7 +4,7 @@ import { FirestoreCollection } from "@shared/firebase";
 
 export function changeMultipleSubjectsStatusAtOnce(
   subjectIds: string[],
-  newStatus: SubjectStatus
+  newStatus: SubjectStatus,
 ) {
   const firestore = admin.firestore();
   const subjectsCollection = firestore.collection(FirestoreCollection.SUBJECTS);
