@@ -2,9 +2,9 @@
   "name": "firebase",
   "private": true,
   "scripts": {
-    "dev:functions": "node functions/esbuild.config.js --watch",
-    "dev:emulators": "firebase emulators:start --project=let-s-share-a-toast --import=firestore-data --export-on-exit",
-    "build:functions": "node functions/esbuild.config.js",
+    "dev:functions": "node functions/esbuild.config.mjs --watch",
+    "dev:emulators": "firebase emulators:start --project=let-s-share-a-toast-b60fb --import=firestore-data --export-on-exit",
+    "build:functions": "node functions/esbuild.config.mjs",
     "shell:functions": "firebase functions:shell",
     "deploy:functions": "firebase deploy --only functions",
     "logs:functions": "firebase functions:log"
@@ -12,9 +12,11 @@
   "dependencies": {
     "axios": "1.7.9",
     "firebase-admin": "13.0.2",
-    "firebase-functions": "6.3.0"
+    "firebase-functions": "6.3.0",
+    "firebase-tools": "13.29.2"
   },
   "devDependencies": {
+    "@types/node": "22.10.10",
     "esbuild": "0.24.2",
     "firebase-functions-test": "3.4.0",
     "jest": "29.7.0",
