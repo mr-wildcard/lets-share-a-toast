@@ -1,8 +1,8 @@
-import { context } from "esbuild";
+import { context, build } from "esbuild";
 
 const args = process.argv.slice(2);
 
-context({
+const config = {
   entryPoints: ["src/index.ts"],
   platform: "node",
   target: ["node22"],
@@ -10,12 +10,17 @@ context({
   bundle: true,
   absWorkingDir: import.meta.dirname,
   external: ["firebase-admin", "firebase-functions"],
-}).then((bundler) => {
-  console.log("✅ Compilation for Firebase functions ready.");
+};
 
-  if (args.includes("--watch")) {
-    console.log("Watching for changes...");
+if (args.includes("--watch")) {
+  const buildContext = await context(config);
 
-    return bundler.watch();
-  }
-});
+  await buildContext.watch();
+
+  console.log("✅ Firebase functions successfully compiled.");
+  console.log("👀 Watching for changes...");
+} else {
+  await build(config);
+
+  console.log("✅ Firebase functions successfully compiled.");
+}
