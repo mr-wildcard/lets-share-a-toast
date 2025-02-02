@@ -10,13 +10,14 @@ import {
   Input,
   FieldLabel,
   NumberInput,
-  Dialog,
+  Group,
 } from "@chakra-ui/react";
 import { Field, FieldProps, Formik, Form } from "formik";
-import DayPicker from "react-day-picker/DayPickerInput";
+import { DayPicker } from "react-day-picker";
 import dayjs from "dayjs";
-
+import { LuCalendar } from "react-icons/lu";
 import { CurrentToast, User } from "@shared/models";
+import { fr } from "react-day-picker/locale";
 
 import { Field as ChakraField } from "@web/components/ui/field";
 import { firebaseData } from "@web/core/firebase/data";
@@ -38,6 +39,13 @@ import {
 import { LuInfo } from "react-icons/lu";
 import { Tooltip } from "@web/components/ui/tooltip";
 import { Checkbox } from "@web/components/ui/checkbox";
+import { DialogFooter } from "@web/components/ui/dialog";
+import {
+  PopoverBody,
+  PopoverContent,
+  PopoverRoot,
+  PopoverTrigger,
+} from "@web/components/ui/popover";
 
 const createToastCloudFunction = getCloudFunctionCreateTOAST();
 
@@ -197,30 +205,47 @@ const TOASTForm: FC<Props> = ({
                     label="Day"
                     invalid={meta.touched && !!meta.error}
                   >
-                    <Box position="relative">
-                      <DayPickerInput
-                        {...field}
-                        onDayChange={(date: Date) =>
-                          setFieldValue(field.name, date)
-                        }
-                        formatDate={getFormattedTOASTDateWithRemainingDays}
-                        classNames={datePickerCSS}
-                        component={DateInput}
-                        keepFocus={false}
-                        dayPickerProps={{
-                          classNames: datePickerCSS,
-                          firstDayOfWeek: 1,
-                          disabledDays: (date: Date) =>
-                            dayjs(date).isBefore(today),
-                          fromMonth: currentToast
-                            ? currentToast?.date
-                            : new Date(),
-                          selectedDays: values.dueDate,
-                          navbarElement: DatePickerNavBar,
-                          captionElement: DatePickerCaption,
-                        }}
-                      />
-                    </Box>
+                    <Group attached>
+                      <Input placeholder="Placeholder" />
+
+                      <PopoverRoot>
+                        <PopoverTrigger asChild>
+                          <Button variant="subtle">
+                            <LuCalendar />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <PopoverBody>
+                            <DayPicker
+                              {...field}
+                              mode="single"
+                              locale={fr}
+                              onSelect={(date: Date) =>
+                                setFieldValue(field.name, date)
+                              }
+                              formatDate={
+                                getFormattedTOASTDateWithRemainingDays
+                              }
+                              classNames={datePickerCSS}
+                              component={DateInput}
+                              keepFocus={false}
+                              dayPickerProps={{
+                                classNames: datePickerCSS,
+                                firstDayOfWeek: 1,
+                                disabledDays: (date: Date) =>
+                                  dayjs(date).isBefore(today),
+                                fromMonth: currentToast
+                                  ? currentToast?.date
+                                  : new Date(),
+                                selected: values.dueDate,
+                                navbarElement: DatePickerNavBar,
+                                captionElement: DatePickerCaption,
+                              }}
+                            />
+                          </PopoverBody>
+                        </PopoverContent>
+                      </PopoverRoot>
+                    </Group>
                   </ChakraField>
                 )}
               </Field>
@@ -402,54 +427,54 @@ const TOASTForm: FC<Props> = ({
                 </Box>
               )}
 
-              <Dialog.Footer justifyContent="center">
-                <Button
-                  type="submit"
-                  disabled={!isValid}
-                  overflow="hidden"
-                  colorScheme="blue"
-                  loading={isSubmitting}
-                  loadingText={
-                    !currentToast ? "Creating TOAST..." : "Saving..."
-                  }
-                  mx={2}
-                >
-                  <Image
-                    position="absolute"
-                    left="5px"
-                    bottom="-10px"
-                    width={42}
-                    height={50}
-                    src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
-                  />
-                  <Text as="span" pl={35}>
-                    {currentToast && "Save modifications"}
-                    {!currentToast && "Let's go !"}
-                  </Text>
-                </Button>
-                <Button
-                  ref={cancelButtonRef}
-                  disabled={isSubmitting}
-                  onClick={() => closeModal(false)}
-                  overflow="hidden"
-                  type="button"
-                  colorScheme="red"
-                  variant="outline"
-                  mx={2}
-                >
-                  <Image
-                    position="absolute"
-                    left="10px"
-                    bottom="0"
-                    width={35}
-                    height={35}
-                    src="https://media.giphy.com/media/4a6NdCWK5QQLWBJpsH/giphy.webp"
-                  />
-                  <Text as="span" pl={35}>
-                    Cancel
-                  </Text>
-                </Button>
-              </Dialog.Footer>
+              <DialogFooter justifyContent="center">
+                <HStack gap={4}>
+                  <Button
+                    type="submit"
+                    disabled={!isValid}
+                    overflow="hidden"
+                    colorPalette="blue"
+                    loading={isSubmitting}
+                    loadingText={
+                      !currentToast ? "Creating TOAST..." : "Saving..."
+                    }
+                  >
+                    <Image
+                      position="absolute"
+                      left="5px"
+                      bottom="-10px"
+                      width={42}
+                      height={50}
+                      src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
+                    />
+                    <Text as="span" pl={35}>
+                      {currentToast && "Save modifications"}
+                      {!currentToast && "Let's go !"}
+                    </Text>
+                  </Button>
+                  <Button
+                    ref={cancelButtonRef}
+                    disabled={isSubmitting}
+                    onClick={() => closeModal(false)}
+                    overflow="hidden"
+                    type="button"
+                    colorPalette="red"
+                    variant="outline"
+                  >
+                    <Image
+                      position="absolute"
+                      left="10px"
+                      bottom="0"
+                      width={35}
+                      height={35}
+                      src="https://media.giphy.com/media/4a6NdCWK5QQLWBJpsH/giphy.webp"
+                    />
+                    <Text as="span" pl={35}>
+                      Cancel
+                    </Text>
+                  </Button>
+                </HStack>
+              </DialogFooter>
             </Stack>
           </Form>
         );

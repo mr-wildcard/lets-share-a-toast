@@ -1,14 +1,5 @@
 import React, { FC, useRef } from "react";
-import {
-  Text,
-  DialogRoot,
-  Textarea,
-  DialogContent,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-  Button,
-} from "@chakra-ui/react";
+import { Text, Textarea, Button } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 
 import { Toast } from "@shared/models";
@@ -21,6 +12,13 @@ import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getTOASTIsReadySlackMessage } from "@web/homepage/helpers";
 import { Checkbox } from "@web/components/ui/checkbox";
+import {
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface FormErrors {
   slackMessage?: boolean;
@@ -43,7 +41,7 @@ const MarkTOASTAsReady: FC<Props> = ({ currentToast, closeModal }) => {
       open={true}
       initialFocusEl={() => cancelBtn.current}
       closeOnEscape={true}
-      size="lg"
+      size="md"
     >
       <DialogContent borderRadius="3px">
         <DialogHeader textAlign="center">
@@ -116,7 +114,7 @@ const MarkTOASTAsReady: FC<Props> = ({ currentToast, closeModal }) => {
                 <Button
                   disabled={!isValid}
                   type="submit"
-                  colorScheme="blue"
+                  colorPalette="blue"
                   loading={isSubmitting}
                   loadingText="Saving..."
                   mx={2}
@@ -128,7 +126,7 @@ const MarkTOASTAsReady: FC<Props> = ({ currentToast, closeModal }) => {
                   disabled={isSubmitting}
                   onClick={closeModal}
                   type="button"
-                  colorScheme="red"
+                  colorPalette="red"
                   variant="outline"
                   mx={2}
                 >

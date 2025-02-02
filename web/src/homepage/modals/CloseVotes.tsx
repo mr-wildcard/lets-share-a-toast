@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useRef, useState } from "react";
-import { Alert, Box, Button, Text } from "@chakra-ui/react";
+import { Alert, Box, Button, HStack, Text } from "@chakra-ui/react";
 
 import { Toast } from "@shared/models";
 
@@ -89,27 +89,27 @@ const CloseVotes: FC<Props> = ({ currentToast, closeModal }) => {
           </Box>
         </DialogBody>
         <DialogFooter justifyContent="center">
-          <Button
-            colorScheme="blue"
-            onClick={closeVotingToast}
-            disabled={closingVotes}
-            loading={closingVotes}
-            loadingText="Closing votes..."
-            mx={2}
-          >
-            Close votes!
-          </Button>
-          <Button
-            ref={cancelBtn}
-            disabled={closingVotes}
-            onClick={closeModal}
-            type="button"
-            colorScheme="red"
-            variant="outline"
-            mx={2}
-          >
-            Cancel
-          </Button>
+          <HStack gap={4}>
+            <Button
+              colorPalette="blue"
+              onClick={closeVotingToast}
+              disabled={closingVotes}
+              loading={closingVotes}
+              loadingText="Closing votes..."
+            >
+              Close votes!
+            </Button>
+            <Button
+              ref={cancelBtn}
+              disabled={closingVotes}
+              onClick={closeModal}
+              type="button"
+              colorPalette="red"
+              variant="outline"
+            >
+              Cancel
+            </Button>
+          </HStack>
         </DialogFooter>
       </DialogContent>
     </DialogRoot>

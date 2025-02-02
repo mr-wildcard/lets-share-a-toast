@@ -19,7 +19,7 @@ const Home = () => {
 
   return (
     <Page flex={1} display="flex" flexDirection="column" padding={0}>
-      <Flex flex={1} h="100%" direction="column">
+      <Flex flex={1} height="100%" direction="column">
         <Box m="auto">
           <TOASTStatus currentToast={currentToast} />
         </Box>

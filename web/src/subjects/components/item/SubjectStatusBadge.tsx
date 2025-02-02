@@ -10,7 +10,7 @@ interface Props {
 const SubjectStatusBadge: FC<Props> = ({ status }) => (
   <>
     {status === SubjectStatus.AVAILABLE && (
-      <Badge variant="solid" colorScheme="green" title="Available for a TOAST">
+      <Badge variant="solid" colorPalette="green" title="Available for a TOAST">
         Available
       </Badge>
     )}
@@ -19,7 +19,7 @@ const SubjectStatusBadge: FC<Props> = ({ status }) => (
       <Badge
         variant="solid"
         fontStyle="italic"
-        colorScheme="blue"
+        colorPalette="blue"
         title="Selected for the next TOAST"
       >
         Selected for the next TOAST !
@@ -27,7 +27,7 @@ const SubjectStatusBadge: FC<Props> = ({ status }) => (
     )}
 
     {status === SubjectStatus.UNAVAILABLE && (
-      <Badge variant="solid" colorScheme="red">
+      <Badge variant="solid" colorPalette="red">
         Unavailable
       </Badge>
     )}

@@ -21,10 +21,10 @@ export const SubjectVotes: FC<Props> = observer(({ subjectId }) => {
       : 100 - (subjectTotalVotes / totalOfAllVotes) * 100;
 
   return (
-    <Flex w={`${votableSubjectWidth}px`} h="full" overflowY="hidden">
+    <Flex w={`${votableSubjectWidth}px`} height="full" overflowY="hidden">
       <Box
         w="full"
-        h="full"
+        height="full"
         transition="transform 300ms cubic-bezier(0.87, 0, 0.13, 1)"
         background="teal.700"
         borderTopRadius={4}

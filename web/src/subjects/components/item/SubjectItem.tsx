@@ -122,7 +122,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
           key="item-status-available"
         >
           Mark as&nbsp;
-          <Badge variant="solid" colorScheme="green" m="1px 0 0 5px">
+          <Badge variant="solid" colorPalette="green" m="1px 0 0 5px">
             AVAILABLE
           </Badge>
         </ContextMenuItem>
@@ -136,7 +136,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
           key="item-status-unavailable"
         >
           Mark as&nbsp;
-          <Badge variant="solid" colorScheme="red" m="1px 0 0 5px">
+          <Badge variant="solid" colorPalette="red" m="1px 0 0 5px">
             UNAVAILABLE
           </Badge>
         </ContextMenuItem>
@@ -271,7 +271,7 @@ const SubjectItem: FC<Props> = ({ onEditSubject, subject }) => {
                 top={0}
                 left={0}
                 w="100%"
-                h="100%"
+                height="100%"
                 zIndex={1}
               >
                 <Spinner />

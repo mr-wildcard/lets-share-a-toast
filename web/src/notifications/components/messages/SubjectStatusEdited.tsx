@@ -18,12 +18,12 @@ const SubjectStatusEdited: FC<NotificationSubjectEditedStatus> = (data) => {
           </Text>
           marked the following subject as: &nbsp;
           {data.newStatus === SubjectStatus.AVAILABLE && (
-            <Badge variant="solid" colorScheme="green">
+            <Badge variant="solid" colorPalette="green">
               Available for a TOAST
             </Badge>
           )}
           {data.newStatus === SubjectStatus.UNAVAILABLE && (
-            <Badge variant="solid" colorScheme="red">
+            <Badge variant="solid" colorPalette="red">
               Unavailable
             </Badge>
           )}

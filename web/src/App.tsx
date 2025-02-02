@@ -29,7 +29,11 @@ export default function LetsShareATOAST() {
 
   return (
     <ChakraProvider value={system}>
-      <ThemeProvider attribute="class" disableTransitionOnChange>
+      <ThemeProvider
+        forcedTheme="light"
+        attribute="class"
+        disableTransitionOnChange
+      >
         <Router>
           <Toaster />
           <Main>

@@ -14,8 +14,7 @@ const MarkTOASTAsReady: FC<Props> = ({ onClick }) => {
       variant="outline"
       position="relative"
       bg="white"
-      size="lg"
-      colorScheme="blue"
+      colorPalette="blue"
       fontWeight="bold"
     >
       <Image

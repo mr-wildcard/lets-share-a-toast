@@ -1,10 +1,17 @@
 import React, { FC, useCallback, useRef, useState } from "react";
-import { Text, Stack, Button, Dialog } from "@chakra-ui/react";
+import { Text, Stack, Button } from "@chakra-ui/react";
 
 import { pageColors } from "@web/core/constants";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { getCloudFunctionCancelTOAST } from "@web/core/firebase/helpers";
+import {
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface Props {
   closeModal(): void;
@@ -32,13 +39,14 @@ const CancelTOAST: FC<Props> = ({ closeModal }) => {
   }, []);
 
   return (
-    <Dialog.Root
+    <DialogRoot
+      placement="center"
       open={true}
       initialFocusEl={() => cancelBtn.current}
       onOpenChange={closeModal}
     >
-      <Dialog.Content borderRadius="3px">
-        <Dialog.Header textAlign="center">
+      <DialogContent borderRadius="3px">
+        <DialogHeader textAlign="center">
           <Text position="relative" pr={5}>
             <HighlightedText bgColor={pageColors.homepage}>
               Cancel current TOAST
@@ -52,8 +60,8 @@ const CancelTOAST: FC<Props> = ({ closeModal }) => {
               src="https://media.giphy.com/media/yc2ENyer5HfbRZvYGA/giphy.webp"
             />
           </Text>
-        </Dialog.Header>
-        <Dialog.Body textAlign="center" fontSize="lg" py={10}>
+        </DialogHeader>
+        <DialogBody textAlign="center" fontSize="lg" py={10}>
           <Text>
             Are you&nbsp;
             <Text as="span" fontWeight="bold">
@@ -63,21 +71,22 @@ const CancelTOAST: FC<Props> = ({ closeModal }) => {
           </Text>
           <Text>You can&apos;t undo this action afterwards.</Text>
           <Text>You&apos;ll need to create a new TOAST from scratch.</Text>
-        </Dialog.Body>
-        <Dialog.Footer justifyContent="center">
+        </DialogBody>
+        <DialogFooter justifyContent="center">
           <Stack gap={3} direction="row">
             <Button
               onClick={cancelTOAST}
               loading={cancelling}
               disabled={cancelling}
               loadingText="Cancelling TOAST..."
-              colorScheme="red"
+              colorPalette="red"
             >
-              I do want to cancel the TOAST
+              Cancel the TOAST
             </Button>
             <Button
               position="relative"
               overflow="hidden"
+              colorPalette="blue"
               ref={cancelBtn}
               onClick={closeModal}
             >
@@ -94,9 +103,9 @@ const CancelTOAST: FC<Props> = ({ closeModal }) => {
               </Text>
             </Button>
           </Stack>
-        </Dialog.Footer>
-      </Dialog.Content>
-    </Dialog.Root>
+        </DialogFooter>
+      </DialogContent>
+    </DialogRoot>
   );
 };
 

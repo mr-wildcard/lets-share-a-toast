@@ -18,56 +18,45 @@ const CloseVotes: FC<Props> = ({ isSuccess, onClick }) => {
   const notEnoughVotes =
     !votingSession || !votingSessionHasAtLeastOneVote(votingSession);
 
-  return (
-    <>
-      {!isSuccess && (
-        <Button
-          onClick={onClick}
-          disabled={notEnoughVotes}
-          variant="outline"
-          position="relative"
-          bg="white"
-          size="lg"
-          colorScheme="blue"
-          fontWeight="bold"
-          title={
-            notEnoughVotes
-              ? "Nobody voted for any subject yet."
-              : "Close voting session."
-          }
-        >
-          <Image
-            src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
-            position="absolute"
-            width={73}
-            height={73}
-            top="-18px"
-            right="-11px"
-            transform="scaleX(-1) rotate(5deg)"
-          />
+  if (!isSuccess) {
+    return (
+      <Button
+        onClick={onClick}
+        disabled={notEnoughVotes}
+        variant="outline"
+        position="relative"
+        bg="white"
+        colorPalette="blue"
+        fontWeight="bold"
+        title={
+          notEnoughVotes
+            ? "Nobody voted for any subject yet."
+            : "Close voting session."
+        }
+      >
+        <Image
+          src="https://media.giphy.com/media/8YTmbulkH7wWNRnURI/giphy.gif"
+          position="absolute"
+          width={73}
+          height={73}
+          top="-18px"
+          right="-11px"
+          transform="scaleX(-1) rotate(5deg)"
+        />
 
-          <Text as="span" fontWeight="bold" pr="40px">
-            Close votes
-          </Text>
-        </Button>
-      )}
-
-      {isSuccess && (
-        <Flex
-          h="100%"
-          align="center"
-          fontWeight="bold"
-          color="white"
-          bg="green.400"
-          px={4}
-          borderRadius={3}
-        >
-          Votes closed
-          <LuCircleCheck ml={3} color="white" boxSize="24px" />
-        </Flex>
-      )}
-    </>
-  );
+        <Text as="span" fontWeight="bold" pr="40px">
+          Close votes
+        </Text>
+      </Button>
+    );
+  } else {
+    return (
+      <Button disabled variant="solid" height="100%" colorPalette="green">
+        Votes closed
+        <LuCircleCheck />
+      </Button>
+    );
+  }
 };
 
 export default CloseVotes;

@@ -16,8 +16,7 @@ const DeadHeatSubjects: FC<Props> = ({ onClick }) => {
       variant="outline"
       position="relative"
       bg="white"
-      size="lg"
-      colorScheme="red"
+      colorPalette="red"
       fontWeight="bold"
     >
       Settle subjects

@@ -23,7 +23,7 @@ const SubjectLanguageBadge: FC<Props> = ({ language }) => {
       display="flex"
       alignItems="center"
       variant="outline"
-      colorScheme="blue"
+      colorPalette="blue"
       fontWeight="bold"
     >
       {languageFlags[language]} {languageLabels[language]}

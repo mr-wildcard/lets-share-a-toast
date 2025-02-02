@@ -12,7 +12,7 @@ const SubjectDurationBadge: FC<Props> = ({ duration }) => {
       display="flex"
       alignItems="center"
       variant="outline"
-      colorScheme="blue"
+      colorPalette="blue"
       fontWeight="bold"
     >
       <Box boxSize="10px" mr={1}>

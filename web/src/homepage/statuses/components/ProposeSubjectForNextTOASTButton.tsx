@@ -35,7 +35,7 @@ const ProposeSubjectForNextTOASTButton = () => {
       position="relative"
       bg="white"
       size="lg"
-      colorScheme="blue"
+      colorPalette="blue"
     >
       <Link to={Pathnames.SUBJECTS}>
         Propose a subject for the next TOAST!

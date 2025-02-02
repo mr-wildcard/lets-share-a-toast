@@ -21,21 +21,19 @@ const EndTOAST: FC<Props> = ({ currentToast, onClick }) => {
       variant="outline"
       position="relative"
       bg="white"
-      size="lg"
-      colorScheme="blue"
+      colorPalette="blue"
+      paddingLeft="60px"
     >
       <Image
         position="absolute"
-        left="-8px"
+        left={0}
         bottom="-10px"
-        width={80}
-        height={80}
+        width={65}
+        height={65}
         src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
       />
 
-      <Text fontWeight="bold" pl={45}>
-        End TOAST
-      </Text>
+      <Text fontWeight="bold">End TOAST</Text>
     </Button>
   );
 };

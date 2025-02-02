@@ -63,13 +63,13 @@ const Votes = () => {
         <ClientSideVotingSessionProvider
           value={new ClientSideVotingSession(currentToast!)}
         >
-          <Flex h="full" direction="column">
+          <Flex height="full" direction="column">
             <Box m={4}>
               <UserVotesLeft />
             </Box>
 
             <Box
-              h="full"
+              height="full"
               maxW="full"
               overflowX="auto"
               style={{
@@ -80,7 +80,7 @@ const Votes = () => {
                 direction="column"
                 justify="center"
                 align="center"
-                h="full"
+                height="full"
                 pt="30px"
                 px="30px"
               >

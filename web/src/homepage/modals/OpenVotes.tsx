@@ -1,5 +1,5 @@
 import React, { FC, useRef } from "react";
-import { Alert, Box, Button, Dialog, Text, Textarea } from "@chakra-ui/react";
+import { Alert, Box, Button, HStack, Text, Textarea } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 import { observer } from "mobx-react-lite";
 
@@ -16,6 +16,13 @@ import { validateSlackNotificationField } from "@web/core/helpers/form/validateS
 import { getCloudFunctionOpenVotes } from "@web/core/firebase/helpers";
 import { Checkbox } from "@web/components/ui/checkbox";
 import { Field as ChakraField } from "@web/components/ui/field";
+import {
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface FormErrors {
   slackMessage?: boolean;
@@ -36,16 +43,16 @@ const OpenVotes: FC<Props> = ({ currentToast, closeModal }) => {
   const totalAvailableSubjects = firebaseData.availableSubjects.length;
 
   return (
-    <Dialog.Root
+    <DialogRoot
       placement="center"
       onOpenChange={closeModal}
       open={true}
       initialFocusEl={() => cancelBtn.current}
       closeOnEscape={true}
-      size="lg"
+      size="md"
     >
-      <Dialog.Content borderRadius="3px">
-        <Dialog.Header textAlign="center">
+      <DialogContent borderRadius="3px">
+        <DialogHeader textAlign="center">
           <Text position="relative">
             <HighlightedText bgColor={pageColors.homepage}>
               Open voting session !
@@ -59,8 +66,8 @@ const OpenVotes: FC<Props> = ({ currentToast, closeModal }) => {
               src="https://media.giphy.com/media/QLREiT3pNpO2VPbGjj/giphy.gif"
             />
           </Text>
-        </Dialog.Header>
-        <Dialog.Body>
+        </DialogHeader>
+        <DialogBody>
           <Formik
             initialValues={{
               notifySlack: false,
@@ -137,35 +144,35 @@ const OpenVotes: FC<Props> = ({ currentToast, closeModal }) => {
                   </Box>
                 </Box>
 
-                <Dialog.Footer justifyContent="center">
-                  <Button
-                    disabled={!isValid}
-                    type="submit"
-                    colorScheme="blue"
-                    loading={isSubmitting}
-                    loadingText="Opening votes..."
-                    mx={2}
-                  >
-                    Open votes!
-                  </Button>
-                  <Button
-                    ref={cancelBtn}
-                    disabled={isSubmitting}
-                    onClick={closeModal}
-                    type="button"
-                    colorScheme="red"
-                    variant="outline"
-                    mx={2}
-                  >
-                    Cancel
-                  </Button>
-                </Dialog.Footer>
+                <DialogFooter justifyContent="center">
+                  <HStack gap={4}>
+                    <Button
+                      disabled={!isValid}
+                      type="submit"
+                      colorPalette="blue"
+                      loading={isSubmitting}
+                      loadingText="Opening votes..."
+                    >
+                      Open votes!
+                    </Button>
+                    <Button
+                      ref={cancelBtn}
+                      disabled={isSubmitting}
+                      onClick={closeModal}
+                      type="button"
+                      colorPalette="red"
+                      variant="outline"
+                    >
+                      Cancel
+                    </Button>
+                  </HStack>
+                </DialogFooter>
               </Form>
             )}
           </Formik>
-        </Dialog.Body>
-      </Dialog.Content>
-    </Dialog.Root>
+        </DialogBody>
+      </DialogContent>
+    </DialogRoot>
   );
 };
 

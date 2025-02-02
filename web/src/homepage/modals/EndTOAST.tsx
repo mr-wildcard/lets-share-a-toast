@@ -1,7 +1,6 @@
 import React, { FC, useRef } from "react";
 import {
   Alert,
-  Dialog,
   Box,
   Button,
   Separator,
@@ -18,6 +17,13 @@ import { getSubjectSpeakersAsText } from "@web/core/helpers/getSubjectSpeakersAs
 import { getCloudFunctionEndTOAST } from "@web/core/firebase/helpers";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
+import {
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface FormErrors {
   givenSubjectsIds?: boolean;
@@ -40,7 +46,7 @@ const EndTOAST: FC<Props> = ({ currentToast, closeModal }) => {
   const [sm] = useToken("sizes", ["sm"]);
 
   return (
-    <Dialog.Root
+    <DialogRoot
       placement="center"
       open={true}
       initialFocusEl={() => cancelBtn.current}
@@ -70,8 +76,8 @@ const EndTOAST: FC<Props> = ({ currentToast, closeModal }) => {
         {({ values, isValid, isSubmitting }: FormikProps<FormValues>) => {
           return (
             <Form>
-              <Dialog.Content borderRadius="3px">
-                <Dialog.Header textAlign="center">
+              <DialogContent borderRadius="3px">
+                <DialogHeader textAlign="center">
                   <Text position="relative" pr={5}>
                     <HighlightedText bgColor={pageColors.homepage}>
                       End current TOAST
@@ -86,8 +92,8 @@ const EndTOAST: FC<Props> = ({ currentToast, closeModal }) => {
                       src="https://media.giphy.com/media/RLVLZDCYkjrdwlUQSt/giphy.webp"
                     />
                   </Text>
-                </Dialog.Header>
-                <Dialog.Body fontSize="lg">
+                </DialogHeader>
+                <DialogBody fontSize="lg">
                   <Box mb={5}>
                     <Alert.Root status="info">
                       <Alert.Content flex={1}>
@@ -175,15 +181,15 @@ const EndTOAST: FC<Props> = ({ currentToast, closeModal }) => {
                       }
                     )}
                   </Stack>
-                </Dialog.Body>
-                <Dialog.Footer justifyContent="center">
+                </DialogBody>
+                <DialogFooter justifyContent="center">
                   <Stack gap={3} direction="row">
                     <Button
                       type="submit"
                       loading={isSubmitting}
                       disabled={isSubmitting || !isValid}
                       loadingText="Ending TOAST..."
-                      colorScheme="green"
+                      colorPalette="green"
                     >
                       I do want to end the TOAST
                     </Button>
@@ -196,13 +202,13 @@ const EndTOAST: FC<Props> = ({ currentToast, closeModal }) => {
                       Do nothing
                     </Button>
                   </Stack>
-                </Dialog.Footer>
-              </Dialog.Content>
+                </DialogFooter>
+              </DialogContent>
             </Form>
           );
         }}
       </Formik>
-    </Dialog.Root>
+    </DialogRoot>
   );
 };
 

@@ -18,7 +18,7 @@ const NoTOAST = () => {
         position="relative"
         bg="white"
         size="lg"
-        colorScheme="blue"
+        colorPalette="blue"
         pr="70px"
       >
         <Link to={Pathnames.SUBJECTS}>

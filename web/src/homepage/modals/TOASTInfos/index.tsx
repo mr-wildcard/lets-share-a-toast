@@ -1,5 +1,5 @@
 import React, { Suspense, FC, useRef } from "react";
-import { Flex, Dialog, Spinner, Text } from "@chakra-ui/react";
+import { Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 import { observer } from "mobx-react-lite";
 
 import { CurrentToast } from "@shared/models";
@@ -8,6 +8,12 @@ import { firebaseData } from "@web/core/firebase/data";
 import HighlightedText from "@web/core/components/HighlightedText";
 import Image from "@web/core/components/Image";
 import { pageColors } from "@web/core/constants";
+import {
+  DialogBody,
+  DialogContent,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface Props {
   isOpen: boolean;
@@ -22,20 +28,20 @@ const TOASTInfosForm: FC<Props> = (props) => {
   const isCreatingToast = firebaseData.currentToast === null;
 
   return (
-    <Dialog.Root
+    <DialogRoot
       onOpenChange={() => props.closeModal(false)}
       initialFocusEl={
         isCreatingToast ? undefined : () => cancelButtonRef.current
       }
       open={props.isOpen}
       closeOnEscape={true}
-      size="xl"
+      size="md"
       placement="center"
       scrollBehavior="inside"
     >
-      <Dialog.Content borderRadius="3px">
-        <Dialog.Header textAlign="center">
-          <Text position="relative">
+      <DialogContent borderRadius="3px">
+        <DialogHeader textAlign="center">
+          <Heading position="relative">
             <HighlightedText bgColor={pageColors.homepage}>
               {isCreatingToast ? "Start a new TOAST" : "Edit current TOAST"}
             </HighlightedText>
@@ -47,12 +53,12 @@ const TOASTInfosForm: FC<Props> = (props) => {
               height={100}
               src="https://media.giphy.com/media/ghNu5dkCg0yYJKhPtE/giphy.webp"
             />
-          </Text>
-        </Dialog.Header>
-        <Dialog.Body pb={6}>
+          </Heading>
+        </DialogHeader>
+        <DialogBody>
           <Suspense
             fallback={
-              <Flex my={10} align="center" justify="center">
+              <Flex marginY={10} align="center" justify="center">
                 <Spinner />
               </Flex>
             }
@@ -63,9 +69,9 @@ const TOASTInfosForm: FC<Props> = (props) => {
               cancelButtonRef={cancelButtonRef}
             />
           </Suspense>
-        </Dialog.Body>
-      </Dialog.Content>
-    </Dialog.Root>
+        </DialogBody>
+      </DialogContent>
+    </DialogRoot>
   );
 };
 

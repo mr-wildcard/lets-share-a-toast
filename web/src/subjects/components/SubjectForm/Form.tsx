@@ -445,7 +445,7 @@ const Form: FC<Props> = ({ subject, closeForm }) => {
 
                                   {values.speakers.length > 1 && (
                                     <Button
-                                      colorScheme="red"
+                                      colorPalette="red"
                                       disabled={
                                         speakerIndex === 0 &&
                                         !values.speakers[speakerIndex + 1]
@@ -554,7 +554,7 @@ const Form: FC<Props> = ({ subject, closeForm }) => {
                     <Button
                       overflow="hidden"
                       type="submit"
-                      colorScheme="blue"
+                      colorPalette="blue"
                       loading={isSubmitting}
                       disabled={!isValid}
                       loadingText={
@@ -582,7 +582,7 @@ const Form: FC<Props> = ({ subject, closeForm }) => {
                       onClick={() => closeForm()}
                       overflow="hidden"
                       type="button"
-                      colorScheme="red"
+                      colorPalette="red"
                       variant="outline"
                       mx={2}
                     >

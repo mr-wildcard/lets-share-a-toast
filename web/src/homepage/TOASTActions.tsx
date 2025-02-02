@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { FC, useCallback, useEffect } from "react";
-import { Box, Button, Flex, Image } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Image } from "@chakra-ui/react";
 import { LuX, LuSettings, LuPencilLine, LuTrash2 } from "react-icons/lu";
 import { animated } from "@react-spring/web";
 
@@ -29,12 +29,6 @@ import {
   MenuTrigger,
 } from "@web/components/ui/menu";
 
-const getActionSpacing = (isSuccess: boolean) => (isSuccess ? 2 : "30px");
-
-const padding = `${spacing.stylizedGap * 2}px ${spacing.stylizedGap}px 0 ${
-  spacing.stylizedGap
-}px`;
-
 interface Props {
   currentToast?: CurrentToast;
 }
@@ -52,9 +46,6 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
     }
   }, []);
 
-  const backgroundOpenAnimationFinished =
-    animations.background.opened && animations.background.animationFinished;
-
   useEffect(() => {
     if (buttonsStates.deadHeatSubjects.display) {
       animations.background.open(true);
@@ -64,7 +55,7 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
   return (
     <Box position="relative">
       <Button
-        variant="link"
+        variant="plain"
         position="absolute"
         color="black"
         left={`${spacing.stylizedGap}px`}
@@ -83,8 +74,8 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
         onClick={() =>
           animations.background.open(!animations.background.opened)
         }
-        leftIcon={animations.background.opened ? <LuX /> : <LuSettings />}
       >
+        {animations.background.opened ? <LuX /> : <LuSettings />}
         {animations.background.opened && "Close"}
         {!animations.background.opened && (
           <Box position="relative">
@@ -102,22 +93,12 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
         )}
       </Button>
       <Box
-        as={animated.div}
-        padding={padding}
+        padding={spacing.stylizedGap}
         position="relative"
         style={{
-          // @ts-expect-error I don't know tbh
-          clipPath: animations.background.animation.clipPath.to(
-            (path1, path2) => {
-              /**
-               * Disable `clip-path` at the end of the animation
-               * to let the menu displays correctly.
-               */
-              return backgroundOpenAnimationFinished
-                ? "none"
-                : `polygon(0% ${path1}%, 100% ${path2}%, 100% 100%, 0% 100%)`;
-            }
-          ),
+          clipPath: animations.background.opened
+            ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+            : "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
         }}
       >
         {animations.toastCreation.animation(
@@ -130,7 +111,7 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
                 right={0}
                 bottom="80%"
                 w="auto"
-                h="50vh"
+                height="50vh"
                 borderBottomRightRadius="3px"
                 style={{
                   opacity: `${style.opacity}`,
@@ -139,74 +120,46 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
             )
         )}
 
-        <Box
-          as={animated.div}
-          position="absolute"
-          bg="white"
-          inset={0}
-          style={{
-            // @ts-expect-error I don't KNOW
-            clipPath: animations.background.animation.clipPath.to(
-              (path1, path2) =>
-                `polygon(0% ${path1}%, 100% ${path2}%, 100% 100%, 0% 100%)`
-            ),
-          }}
-        />
-
-        <Flex justify="space-between" position="relative">
-          <Flex>
-            <Box>
-              <InitiateTOAST
-                onClick={modalsStates.toast.onOpen}
-                isSuccess={buttonsStates.initiateTOAST.isSuccess}
-              />
-            </Box>
+        <Flex justifyContent="space-between">
+          <HStack gap={15} alignItems="stretch">
+            <InitiateTOAST
+              onClick={modalsStates.toast.onOpen}
+              isSuccess={buttonsStates.initiateTOAST.isSuccess}
+            />
 
             {!!currentToast && (
               <>
                 {buttonsStates.openVotes.display && (
-                  <Box ml={getActionSpacing(buttonsStates.openVotes.isSuccess)}>
-                    <OpenVotes
-                      isSuccess={buttonsStates.openVotes.isSuccess}
-                      onClick={modalsStates.openVotes.onOpen}
-                    />
-                  </Box>
+                  <OpenVotes
+                    isSuccess={buttonsStates.openVotes.isSuccess}
+                    onClick={modalsStates.openVotes.onOpen}
+                  />
                 )}
 
                 {buttonsStates.closeVotes.display && (
-                  <Box
-                    ml={getActionSpacing(buttonsStates.closeVotes.isSuccess)}
-                  >
-                    <CloseVotes
-                      isSuccess={buttonsStates.closeVotes.isSuccess}
-                      onClick={modalsStates.closeVotes.onOpen}
-                    />
-                  </Box>
+                  <CloseVotes
+                    isSuccess={buttonsStates.closeVotes.isSuccess}
+                    onClick={modalsStates.closeVotes.onOpen}
+                  />
                 )}
 
                 {buttonsStates.deadHeatSubjects.display && (
-                  <Box ml="30px">
-                    <DeadHeatSubjects
-                      onClick={modalsStates.deadHeatSubjects.onOpen}
-                    />
-                  </Box>
+                  <DeadHeatSubjects
+                    onClick={modalsStates.deadHeatSubjects.onOpen}
+                  />
                 )}
 
                 {buttonsStates.markTOASTAsReady.display && (
-                  <Box ml="30px">
-                    <MarkTOASTAsReady
-                      onClick={modalsStates.markTOASTAsReady.onOpen}
-                    />
-                  </Box>
+                  <MarkTOASTAsReady
+                    onClick={modalsStates.markTOASTAsReady.onOpen}
+                  />
                 )}
 
                 {buttonsStates.endTOAST.display && (
-                  <Box ml="30px">
-                    <EndTOAST
-                      currentToast={currentToast}
-                      onClick={modalsStates.endTOAST.onOpen}
-                    />
-                  </Box>
+                  <EndTOAST
+                    currentToast={currentToast}
+                    onClick={modalsStates.endTOAST.onOpen}
+                  />
                 )}
 
                 {modalsStates.openVotes.open && (
@@ -256,13 +209,13 @@ const TOASTActions: FC<Props> = ({ currentToast }) => {
               isOpen={modalsStates.toast.open}
               closeModal={closeTOASTFormModal}
             />
-          </Flex>
+          </HStack>
 
           {!!currentToast && (
             <MenuRoot>
               <MenuTrigger asChild>
                 <Button
-                  textDecoration="underline"
+                  variant="plain"
                   position="relative"
                   pt={0}
                   fontWeight="bold"

@@ -10,43 +10,32 @@ interface Props {
 }
 
 const InitiateTOAST: FC<Props> = ({ isSuccess, onClick }) => {
-  return !isSuccess ? (
-    <Button
-      onClick={onClick}
-      variant="outline"
-      position="relative"
-      bg="white"
-      size="lg"
-      fontSize="xl"
-      colorScheme="blue"
-    >
-      <Text fontWeight="bold" pr="50px">
+  if (!isSuccess) {
+    return (
+      <Button
+        onClick={onClick}
+        variant="solid"
+        position="relative"
+        colorPalette="blue"
+        paddingLeft="75px"
+      >
         Start a TOAST!
-      </Text>
-      <Image
-        position="absolute"
-        width={60}
-        height={72}
-        right="5px"
-        src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
-      />
-    </Button>
-  ) : (
-    <Flex
-      h="100%"
-      align="center"
-      fontWeight="bold"
-      color="white"
-      bg="green.400"
-      px={4}
-      borderRadius={3}
-    >
-      TOAST Initiated
-      <Box ml={3} color="white" boxSize="24px">
-        <LuCircleCheck />
-      </Box>
-    </Flex>
-  );
+        <Image
+          position="absolute"
+          width={60}
+          height={72}
+          left="10px"
+          src="https://media.giphy.com/media/XgGwL8iUwHIOOMNwmH/giphy.webp"
+        />
+      </Button>
+    );
+  } else {
+    return (
+      <Button disabled variant="solid" height="100%" colorPalette="green">
+        TOAST Initiated <LuCircleCheck />
+      </Button>
+    );
+  }
 };
 
 export default React.memo(InitiateTOAST);

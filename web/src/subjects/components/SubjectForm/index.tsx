@@ -33,7 +33,7 @@ const SubjectForm: FC<Props> = ({ subject, closeForm, isOpen }) => {
       <DrawerContent overflowY="auto">
         <Suspense
           fallback={
-            <Flex h="100%" justifyContent="center" alignItems="center">
+            <Flex height="100%" justifyContent="center" alignItems="center">
               <Spinner
                 borderWidth="4px"
                 animationDuration="0.65s"

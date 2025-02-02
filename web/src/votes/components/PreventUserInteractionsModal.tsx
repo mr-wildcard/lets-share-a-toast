@@ -44,7 +44,7 @@ const PreventUserInteractionsModal: FC<PropsWithChildren<Props>> = ({
         <Box
           position="absolute"
           w="full"
-          h="100px"
+          height="100px"
           bottom="calc(100% - 17px)"
           className={css.happyToast}
         >

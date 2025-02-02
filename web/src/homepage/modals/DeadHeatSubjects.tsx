@@ -5,7 +5,6 @@ import {
   Button,
   Separator,
   Heading,
-  Dialog,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -25,6 +24,13 @@ import Image from "@web/core/components/Image";
 import { firebaseData } from "@web/core/firebase/data";
 import { SelectableSubject } from "./deadHeatSubjects/SelectableSubject";
 import { getCloudFunctionResolveDeadHeatSubjects } from "@web/core/firebase/helpers";
+import {
+  DialogBody,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@web/components/ui/dialog";
 
 interface FormErrors {
   selectedSubjectIds?: boolean;
@@ -92,7 +98,7 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
     }, [selectedSubjects, alreadySettledSubjects]);
 
     return (
-      <Dialog.Root
+      <DialogRoot
         placement="center"
         onOpenChange={closeModal}
         open={true}
@@ -134,8 +140,8 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
 
             return (
               <Form>
-                <Dialog.Content borderRadius="3px">
-                  <Dialog.Header textAlign="center">
+                <DialogContent borderRadius="3px">
+                  <DialogHeader textAlign="center">
                     <Text position="relative">
                       <HighlightedText bgColor={pageColors.homepage}>
                         Almost there...
@@ -149,8 +155,8 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
                         src="https://media.giphy.com/media/XcMbKY8KIkXMJTLdse/giphy.gif"
                       />
                     </Text>
-                  </Dialog.Header>
-                  <Dialog.Body padding={0}>
+                  </DialogHeader>
+                  <DialogBody padding={0}>
                     <Box mb={5} px={5}>
                       <Alert.Root status="warning">
                         <Alert.Content flex={1}>
@@ -269,12 +275,12 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
                         )}
                       </Field>
                     </Box>
-                  </Dialog.Body>
-                  <Dialog.Footer justifyContent="center">
+                  </DialogBody>
+                  <DialogFooter justifyContent="center">
                     <Button
                       disabled={!isValid}
                       type="submit"
-                      colorScheme="blue"
+                      colorPalette="blue"
                       loading={isSubmitting}
                       loadingText="Saving subjects..."
                     >
@@ -290,19 +296,19 @@ const DeadHeatSubjectsModal: FC<Props> = observer(
                       disabled={isSubmitting}
                       onClick={closeModal}
                       type="button"
-                      colorScheme="red"
+                      colorPalette="red"
                       variant="outline"
                       mx={2}
                     >
                       Do nothing
                     </Button>
-                  </Dialog.Footer>
-                </Dialog.Content>
+                  </DialogFooter>
+                </DialogContent>
               </Form>
             );
           }}
         </Formik>
-      </Dialog.Root>
+      </DialogRoot>
     );
   }
 );

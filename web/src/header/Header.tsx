@@ -28,7 +28,7 @@ const Header: FC = () => {
       as="header"
       marginBottom={`${spacing.stylizedGap}px`}
     >
-      <Flex justify="space-between" align="center" h="100%">
+      <Flex justify="space-between" align="center" height="100%">
         <Flex flex={1} align="center">
           <Box mr={20}>
             <Logo />

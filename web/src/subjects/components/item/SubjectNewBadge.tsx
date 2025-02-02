@@ -5,7 +5,7 @@ import Image from "@web/core/components/Image";
 
 const SubjectNewBadge: FC = () => {
   return (
-    <Badge variant="outline" colorScheme="red" position="relative" pl="30px">
+    <Badge variant="outline" colorPalette="red" position="relative" pl="30px">
       <Image
         position="absolute"
         src="https://media.giphy.com/media/KZXnlnHy0Bx33ecYcJ/giphy.gif"

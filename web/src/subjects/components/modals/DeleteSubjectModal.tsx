@@ -61,7 +61,7 @@ const DeleteSubjectModal: FC<Props> = ({
         </Dialog.Body>
         <Dialog.Footer justifyContent="center">
           <Stack gap={3} direction="row">
-            <Button onClick={() => closeModal(true)} colorScheme="red">
+            <Button onClick={() => closeModal(true)} colorPalette="red">
               Yes I&apos;m sure, delete it
             </Button>
             <Button

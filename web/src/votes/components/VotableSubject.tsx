@@ -57,7 +57,7 @@ export const VotableSubject: FC<Props> = observer(
       <Box w={`${votableSubjectWidth}px`} boxShadow="lg">
         <Box padding={4} bg="white">
           <Button
-            colorScheme="black"
+            colorPalette="black"
             variant="link"
             fontWeight="bold"
             fontSize="lg"

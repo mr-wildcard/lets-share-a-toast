@@ -23,12 +23,12 @@ const SubjectAddButton: FC<Props> = ({ creatingSubject, onClick }) => {
       display="block"
       position="relative"
       variant="outline"
-      colorScheme="gray"
+      colorPalette="gray"
       borderColor="black"
       onClick={onClick}
       disabled={creatingSubject}
       w="100%"
-      h="auto"
+      height="auto"
       minH="142px"
       padding={0}
       fontWeight="bold"
@@ -52,7 +52,7 @@ const SubjectAddButton: FC<Props> = ({ creatingSubject, onClick }) => {
       )}
 
       <Box style={{ opacity: !creatingSubject ? 1 : 0 }}>
-        <Stack borderRadius="3px" h="100%" gap={4} padding={5}>
+        <Stack borderRadius="3px" height="100%" gap={4} padding={5}>
           <SkeletonText noOfLines={1} />
           <HStack mb={10}>
             <SkeletonCircle size="28px" />
@@ -67,7 +67,7 @@ const SubjectAddButton: FC<Props> = ({ creatingSubject, onClick }) => {
           top={0}
           left={0}
           w="100%"
-          h="100%"
+          height="100%"
           align="center"
           justify="center"
           bgGradient="linear(rgba(255, 255, 255, 0.7), white 80%)"
